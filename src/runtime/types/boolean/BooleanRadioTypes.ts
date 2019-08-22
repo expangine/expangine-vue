@@ -31,4 +31,6 @@ export const BooleanRadioInput: TypeVisualInput<BooleanType, BooleanRadioOptions
   getSummary: (options) => (
     `<strong>Radio</strong>: ${options.labelTrue} / ${options.labelFalse}`
   ),
+  onSubAdd: () => { /**/ },
+  onSubRemove: () => { /**/ },
 };

@@ -5,28 +5,24 @@
         Expangine
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        text
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
+      <v-btn text target="_blank" href="https://github.com/expangine/expangine-vue">
+        <span class="mr-2">GitHub</span>
       </v-btn>
     </v-app-bar>
-
     <v-content>
       <router-view></router-view>
+      <confirm-dialog></confirm-dialog>
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import ConfirmDialog from './app/ConfirmDialog.vue';
+
 
 export default Vue.extend({
   name: 'App',
-  data: () => ({
-    //
-  }),
+  components: { ConfirmDialog },
 });
 </script>

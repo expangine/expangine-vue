@@ -92,8 +92,9 @@
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import TypeEditorBase from '../TypeEditorBase';
+import { confirm } from '@/app/Confirm';
 import { TypeVisuals } from '../../TypeVisuals';
+import TypeEditorBase from '../TypeEditorBase';
 
 
 export default TypeEditorBase<ObjectType, any>().extend({
@@ -138,14 +139,23 @@ export default TypeEditorBase<ObjectType, any>().extend({
       this.addProp = '';
       this.addType = null;
 
+      this.inputSelected.onSubAdd(propName, this.type, this.settings);
+
       this.updateType();
       this.updateSettings();
     },
-    remove(prop: string) {
+    async remove(prop: string) {
+      if (!await confirm()) {
+        return;
+      }
+
+      this.inputSelected.onSubRemove(prop, this.type, this.settings);
+
       this.$delete(this.type.options.props, prop);
       if (this.settings.sub) {
         this.$delete(this.settings.sub, prop);
       }
+
       this.updateType();
       this.updateSettings();
     },

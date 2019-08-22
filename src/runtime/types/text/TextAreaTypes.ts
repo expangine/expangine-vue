@@ -51,4 +51,6 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
   getSummary: (options) => (
     `<strong>Textarea</strong>: ${options.label}`
   ),
+  onSubAdd: () => { /**/ },
+  onSubRemove: () => { /**/ },
 };

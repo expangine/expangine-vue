@@ -27,4 +27,6 @@ export const BooleanCheckboxInput: TypeVisualInput<BooleanType, BooleanCheckboxO
   getSummary: (options) => (
     `<strong>Checkbox</strong>: ${options.label}`
   ),
+  onSubAdd: () => { /**/ },
+  onSubRemove: () => { /**/ },
 };

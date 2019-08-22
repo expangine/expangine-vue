@@ -29,4 +29,6 @@ export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptio
   getSummary: (options) => (
     `<strong>Switch</strong>: ${options.label}`
   ),
+  onSubAdd: () => { /**/ },
+  onSubRemove: () => { /**/ },
 };

@@ -41,4 +41,6 @@ export const BooleanSelectInput: TypeVisualInput<BooleanType, BooleanSelectOptio
   getSummary: (options) => (
     `<strong>Dropdown</strong>: ${options.label} ${options.labelTrue} / ${options.labelFalse}`
   ),
+  onSubAdd: () => { /**/ },
+  onSubRemove: () => { /**/ },
 };

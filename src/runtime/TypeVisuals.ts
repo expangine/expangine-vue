@@ -50,6 +50,8 @@ export interface TypeVisualInput<T extends Type, Options>
   isVisible: (type: T) => boolean;
   getSummary: (options: Options) => string;
   getDefaultOptions: () => Options;
+  onSubAdd: (sub: string, type: T, settings: TypeSettings<Options>) => void;
+  onSubRemove: (sub: string, type: T, settings: TypeSettings<Options>) => void;
 }
 
 export type TypeVisuals<

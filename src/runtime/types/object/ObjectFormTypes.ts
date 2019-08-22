@@ -37,4 +37,18 @@ export const ObjectFormInputs: TypeVisualInput<ObjectType, ObjectFormOptions> =
   getSummary: (options) => (
     `<strong>Form</strong>: ${options.title}`
   ),
+  onSubAdd: (prop, type, settings) => {
+    const columns = settings.options.columns;
+    const index = columns.findIndex((v) => v.prop === prop);
+    if (index === -1) {
+      columns.push({ prop, cols: 12 });
+    }
+  },
+  onSubRemove: (prop, type, settings) => {
+    const columns = settings.options.columns;
+    const index = columns.findIndex((v) => v.prop === prop);
+    if (index !== -1) {
+      columns.splice(index, 1);
+    }
+  },
 };
