@@ -127,3 +127,33 @@ interface Visuals {
 - At any point, you can Alias a type.
 - Every type can be required or optional, automatically \[un]wrap it with OptionalType.
 - Every type can have "alternative types" which wraps the type with ManyType. When there's one left, it's automatically downgraded.
+
+# expangine-vue
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
