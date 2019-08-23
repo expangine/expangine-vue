@@ -94,8 +94,12 @@ export default Vue.extend({
   },
   methods: {
     pullDateTime() {
-      this.dateValue = this.value.substring(0, 10);
-      this.timeValue = this.value.substring(11);
+      if (this.value) {
+        this.dateValue = this.value.substring(0, 10);
+        this.timeValue = this.value.substring(11);
+      } else {
+        this.dateValue = this.timeValue = '';
+      }
     },
     reset() {
       this.showDate = true;

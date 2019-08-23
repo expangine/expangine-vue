@@ -12,6 +12,7 @@
     <v-content>
       <router-view></router-view>
       <confirm-dialog></confirm-dialog>
+      <build-type-dialog></build-type-dialog>
     </v-content>
   </v-app>
 </template>
@@ -19,10 +20,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import ConfirmDialog from './app/ConfirmDialog.vue';
+import BuildTypeDialog from './app/BuildTypeDialog.vue';
 
 
 export default Vue.extend({
   name: 'App',
-  components: { ConfirmDialog },
+  components: { 
+    ConfirmDialog,
+    BuildTypeDialog,
+  },
 });
 </script>

@@ -6,7 +6,7 @@ export interface TypeBuildable
 {
   buildable: true;
   buildLabel: string;
-  onBuild: (parent?: Type, parentSettings?: TypeSettings<any>) => { type: Type, settings: TypeSettings<any> };
+  onBuild: (parent?: Type, parentSettings?: TypeSettings<any>) => TypeAndSettings;
 }
 
 export interface TypeNotBuildable
@@ -18,7 +18,8 @@ export interface TypeModifiable
 {
   modifiable: true;
   modifyLabel: string;
-  onModify: (type?: Type, settings?: TypeSettings<any>) => { type: Type, settings: TypeSettings<any> };
+  canModify: (type: Type, parent?: Type) => boolean;
+  onModify: (type?: Type, settings?: TypeSettings<any>) => TypeAndSettings;
 }
 
 export interface TypeNotModifiable
@@ -70,4 +71,10 @@ export interface TypeSettings<Options>
   options: Options;
   defaultValue: any;
   sub?: Record<string, TypeSettings<any>>;
+}
+
+export interface TypeAndSettings<Options = any>
+{
+  type: Type;
+  settings: TypeSettings<Options>;
 }

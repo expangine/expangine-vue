@@ -10,6 +10,7 @@
           :read-only="readOnly"
           @input:type="updateType"
           @input:settings="updateSettings"
+          @change:type="changeType"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -53,6 +54,7 @@
                 :settings="settings.sub[prop]"
                 :read-only="readOnly"
                 @input="updateType"
+                @change:type="onChangeType(prop, $event)"
               ></ex-type-editor>
             </td>
           </tr>
@@ -61,7 +63,7 @@
       <tfoot v-if="!readOnly">
         <tr>
           <td class="cell-top pa-3">
-            <v-btn icon @click="add" :disabled="!isValidProp || !isValidType">
+            <v-btn icon @click="add" :disabled="!isValidProp">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </td>
@@ -75,13 +77,13 @@
             ></v-text-field>
           </td>
           <td class="pa-1">
-            <v-select
+            <!-- <v-select
               solo
               hide-details
               placeholder="Type"
               :items="availableTypes"
               v-model="addType"
-            ></v-select>
+            ></v-select> -->
           </td>
         </tr>
       </tfoot>
@@ -91,42 +93,32 @@
 
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
-import { ListOptions } from '../../../common';
 import { confirm } from '../../../app/Confirm';
-import { TypeVisuals } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
+import { getBuildType } from '../../../app/BuildType';
+import { TypeAndSettings } from '../../TypeVisuals';
 
 
 export default TypeEditorBase<ObjectType, any>().extend({
   name: 'ObjectEditor',
   data: () => ({
     addProp: '',
-    addType: null as null | TypeVisuals<ObjectType, true, any>,
   }),
   computed: {
     isValidProp(): boolean {
       return !!(this.addProp && !(this.addProp in this.type.options.props));
     },
-    isValidType(): boolean {
-      return !!this.addType;
-    },
-    availableTypes(): ListOptions<TypeVisuals | null> {
-      const options: ListOptions<TypeVisuals | null> = this.registry.getBuildableTypeOptions();
-      options.unshift({
-        text: 'Type',
-        value: null,
-      });
-      return options;
-    },
   },
   methods: {
-    add() {
-      if (!this.addProp || !this.addType) {
+    async add() {
+      const addType = await getBuildType({ registry: this.registry });
+
+      if (!this.addProp || !addType) {
         return;
       }
 
       const propName = this.addProp;
-      const { type: propType, settings: propSettings } = this.addType.onBuild(this.type, this.settings);
+      const { type: propType, settings: propSettings } = addType.onBuild(this.type, this.settings);
 
       this.$set(this.type.options.props, propName, propType);
       if (!this.settings.sub) {
@@ -137,7 +129,6 @@ export default TypeEditorBase<ObjectType, any>().extend({
       }
 
       this.addProp = '';
-      this.addType = null;
 
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
@@ -154,6 +145,15 @@ export default TypeEditorBase<ObjectType, any>().extend({
       this.$delete(this.type.options.props, prop);
       if (this.settings.sub) {
         this.$delete(this.settings.sub, prop);
+      }
+
+      this.updateType();
+      this.updateSettings();
+    },
+    onChangeType(prop: string, result: TypeAndSettings) {
+      this.type.options.props[prop] = result.type;
+      if (this.settings.sub) {
+        this.settings.sub[prop] = result.settings;
       }
 
       this.updateType();

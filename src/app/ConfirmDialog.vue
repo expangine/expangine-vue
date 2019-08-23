@@ -10,11 +10,13 @@
       ></v-card-text>
       <v-card-actions>
         <v-btn 
+          color="primary"
           v-html="confirm" 
           @click="handle(true)"
         ></v-btn>
         <v-spacer></v-spacer>
         <v-btn 
+          color="secondary"
           v-html="unconfirm" 
           @click="handle(false)"
         ></v-btn>

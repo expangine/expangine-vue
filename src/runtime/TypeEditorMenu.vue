@@ -139,37 +139,23 @@
         </v-card>
       </v-menu>
 
-      <v-list-item v-if="isRequired" @click="makeOptional">
-        <v-list-item-title>
-          Make Optional
-        </v-list-item-title>
-      </v-list-item>
-
-      <v-list-item v-if="isOptional" @click="makeRequired">
-        <v-list-item-title>
-          Make Required
-        </v-list-item-title>
-      </v-list-item>
-
-      <v-list-item v-if="isAlternative" @click="removeAlternative">
-        <v-list-item-title>
-          Remove Alternative Type
-        </v-list-item-title>
-      </v-list-item>
-
-      <v-list-item v-if="isOnly" @click="addAlternative">
-        <v-list-item-title>
-          Add Alternative Type
-        </v-list-item-title>
-      </v-list-item>
+      <template v-for="modify in modifiableOptions">
+        <v-list-item :key="modify.text" @click="onModify(modify)">
+          <v-list-item-title 
+            v-html="modify.text"
+          ></v-list-item-title>
+        </v-list-item>
+      </template>
 
     </v-list>
   </v-menu>
 </template>
 
 <script lang="ts">
-import { Type, OptionalType, ManyType } from 'expangine-runtime';
+import { Type } from 'expangine-runtime';
 import TypeEditorBase from './types/TypeEditorBase';
+import { ListOptions } from '../common';
+import { TypeVisuals } from './TypeVisuals';
 
 
 export default TypeEditorBase<Type, any>().extend({
@@ -184,6 +170,9 @@ export default TypeEditorBase<Type, any>().extend({
       get(): boolean {
         return !!this.$slots.configure;
       },
+    },
+    modifiableOptions(): ListOptions<TypeVisuals<any, any, true>> {
+      return this.registry.getModifiableTypeOptions(this.type, this.parent);
     },
   },
   methods: {
@@ -202,26 +191,9 @@ export default TypeEditorBase<Type, any>().extend({
       this.settings.options = next;
       this.updateSettings();
     },
-    makeOptional() {
-      this.$emit('change', new OptionalType(this.type));
-      this.done();
-    },
-    makeRequired() {
-      this.$emit('change', this.type);
-      this.done();
-    },
-    removeAlternative() {
-      if (this.parent instanceof ManyType) {
-        const types = this.parent.options;
-        const index = types.indexOf(this.type);
-        if (index !== -1) {
-          types.splice(index, 1);
-        }
-      }
-      this.done();
-    },
-    addAlternative() {
-      this.$emit('change', new ManyType([this.type]));
+    onModify(modifiableType: TypeVisuals<any, any, true>) {
+      const result = modifiableType.onModify(this.type, this.settings);
+      this.$emit('change:type', result);
       this.done();
     },
     done() {

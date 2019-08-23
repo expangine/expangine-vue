@@ -9,6 +9,7 @@
         :read-only="readOnly"
         @input:type="updateType"
         @input:settings="updateSettings"
+        @change:type="changeType"
       >
         <template #configure>
           <v-list-item>
