@@ -16,7 +16,7 @@
       ></ex-type-input>
     </v-list-item-content>
   </v-list-item>
-  <v-btn v-else @click="addValue">
+  <v-btn v-else @click="addValue" class="mt-3">
     Add {{ valueName }}
   </v-btn>
 </template>

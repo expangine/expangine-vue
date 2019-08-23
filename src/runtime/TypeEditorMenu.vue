@@ -145,8 +145,13 @@
             v-html="modify.text"
           ></v-list-item-title>
         </v-list-item>
+        
       </template>
-
+      <v-list-item @click="changeType">
+        <v-list-item-title>
+          Change Type
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -155,8 +160,10 @@
 import { Type } from 'expangine-runtime';
 import { ListOptions } from '../common';
 import { TypeVisuals } from './TypeVisuals';
-import TypeEditorBase from './types/TypeEditorBase';
 import { confirm } from '../app/Confirm';
+import { getBuildType } from '../app/BuildType';
+import TypeEditorBase from './types/TypeEditorBase';
+
 
 
 export default TypeEditorBase<Type, any>().extend({
@@ -192,13 +199,30 @@ export default TypeEditorBase<Type, any>().extend({
       this.settings.options = next;
       this.updateSettings();
     },
+    async changeType() {
+      const newType = await getBuildType({ 
+        registry: this.registry, 
+        title: 'Choose New Type',
+        ok: 'Change',
+        exclude: { [this.type.getId()]: true },
+      });
+
+      if (!newType) {
+        return;
+      }
+
+      const result = await newType.onBuild();
+
+      this.$emit('change:type', result);
+      this.done();
+    },
     async onModify(modifiableType: TypeVisuals<any, any, true>) {
       if (!await confirm()) {
         return;
       }
 
       const result = await modifiableType.onModify(this.type, this.settings);
-      
+
       this.$emit('change:type', result);
       this.done();
     },
