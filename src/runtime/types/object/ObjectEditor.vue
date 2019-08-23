@@ -118,7 +118,7 @@ export default TypeEditorBase<ObjectType, any>().extend({
       }
 
       const propName = this.addProp;
-      const { type: propType, settings: propSettings } = addType.onBuild(this.type, this.settings);
+      const { type: propType, settings: propSettings } = await addType.onBuild(this.type, this.settings);
 
       this.$set(this.type.options.props, propName, propType);
       if (!this.settings.sub) {

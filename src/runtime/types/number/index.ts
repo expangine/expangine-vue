@@ -15,16 +15,14 @@ const NumberVisuals: TypeVisuals<NumberType, true, false> =
   editor: NumberEditor,
   buildable: true,
   buildLabel: 'Number',
-  onBuild(parent, parentSettings) {
-    return { 
-      type: new NumberType({ }), 
-      settings: { 
-        input: 'textbox', 
-        defaultValue: '',
-        options: TextBoxInput.getDefaultOptions(), 
-      },
-    };
-  },
+  onBuild: async () => ({
+    type: new NumberType({ }), 
+    settings: { 
+      input: 'textbox', 
+      defaultValue: '',
+      options: TextBoxInput.getDefaultOptions(), 
+    },
+  }),
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'slider'],
   inputs: {

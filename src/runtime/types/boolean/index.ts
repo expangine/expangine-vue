@@ -17,16 +17,14 @@ const BooleanVisuals: TypeVisuals<BooleanType, true, false> =
   editor: BooleanEditor,
   buildable: true,
   buildLabel: 'Boolean',
-  onBuild(parent, parentSettings) {
-    return { 
-      type: new BooleanType({ }), 
-      settings: { 
-        input: 'checkbox', 
-        defaultValue: false,
-        options: BooleanCheckboxInput.getDefaultOptions(), 
-      },
-    };
-  },
+  onBuild: async () => ({
+    type: new BooleanType({ }), 
+    settings: { 
+      input: 'checkbox', 
+      defaultValue: false,
+      options: BooleanCheckboxInput.getDefaultOptions(), 
+    },
+  }),
   defaultInput: 'checkbox',
   inputsOrder: ['checkbox', 'switch', 'radio', 'select'],
   inputs: {

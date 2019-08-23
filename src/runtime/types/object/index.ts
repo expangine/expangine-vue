@@ -15,7 +15,7 @@ const ObjectVisuals: TypeVisuals<ObjectType, true, false> =
   allowsDefault: false,
   buildable: true,
   buildLabel: 'Object',
-  onBuild: (parent, parentSettings) => ({
+  onBuild: async (parent, parentSettings) => ({
     type: new ObjectType({ props: {} }),
     settings: { 
       input: 'form', 

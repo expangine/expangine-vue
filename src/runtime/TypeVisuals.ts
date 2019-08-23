@@ -6,7 +6,7 @@ export interface TypeBuildable
 {
   buildable: true;
   buildLabel: string;
-  onBuild: (parent?: Type, parentSettings?: TypeSettings<any>) => TypeAndSettings;
+  onBuild: (parent?: Type, parentSettings?: TypeSettings<any>) => Promise<TypeAndSettings>;
 }
 
 export interface TypeNotBuildable
@@ -19,7 +19,7 @@ export interface TypeModifiable
   modifiable: true;
   modifyLabel: string;
   canModify: (type: Type, parent?: Type) => boolean;
-  onModify: (type?: Type, settings?: TypeSettings<any>) => TypeAndSettings;
+  onModify: (type?: Type, settings?: TypeSettings<any>) => Promise<TypeAndSettings>;
 }
 
 export interface TypeNotModifiable

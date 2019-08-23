@@ -15,16 +15,14 @@ const DateVisuals: TypeVisuals<DateType, true, false> =
   editor: DateEditor,
   buildable: true,
   buildLabel: 'Date',
-  onBuild(parent, parentSettings) {
-    return { 
-      type: new DateType({ }), 
-      settings: { 
-        input: 'picker', 
-        defaultValue: new Date(),
-        options: PickerInput.getDefaultOptions(), 
-      },
-    };
-  },
+  onBuild: async () => ({
+    type: new DateType({ }), 
+    settings: { 
+      input: 'picker', 
+      defaultValue: new Date(),
+      options: PickerInput.getDefaultOptions(), 
+    },
+  }),
   defaultInput: 'picker',
   inputsOrder: ['picker', 'textbox'],
   inputs: {

@@ -191,8 +191,8 @@ export default TypeEditorBase<Type, any>().extend({
       this.settings.options = next;
       this.updateSettings();
     },
-    onModify(modifiableType: TypeVisuals<any, any, true>) {
-      const result = modifiableType.onModify(this.type, this.settings);
+    async onModify(modifiableType: TypeVisuals<any, any, true>) {
+      const result = await modifiableType.onModify(this.type, this.settings);
       this.$emit('change:type', result);
       this.done();
     },

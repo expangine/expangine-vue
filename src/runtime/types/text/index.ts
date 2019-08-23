@@ -15,16 +15,14 @@ const TextVisuals: TypeVisuals<TextType, true, false> =
   editor: TextEditor,
   buildable: true,
   buildLabel: 'Text',
-  onBuild(parent, parentSettings) {
-    return { 
-      type: new TextType({ }), 
-      settings: { 
-        input: 'textbox', 
-        defaultValue: '',
-        options: TextBoxInput.getDefaultOptions(), 
-      },
-    };
-  },
+  onBuild: async () => ({
+    type: new TextType({ }), 
+    settings: { 
+      input: 'textbox', 
+      defaultValue: '',
+      options: TextBoxInput.getDefaultOptions(), 
+    },
+  }),
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'textarea'],
   inputs: {

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="isReady">
     <v-row>
       <v-col>
         <v-toolbar height="64">
@@ -55,14 +55,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Type, defs } from 'expangine-runtime';
+import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
 import VisualsStarting from '../runtime/types/object';
 import Registry from '../runtime';
-import { TypeVisuals } from '../runtime/TypeVisuals';
-import { defs } from 'expangine-runtime';
 
 
 const Visuals: TypeVisuals<any, true, any> = VisualsStarting;
-const { type, settings } = Visuals.onBuild();
 
 function copy(a: any): any {
   return JSON.parse(JSON.stringify(a));
@@ -70,22 +69,25 @@ function copy(a: any): any {
 
 export default Vue.extend({
   name: 'home',
-  mounted() {
+  async mounted() {
     (window as any).registry = Registry;
     (window as any).home = this;
 
-    this.loadType();
+    await this.loadType();
     this.loadData();
   },
   data: () => ({
     mode: 0,
-    type,
-    settings,
+    type: null as null | Type,
+    settings: null as null | TypeSettings<any>,
     registry: Registry,
     readOnly: false,
-    data: copy(settings.defaultValue),
+    data: null as null | any,
   }),
   computed: {
+    isReady(): boolean {
+      return !!(this.type && this.settings);
+    },
     isDesign(): boolean {
       return this.mode === 0 || this.mode === undefined;
     },
@@ -94,8 +96,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    reset() {
-      const built = Visuals.onBuild();
+    async reset() {
+      const built = await Visuals.onBuild();
 
       this.type = built.type;
       this.settings = built.settings;
@@ -105,22 +107,36 @@ export default Vue.extend({
       this.saveData();
     },
     saveType() {
+      if (this.type === null || this.settings === null) {
+        return;
+      }
+
       window.console.log('saving type & settings');
 
       localStorage.setItem('type', JSON.stringify(this.type.encode()));
       localStorage.setItem('settings', JSON.stringify(this.settings));
     },
     saveData() {
+      if (this.data === null) {
+        return;
+      }
+
       window.console.log('saving data');
 
       localStorage.setItem('data', JSON.stringify(this.data));
     },
-    loadType() {
-      this.type = this.loadVar('type', this.type, (t) => defs.getType(t));
-      this.settings = this.loadVar('settings', this.settings);
+    async loadType() {
+      const defaults = await Visuals.onBuild();
+
+      this.type = this.loadVar('type', defaults.type, (t) => defs.getType(t));
+      this.settings = this.loadVar('settings', defaults.settings);
     },
     loadData() {
-      this.data = this.loadVar('data', this.data);
+      if (this.settings === null) {
+        return;
+      }
+
+      this.data = this.loadVar('data', copy(this.settings.defaultValue));
     },
     loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V): V {
       const stored = localStorage.getItem(varName);
