@@ -13,6 +13,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
     {
       updateSettings(): void;
       updateType(): void;
+      updateTypeAndSettings(): void;
       changeType(result: TypeAndSettings): void;
     },
     {
@@ -113,6 +114,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
       updateSettings() {
         this.$emit('input:settings', this.settings);
+      },
+      updateTypeAndSettings() {
+        this.updateType();
+        this.updateSettings();
       },
       changeType(result: TypeAndSettings) {
         this.$emit('change:type', result);

@@ -1,11 +1,11 @@
 
 import { OptionalType, AnyType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { OptionalInput } from './OptionalTypes';
+import { OptionalInput, OptionalSubs } from './OptionalTypes';
 import OptionalEditor from './OptionalEditor.vue';
 
 
-const OptionalVisuals: TypeVisuals<OptionalType, false, true, 'innerType'> = 
+const OptionalVisuals: TypeVisuals<OptionalType, false, true, OptionalSubs> = 
 {
   type: OptionalType,
   newInstance: () => new OptionalType(new AnyType({})),

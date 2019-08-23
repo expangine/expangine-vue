@@ -36,11 +36,11 @@
 import { OptionalType } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { confirm } from '../../../app/Confirm';
-import { OptionalSubs } from './OptionalTypes';
+import { OptionalSubs, OptionalOptions } from './OptionalTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
 
-export default TypeEditorBase<OptionalType, any, OptionalSubs>().extend({
+export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().extend({
   name: 'OptionalEditor',
   data: () => ({
     menu: false,
@@ -59,9 +59,8 @@ export default TypeEditorBase<OptionalType, any, OptionalSubs>().extend({
     onChangeType({ type: innerType, settings }: TypeAndSettings) {
       this.type.options = innerType;
       this.settings.sub.innerType = settings;
-      
-      this.updateType();
-      this.updateSettings();
+
+      this.updateTypeAndSettings();
     },
   },
 });

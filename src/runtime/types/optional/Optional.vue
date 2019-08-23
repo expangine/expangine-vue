@@ -1,6 +1,6 @@
 <template>
   <v-list-item v-if="hasValue">
-    <v-list-item-avatar class="pr-0">
+    <v-list-item-avatar class="mr-0">
       <v-btn icon @click="removeValue">
         <v-icon>mdi-minus</v-icon>
       </v-btn>

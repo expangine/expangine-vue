@@ -125,8 +125,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
-      this.updateType();
-      this.updateSettings();
+      this.updateTypeAndSettings();
     },
     async remove(prop: string) {
       if (!await confirm()) {
@@ -140,8 +139,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         this.$delete(this.settings.sub, prop);
       }
 
-      this.updateType();
-      this.updateSettings();
+      this.updateTypeAndSettings();
     },
     onChangeType(prop: string, result: TypeAndSettings) {
       this.type.options.props[prop] = result.type;
@@ -149,8 +147,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         this.settings.sub[prop] = result.settings;
       }
 
-      this.updateType();
-      this.updateSettings();
+      this.updateTypeAndSettings();
     },
   },
 });

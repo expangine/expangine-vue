@@ -2,7 +2,7 @@
 import { VueConstructor } from 'vue';
 import { Type, TypeClass } from 'expangine-runtime';
 
-export type SubsType = string | number | unknown;
+export type SubsType = string | unknown;
 
 export interface TypeBuildable<Subs extends SubsType = unknown>
 {
@@ -55,7 +55,7 @@ export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unk
   getSummary: (options: Options) => string;
   getDefaultOptions: () => Options;
 } & (
-  Subs extends string
+  Subs extends (string | number)
     ? {
         onSubAdd: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
         onSubRemove: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
@@ -76,7 +76,7 @@ export type TypeVisuals<
 
 export type TypeSettings<Options, Subs extends SubsType = unknown> =
   { input: string; options: Options; defaultValue: any; } 
-  & (Subs extends string 
+  & (Subs extends string
       ? { sub: Record<Subs, TypeSettings<any, any>> }
       : { }
     );
