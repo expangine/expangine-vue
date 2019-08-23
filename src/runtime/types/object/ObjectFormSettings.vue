@@ -87,7 +87,7 @@
 
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
-import { ListOptions } from '@/common';
+import { ListOptions } from '../../../common';
 import { ObjectFormOptions } from './ObjectFormTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
 
@@ -102,42 +102,46 @@ const sizeOptions: ListOptions<SizeOption> = [
   { text: '4k and ultra-wides (>1904px)', value: { columns: 'xl', offset: 'offsetXl' } },
 ];
 
+const columnOptions: ListOptions<number | undefined> = [
+  { text: 'auto', value: undefined },
+  { text: '1', value: 1 },
+  { text: '2', value: 2 },
+  { text: '3', value: 3 },
+  { text: '4', value: 4 },
+  { text: '5', value: 5 },
+  { text: '6', value: 6 },
+  { text: '7', value: 7 },
+  { text: '8', value: 8 },
+  { text: '9', value: 9},
+  { text: '10', value: 10 },
+  { text: '11', value: 11 },
+  { text: '12', value: 12 },
+];
+
+const offsetOptions: ListOptions<number | undefined> = [
+  { text: '0', value: undefined },
+  { text: '1', value: 1 },
+  { text: '2', value: 2 },
+  { text: '3', value: 3 },
+  { text: '4', value: 4 },
+  { text: '5', value: 5 },
+  { text: '6', value: 6 },
+  { text: '7', value: 7 },
+  { text: '8', value: 8 },
+  { text: '9', value: 9},
+  { text: '10', value: 10 },
+  { text: '11', value: 11 },
+];
+
 export default TypeSettingsBase<ObjectType, ObjectFormOptions>().extend({
   data: () => ({
     outside: null as null | string,
     size: sizeOptions[0].value,
-    sizeOptions,
-    columnOptions: [
-      { text: 'auto', value: undefined },
-      { text: '1', value: 1 },
-      { text: '2', value: 2 },
-      { text: '3', value: 3 },
-      { text: '4', value: 4 },
-      { text: '5', value: 5 },
-      { text: '6', value: 6 },
-      { text: '7', value: 7 },
-      { text: '8', value: 8 },
-      { text: '9', value: 9},
-      { text: '10', value: 10 },
-      { text: '11', value: 11 },
-      { text: '12', value: 12 },
-    ] as ListOptions<number>,
-    offsetOptions: [
-      { text: '0', value: undefined },
-      { text: '1', value: 1 },
-      { text: '2', value: 2 },
-      { text: '3', value: 3 },
-      { text: '4', value: 4 },
-      { text: '5', value: 5 },
-      { text: '6', value: 6 },
-      { text: '7', value: 7 },
-      { text: '8', value: 8 },
-      { text: '9', value: 9},
-      { text: '10', value: 10 },
-      { text: '11', value: 11 },
-    ] as ListOptions<number>,
   }),
   computed: {
+    sizeOptions: () => sizeOptions,
+    columnOptions: () => columnOptions,
+    offsetOptions: () => offsetOptions,
     hasOutside(): boolean {
       return this.outsideOptions.length > 0;
     },

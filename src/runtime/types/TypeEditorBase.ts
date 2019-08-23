@@ -23,6 +23,7 @@ export default function <T extends Type, O>()
       inputs: ListOptions;
       inputSelected: TypeVisualInput<T, O>;
       inputSettings: VueConstructor;
+      inputInput: VueConstructor;
       summary: string;
       hasDefault: boolean;
     },
@@ -94,6 +95,9 @@ export default function <T extends Type, O>()
       },
       inputSettings(): VueConstructor {
         return this.inputSelected.settings;
+      },
+      inputInput(): VueConstructor {
+        return this.inputSelected.input;
       },
       summary(): string {
         return this.inputSelected.getSummary(this.settings.options);

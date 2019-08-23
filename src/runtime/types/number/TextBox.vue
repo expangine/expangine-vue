@@ -19,12 +19,6 @@ import TypeInputBase from '../TypeInputBase';
 
 export default TypeInputBase<NumberType, TextBoxOptions, number | string>([Number, String]).extend({
   computed: {
-    hasHint(): boolean {
-      return !this.hideHint;
-    },
-    hideHint(): boolean {
-      return !this.settings.options.hint;
-    },
     valueNumber: {
       get(): string {
         return isFinite(parseFloat(this.value as string)) ? this.value.toString() : '';
@@ -32,6 +26,12 @@ export default TypeInputBase<NumberType, TextBoxOptions, number | string>([Numbe
       set(value: string) {
         this.input(parseFloat(value));
       },
+    },
+    hasHint(): boolean {
+      return !this.hideHint;
+    },
+    hideHint(): boolean {
+      return !this.settings.options.hint;
     },
   },
   methods: {

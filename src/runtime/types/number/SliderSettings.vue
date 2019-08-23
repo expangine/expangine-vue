@@ -50,16 +50,19 @@
 import { NumberType } from 'expangine-runtime';
 import { SliderOptions } from './SliderTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
+import { ListOptions } from '../../../common';
 
+
+const thumbLabelOptions: ListOptions<string | boolean> = [
+  { text: 'None', value: false },
+  { text: 'Show on drag', value: true },
+  { text: 'Show always', value: 'always' },
+];
 
 export default TypeSettingsBase<NumberType, SliderOptions>().extend({
-  data: () => ({
-    thumbLabelOptions: [
-      { text: 'None', value: false },
-      { text: 'Show on drag', value: true },
-      { text: 'Show always', value: 'always' },
-    ],
-  }),
+  computed: {
+    thumbLabelOptions: () => thumbLabelOptions,
+  },
 });
 </script>
 

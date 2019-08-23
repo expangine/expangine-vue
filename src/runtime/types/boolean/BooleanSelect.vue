@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { BooleanType } from 'expangine-runtime';
-import { ListOptions } from '@/common';
+import { ListOptions } from '../../../common';
 import { BooleanSelectOptions } from './BooleanSelectTypes';
 import TypeInputBase from '../TypeInputBase';
 

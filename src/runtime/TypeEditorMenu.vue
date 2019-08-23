@@ -105,11 +105,11 @@
               <v-list-item-subtitle v-html="inputSelected.description"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-sheet :dark="settings.options.dark" class="mx-4 my-2 pa-3" elevation="2">
+          <v-sheet max-height="300" :dark="settings.options.dark" class="scrollable mx-4 my-2 pa-3" elevation="2">
             <div class="pb-2">Preview</div>
             <component
               read-only
-              :is="inputSelected.input"
+              :is="inputInput"
               :type="type"
               :settings="settings"
               :registry="registry"

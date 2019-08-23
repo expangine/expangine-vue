@@ -91,8 +91,8 @@
 
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
-import { ListOptions } from '@/common';
-import { confirm } from '@/app/Confirm';
+import { ListOptions } from '../../../common';
+import { confirm } from '../../../app/Confirm';
 import { TypeVisuals } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
 
