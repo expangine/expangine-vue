@@ -32,9 +32,8 @@ export const PickerInput: TypeVisualInput<DateType, PickerOptions> =
     dense: false,
     flat: false,
   }),
+  getName: (options) => options.label,
   getSummary: (options) => (
     `<strong>Picker</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

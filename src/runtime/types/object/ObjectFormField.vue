@@ -15,7 +15,7 @@ import { TypeSettings } from '../../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<ObjectType, ObjectFormOptions, any>(Object).extend({
+export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object).extend({
   props: {
     prop: {
       type: String,

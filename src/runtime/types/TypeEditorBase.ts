@@ -2,11 +2,11 @@
 import Vue, { VueConstructor } from 'vue';
 import { Type, OptionalType, ManyType } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings } from '../TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings, SubsType } from '../TypeVisuals';
 import { Registry } from '../Registry';
 
 
-export default function <T extends Type, O>()
+export default function <T extends Type, O, S extends SubsType = unknown>()
 {
   return Vue.extend<
     unknown,
@@ -20,9 +20,9 @@ export default function <T extends Type, O>()
       isOptional: boolean;
       isAlternative: boolean;
       isOnly: boolean;
-      visuals: TypeVisuals<T>;
+      visuals: TypeVisuals<T, any, any, S>;
       inputs: ListOptions;
-      inputSelected: TypeVisualInput<T, O>;
+      inputSelected: TypeVisualInput<T, O, S>;
       inputSettings: VueConstructor;
       inputInput: VueConstructor;
       summary: string;
@@ -33,7 +33,7 @@ export default function <T extends Type, O>()
       parent: Type;
       readOnly: boolean;
       registry: Registry;
-      settings: TypeSettings<O>;
+      settings: TypeSettings<O, S>;
     }
   >({
     props: {
@@ -53,7 +53,7 @@ export default function <T extends Type, O>()
         required: true,
       },
       settings: {
-        type: Object as () => TypeSettings<O>,
+        type: Object as () => TypeSettings<O, S>,
         required: true,
       },
     },
@@ -70,7 +70,7 @@ export default function <T extends Type, O>()
       isOnly(): boolean {
         return !this.isAlternative;
       },
-      visuals(): TypeVisuals<T> {
+      visuals(): TypeVisuals<T, any, any, S> {
         return this.registry.getVisuals(this.type);
       },
       inputs(): ListOptions {
@@ -91,7 +91,7 @@ export default function <T extends Type, O>()
 
         return items;
       },
-      inputSelected(): TypeVisualInput<T, O> {
+      inputSelected(): TypeVisualInput<T, O, S> {
         return this.visuals.inputs[this.settings.input];
       },
       inputSettings(): VueConstructor {

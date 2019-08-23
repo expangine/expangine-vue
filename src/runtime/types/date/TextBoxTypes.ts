@@ -37,9 +37,8 @@ export const TextBoxInput: TypeVisualInput<DateType, TextBoxOptions> =
     dense: false,
     flat: false,
   }),
+  getName: (options) => options.label,
   getSummary: (options) => (
     `<strong>Textbox</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

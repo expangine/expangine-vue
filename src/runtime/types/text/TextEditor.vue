@@ -83,6 +83,7 @@
 import { TextType } from 'expangine-runtime';
 import TypeEditorBase from '../TypeEditorBase';
 
+
 export default TypeEditorBase<TextType, any>().extend({
   name: 'TextEditor',
 });

@@ -1,7 +1,9 @@
+import { PropType } from 'vue';
 import { isString } from 'expangine-runtime';
 
 export type ListOptions<T = string> = Array<{ text: string; value: T }>;
 
+export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol];
 
 export function formatDate<O = undefined>(
   date: Date | string | undefined, 

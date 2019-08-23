@@ -48,9 +48,8 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
     dense: false,
     flat: false,
   }),
+  getName: (options) => options.label,
   getSummary: (options) => (
     `<strong>Textarea</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

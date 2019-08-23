@@ -44,9 +44,8 @@ export const TextBoxInput: TypeVisualInput<TextType, TextBoxOptions> =
     flat: false,
     type: 'text',
   }),
+  getName: (options) => options.label,
   getSummary: (options: TextBoxOptions) => (
     `<strong>Textbox</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

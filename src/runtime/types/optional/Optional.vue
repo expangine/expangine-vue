@@ -1,0 +1,71 @@
+<template>
+  <v-list-item v-if="hasValue">
+    <v-list-item-avatar class="pr-0">
+      <v-btn icon @click="removeValue">
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+    </v-list-item-avatar>
+    <v-list-item-content class="pa-1">
+      <ex-type-input
+        :value="value"
+        :type="type.options"
+        :read-only="readOnly"
+        :registry="registry"
+        :settings="settings.sub.innerType"
+        @input="input"
+      ></ex-type-input>
+    </v-list-item-content>
+  </v-list-item>
+  <v-btn v-else @click="addValue">
+    Add {{ valueName }}
+  </v-btn>
+</template>
+
+<script lang="ts">
+import { OptionalType } from 'expangine-runtime';
+import { OptionalOptions, OptionalSubs } from './OptionalTypes';
+import { PropTypeAny } from '../../../common';
+import { confirm } from '../../../app/Confirm';
+import { TypeVisuals, TypeVisualInput, TypeSettings } from '../../TypeVisuals';
+import TypeInputBase from '../TypeInputBase';
+
+
+export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(PropTypeAny).extend({
+  computed: {
+    hasValue: {
+      cache: false,
+      get(): boolean {
+        return this.value !== undefined;
+      },
+    },
+    innerTypeVisuals(): TypeVisuals {
+      return this.registry.getVisuals(this.type.options);
+    },
+    innerTypeSettings(): TypeSettings<any> {
+      return this.settings.sub.innerType;
+    },
+    innerTypeInput(): TypeVisualInput<any, any> {
+      return this.innerTypeVisuals.inputs[this.innerTypeSettings.input];
+    },
+    valueName(): string {
+      return this.innerTypeInput.getName(this.innerTypeSettings.options) || this.innerTypeVisuals.name;
+    },
+  },
+  methods: {
+    async removeValue() {
+      if (!await confirm()) {
+        return;
+      }
+      this.$emit('input', undefined);
+    },
+    addValue() {
+      this.$emit('input', this.settings.sub.innerType.defaultValue);
+      this.$forceUpdate();
+    },
+  },
+});
+</script>
+
+<style lang="sass" scoped>
+
+</style>

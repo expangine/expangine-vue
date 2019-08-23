@@ -28,9 +28,8 @@ export const SliderInput: TypeVisualInput<NumberType, SliderOptions> =
     step: 1,
     thumbLabel: false,
   }),
+  getName: (options) => options.label,
   getSummary: (options: SliderOptions) => (
     `<strong>Slider</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

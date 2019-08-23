@@ -1,5 +1,6 @@
 <template>
   <v-slider
+    class="mt-4"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :disabled="readOnly"

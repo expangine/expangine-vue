@@ -1,11 +1,11 @@
 
 import Vue, { PropType } from 'vue';
 import { Type } from 'expangine-runtime';
-import { TypeVisuals, TypeVisualInput, TypeSettings } from '../TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, SubsType } from '../TypeVisuals';
 import { Registry } from '../Registry';
 
 
-export default function<T extends Type, O, V>(type: PropType<V>)
+export default function<T extends Type, O, V, S extends SubsType = unknown>(type: PropType<V>)
 {
   return Vue.extend<
     unknown,
@@ -16,7 +16,7 @@ export default function<T extends Type, O, V>(type: PropType<V>)
     },
     {
       invalid: boolean;
-      visuals: TypeVisuals<T>;
+      visuals: TypeVisuals<T, any, any, S>;
       inputSelected: TypeVisualInput<T, O>
     },
     {
@@ -24,7 +24,7 @@ export default function<T extends Type, O, V>(type: PropType<V>)
       type: T;
       readOnly: boolean;
       registry: Registry;
-      settings: TypeSettings<O>;
+      settings: TypeSettings<O, S>;
     }
   >({
     props: {
@@ -44,7 +44,7 @@ export default function<T extends Type, O, V>(type: PropType<V>)
         required: true,
       },
       settings: {
-        type: Object as () => TypeSettings<O>,
+        type: Object as () => TypeSettings<O, S>,
         required: true,
       },
     },
@@ -52,10 +52,10 @@ export default function<T extends Type, O, V>(type: PropType<V>)
       invalid(): boolean {
         return !this.type.isValid(this.value);
       },
-      visuals(): TypeVisuals<T> {
+      visuals(): TypeVisuals<T, any, any, S> {
         return this.registry.getVisuals(this.type);
       },
-      inputSelected(): TypeVisualInput<T, O> {
+      inputSelected(): TypeVisualInput<T, O, S> {
         return this.visuals.inputs[this.settings.input];
       },
     },

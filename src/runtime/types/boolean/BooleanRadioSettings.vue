@@ -30,7 +30,7 @@
         hide-details
         label="Dark"
         v-model="value.dark"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -38,7 +38,7 @@
         hide-details
         label="Row"
         v-model="value.row"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
   </v-list>

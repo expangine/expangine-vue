@@ -26,9 +26,8 @@ export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptio
     hint: '',
     inset: false,
   }),
+  getName: (options) => options.label,
   getSummary: (options) => (
     `<strong>Switch</strong>: ${options.label}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

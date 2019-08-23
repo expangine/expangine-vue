@@ -2,11 +2,13 @@
 import { VueConstructor } from 'vue';
 import { Type, TypeClass } from 'expangine-runtime';
 
-export interface TypeBuildable
+export type SubsType = string | number | unknown;
+
+export interface TypeBuildable<Subs extends SubsType = unknown>
 {
   buildable: true;
   buildLabel: string;
-  onBuild: (parent?: Type, parentSettings?: TypeSettings<any>) => Promise<TypeAndSettings>;
+  onBuild: (parent?: Type, parentSettings?: TypeSettings<any, any>) => Promise<TypeAndSettings<any, Subs>>;
 }
 
 export interface TypeNotBuildable
@@ -14,12 +16,12 @@ export interface TypeNotBuildable
   buildable?: false;
 }
 
-export interface TypeModifiable
+export interface TypeModifiable<Subs extends SubsType = unknown>
 {
   modifiable: true;
   modifyLabel: string;
   canModify: (type: Type, parent?: Type) => boolean;
-  onModify: (type?: Type, settings?: TypeSettings<any>) => Promise<TypeAndSettings>;
+  onModify: (type: Type, settings: TypeSettings<any, any>) => Promise<TypeAndSettings<any, Subs>>;
 }
 
 export interface TypeNotModifiable
@@ -27,7 +29,7 @@ export interface TypeNotModifiable
   modifiable?: false;
 }
 
-export interface TypeVisualRequired<T extends Type, OptionMap = any>
+export interface TypeVisualRequired<T extends Type, Subs extends SubsType = unknown, OptionMap = any>
 {
   type: TypeClass<T>;
   newInstance: () => T;
@@ -38,43 +40,49 @@ export interface TypeVisualRequired<T extends Type, OptionMap = any>
   allowsDefault?: boolean;
   inputsOrder: Array<keyof OptionMap>;
   inputs: {
-    [P in keyof OptionMap]: TypeVisualInput<T, OptionMap[P]>;
+    [P in keyof OptionMap]: TypeVisualInput<T, OptionMap[P], Subs>;
   };
 }
 
-export interface TypeVisualInput<T extends Type, Options>
+export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unknown> =
 {
   name: string;
   description: string;
   settings: VueConstructor;
   input: VueConstructor;
   isVisible: (type: T) => boolean;
+  getName: (options: Options) => string;
   getSummary: (options: Options) => string;
   getDefaultOptions: () => Options;
-  onSubAdd: (sub: string, type: T, settings: TypeSettings<Options>) => void;
-  onSubRemove: (sub: string, type: T, settings: TypeSettings<Options>) => void;
-}
+} & (
+  Subs extends string
+    ? {
+        onSubAdd: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
+        onSubRemove: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
+      }
+    : { }
+);
 
 export type TypeVisuals<
   T extends Type = Type,
   Build extends boolean = any, 
-  Modify extends boolean = any
+  Modify extends boolean = any,
+  Subs extends SubsType = unknown
 > = 
-  TypeVisualRequired<T>
-  & (Build extends true ? TypeBuildable : TypeNotBuildable)
-  & (Modify extends true ? TypeModifiable : TypeNotModifiable)
+  TypeVisualRequired<T, Subs>
+  & (Build extends true ? TypeBuildable<Subs> : TypeNotBuildable)
+  & (Modify extends true ? TypeModifiable<Subs> : TypeNotModifiable)
 ;
 
-export interface TypeSettings<Options>
-{ 
-  input: string;
-  options: Options;
-  defaultValue: any;
-  sub?: Record<string, TypeSettings<any>>;
-}
+export type TypeSettings<Options, Subs extends SubsType = unknown> =
+  { input: string; options: Options; defaultValue: any; } 
+  & (Subs extends string 
+      ? { sub: Record<Subs, TypeSettings<any, any>> }
+      : { }
+    );
 
-export interface TypeAndSettings<Options = any>
+export interface TypeAndSettings<Options = any, Subs extends SubsType = unknown>
 {
   type: Type;
-  settings: TypeSettings<Options>;
+  settings: TypeSettings<Options, Subs>;
 }

@@ -66,7 +66,7 @@
         hide-details
         label="Clearable"
         v-model="value.clearable"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -74,7 +74,7 @@
         hide-details
         label="Dark"
         v-model="value.dark"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -82,7 +82,7 @@
         hide-details
         label="Filled"
         v-model="value.filled"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -90,7 +90,7 @@
         hide-details
         label="Solo"
         v-model="value.solo"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -98,7 +98,7 @@
         hide-details
         label="Outlined"
         v-model="value.outlined"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
     <v-list-item>
@@ -106,7 +106,7 @@
         hide-details
         label="Flat"
         v-model="value.flat"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
   </v-list>

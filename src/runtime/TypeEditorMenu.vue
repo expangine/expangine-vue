@@ -140,7 +140,7 @@
       </v-menu>
 
       <template v-for="modify in modifiableOptions">
-        <v-list-item :key="modify.text" @click="onModify(modify)">
+        <v-list-item :key="modify.text" @click="onModify(modify.value)">
           <v-list-item-title 
             v-html="modify.text"
           ></v-list-item-title>
@@ -153,9 +153,10 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
-import TypeEditorBase from './types/TypeEditorBase';
 import { ListOptions } from '../common';
 import { TypeVisuals } from './TypeVisuals';
+import TypeEditorBase from './types/TypeEditorBase';
+import { confirm } from '../app/Confirm';
 
 
 export default TypeEditorBase<Type, any>().extend({
@@ -192,7 +193,12 @@ export default TypeEditorBase<Type, any>().extend({
       this.updateSettings();
     },
     async onModify(modifiableType: TypeVisuals<any, any, true>) {
+      if (!await confirm()) {
+        return;
+      }
+
       const result = await modifiableType.onModify(this.type, this.settings);
+      
       this.$emit('change:type', result);
       this.done();
     },

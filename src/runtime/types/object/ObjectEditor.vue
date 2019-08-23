@@ -53,7 +53,8 @@
                 :registry="registry"
                 :settings="settings.sub[prop]"
                 :read-only="readOnly"
-                @input="updateType"
+                @input:type="updateType"
+                @input:settings="updateSettings"
                 @change:type="onChangeType(prop, $event)"
               ></ex-type-editor>
             </td>
@@ -76,15 +77,7 @@
               v-model="addProp"
             ></v-text-field>
           </td>
-          <td class="pa-1">
-            <!-- <v-select
-              solo
-              hide-details
-              placeholder="Type"
-              :items="availableTypes"
-              v-model="addType"
-            ></v-select> -->
-          </td>
+          <td></td>
         </tr>
       </tfoot>
     </v-simple-table>
@@ -99,7 +92,7 @@ import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
 
 
-export default TypeEditorBase<ObjectType, any>().extend({
+export default TypeEditorBase<ObjectType, any, string>().extend({
   name: 'ObjectEditor',
   data: () => ({
     addProp: '',

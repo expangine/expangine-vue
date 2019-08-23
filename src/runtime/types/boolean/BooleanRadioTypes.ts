@@ -28,9 +28,10 @@ export const BooleanRadioInput: TypeVisualInput<BooleanType, BooleanRadioOptions
     hint: '',
     row: false,
   }),
+  getName: (options) => (
+    `${options.labelTrue} / ${options.labelFalse}`
+  ),
   getSummary: (options) => (
     `<strong>Radio</strong>: ${options.labelTrue} / ${options.labelFalse}`
   ),
-  onSubAdd: () => { /**/ },
-  onSubRemove: () => { /**/ },
 };

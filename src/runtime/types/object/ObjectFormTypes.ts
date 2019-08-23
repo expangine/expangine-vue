@@ -23,7 +23,7 @@ export interface ObjectFormOptions
   }>;
 }
 
-export const ObjectFormInputs: TypeVisualInput<ObjectType, ObjectFormOptions> = 
+export const ObjectFormInputs: TypeVisualInput<ObjectType, ObjectFormOptions, string> = 
 {
   name: 'Form',
   description: 'A form gives you control on the order of the fields and how much space they take up.',
@@ -34,6 +34,7 @@ export const ObjectFormInputs: TypeVisualInput<ObjectType, ObjectFormOptions> =
     title: '',
     columns: [],
   }),
+  getName: (options) => options.title,
   getSummary: (options) => (
     `<strong>Form</strong>: ${options.title}`
   ),

@@ -16,10 +16,11 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
+import { PropTypeAny } from '../common';
 import TypeInputBase from './types/TypeInputBase';
 
 
-export default TypeInputBase<Type, any, any>([String, Number, Boolean, Array, Object, Function]).extend({
+export default TypeInputBase<Type, any, any>(PropTypeAny).extend({
   
 });
 </script>

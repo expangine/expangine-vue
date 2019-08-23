@@ -40,7 +40,7 @@
         hide-details
         label="Dark"
         v-model="value.dark"
-        @input="input"
+        @change="input"
       ></v-checkbox>
     </v-list-item>
   </v-list>
