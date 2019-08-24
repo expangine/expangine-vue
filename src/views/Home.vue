@@ -59,6 +59,7 @@ import { Type, defs } from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
 import VisualsStarting from '../runtime/types/object';
 import Registry from '../runtime';
+import { confirm } from '../app/Confirm';
 
 
 const Visuals: TypeVisuals<any, true, any> = VisualsStarting;
@@ -97,6 +98,10 @@ export default Vue.extend({
   },
   methods: {
     async reset() {
+      if (!await confirm()) {
+        return;
+      }
+
       const built = await Visuals.onBuild();
 
       this.type = built.type;
