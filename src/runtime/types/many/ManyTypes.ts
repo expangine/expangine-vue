@@ -23,4 +23,5 @@ export const ManyInput: TypeVisualInput<ManyType, ManyOptions, ManySubs> =
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },
+  onSubMove: () => { /**/ },
 };

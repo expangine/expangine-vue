@@ -23,4 +23,5 @@ export const OptionalInput: TypeVisualInput<OptionalType, OptionalOptions, Optio
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },
+  onSubMove: () => { /**/ },
 };

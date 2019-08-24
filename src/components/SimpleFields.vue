@@ -9,7 +9,7 @@
           :hide-details="hideDetails(field, fieldIndex)"
           :hint="field.details"
           :persistent-hint="!!field.details"
-          :clearable="!field.required"
+          :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
@@ -26,7 +26,7 @@
           :hint="field.details"
           :persistent-hint="!!field.details"
           :items="field.items"
-          :clearable="!field.required"
+          :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
@@ -39,7 +39,7 @@
           :hint="field.details"
           :persistent-hint="!!field.details"
           :items="field.items"
-          :clearable="!field.required"
+          :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
@@ -52,7 +52,7 @@
           :hide-details="hideDetails(field, fieldIndex)"
           :hint="field.details"
           :persistent-hint="!!field.details"
-          :clearable="!field.required && removeEmpty"
+          :clearable="!field.required && removeEmpty && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, toNumber($event))"
@@ -63,7 +63,7 @@
           :read-only="readOnly"
           :text-props="{ 
             filled: true, 
-            clearable: !field.required, 
+            clearable: !field.required && !readOnly, 
             label: field.label, 
             prependInnerIcon: 'mdi-calendar',
             hideDetails: hideDetails(field, fieldIndex),
@@ -80,7 +80,7 @@
           :hide-details="hideDetails(field, fieldIndex)"
           :hint="field.details"
           :persistent-hint="!!field.details"
-          :clearable="!field.required"
+          :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"

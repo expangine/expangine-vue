@@ -52,7 +52,7 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label,
+  getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
     `<strong>Textarea</strong>: ${options.label}`
   ),

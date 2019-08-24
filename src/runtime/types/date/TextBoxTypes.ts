@@ -41,7 +41,7 @@ export const TextBoxInput: TypeVisualInput<DateType, TextBoxOptions> =
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label || options.placeholder,
+  getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
     `<strong>Textbox</strong>: ${options.label}`
   ),

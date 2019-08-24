@@ -40,7 +40,7 @@ export const TextBoxInput: TypeVisualInput<NumberType, TextBoxOptions> =
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label,
+  getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options: TextBoxOptions) => (
     `<strong>Textbox</strong>: ${options.label}`
   ),

@@ -52,4 +52,11 @@ export const ObjectFormInputs: TypeVisualInput<ObjectType, ObjectFormOptions, st
       columns.splice(index, 1);
     }
   },
+  onSubMove: (prop, newProp, type, settings) => {
+    const columns = settings.options.columns;
+    const index = columns.findIndex((v) => v.prop === prop);
+    if (index !== -1) {
+      columns[index].prop = newProp;
+    }
+  },
 };

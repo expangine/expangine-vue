@@ -24,27 +24,32 @@
     </v-list-item>
     <v-simple-table dense>
       <colgroup>
-        <col style="width: 54px;">
-        <col style="width: 150px;">
+        <col>
         <col style="width: 100%;">
       </colgroup>
       <thead>
         <tr>
-          <th></th>
-          <th class="text-right">Name</th>
+          <th class="text-right" style="min-width: 100px">Name</th>
           <th class="text-left pl-10">Type</th>
         </tr>
       </thead>
       <tbody>
         <template v-for="(propType, prop) in type.options.props">
           <tr :key="prop">
-            <td class="cell-top pa-3">
-              <v-btn v-if="!readOnly" icon @click="remove(prop)">
-                <v-icon>mdi-minus</v-icon>
-              </v-btn>
-            </td>
             <td class="text-right border-right cell-top pa-5">
-              <strong>{{ prop }}</strong>
+              <v-menu :disabled="readOnly">
+                <template #activator="{ on }">
+                  <v-chip outlined v-on="on" class="property-element">{{ prop }}</v-chip>
+                </template>
+                <v-list>
+                  <v-list-item @click="remove(prop)">
+                    Remove
+                  </v-list-item>
+                  <v-list-item @click="rename(prop)">
+                    Rename
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </td>
             <td class="pl-0">
               <ex-type-editor
@@ -63,21 +68,19 @@
       </tbody>
       <tfoot v-if="!readOnly">
         <tr>
+          <td class="pa-1 border-right text-right">
+            <v-text-field
+              solo
+              hide-details
+              placeholder="Name"
+              v-model="addProp"
+            ></v-text-field>
+          </td>
           <td class="cell-top pa-3">
             <v-btn icon @click="add" :disabled="!isValidProp">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </td>
-          <td class="border-right pa-1">
-            <v-text-field
-              solo
-              hide-details
-              class="text-right"
-              placeholder="Name"
-              v-model="addProp"
-            ></v-text-field>
-          </td>
-          <td></td>
         </tr>
       </tfoot>
     </v-simple-table>
@@ -87,9 +90,11 @@
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
 import { confirm } from '../../../app/Confirm';
-import TypeEditorBase from '../TypeEditorBase';
+import { input } from '../../../app/Input';
+import { notify } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
+import TypeEditorBase from '../TypeEditorBase';
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({
@@ -137,6 +142,39 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.updateTypeAndSettings();
     },
+    async rename(prop: string) {
+      const newProp = await input({ 
+        title: 'Rename',
+        message: 'Enter a new name for this property',
+        label: 'Name',
+        value: prop,
+      });
+
+      if (!newProp) {
+        return;
+      }
+      if (newProp === prop) {
+        return notify({ message: 'The property name will remain the same.' });
+      }
+      if (newProp in this.type.options.props) {
+        return notify({ message: 'A property with that name already exists.' });
+      }
+
+      this.inputSelected.onSubMove(prop, newProp, this.type, this.settings);
+
+      const propType = this.type.options.props[prop];
+      const propSettings = this.settings.sub[prop];
+
+      this.$delete(this.type.options.props, prop);
+      this.$delete(this.settings.sub, prop);
+
+      this.$set(this.type.options.props, newProp, propType);
+      this.$set(this.settings.sub, newProp, propSettings);
+
+      this.updateTypeAndSettings();
+
+      notify({ message: `${prop} renamed to ${newProp}` });
+    },
     onChangeType(prop: string, result: TypeAndSettings) {
       this.type.options.props[prop] = result.type;
       this.settings.sub[prop] = result.settings;
@@ -148,8 +186,8 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 </script>
 
 <style scoped>
-.v-data-table >>> table {
-  table-layout: fixed;
+.property-element {
+  white-space: nowrap;
 }
 .v-input.v-text-field--single-line >>> input {
   text-align: right;

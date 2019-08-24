@@ -34,7 +34,7 @@ export const PickerInput: TypeVisualInput<DateType, PickerOptions> =
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label,
+  getName: (options) => options.label || options.hint,
   getSummary: (options) => (
     `<strong>Picker</strong>: ${options.label}`
   ),

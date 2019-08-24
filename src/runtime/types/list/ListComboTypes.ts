@@ -54,10 +54,11 @@ export const ListComboInput: TypeVisualInput<ListType, ListComboOptions, ListCom
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label || options.placeholder,
+  getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: () => (
     `<strong>Combobox</strong>`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },
+  onSubMove: () => { /**/ },
 };

@@ -59,6 +59,7 @@ export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unk
     ? {
         onSubAdd: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
         onSubRemove: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
+        onSubMove: (from: Subs, to: Subs, type: T, settings: TypeSettings<Options, any>) => void;
       }
     : { }
 );

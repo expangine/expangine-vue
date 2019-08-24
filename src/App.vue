@@ -12,6 +12,8 @@
     <v-content>
       <router-view></router-view>
       <confirm-dialog></confirm-dialog>
+      <input-dialog></input-dialog>
+      <notify-dialog></notify-dialog>
       <build-type-dialog></build-type-dialog>
     </v-content>
   </v-app>
@@ -20,7 +22,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import ConfirmDialog from './app/ConfirmDialog.vue';
+import InputDialog from './app/InputDialog.vue';
 import BuildTypeDialog from './app/BuildTypeDialog.vue';
+import NotifyDialog from './app/NotifyDialog.vue';
 
 
 export default Vue.extend({
@@ -28,6 +32,8 @@ export default Vue.extend({
   components: { 
     ConfirmDialog,
     BuildTypeDialog,
+    InputDialog,
+    NotifyDialog,
   },
 });
 </script>

@@ -3,6 +3,7 @@ import { ListType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
 import ListList from './ListList.vue';
 import ListListSettings from './ListListSettings.vue';
+import OptionalVisuals from '../optional';
 
 
 export interface ListListOptions
@@ -30,10 +31,11 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListListS
     hideInsert: false,
     hideSort: false,
   }),
-  getName: () => '',
+  getName: (options) => options.title || options.itemName,
   getSummary: () => (
     `<strong>List</strong>`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },
+  onSubMove: () => { /**/ },
 };

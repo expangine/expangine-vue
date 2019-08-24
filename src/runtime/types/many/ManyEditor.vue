@@ -3,7 +3,7 @@
     <template v-for="(innerType, index) in type.options">
       <v-list-item :key="innerType.getId()">
         <v-list-item-avatar class="mr-0">
-          <v-menu :close-on-content-click="false">
+          <v-menu :close-on-content-click="false" :disabled="readOnly">
             <template #activator="{ on }">
               <v-btn icon v-on="on">
                 <v-icon>mdi-dots-horizontal</v-icon>
