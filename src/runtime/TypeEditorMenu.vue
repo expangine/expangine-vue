@@ -56,8 +56,7 @@
                 :settings="settings"
                 :registry="registry"
                 :read-only="readOnly"
-                v-model="settings.defaultValue"
-                @input="updateSettings"
+                v-model="defaultValue"
               ></component>
             </v-sheet>
             <v-sheet 
@@ -113,7 +112,7 @@
               :type="type"
               :settings="settings"
               :registry="registry"
-              :value="settings.defaultValue"
+              :value="defaultValue"
             ></component>
           </v-sheet>
           <v-sheet tile max-height="300" class="scrollable mt-3 py-3">
@@ -181,6 +180,15 @@ export default TypeEditorBase<Type, any>().extend({
     },
     modifiableOptions(): ListOptions<TypeVisuals<any, any, true>> {
       return this.registry.getModifiableTypeOptions(this.type, this.parent);
+    },
+    defaultValue: {
+      get(): any {
+        return this.type.fromJson(this.settings.defaultValue);
+      },
+      set(value: any) {
+        this.settings.defaultValue = this.type.toJson(value);
+        this.updateSettings();
+      },
     },
   },
   methods: {

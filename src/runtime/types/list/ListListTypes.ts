@@ -8,8 +8,10 @@ import ListListSettings from './ListListSettings.vue';
 export interface ListListOptions
 {
   title: string;
-  addLabel: string;
-  removeLabel: string;
+  itemName: string;
+  hideRemove: boolean;
+  hideInsert: boolean;
+  hideSort: boolean;
 }
 
 export type ListListSubs = 'item';
@@ -23,8 +25,10 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListListS
   isVisible: () => true,
   getDefaultOptions: () => ({
     title: '',
-    addLabel: 'Add Item',
-    removeLabel: 'Remove Item',
+    itemName: 'Item',
+    hideRemove: false,
+    hideInsert: false,
+    hideSort: false,
   }),
   getName: () => '',
   getSummary: () => (

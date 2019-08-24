@@ -68,10 +68,11 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
         return;
       }
 
+      const subSettings = this.settings.sub[innerType.getId()];
       const newValue = innerType.isValid(this.value)
         ? this.value
-        : this.settings.sub[innerType.getId()].defaultValue;
-        
+        : innerType.fromJson(subSettings.defaultValue);
+      
       this.currentType = innerType;
       this.$emit('input', newValue);
       this.$forceUpdate();

@@ -106,7 +106,7 @@ export default Vue.extend({
 
       this.type = built.type;
       this.settings = built.settings;
-      this.data = copy(built.settings.defaultValue);
+      this.data = built.type.fromJson(built.settings.defaultValue);
 
       this.saveType();
       this.saveData();

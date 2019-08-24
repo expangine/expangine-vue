@@ -65,7 +65,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
       this.$emit('input', undefined);
     },
     addValue() {
-      this.$emit('input', this.settings.sub.innerType.defaultValue);
+      this.$emit('input', this.type.options.fromJson(this.innerTypeSettings.defaultValue));
       this.$forceUpdate();
     },
   },

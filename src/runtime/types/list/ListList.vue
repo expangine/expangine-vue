@@ -10,19 +10,55 @@
     <template v-for="(item, itemIndex) in value">
       <v-list-item :key="itemIndex">
         <v-list-item-avatar class="mr-0">
-          <v-btn icon @click="removeAt(itemIndex)">
-            <v-tooltip bottom>
-              <template #activator="{ on }">
-                <v-icon v-on="on">mdi-minus</v-icon>
-              </template>
-              <span>{{ removeLabel }}</span>
-            </v-tooltip>
-          </v-btn>
+          <v-menu>
+            <template #activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-horizontal</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-if="canRemove" @click="removeAt(itemIndex)">
+                <v-list-item-content>
+                  Remove {{ itemName }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canInsert" @click="insertAt(itemIndex)">
+                <v-list-item-content>
+                  Insert {{ itemName }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canAdd" @click="addItem">
+                <v-list-item-content>
+                  Add {{ itemName }}
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canMove(itemIndex, -1)" @click="moveTo(itemIndex, 0)">
+                <v-list-item-content>
+                  Move to Top
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canMove(itemIndex, -1)" @click="move(itemIndex, -1)">
+                <v-list-item-content>
+                  Move Up
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canMove(itemIndex, 1)" @click="move(itemIndex, 1)">
+                <v-list-item-content>
+                  Move Down
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="canMove(itemIndex, 1)" @click="moveTo(itemIndex, value.length - 1)">
+                <v-list-item-content>
+                  Move to Bottom
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-list-item-avatar>
         <v-list-item-content class="list-item">
           <ex-type-input
             :value="item"
-            :type="type.options.item"
+            :type="itemType"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings.sub.item"
@@ -31,36 +67,49 @@
         </v-list-item-content>
       </v-list-item>
     </template>
-    <v-list-item>
-      <v-list-item-avatar class="mr-0">
-        <v-btn icon @click="addItem">
-          <v-tooltip bottom>
-            <template #activator="{ on }">
-              <v-icon v-on="on">mdi-plus</v-icon>
-            </template>
-            <span>{{ addLabel }}</span>
-          </v-tooltip>
-        </v-btn>
-      </v-list-item-avatar>
-    </v-list-item>
   </v-list>
 </template>
 
 <script lang="ts">
-import { ListType, copy } from 'expangine-runtime';
+import { Type, ListType, isNumber } from 'expangine-runtime';
 import { ListListOptions, ListListSubs } from './ListListTypes';
 import { confirm } from '../../../app/Confirm';
 import TypeInputBase from '../TypeInputBase';
+import { TypeSettings } from '../../TypeVisuals';
 
 
 export default TypeInputBase<ListType, ListListOptions, any[], ListListSubs>(Array).extend({
   name: 'ListList',
   computed: {
-    addLabel(): string { 
-      return this.settings.options.addLabel || 'Add Item';
+    itemType(): Type {
+      return this.type.options.item;
     },
-    removeLabel(): string {
-      return this.settings.options.removeLabel || 'Remove Item';
+    itemSettings(): TypeSettings<any, any> {
+      return this.settings.sub.item;
+    },
+    itemName(): string {
+      return this.settings.options.itemName || 'Item';
+    },
+    canRemove(): boolean {
+      if (this.settings.options.hideRemove) {
+        return false;
+      }
+      if (isNumber(this.type.options.min)) {
+        return this.value.length > this.type.options.min;
+      }
+      return true;
+    },
+    canInsert(): boolean {
+      if (this.settings.options.hideInsert) {
+        return false;
+      }
+      return this.canAdd;
+    },
+    canAdd(): boolean {
+      if (isNumber(this.type.options.max)) {
+        return this.value.length < this.type.options.max;
+      }
+      return true;
     },
   },
   methods: {
@@ -72,12 +121,30 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListListSubs>(Arr
       this.value.splice(index, 1);
       this.update();
     },
+    canMove(index: number, dir: number) {
+      const next = index + dir;
+
+      return next >= 0 && next < this.value.length && !this.settings.options.hideSort;
+    },
+    moveTo(from: number, to: number) {
+      const temp = this.value[from];
+      this.$set(this.value, from, this.value[to]);
+      this.$set(this.value, to, temp);
+      this.update();
+    },
+    move(index: number, dir: number) {
+      this.moveTo(index, index + dir);
+    },
+    insertAt(index: number) {
+      this.value.splice(index, 0, this.itemType.fromJson(this.itemSettings.defaultValue));
+      this.update();
+    },
     setItem(index: number, item: any) {
       this.$set(this.value, index, item);
       this.update();
     },
     addItem() {
-      this.value.push(copy(this.settings.sub.item.defaultValue));
+      this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
       this.update();
     },
   },

@@ -67,7 +67,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
         this.input(this.value);
       },
       clear() {
-        this.input(this.settings.defaultValue);
+        this.input(this.type.fromJson(this.settings.defaultValue));
       },
     },
   });
