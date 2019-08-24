@@ -7,6 +7,7 @@ import NumberVisuals from './types/number';
 import DateVisuals from './types/date';
 import OptionalVisuals from './types/optional';
 import ManyVisuals from './types/many';
+import ListVisuals from './types/list';
 
 
 export default new Registry()
@@ -17,4 +18,5 @@ export default new Registry()
   .addType(DateVisuals)
   .addType(OptionalVisuals)
   .addType(ManyVisuals)
+  .addType(ListVisuals)
 ;

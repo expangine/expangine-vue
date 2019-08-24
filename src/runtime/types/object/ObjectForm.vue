@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="object-form">
     <v-row v-if="settings.options.title">
       <v-col>
         <strong v-html="settings.options.title"></strong>
