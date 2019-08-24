@@ -1,5 +1,10 @@
 <template>
-  <v-menu :close-on-content-click="false" max-width="300" offset-x>
+  <v-menu 
+    offset-x
+    max-width="300"
+    :disabled="readOnly"
+    :close-on-content-click="false" 
+  >
     <template #activator="{ on }">
       <v-text-field
         v-bind="$props"
@@ -22,7 +27,37 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  props: ['value', 'filled', 'label', 'showSwatches', 'hideDetails'],
+  props: {
+    value: {
+      type: String,
+      required: true,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    filled: {
+      type: Boolean,
+    },
+    clearable: {
+      type: Boolean,
+    },
+    label: {
+      type: String,
+    },
+    hint: {
+      type: String,
+    },
+    showSwatches: {
+      type: Boolean,
+    },
+    hideDetails: {
+      type: Boolean,
+    },
+    persistentHint: {
+      type: Boolean,
+    },
+  },
   methods: {
     input(value: string) {
       this.$emit('input', value);

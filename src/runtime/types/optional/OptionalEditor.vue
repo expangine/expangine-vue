@@ -1,7 +1,7 @@
 <template>
   <v-list-item>
     <v-list-item-avatar class="cell-top mr-0 pt-1">
-      <v-menu :close-on-content-click="false">
+      <v-menu :close-on-content-click="false" :disabled="readOnly">
         <template #activator="{ on }">
           <v-btn icon v-on="on">
             <v-icon>mdi-help-circle-outline</v-icon>

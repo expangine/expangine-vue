@@ -1,5 +1,6 @@
 <template>
   <v-slider
+    v-bind="settings.options"
     class="mt-4"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
@@ -8,7 +9,6 @@
     :min="type.options.min"
     :max="type.options.max"
     :value="value"
-    v-bind="settings.options"
     @input="input"
   ></v-slider>
 </template>

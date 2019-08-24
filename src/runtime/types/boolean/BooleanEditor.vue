@@ -23,6 +23,7 @@
                 label="True Text"
                 placeholder="true, 1, y, yes, x"
                 v-model="trues"
+                :disabled="readOnly"
                 @input="updateValue"
               ></v-combobox>
             </v-list-item-content>
@@ -37,6 +38,7 @@
                 hide-details
                 label="False Text"
                 placeholder="false, 0, n, no"
+                :disabled="readOnly"
                 v-model="falses"
                 @input="updateValue"
               ></v-combobox>

@@ -7,6 +7,7 @@ import TypeEditorMenu from './runtime/TypeEditorMenu.vue';
 import TypeInput from './runtime/TypeInput.vue';
 import ColorPicker from './components/ColorPicker.vue';
 import DatePicker from './components/DatePicker.vue';
+import SimpleFields from './components/SimpleFields.vue';
 
 import vuetify from './plugins/vuetify';
 
@@ -17,6 +18,7 @@ Vue.component('ex-type-editor-menu', TypeEditorMenu);
 Vue.component('ex-type-input', TypeInput);
 Vue.component('ex-color-picker', ColorPicker);
 Vue.component('ex-date-picker', DatePicker);
+Vue.component('ex-simple-fields', SimpleFields);
 
 
 new Vue({

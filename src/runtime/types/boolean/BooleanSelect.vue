@@ -1,12 +1,12 @@
 <template>
   <v-select
+    v-bind="settings.options"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
     :items="items"
     :value="value"
-    v-bind="settings.options"
     @input="input"
   ></v-select>
 </template>

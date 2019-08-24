@@ -14,6 +14,7 @@ export default function <T extends Type, O>()
     {
       type: T;
       value: O;
+      readOnly: boolean;
     }
   >({
     props: {
@@ -24,6 +25,10 @@ export default function <T extends Type, O>()
       value: {
         type: Object as () => O,
         required: true,
+      },
+      readOnly: {
+        type: Boolean,
+        default: false,
       },
     },
     methods: {

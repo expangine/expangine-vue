@@ -12,59 +12,13 @@
         @change:type="changeType"
       >
         <template #configure>
-          <v-list-item>
-            <v-text-field
-              clearable
-              filled
-              type="number"
-              label="Min Length"
-              v-model.number="type.options.min"
-              @input="updateType"
-            ></v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-text-field
-              clearable
-              filled
-              hide-details
-              type="number"
-              label="Max Length"
-              v-model.number="type.options.max"
-              @input="updateType"
-            ></v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Require Uppercase"
-              v-model="type.options.requireUpper"
-              @input="updateType"
-            ></v-checkbox>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Require Lowercase"
-              v-model="type.options.requireLower"
-              @input="updateType"
-            ></v-checkbox>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Force Uppercase"
-              v-model="type.options.forceUpper"
-              @input="updateType"
-            ></v-checkbox>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Force Lowercase"
-              v-model="type.options.forceLower"
-              @input="updateType"
-            ></v-checkbox>
-          </v-list-item>
+          <ex-simple-fields
+            remove-empty
+            :value="type.options"
+            :fields="optionFields"
+            :read-only="readOnly"
+            @input="updateType"
+          ></ex-simple-fields>
         </template>
       </ex-type-editor-menu>
     </v-list-item-avatar>
@@ -80,12 +34,25 @@
 </template>
 
 <script lang="ts">
-import { TextType } from 'expangine-runtime';
+import { TextType, TextOptions } from 'expangine-runtime';
+import { SimpleFieldSettings } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
 
 
+const fields: SimpleFieldSettings<TextOptions> = [
+  { name: 'min', type: 'number', label: 'Min' },
+  { name: 'max', type: 'number', label: 'Max' },
+  { name: 'requireUpper', type: 'boolean', label: 'Require Upper'},
+  { name: 'requireLower', type: 'boolean', label: 'Require Lower'},
+  { name: 'forceUpper', type: 'boolean', label: 'Force Upper'},
+  { name: 'forceLower', type: 'boolean', label: 'Force Lower'},
+];
+
 export default TypeEditorBase<TextType, any>().extend({
   name: 'TextEditor',
+  computed: {
+    optionFields: () => fields,
+  },
 });
 </script>
 

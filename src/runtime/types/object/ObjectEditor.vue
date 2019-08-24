@@ -39,7 +39,7 @@
         <template v-for="(propType, prop) in type.options.props">
           <tr :key="prop">
             <td class="cell-top pa-3">
-              <v-btn icon @click="remove(prop)">
+              <v-btn v-if="!readOnly" icon @click="remove(prop)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </td>

@@ -1,41 +1,30 @@
 <template>
-  <v-list>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Label"
-        v-model="value.label"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        hide-details
-        label="Hint"
-        v-model="value.hint"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Dark"
-        v-model="value.dark"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-  </v-list>
+  <ex-simple-fields
+    :value="value"
+    :fields="optionFields"
+    :read-only="readOnly"
+    @input="input"
+  ></ex-simple-fields>
 </template>
 
 <script lang="ts">
 import { BooleanType } from 'expangine-runtime';
 import { BooleanCheckboxOptions } from './BooleanCheckboxTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
+import { SimpleFieldSettings } from '../../../common';
 
+
+const fields: SimpleFieldSettings<BooleanCheckboxOptions> = [
+  { name: 'label', type: 'text', label: 'Label' },
+  { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'dark', type: 'boolean', label: 'Dark' },
+];
 
 export default TypeSettingsBase<BooleanType, BooleanCheckboxOptions>().extend({
   name: 'BooleanCheckboxSettings',
+  computed: {
+    optionFields: () => fields,
+  },
 });
 </script>
 

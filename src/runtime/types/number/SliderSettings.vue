@@ -1,56 +1,17 @@
 <template>
-  <v-list>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Label"
-        v-model="value.label"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Hint"
-        v-model="value.hint"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        type="number"
-        label="Step"
-        v-model.number="value.step"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-select
-        filled
-        hide-details
-        label="Thumb Label"
-        :items="thumbLabelOptions"
-        v-model="value.thumbLabel"
-        @input="input"
-      ></v-select>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Dark"
-        v-model="value.dark"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-  </v-list>
+  <ex-simple-fields
+    :value="value"
+    :fields="optionFields"
+    :read-only="readOnly"
+    @input="input"
+  ></ex-simple-fields>
 </template>
 
 <script lang="ts">
 import { NumberType } from 'expangine-runtime';
 import { SliderOptions } from './SliderTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
-import { ListOptions } from '../../../common';
+import { ListOptions, SimpleFieldSettings } from '../../../common';
 
 
 const thumbLabelOptions: ListOptions<string | boolean> = [
@@ -59,10 +20,18 @@ const thumbLabelOptions: ListOptions<string | boolean> = [
   { text: 'Show always', value: 'always' },
 ];
 
+const fields: SimpleFieldSettings<SliderOptions> = [
+  { name: 'label', type: 'text', label: 'Label' },
+  { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'step', type: 'number', label: 'Step' },
+  { name: 'thumbLabel', type: 'select', label: 'Thumb Label', items: thumbLabelOptions },
+  { name: 'dark', type: 'boolean', label: 'Dark' },
+];
+
 export default TypeSettingsBase<NumberType, SliderOptions>().extend({
   name: 'NumberSliderSettings',
   computed: {
-    thumbLabelOptions: () => thumbLabelOptions,
+    optionFields: () => fields,
   },
 });
 </script>

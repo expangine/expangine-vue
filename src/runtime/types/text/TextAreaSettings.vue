@@ -1,137 +1,17 @@
 <template>
-  <v-list>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Label"
-        v-model="value.label"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-select
-        filled
-        label="Auto Complete"
-        :items="autocompleteOptions"
-        v-model="value.autocomplete"
-        @input="input"
-      ></v-select>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Hint"
-        v-model="value.hint"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Prefix"
-        v-model="value.prefix"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Suffix"
-        v-model="value.suffix"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Rows"
-        v-model.number="value.rows"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="Row Height"
-        v-model.number="value.rowHeight"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        clearable
-        hide-details
-        type="number"
-        label="Counter"
-        v-model="value.counter"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Clearable"
-        v-model="value.clearable"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Auto Grow"
-        v-model="value.autoGrow"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Dark"
-        v-model="value.dark"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Filled"
-        v-model="value.filled"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Solo"
-        v-model="value.solo"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Outlined"
-        v-model="value.outlined"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Flat"
-        v-model="value.flat"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-  </v-list>
+  <ex-simple-fields
+    :value="value"
+    :fields="optionFields"
+    :read-only="readOnly"
+    @input="input"
+  ></ex-simple-fields>
 </template>
 
 <script lang="ts">
 import { TextType } from 'expangine-runtime';
-import { TextBoxOptions } from './TextBoxTypes';
+import { TextAreaOptions } from './TextAreaTypes';
+import { SimpleFieldSettings, ListOptions } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
-import { ListOptions } from '../../../common';
 
 
 const autocompleteOptions: ListOptions = [
@@ -162,10 +42,30 @@ const autocompleteOptions: ListOptions = [
   { text: 'Telephone Local', value: 'tel-national' },
 ];
 
-export default TypeSettingsBase<TextType, TextBoxOptions>().extend({
+const fields: SimpleFieldSettings<TextAreaOptions> = [
+  { name: 'label', type: 'text', label: 'Label' },
+  { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'prefix', type: 'text', label: 'Prefix' },
+  { name: 'suffix', type: 'text', label: 'Suffix' },
+  { name: 'placeholder', type: 'text', label: 'Placeholder' },
+  { name: 'rows', type: 'number', label: 'Rows' },
+  { name: 'rowHeight', type: 'number', label: 'Row Height' },
+  { name: 'autocomplete', type: 'text', label: 'Autocomplete', items: autocompleteOptions },
+  { name: 'autoGrow', type: 'boolean', label: 'Auto Grow' },
+  { name: 'counter', type: 'boolean', label: 'Counter' },
+  { name: 'clearable', type: 'boolean', label: 'Clearable' },
+  { name: 'dark', type: 'boolean', label: 'Dark' },
+  { name: 'filled', type: 'boolean', label: 'Filled' },
+  { name: 'solo', type: 'boolean', label: 'Solo' },
+  { name: 'outlined', type: 'boolean', label: 'Outlined' },
+  { name: 'dense', type: 'boolean', label: 'Dense' },
+  { name: 'flat', type: 'boolean', label: 'Flat' },
+];
+
+export default TypeSettingsBase<TextType, TextAreaOptions>().extend({
   name: 'TextAreaSettings',
   computed: {
-    autocompleteOptions: () => autocompleteOptions,
+    optionFields: () => fields,
   },
 });
 </script>

@@ -1,5 +1,6 @@
 <template>
   <v-checkbox
+    v-bind="settings.options"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
@@ -7,7 +8,6 @@
     :value="value"
     :true-value="true"
     :false-value="false"
-    v-bind="settings.options"
     @change="input"
   ></v-checkbox>
 </template>

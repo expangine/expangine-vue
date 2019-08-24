@@ -43,7 +43,9 @@ export default Vue.extend({
   data: () => buildTypeDialog,
   computed: {
     items(): ListOptions<TypeVisuals | null> {
-      return this.registry.getBuildableTypeOptions(this.exclude);
+      return this.registry 
+        ? this.registry.getBuildableTypeOptions(this.exclude)
+        : [];
     },
   },
 });

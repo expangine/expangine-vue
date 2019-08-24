@@ -1,12 +1,12 @@
 <template>
   <v-text-field
+    v-bind="settings.options"
     :type="inputType"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
     :value="value"
-    v-bind="settings.options"
     @input="input"
   ></v-text-field>
 </template>

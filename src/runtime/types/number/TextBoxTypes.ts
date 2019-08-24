@@ -11,9 +11,10 @@ export interface TextBoxOptions
   hint: string;
   prefix: string;
   suffix: string;
-  counter: boolean;
+  placeholder: string;
   dark: boolean;
   filled: boolean;
+  solo: boolean;
   outlined: boolean;
   dense: boolean;
   flat: boolean;
@@ -31,9 +32,10 @@ export const TextBoxInput: TypeVisualInput<NumberType, TextBoxOptions> =
     hint: '',
     prefix: '',
     suffix: '',
-    counter: false,
+    placeholder: '',
     dark: false,
     filled: false,
+    solo: false,
     outlined: false,
     dense: false,
     flat: false,

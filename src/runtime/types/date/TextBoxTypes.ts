@@ -11,7 +11,9 @@ export interface TextBoxOptions
   hint: string;
   prefix: string;
   suffix: string;
+  placeholder: string;
   dark: boolean;
+  solo: boolean;
   filled: boolean;
   outlined: boolean;
   dense: boolean;
@@ -30,14 +32,16 @@ export const TextBoxInput: TypeVisualInput<DateType, TextBoxOptions> =
     hint: '',
     prefix: '',
     suffix: '',
+    placeholder: '',
     counter: false,
     dark: false,
+    solo: false,
     filled: false,
     outlined: false,
     dense: false,
     flat: false,
   }),
-  getName: (options) => options.label,
+  getName: (options) => options.label || options.placeholder,
   getSummary: (options) => (
     `<strong>Textbox</strong>: ${options.label}`
   ),

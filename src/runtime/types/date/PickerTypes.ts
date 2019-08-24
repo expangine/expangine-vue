@@ -11,6 +11,7 @@ export interface PickerOptions
   hint: string;
   dark: boolean;
   filled: boolean;
+  solo: boolean;
   outlined: boolean;
   dense: boolean;
   flat: boolean;
@@ -28,6 +29,7 @@ export const PickerInput: TypeVisualInput<DateType, PickerOptions> =
     hint: '',
     dark: false,
     filled: false,
+    solo: false,
     outlined: false,
     dense: false,
     flat: false,

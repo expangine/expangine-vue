@@ -37,6 +37,7 @@
                   filled
                   hide-details
                   label="Display As"
+                  :disabled="readOnly"
                   :value="settings.input"
                   :items="inputs"
                   @input="setInput"
@@ -119,6 +120,7 @@
             <component 
               :is="inputSettings" 
               :type="type"
+              :read-only="readOnly"
               v-model="settings.options"
               @input="updateSettings"
             ></component>
@@ -138,19 +140,22 @@
         </v-card>
       </v-menu>
 
-      <template v-for="modify in modifiableOptions">
-        <v-list-item :key="modify.text" @click="onModify(modify.value)">
-          <v-list-item-title 
-            v-html="modify.text"
-          ></v-list-item-title>
+      <template v-if="!readOnly">
+        <template v-for="modify in modifiableOptions">
+          <v-list-item :key="modify.text" @click="onModify(modify.value)">
+            <v-list-item-title 
+              v-html="modify.text"
+            ></v-list-item-title>
+          </v-list-item>
+        </template>
+
+        <v-list-item @click="changeType">
+          <v-list-item-title>
+            Change Type
+          </v-list-item-title>
         </v-list-item>
-        
       </template>
-      <v-list-item @click="changeType">
-        <v-list-item-title>
-          Change Type
-        </v-list-item-title>
-      </v-list-item>
+
     </v-list>
   </v-menu>
 </template>

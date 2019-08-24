@@ -13,27 +13,13 @@
           @change:type="changeType"
         >
           <template #configure>
-            <v-list-item>
-              <v-text-field
-                clearable
-                filled
-                type="number"
-                label="Min Items"
-                v-model.number="type.options.min"
-                @input="updateType"
-              ></v-text-field>
-            </v-list-item>
-            <v-list-item>
-              <v-text-field
-                clearable
-                filled
-                hide-details
-                type="number"
-                label="Max Items"
-                v-model.number="type.options.max"
-                @input="updateType"
-              ></v-text-field>
-            </v-list-item>
+            <ex-simple-fields
+              remove-empty
+              :value="type.options"
+              :fields="optionFields"
+              :read-only="readOnly"
+              @input="updateType"
+            ></ex-simple-fields>
           </template>
         </ex-type-editor-menu>
       </v-list-item-avatar>
@@ -67,14 +53,24 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType } from 'expangine-runtime';
+import { Type, ListType, ListOptions } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { ListListSubs } from './ListListTypes';
+import { SimpleFieldSettings } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
+
+
+const fields: SimpleFieldSettings<ListOptions> = [
+  { name: 'min', type: 'number', label: 'Min' },
+  { name: 'max', type: 'number', label: 'Max' },
+];
 
 
 export default TypeEditorBase<ListType, any, ListListSubs>().extend({
   name: 'ListEditor',
+  computed: {
+    optionFields: () => fields,
+  },
   methods: {
     onChangeType({ type: innerType, settings }: TypeAndSettings) {
       this.type.options.item = innerType;

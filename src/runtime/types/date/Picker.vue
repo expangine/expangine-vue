@@ -1,10 +1,11 @@
 <template>
   <ex-date-picker
+    v-bind="settings.options"
     :value="value"
+    :read-only="readOnly"
     :with-time="type.options.withTime"
     :text-props="textProps"
     :date-props="dateProps"
-    v-bind="settings.options"
     @input="input"
   ></ex-date-picker>
 </template>
@@ -41,7 +42,6 @@ export default TypeInputBase<DateType, PickerOptions, Date>(Date).extend({
         prependInnerIcon: 'mdi-calendar',
         hideDetails: this.hideHint,
         persistentHint: this.hasHint,
-        disabled: this.readOnly,
         error: this.invalid,
       };
     },

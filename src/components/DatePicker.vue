@@ -2,6 +2,7 @@
   <v-menu
     v-bind="menuProps"
     v-model="menu"
+    :disabled="readOnly"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
@@ -45,6 +46,10 @@ export default Vue.extend({
   props: {
     value: {
       type: Date as PropType<Date>,
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
     },
     withTime: {
       type: Boolean,

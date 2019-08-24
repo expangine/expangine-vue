@@ -1,12 +1,12 @@
 <template>
   <v-text-field
+    v-bind="settings.options"
     type="number"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
     v-model="valueNumber"
-    v-bind="settings.options"
     @blur="fix"
   ></v-text-field>
 </template>

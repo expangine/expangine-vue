@@ -11,6 +11,7 @@ export interface TextAreaOptions
   hint: string;
   prefix: string;
   suffix: string;
+  placeholder: string;
   rows: number;
   rowHeight: number;
   autocomplete: string;
@@ -19,6 +20,7 @@ export interface TextAreaOptions
   clearable: boolean;
   dark: boolean;
   filled: boolean;
+  solo: boolean;
   outlined: boolean;
   dense: boolean;
   flat: boolean;
@@ -36,6 +38,7 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
     hint: '',
     prefix: '',
     suffix: '',
+    placeholder: '',
     rows: 5,
     autocomplete: 'new-password',
     autoGrow: false,
@@ -44,6 +47,7 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
     clearable: false,
     dark: false,
     filled: false,
+    solo: false,
     outlined: false,
     dense: false,
     flat: false,

@@ -12,35 +12,13 @@
         @change:type="changeType"
       >
         <template #configure>
-          <v-list-item>
-            <v-text-field
-              clearable
-              filled
-              type="number"
-              label="Min"
-              v-model.number="type.options.min"
-              @input="updateType"
-            ></v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-text-field
-              clearable
-              filled
-              hide-details
-              type="number"
-              label="Max"
-              v-model.number="type.options.max"
-              @input="updateType"
-            ></v-text-field>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Whole"
-              v-model="type.options.whole"
-              @input="updateType"
-            ></v-checkbox>
-          </v-list-item>
+          <ex-simple-fields
+            remove-empty
+            :value="type.options"
+            :fields="optionFields"
+            :read-only="readOnly"
+            @input="updateType"
+          ></ex-simple-fields>
         </template>
       </ex-type-editor-menu>
     </v-list-item-avatar>
@@ -56,11 +34,22 @@
 </template>
 
 <script lang="ts">
-import { TextType } from 'expangine-runtime';
+import { NumberType, NumberOptions } from 'expangine-runtime';
+import { SimpleFieldSettings } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
 
-export default TypeEditorBase<TextType, any>().extend({
+
+const fields: SimpleFieldSettings<NumberOptions> = [
+  { name: 'min', type: 'number', label: 'Min' },
+  { name: 'max', type: 'number', label: 'Max' },
+  { name: 'whole', type: 'boolean', label: 'Whole' },
+];
+
+export default TypeEditorBase<NumberType, any>().extend({
   name: 'NumberEditor',
+  computed: {
+    optionFields: () => fields,
+  },
 });
 </script>
 

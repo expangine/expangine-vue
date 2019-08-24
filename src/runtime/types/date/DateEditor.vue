@@ -12,69 +12,13 @@
         @change:type="changeType"
       >
         <template #configure>
-          <v-list-item>
-            <ex-date-picker
-              v-model="type.options.validateMin"
-              :text-props="{ filled: true, clearable: true, label: 'Validate Min', prependInnerIcon: 'mdi-calendar' }"
-              @input="updateType"
-            ></ex-date-picker>
-          </v-list-item>
-          <v-list-item>
-            <ex-date-picker
-              v-model="type.options.validateMax"
-              :text-props="{ filled: true, clearable: true, label: 'Validate Max', prependInnerIcon: 'mdi-calendar' }"
-              @input="updateType"
-            ></ex-date-picker>
-          </v-list-item>
-          <v-list-item>
-            <ex-date-picker
-              v-model="type.options.forceMin"
-              :text-props="{ filled: true, clearable: true, label: 'Force Min', prependInnerIcon: 'mdi-calendar' }"
-              @input="updateType"
-            ></ex-date-picker>
-          </v-list-item>
-          <v-list-item>
-            <ex-date-picker
-              v-model="type.options.forceMax"
-              :text-props="{ filled: true, clearable: true, label: 'Force Max', prependInnerIcon: 'mdi-calendar' }"
-              @input="updateType"
-            ></ex-date-picker>
-          </v-list-item>
-          <v-list-item>
-            <v-select
-              filled
-              label="Force Start Of"
-              :items="unitOptions"
-              v-model="type.options.forceStartOf"
-              @input="updateType"
-            ></v-select>
-          </v-list-item>
-          <v-list-item>
-            <v-select
-              filled
-              hide-details
-              label="Force End Of"
-              :items="unitOptions"
-              v-model="type.options.forceEndOf"
-              @input="updateType"
-            ></v-select>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="With Time"
-              v-model="type.options.withTime"
-              @change="updateType"
-            ></v-checkbox>
-          </v-list-item>
-          <v-list-item>
-            <v-checkbox
-              hide-details
-              label="Parse as UTC"
-              v-model="type.options.parseAsUTC"
-              @change="updateType"
-            ></v-checkbox>
-          </v-list-item>
+          <ex-simple-fields
+            remove-empty
+            :value="type.options"
+            :fields="optionFields"
+            :read-only="readOnly"
+            @input="updateType"
+          ></ex-simple-fields>
         </template>
       </ex-type-editor-menu>
     </v-list-item-avatar>
@@ -90,12 +34,12 @@
 </template>
 
 <script lang="ts">
-import { DateType } from 'expangine-runtime';
+import { DateType, DateOptions, Unit } from 'expangine-runtime';
+import { ListOptions, SimpleFieldSettings } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
-import { ListOptions } from '../../../common';
 
 
-const unitOptions: ListOptions = [
+const unitOptions: ListOptions<Unit> = [
   { text: 'Millisecond', value: 'millis' },
   { text: 'Second', value: 'second' },
   { text: 'Minute', value: 'minute' },
@@ -107,10 +51,21 @@ const unitOptions: ListOptions = [
   { text: 'Year', value: 'year' },
 ];
 
+const fields: SimpleFieldSettings<DateOptions> = [
+  { name: 'validateMin', type: 'date', label: 'Validate Min' },
+  { name: 'validateMax', type: 'date', label: 'Validate Max' },
+  { name: 'forceMin', type: 'date', label: 'Force Min' },
+  { name: 'forceMax', type: 'date', label: 'Force Max' },
+  { name: 'forceStartOf', type: 'select', label: 'Force Start Of', items: unitOptions },
+  { name: 'forceEndOf', type: 'select', label: 'Force End Of', items: unitOptions },
+  { name: 'withTime', type: 'boolean', label: 'With Time' },
+  { name: 'parseAsUTC', type: 'boolean', label: 'Parse as UTC' },
+];
+
 export default TypeEditorBase<DateType, any>().extend({
   name: 'DateEditor',
   computed: {
-    unitOptions: () => unitOptions,
+    optionFields: () => fields,
   },
 });
 </script>

@@ -16,11 +16,17 @@
                 Design
               </v-btn>
               <v-btn text>
-                Populate
+                Data
               </v-btn>
             </v-btn-toggle>
             <v-btn text @click="reset">
               Reset
+            </v-btn>
+            <v-btn text @click="exportJson">
+              Export
+            </v-btn>
+            <v-btn text @click="importJson">
+              Import
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
@@ -110,6 +116,38 @@ export default Vue.extend({
 
       this.saveType();
       this.saveData();
+    },
+    exportJson() {
+      if (!this.type) {
+        return;
+      }
+
+      const exported = JSON.stringify({
+        type: this.type.encode(),
+        settings: this.settings,
+        data: this.type.toJson(this.data),
+      }, undefined, 2);
+
+      this.downloadFile('export-' + Date.now() + '.json', exported, 'text/json');
+    },
+    importJson() {
+      const finput = document.createElement('input');
+      finput.type = 'file';
+      finput.multiple = true;
+      finput.accept = '.json';
+      finput.onchange = (e) => (window as any).console.log(finput.files);
+      finput.click();
+      finput.remove();
+    },
+    downloadFile(name: string, contents: any, type?: string) {
+      const blob = new Blob([contents], {type: type || 'text/plain'});
+      const href = window.URL.createObjectURL(blob);
+      const dlink = document.createElement('a');
+      dlink.download = name;
+      dlink.href = href;
+      dlink.onclick = (e) => setTimeout(() => window.URL.revokeObjectURL(dlink.href), 1500);
+      dlink.click();
+      dlink.remove();
     },
     saveType() {
       if (this.type === null || this.settings === null) {

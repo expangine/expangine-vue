@@ -2,8 +2,9 @@
 import { ListType, AnyType, TextType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
 import { ListListInput, ListListSubs } from './ListListTypes';
-import ListEditor from './ListEditor.vue';
+import { ListComboInput } from './ListComboTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
+import ListEditor from './ListEditor.vue';
 
 
 const ListVisuals: TypeVisuals<ListType, true, false, ListListSubs> =
@@ -31,9 +32,10 @@ const ListVisuals: TypeVisuals<ListType, true, false, ListListSubs> =
     },
   }),
   defaultInput: 'list',
-  inputsOrder: ['list'],
+  inputsOrder: ['list', 'combo'],
   inputs: {
     list: ListListInput,
+    combo: ListComboInput,
   },
 };
 

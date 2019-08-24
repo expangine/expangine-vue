@@ -1,5 +1,6 @@
 <template>
   <v-switch
+    v-bind="settings.options"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :error="invalid"
@@ -7,7 +8,6 @@
     :value="value"
     :true-value="true"
     :false-value="false"
-    v-bind="settings.options"
     @change="input"
   ></v-switch>
 </template>

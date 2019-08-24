@@ -1,57 +1,32 @@
 <template>
-  <v-list>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="True Label"
-        v-model="value.labelTrue"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        label="False Label"
-        v-model="value.labelFalse"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-text-field
-        filled
-        hide-details
-        label="Hint"
-        v-model="value.hint"
-        @input="input"
-      ></v-text-field>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Dark"
-        v-model="value.dark"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-    <v-list-item>
-      <v-checkbox
-        hide-details
-        label="Row"
-        v-model="value.row"
-        @change="input"
-      ></v-checkbox>
-    </v-list-item>
-  </v-list>
+  <ex-simple-fields
+    :value="value"
+    :fields="optionFields"
+    :read-only="readOnly"
+    @input="input"
+  ></ex-simple-fields>
 </template>
 
 <script lang="ts">
 import { BooleanType } from 'expangine-runtime';
 import { BooleanRadioOptions } from './BooleanRadioTypes';
+import { SimpleFieldSettings } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
+const fields: SimpleFieldSettings<BooleanRadioOptions> = [
+  { name: 'labelTrue', type: 'text', label: 'True Label' },
+  { name: 'labelFalse', type: 'text', label: 'False Label' },
+  { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'dark', type: 'boolean', label: 'Dark' },
+  { name: 'row', type: 'boolean', label: 'Row' },
+];
+
 export default TypeSettingsBase<BooleanType, BooleanRadioOptions>().extend({
   name: 'BooleanRadioSettings',
+  computed: {
+    optionFields: () => fields,
+  },
 });
 </script>
 
