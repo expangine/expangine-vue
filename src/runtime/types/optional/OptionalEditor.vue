@@ -1,6 +1,6 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar class="mr-0">
+    <v-list-item-avatar class="cell-top mr-0 pt-1">
       <v-menu 
         :close-on-content-click="false"
         v-model="menu"
@@ -66,6 +66,8 @@ export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().ext
 });
 </script>
 
-<style lang="sass" scoped>
-
+<style scoped>
+.cell-top {
+  align-self: start;
+}
 </style>

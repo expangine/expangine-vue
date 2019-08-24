@@ -1,6 +1,6 @@
 <template>
   <v-list-item v-if="hasValue">
-    <v-list-item-avatar class="mr-0">
+    <v-list-item-avatar class="cell-top mr-0 pt-1">
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="removeValue" v-on="on">
@@ -72,6 +72,8 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
 });
 </script>
 
-<style lang="sass" scoped>
-
+<style scoped>
+.cell-top {
+  align-self: start;
+}
 </style>
