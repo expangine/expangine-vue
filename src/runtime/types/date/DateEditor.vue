@@ -64,7 +64,7 @@
               hide-details
               label="With Time"
               v-model="type.options.withTime"
-              @input="updateType"
+              @change="updateType"
             ></v-checkbox>
           </v-list-item>
           <v-list-item>
@@ -72,7 +72,7 @@
               hide-details
               label="Parse as UTC"
               v-model="type.options.parseAsUTC"
-              @input="updateType"
+              @change="updateType"
             ></v-checkbox>
           </v-list-item>
         </template>

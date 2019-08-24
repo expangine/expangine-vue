@@ -18,6 +18,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<NumberType, TextBoxOptions, number | string>([Number, String]).extend({
+  name: 'NumberTextBox',
   computed: {
     valueNumber: {
       get(): string {

@@ -1,6 +1,6 @@
 <template>
   <ex-date-picker
-    :value="valueDate"
+    :value="value"
     :with-time="type.options.withTime"
     :text-props="textProps"
     :date-props="dateProps"
@@ -16,29 +16,9 @@ import { PickerOptions } from './PickerTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<DateType, PickerOptions, Date | string>([Date, String]).extend({
+export default TypeInputBase<DateType, PickerOptions, Date>(Date).extend({
+  name: 'DatePicker',
   computed: {
-    valueDate: {
-      get(): string {
-        return formatDate(this.value, '', this.type.options.withTime);
-      },
-      set(value: string) {
-        if (!value) {
-          this.input(new Date());
-        } else {
-          const [year, month, date, hour, minute, second] = value.split(/[-\s:]/);
-
-          this.input(new Date(
-            parseInt(year, 10), 
-            parseInt(month, 10) - 1, 
-            parseInt(date, 10),
-            parseInt(hour, 10) || 0,
-            parseInt(minute, 10) || 0,
-            parseInt(second, 10) || 0,
-          ));
-        }
-      },
-    },
     hasHint(): boolean {
       return !this.hideHint;
     },
@@ -65,9 +45,6 @@ export default TypeInputBase<DateType, PickerOptions, Date | string>([Date, Stri
         error: this.invalid,
       };
     },
-  },
-  methods: {
-    
   },
 });
 </script>

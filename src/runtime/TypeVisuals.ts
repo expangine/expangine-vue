@@ -21,7 +21,7 @@ export interface TypeModifiable<Subs extends SubsType = unknown>
   modifiable: true;
   modifyLabel: string;
   canModify: (type: Type, parent?: Type) => boolean;
-  onModify: (type: Type, settings: TypeSettings<any, any>) => Promise<TypeAndSettings<any, Subs>>;
+  onModify: (type: Type, settings: TypeSettings<any, any>) => Promise<TypeAndSettings<any, Subs> | null>;
 }
 
 export interface TypeNotModifiable

@@ -16,6 +16,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object).extend({
+  name: 'ObjectFormField',
   props: {
     prop: {
       type: String,

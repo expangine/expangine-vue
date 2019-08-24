@@ -19,6 +19,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<BooleanType, BooleanSwitchOptions, boolean>(Boolean).extend({
+  name: 'BooleanSwitch',
   computed: {
     hasHint(): boolean {
       return !this.hideHint;

@@ -217,14 +217,12 @@ export default TypeEditorBase<Type, any>().extend({
       this.done();
     },
     async onModify(modifiableType: TypeVisuals<any, any, true>) {
-      if (!await confirm()) {
-        return;
-      }
-
       const result = await modifiableType.onModify(this.type, this.settings);
 
-      this.$emit('change:type', result);
-      this.done();
+      if (result) {
+        this.$emit('change:type', result);
+        this.done();
+      }
     },
     done() {
       this.configuring = false;

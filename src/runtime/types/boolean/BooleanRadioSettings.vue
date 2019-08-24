@@ -51,7 +51,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<BooleanType, BooleanRadioOptions>().extend({
-  
+  name: 'BooleanRadioSettings',
 });
 </script>
 

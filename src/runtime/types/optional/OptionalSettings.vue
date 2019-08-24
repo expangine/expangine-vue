@@ -9,7 +9,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<OptionalType, OptionalOptions>().extend({
-  
+  name: 'OptionalSettings',
 });
 </script>
 

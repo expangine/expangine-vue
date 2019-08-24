@@ -85,7 +85,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
 
       const { type, settings } = await newType.onBuild();
 
-      this.type.options.splice(index, 0, type);
+      this.type.options.splice(index + 1, 0, type);
       this.$set(this.settings.sub, type.getId(), settings);
 
       this.updateTypeAndSettings();

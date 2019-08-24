@@ -7,7 +7,7 @@
       <v-text-field
         v-bind="textProps"
         v-on="on"
-        :value="value"
+        :value="valueAsString"
       ></v-text-field>
     </template>
     <v-date-picker
@@ -37,13 +37,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
+import { DateFormat, currentLocale } from 'expangine-runtime';
 
 
 export default Vue.extend({
   props: {
     value: {
-      type: String,
+      type: Date as PropType<Date>,
     },
     withTime: {
       type: Boolean,
@@ -83,6 +84,13 @@ export default Vue.extend({
     dateValue: '',
     timeValue: '',
   }),
+  computed: {
+    valueAsString(): string {
+      return this.withTime  
+        ? DateFormat.format('Y-MM-DD HH:mm', [this.value, currentLocale])
+        : DateFormat.format('Y-MM-DD', [this.value, currentLocale]);
+    },
+  },
   watch: {
     menu: 'reset',
     value: {
@@ -95,8 +103,8 @@ export default Vue.extend({
   methods: {
     pullDateTime() {
       if (this.value) {
-        this.dateValue = this.value.substring(0, 10);
-        this.timeValue = this.value.substring(11);
+        this.dateValue = DateFormat.format('Y-MM-DD', [this.value, currentLocale]);
+        this.timeValue = DateFormat.format('HH:mm', [this.value, currentLocale]);
       } else {
         this.dateValue = this.timeValue = '';
       }
@@ -114,7 +122,7 @@ export default Vue.extend({
         this.showDate = false;
         this.showTime = true;
       } else {
-        this.$emit('input', this.dateValue);
+        this.$emit('input', new Date(this.dateValue + ' 00:00'));
         this.menu = false;
       }
     },
@@ -128,7 +136,7 @@ export default Vue.extend({
     timeProceed() {
       this.showTime = false;
       this.showDate = true;
-      this.$emit('input', this.dateValue + ' ' + this.timeValue);
+      this.$emit('input', new Date(this.dateValue + ' ' + this.timeValue));
       this.menu = false;
     },
   },

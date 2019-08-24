@@ -60,6 +60,7 @@ const thumbLabelOptions: ListOptions<string | boolean> = [
 ];
 
 export default TypeSettingsBase<NumberType, SliderOptions>().extend({
+  name: 'NumberSliderSettings',
   computed: {
     thumbLabelOptions: () => thumbLabelOptions,
   },

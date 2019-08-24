@@ -93,7 +93,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<DateType, TextBoxOptions>().extend({
-  
+  name: 'DateTextBoxSettings',
 });
 </script>
 

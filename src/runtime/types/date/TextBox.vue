@@ -18,6 +18,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<DateType, TextBoxOptions, Date>(Date).extend({
+  name: 'DateTextBox',
   computed: {
     inputType(): string {
       return this.type.options.withTime ? 'datetime' : 'date';

@@ -48,6 +48,7 @@ import TypeInputBase from '../TypeInputBase';
 import ObjectFormField from './ObjectFormField.vue';
 
 export default TypeInputBase<ObjectType, ObjectFormOptions, object>(Object).extend({
+  name: 'ObjectForm',
   components: {
     ObjectFormField,
   },

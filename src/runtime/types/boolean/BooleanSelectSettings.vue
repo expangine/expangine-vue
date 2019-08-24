@@ -91,7 +91,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<BooleanType, BooleanSelectOptions>().extend({
-  
+  name: 'BooleanSelectSettings',
 });
 </script>
 

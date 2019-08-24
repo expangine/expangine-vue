@@ -20,6 +20,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<NumberType, SliderOptions, number | string>([Number, String]).extend({
+  name: 'NumberSlider',
   computed: {
     hasHint(): boolean {
       return !this.hideHint;

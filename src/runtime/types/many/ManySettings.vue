@@ -9,7 +9,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<ManyType, ManyOptions>().extend({
-  
+  name: 'ManySettings',
 });
 </script>
 

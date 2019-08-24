@@ -17,6 +17,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<TextType, TextAreaOptions, string>(String).extend({
+  name: 'TextArea',
   computed: {
     hasHint(): boolean {
       return !this.hideHint;

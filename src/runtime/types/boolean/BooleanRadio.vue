@@ -29,6 +29,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<BooleanType, BooleanRadioOptions, boolean>(Boolean).extend({
+  name: 'BooleanRadio',
   computed: {
     hasHint(): boolean {
       return !this.hideHint;

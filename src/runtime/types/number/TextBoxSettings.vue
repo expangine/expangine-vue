@@ -93,7 +93,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<NumberType, TextBoxOptions>().extend({
-  
+  name: 'NumberTextBoxSettings',
 });
 </script>
 

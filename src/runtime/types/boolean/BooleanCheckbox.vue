@@ -19,6 +19,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<BooleanType, BooleanCheckboxOptions, boolean>(Boolean).extend({
+  name: 'BooleanCheckbox',
   computed: {
     hasHint(): boolean {
       return !this.hideHint;

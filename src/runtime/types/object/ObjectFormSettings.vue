@@ -134,6 +134,7 @@ const offsetOptions: ListOptions<number | undefined> = [
 ];
 
 export default TypeSettingsBase<ObjectType, ObjectFormOptions>().extend({
+  name: 'ObjectFormSettings',
   data: () => ({
     outside: null as null | string,
     size: sizeOptions[0].value,

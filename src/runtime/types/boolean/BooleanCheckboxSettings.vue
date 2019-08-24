@@ -35,7 +35,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<BooleanType, BooleanCheckboxOptions>().extend({
-  
+  name: 'BooleanCheckboxSettings',
 });
 </script>
 

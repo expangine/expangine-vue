@@ -1,5 +1,5 @@
 
-import { TextType } from 'expangine-runtime';
+import { NumberType } from 'expangine-runtime';
 import TextBox from './TextBox.vue';
 import TextBoxSettings from './TextBoxSettings.vue';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
@@ -19,7 +19,7 @@ export interface TextBoxOptions
   flat: boolean;
 }
 
-export const TextBoxInput: TypeVisualInput<TextType, TextBoxOptions> = 
+export const TextBoxInput: TypeVisualInput<NumberType, TextBoxOptions> = 
 {
   name: 'Textbox',
   description: 'A textbox allows single-line number input',

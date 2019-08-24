@@ -1,9 +1,14 @@
 <template>
   <v-list-item v-if="hasValue">
     <v-list-item-avatar class="mr-0">
-      <v-btn icon @click="removeValue">
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on }">
+          <v-btn icon @click="removeValue" v-on="on">
+            <v-icon>mdi-minus</v-icon>
+          </v-btn>
+        </template>
+        <span>Remove Optional Value</span>
+      </v-tooltip>
     </v-list-item-avatar>
     <v-list-item-content class="pa-1">
       <ex-type-input
@@ -31,6 +36,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(PropTypeAny).extend({
+  name: 'Optional',
   computed: {
     hasValue: {
       cache: false,

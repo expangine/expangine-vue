@@ -104,7 +104,10 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
   },
   methods: {
     async add() {
-      const addType = await getBuildType({ registry: this.registry });
+      const addType = await getBuildType({ 
+        title: 'Add Property',
+        registry: this.registry,
+      });
 
       if (!this.addProp || !addType) {
         return;
@@ -114,12 +117,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       const { type: propType, settings: propSettings } = await addType.onBuild(this.type, this.settings);
 
       this.$set(this.type.options.props, propName, propType);
-      if (!this.settings.sub) {
-        this.$set(this.settings, 'sub', {});  
-      }
-      if (this.settings.sub) {
-        this.$set(this.settings.sub, propName, propSettings);
-      }
+      this.$set(this.settings.sub, propName, propSettings);
 
       this.addProp = '';
 
@@ -128,24 +126,20 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.updateTypeAndSettings();
     },
     async remove(prop: string) {
-      if (!await confirm()) {
+      if (!await confirm({ message: `Remove ${prop}?`})) {
         return;
       }
 
       this.inputSelected.onSubRemove(prop, this.type, this.settings);
 
       this.$delete(this.type.options.props, prop);
-      if (this.settings.sub) {
-        this.$delete(this.settings.sub, prop);
-      }
+      this.$delete(this.settings.sub, prop);
 
       this.updateTypeAndSettings();
     },
     onChangeType(prop: string, result: TypeAndSettings) {
       this.type.options.props[prop] = result.type;
-      if (this.settings.sub) {
-        this.settings.sub[prop] = result.settings;
-      }
+      this.settings.sub[prop] = result.settings;
 
       this.updateTypeAndSettings();
     },

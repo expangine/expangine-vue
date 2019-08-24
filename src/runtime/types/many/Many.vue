@@ -4,7 +4,12 @@
       <v-menu>
         <template #activator="{ on }">
           <v-btn icon v-on="on">
-            <v-icon>mdi-delta</v-icon>
+            <v-tooltip bottom>
+              <template #activator="{ on }">
+                <v-icon v-on="on">mdi-delta</v-icon>
+              </template>
+              <span>Change Type</span>
+            </v-tooltip>
           </v-btn>
         </template>
         <v-list>
@@ -42,6 +47,7 @@ import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).extend({
+  name: 'Many',
   data: () => ({
     currentType: null as null | Type,
   }),

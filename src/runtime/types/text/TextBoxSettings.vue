@@ -159,6 +159,7 @@ const autocompleteOptions: ListOptions = [
 ];
 
 export default TypeSettingsBase<TextType, TextBoxOptions>().extend({
+  name: 'TextBoxSettings',
   computed: {
     typeOptions: () => typeOptions,
     autocompleteOptions: () => autocompleteOptions,

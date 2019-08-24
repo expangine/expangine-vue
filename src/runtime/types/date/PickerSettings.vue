@@ -67,7 +67,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 export default TypeSettingsBase<DateType, PickerOptions>().extend({
-  
+  name: 'DatePickerSettings',
 });
 </script>
 
