@@ -122,13 +122,13 @@ export default Vue.extend({
       localStorage.setItem('settings', JSON.stringify(this.settings));
     },
     saveData() {
-      if (this.data === null) {
+      if (this.data === null || this.type === null) {
         return;
       }
 
       window.console.log('saving data');
 
-      localStorage.setItem('data', JSON.stringify(this.data));
+      localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
     },
     async loadType() {
       const defaults = await Visuals.onBuild();
@@ -137,11 +137,11 @@ export default Vue.extend({
       this.settings = this.loadVar('settings', defaults.settings);
     },
     loadData() {
-      if (this.settings === null) {
+      if (this.settings === null || this.type === null) {
         return;
       }
 
-      this.data = this.loadVar('data', copy(this.settings.defaultValue));
+      this.data = this.type.fromJson(this.loadVar('data', copy(this.settings.defaultValue)));
     },
     loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V): V {
       const stored = localStorage.getItem(varName);
