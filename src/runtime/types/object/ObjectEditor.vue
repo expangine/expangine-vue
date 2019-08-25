@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-list-item>
-      <v-list-item-avatar>
+      <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
           :type="type"
           :settings="settings"
@@ -14,11 +14,15 @@
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title>
-          Object
+        <v-list-item-title class="primary--text">
+          <strong>Object</strong>
         </v-list-item-title>
         <v-list-item-subtitle 
           v-html="summary"
+        ></v-list-item-subtitle>
+        <v-list-item-subtitle 
+          class="grey--text"
+          v-html="description"
         ></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -28,18 +32,18 @@
         <col style="width: 100%;">
       </colgroup>
       <thead>
-        <tr>
-          <th class="text-right" style="min-width: 100px">Name</th>
-          <th class="text-left pl-10">Type</th>
+        <tr class="grey lighten-3">
+          <th class="text-right pr-6" style="min-width: 100px">Property</th>
+          <th class="text-left pl-6">Type</th>
         </tr>
       </thead>
       <tbody>
         <template v-for="(propType, prop) in type.options.props">
           <tr :key="prop">
-            <td class="text-right border-right cell-top pa-5">
+            <td class="text-right border-right cell-top pa-4">
               <v-menu :disabled="readOnly">
                 <template #activator="{ on }">
-                  <v-chip outlined v-on="on" class="property-element">{{ prop }}</v-chip>
+                  <v-chip label link outlined v-on="on" color="accent" class="property-element">{{ prop }}</v-chip>
                 </template>
                 <v-list>
                   <v-list-item @click="remove(prop)">
@@ -95,6 +99,7 @@ import { notify } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
+import { friendlyList } from '../../../common';
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({
@@ -105,6 +110,9 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
   computed: {
     isValidProp(): boolean {
       return !!(this.addProp && !(this.addProp in this.type.options.props));
+    },
+    description(): string {
+      return friendlyList(Object.keys(this.type.options.props));
     },
   },
   methods: {
@@ -194,8 +202,5 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 }
 .border-right {
   border-right: 1px solid rgba(0, 0, 0, 0.12);
-}
-.cell-top {
-  vertical-align: top;
 }
 </style>

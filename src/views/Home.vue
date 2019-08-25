@@ -9,6 +9,7 @@
               hide-details
               class="ma-2 pt-3"
               label="Read Only"
+              color="primary"
               v-model="readOnly"
             ></v-switch>
             <v-btn-toggle v-model="mode" class="ma-2">

@@ -71,9 +71,3 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
   },
 });
 </script>
-
-<style scoped>
-.cell-top {
-  align-self: start;
-}
-</style>

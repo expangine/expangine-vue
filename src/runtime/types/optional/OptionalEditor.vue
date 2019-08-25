@@ -59,9 +59,3 @@ export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().ext
   },
 });
 </script>
-
-<style scoped>
-.cell-top {
-  align-self: start;
-}
-</style>

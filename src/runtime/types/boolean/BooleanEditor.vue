@@ -1,6 +1,6 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar>
+    <v-list-item-avatar class="cell-top pt-1 mr-3">
       <ex-type-editor-menu
         :type="type"
         :settings="settings"
@@ -48,8 +48,8 @@
       </ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content>
-      <v-list-item-title>
-        Boolean 
+      <v-list-item-title class="primary--text">
+        <strong>Boolean</strong> 
       </v-list-item-title>
       <v-list-item-subtitle 
         v-html="summary"

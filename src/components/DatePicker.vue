@@ -91,9 +91,11 @@ export default Vue.extend({
   }),
   computed: {
     valueAsString(): string {
-      return this.withTime  
-        ? DateFormat.format('Y-MM-DD HH:mm', [this.value, currentLocale])
-        : DateFormat.format('Y-MM-DD', [this.value, currentLocale]);
+      return this.value 
+        ? this.withTime  
+          ? DateFormat.format('Y-MM-DD HH:mm', [this.value, currentLocale])
+          : DateFormat.format('Y-MM-DD', [this.value, currentLocale])
+        : '';
     },
   },
   watch: {

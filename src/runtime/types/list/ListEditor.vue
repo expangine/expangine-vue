@@ -1,7 +1,7 @@
 <template>
-  <v-list>
+  <v-list class="pa-0">
     <v-list-item>
-      <v-list-item-avatar>
+      <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
           :type="type"
           :settings="settings"
@@ -24,11 +24,16 @@
         </ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
-        <v-list-item-title>
-          List
+        <v-list-item-title class="primary--text">
+          <strong>List</strong>
         </v-list-item-title>
         <v-list-item-subtitle 
           v-html="summary"
+        ></v-list-item-subtitle>
+        <v-list-item-subtitle 
+          v-if="description"
+          class="grey--text"
+          v-text="description"
         ></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -53,10 +58,10 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, ListOptions } from 'expangine-runtime';
+import { Type, ListType, ListOptions, isNumber } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { ListListSubs } from './ListListTypes';
-import { SimpleFieldSettings } from '../../../common';
+import { SimpleFieldSettings, friendlyList } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
 
 
@@ -70,6 +75,20 @@ export default TypeEditorBase<ListType, any, ListListSubs>().extend({
   name: 'ListEditor',
   computed: {
     optionFields: () => fields,
+    description(): string {
+      const { min, max } = this.type.options;
+      const things: string[] = [];
+
+      if (isNumber(min) && isNumber(max)) {
+        things.push('between ' + min + ' and ' + max + ' items');
+      } else if (isNumber(min)) {
+        things.push('at least ' + min + ' items');
+      } else if (isNumber(max)) {
+        things.push('no more than ' + max + ' items');
+      }
+
+      return friendlyList(things);
+    },
   },
   methods: {
     onChangeType({ type: innerType, settings }: TypeAndSettings) {
@@ -81,9 +100,3 @@ export default TypeEditorBase<ListType, any, ListListSubs>().extend({
   },
 });
 </script>
-
-<style scoped>
-.cell-top {
-  align-self: start;
-}
-</style>

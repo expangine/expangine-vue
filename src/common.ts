@@ -38,6 +38,16 @@ export type SimpleFieldOptionForProperty<O, K extends keyof O> = SimpleFieldOpti
 
 export type SimpleFieldSettings<O> = Array<SimpleFieldOptionForProperty<O, keyof O>>;
 
+export function friendlyList(things: string[]): string
+{
+  switch (things.length) {
+    case 0:  return '';
+    case 1:  return things[0];
+    case 2:  return things[0] + ' and ' + things[1];
+    default: return things.slice(0, things.length - 1).join(', ') + ', and ' + things[things.length - 1];
+  }
+}
+
 export function formatDate<O = undefined>(
   date: Date | string | undefined, 
   otherwise: O, 
