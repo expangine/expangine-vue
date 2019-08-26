@@ -6,6 +6,7 @@ import { EnumSubs } from './EnumTypes';
 import { EnumSelectInput } from './EnumSelectTypes';
 import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
 import { EnumSliderInput } from './EnumSliderTypes';
+import { EnumRadioInput } from './EnumRadioTypes';
 import EnumEditor from './EnumEditor.vue';
 
 
@@ -39,11 +40,12 @@ const EnumVisuals: TypeVisuals<EnumType, true, false, EnumSubs> =
     },
   }),
   defaultInput: 'dropdown',
-  inputsOrder: ['dropdown', 'autocomplete', 'slider'],
+  inputsOrder: ['dropdown', 'autocomplete', 'slider', 'radio'],
   inputs: {
     dropdown: EnumSelectInput,
     autocomplete: EnumAutocompleteInput,
     slider: EnumSliderInput,
+    radio: EnumRadioInput,
   },
 };
 

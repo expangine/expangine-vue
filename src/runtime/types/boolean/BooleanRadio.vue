@@ -1,7 +1,6 @@
 <template>
   <v-radio-group
     v-bind="settings.options"
-    :read-only="readOnly"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
