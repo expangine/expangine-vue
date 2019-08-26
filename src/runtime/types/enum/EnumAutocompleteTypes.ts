@@ -2,15 +2,15 @@
 import { EnumType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
 import { EnumSubs } from './EnumTypes';
-import EnumSelect from './EnumSelect.vue';
-import EnumSelectSettings from './EnumSelectSettings.vue';
+import EnumAutocomplete from './EnumAutocomplete.vue';
+import EnumAutocompleteSettings from './EnumAutocompleteSettings.vue';
 
 
-export interface EnumSelectOptions
+export interface EnumAutocompleteOptions
 {
   label: string;
-  dark: boolean;
   hint: string;
+  dark: boolean;
   filled: boolean;
   outlined: boolean;
   dense: boolean;
@@ -18,17 +18,17 @@ export interface EnumSelectOptions
   flat: boolean;
 }
 
-export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumSubs> = 
+export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOptions, EnumSubs> = 
 {
-  name: 'Dropdown',
-  description: 'A dropdown where the option text is the enum key and the value is the enum value.',
-  input: EnumSelect,
-  settings: EnumSelectSettings,
+  name: 'Autocomplete',
+  description: 'An autocomplete where the option text is the enum key and the value is the enum value.',
+  input: EnumAutocomplete,
+  settings: EnumAutocompleteSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',
-    dark: false,
     hint: '',
+    dark: false,
     filled: false,
     outlined: false,
     dense: false,
@@ -37,7 +37,7 @@ export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumS
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Dropdown</strong> ${options.label || options.hint}`
+    `<strong>Autocomplete</strong> ${options.label || options.hint}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

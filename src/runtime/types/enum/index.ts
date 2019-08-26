@@ -1,9 +1,10 @@
 
 import { EnumType, TextType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { EnumSelectInput } from './EnumSelectTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { EnumSubs } from './EnumTypes';
+import { EnumSelectInput } from './EnumSelectTypes';
+import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
 import EnumEditor from './EnumEditor.vue';
 
 
@@ -37,9 +38,10 @@ const EnumVisuals: TypeVisuals<EnumType, true, false, EnumSubs> =
     },
   }),
   defaultInput: 'dropdown',
-  inputsOrder: ['dropdown'],
+  inputsOrder: ['dropdown', 'autocomplete'],
   inputs: {
     dropdown: EnumSelectInput,
+    autocomplete: EnumAutocompleteInput,
   },
 };
 
