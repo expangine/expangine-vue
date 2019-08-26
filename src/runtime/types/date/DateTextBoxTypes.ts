@@ -1,11 +1,11 @@
 
 import { DateType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
-import TextBox from './TextBox.vue';
-import TextBoxSettings from './TextBoxSettings.vue';
+import DateTextBox from './DateTextBox.vue';
+import DateTextBoxSettings from './DateTextBoxSettings.vue';
 
 
-export interface TextBoxOptions
+export interface DateTextBoxOptions
 {
   label: string;
   hint: string;
@@ -20,12 +20,12 @@ export interface TextBoxOptions
   flat: boolean;
 }
 
-export const TextBoxInput: TypeVisualInput<DateType, TextBoxOptions> = 
+export const DateTextBoxInput: TypeVisualInput<DateType, DateTextBoxOptions> = 
 {
   name: 'Textbox',
   description: 'A textbox allows single-line date input',
-  input: TextBox,
-  settings: TextBoxSettings,
+  input: DateTextBox,
+  settings: DateTextBoxSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',

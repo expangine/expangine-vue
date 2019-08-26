@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import { DateType } from 'expangine-runtime';
-import { PickerOptions } from './PickerTypes';
+import { EnumType } from 'expangine-runtime';
 import { SimpleFieldSettings } from '../../../common';
+import { EnumSelectOptions } from './EnumSelectTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
-const fields: SimpleFieldSettings<PickerOptions> = [
+const fields: SimpleFieldSettings<EnumSelectOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'dark', type: 'boolean', label: 'Dark' },
@@ -25,8 +25,8 @@ const fields: SimpleFieldSettings<PickerOptions> = [
   { name: 'flat', type: 'boolean', label: 'Flat' },
 ];
 
-export default TypeSettingsBase<DateType, PickerOptions>().extend({
-  name: 'DatePickerSettings',
+export default TypeSettingsBase<EnumType, EnumSelectOptions>().extend({
+  name: 'EnumDropdownSettings',
   computed: {
     optionFields: () => fields,
   },

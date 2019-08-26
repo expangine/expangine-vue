@@ -1,8 +1,8 @@
 
 import { DateType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { PickerInput } from './PickerTypes';
-import { TextBoxInput } from './TextBoxTypes';
+import { DatePickerInput } from './DatePickerTypes';
+import { DateTextBoxInput } from './DateTextBoxTypes';
 import DateEditor from './DateEditor.vue';
 
 
@@ -20,14 +20,14 @@ const DateVisuals: TypeVisuals<DateType, true, false> =
     settings: { 
       input: 'picker', 
       defaultValue: new Date(),
-      options: PickerInput.getDefaultOptions(), 
+      options: DatePickerInput.getDefaultOptions(), 
     },
   }),
   defaultInput: 'picker',
   inputsOrder: ['picker', 'textbox'],
   inputs: {
-    picker: PickerInput,
-    textbox: TextBoxInput,
+    picker: DatePickerInput,
+    textbox: DateTextBoxInput,
   },
 };
 

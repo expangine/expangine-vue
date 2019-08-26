@@ -5,10 +5,7 @@
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
-    :value="value"
-    :true-value="true"
-    :false-value="false"
-    @change="input"
+    v-model="computedValue"
   ></v-checkbox>
 </template>
 

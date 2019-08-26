@@ -1,11 +1,11 @@
 
 import { NumberType } from 'expangine-runtime';
-import TextBox from './TextBox.vue';
-import TextBoxSettings from './TextBoxSettings.vue';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import NumberTextBox from './NumberTextBox.vue';
+import NumberTextBoxSettings from './NumberTextBoxSettings.vue';
 
 
-export interface TextBoxOptions
+export interface NumberTextBoxOptions
 {
   label: string;
   hint: string;
@@ -20,12 +20,12 @@ export interface TextBoxOptions
   flat: boolean;
 }
 
-export const TextBoxInput: TypeVisualInput<NumberType, TextBoxOptions> = 
+export const NumberTextBoxInput: TypeVisualInput<NumberType, NumberTextBoxOptions> = 
 {
   name: 'Textbox',
   description: 'A textbox allows single-line number input',
-  input: TextBox,
-  settings: TextBoxSettings,
+  input: NumberTextBox,
+  settings: NumberTextBoxSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',
@@ -41,7 +41,7 @@ export const TextBoxInput: TypeVisualInput<NumberType, TextBoxOptions> =
     flat: false,
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
-  getSummary: (options: TextBoxOptions) => (
-    `<strong>Textbox</strong>: ${options.label}`
+  getSummary: (options) => (
+    `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint}`
   ),
 };

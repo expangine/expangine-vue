@@ -1,8 +1,8 @@
 
 import { NumberType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { TextBoxInput } from './TextBoxTypes';
-import { SliderInput } from './SliderTypes';
+import { NumberTextBoxInput } from './NumberTextBoxTypes';
+import { NumberSliderInput } from './NumberSliderTypes';
 import NumberEditor from './NumberEditor.vue';
 
 
@@ -20,14 +20,14 @@ const NumberVisuals: TypeVisuals<NumberType, true, false> =
     settings: { 
       input: 'textbox', 
       defaultValue: '',
-      options: TextBoxInput.getDefaultOptions(), 
+      options: NumberTextBoxInput.getDefaultOptions(), 
     },
   }),
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'slider'],
   inputs: {
-    textbox: TextBoxInput,
-    slider: SliderInput,
+    textbox: NumberTextBoxInput,
+    slider: NumberSliderInput,
   },
 };
 

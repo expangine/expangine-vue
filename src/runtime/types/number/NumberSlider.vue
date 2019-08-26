@@ -8,18 +8,17 @@
     :error="invalid"
     :min="type.options.min"
     :max="type.options.max"
-    :value="value"
-    @input="input"
+    v-model.number="computedValue"
   ></v-slider>
 </template>
 
 <script lang="ts">
 import { NumberType } from 'expangine-runtime';
-import { SliderOptions } from './SliderTypes';
+import { NumberSliderOptions } from './NumberSliderTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<NumberType, SliderOptions, number | string>([Number, String]).extend({
+export default TypeInputBase<NumberType, NumberSliderOptions, number | string>([Number, String]).extend({
   name: 'NumberSlider',
   computed: {
     hasHint(): boolean {

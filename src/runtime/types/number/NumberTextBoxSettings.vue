@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import { DateType } from 'expangine-runtime';
-import { TextBoxOptions } from './TextBoxTypes';
+import { NumberType } from 'expangine-runtime';
+import { NumberTextBoxOptions } from './NumberTextBoxTypes';
 import { SimpleFieldSettings } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
-const fields: SimpleFieldSettings<TextBoxOptions> = [
+const fields: SimpleFieldSettings<NumberTextBoxOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'prefix', type: 'text', label: 'Prefix' },
@@ -28,8 +28,8 @@ const fields: SimpleFieldSettings<TextBoxOptions> = [
   { name: 'flat', type: 'boolean', label: 'Flat' },
 ];
 
-export default TypeSettingsBase<DateType, TextBoxOptions>().extend({
-  name: 'DateTextBoxSettings',
+export default TypeSettingsBase<NumberType, NumberTextBoxOptions>().extend({
+  name: 'NumberTextBoxSettings',
   computed: {
     optionFields: () => fields,
   },

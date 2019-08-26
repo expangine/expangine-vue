@@ -32,8 +32,8 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListListS
     hideSort: false,
   }),
   getName: (options) => options.title || options.itemName,
-  getSummary: () => (
-    `<strong>List</strong>`
+  getSummary: (options) => (
+    `<strong>List</strong> ${options.title || options.itemName}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

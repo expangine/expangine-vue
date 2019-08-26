@@ -8,6 +8,7 @@ import DateVisuals from './types/date';
 import OptionalVisuals from './types/optional';
 import ManyVisuals from './types/many';
 import ListVisuals from './types/list';
+import EnumVisuals from './types/enum';
 
 
 export default new Registry()
@@ -19,4 +20,5 @@ export default new Registry()
   .addType(OptionalVisuals)
   .addType(ManyVisuals)
   .addType(ListVisuals)
+  .addType(EnumVisuals)
 ;

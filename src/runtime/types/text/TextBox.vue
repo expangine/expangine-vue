@@ -1,14 +1,13 @@
 <template>
   <v-text-field
+    v-bind="settings.options"
     :hide-details="hideHint"
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
-    :value="value"
-    v-bind="settings.options"
     :clearable="clearable"
     :counter="counter"
-    @input="input"
+    v-model="computedValue"
   ></v-text-field>
 </template>
 

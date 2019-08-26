@@ -1,11 +1,11 @@
 
 import { DateType } from 'expangine-runtime';
-import Picker from './Picker.vue';
-import PickerSettings from './PickerSettings.vue';
+import Picker from './DatePicker.vue';
+import PickerSettings from './DatePickerSettings.vue';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 
-export interface PickerOptions
+export interface DatePickerOptions
 {
   label: string;
   hint: string;
@@ -17,7 +17,7 @@ export interface PickerOptions
   flat: boolean;
 }
 
-export const PickerInput: TypeVisualInput<DateType, PickerOptions> = 
+export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> = 
 {
   name: 'Picker',
   description: 'A picker allows the user to select a date.',

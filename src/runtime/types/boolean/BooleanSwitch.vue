@@ -5,10 +5,7 @@
     :persistent-hint="hasHint"
     :error="invalid"
     :readonly="readOnly"
-    :value="value"
-    :true-value="true"
-    :false-value="false"
-    @change="input"
+    v-model="computedValue"
   ></v-switch>
 </template>
 

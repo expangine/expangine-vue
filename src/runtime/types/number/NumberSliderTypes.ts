@@ -1,11 +1,11 @@
 
 import { NumberType, isNumber } from 'expangine-runtime';
-import Slider from './Slider.vue';
-import SliderSettings from './SliderSettings.vue';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import NumberSlider from './NumberSlider.vue';
+import NumberSliderSettings from './NumberSliderSettings.vue';
 
 
-export interface SliderOptions
+export interface NumberSliderOptions
 {
   label: string;
   hint: string;
@@ -14,12 +14,12 @@ export interface SliderOptions
   thumbLabel: boolean;
 }
 
-export const SliderInput: TypeVisualInput<NumberType, SliderOptions> = 
+export const NumberSliderInput: TypeVisualInput<NumberType, NumberSliderOptions> = 
 {
   name: 'Slider',
   description: 'A slider specifies a number value.',
-  input: Slider,
-  settings: SliderSettings,
+  input: NumberSlider,
+  settings: NumberSliderSettings,
   isVisible: (type) => isNumber(type.options.min) && isNumber(type.options.max),
   getDefaultOptions: () => ({
     label: '',
@@ -29,7 +29,7 @@ export const SliderInput: TypeVisualInput<NumberType, SliderOptions> =
     thumbLabel: false,
   }),
   getName: (options) => options.label || options.hint,
-  getSummary: (options: SliderOptions) => (
-    `<strong>Slider</strong>: ${options.label}`
+  getSummary: (options) => (
+    `<strong>Slider</strong>: ${options.label || options.hint}`
   ),
 };

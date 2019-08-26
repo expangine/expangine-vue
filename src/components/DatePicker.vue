@@ -9,6 +9,7 @@
         v-bind="textProps"
         v-on="on"
         :value="valueAsString"
+        @click:clear="$emit('click:clear')"
       ></v-text-field>
     </template>
     <v-date-picker

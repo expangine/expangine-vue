@@ -52,6 +52,6 @@ export const TextBoxInput: TypeVisualInput<TextType, TextBoxOptions> =
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options: TextBoxOptions) => (
-    `<strong>Textbox</strong>: ${options.label}`
+    `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint}`
   ),
 };

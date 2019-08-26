@@ -6,18 +6,17 @@
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
-    :value="value"
-    @input="input"
+    v-model="computedValue"
   ></v-text-field>
 </template>
 
 <script lang="ts">
 import { DateType } from 'expangine-runtime';
-import { TextBoxOptions } from './TextBoxTypes';
+import { DateTextBoxOptions } from './DateTextBoxTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<DateType, TextBoxOptions, Date>(Date).extend({
+export default TypeInputBase<DateType, DateTextBoxOptions, Date>(Date).extend({
   name: 'DateTextBox',
   computed: {
     inputType(): string {

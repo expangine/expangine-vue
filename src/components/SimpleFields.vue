@@ -13,6 +13,7 @@
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
+          @click:clear="setField(field)"
         ></v-text-field>
         <v-combobox
           v-else-if="field.type === 'combo'"
@@ -30,6 +31,7 @@
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
+          @click:clear="setField(field)"
         ></v-combobox>
         <v-select
           v-else-if="field.type === 'select'"
@@ -43,6 +45,7 @@
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
+          @click:clear="setField(field)"
         ></v-select>
         <v-text-field
           v-else-if="field.type === 'number'"
@@ -72,6 +75,7 @@
           }"
           :value="value[field.name]"
           @input="setField(field, $event)"
+          @click:clear="setField(field)"
         ></ex-date-picker>
         <ex-color-picker
           v-else-if="field.type === 'color'"
@@ -84,6 +88,7 @@
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, $event)"
+          @click:clear="setField(field)"
         ></ex-color-picker>
         <ex-simple-fields
           v-else-if="field.type === 'object'"
@@ -99,9 +104,7 @@
           :hint="field.details"
           :persistent-hint="!!field.details"
           :label="field.label"
-          :value="value[field.name]"
-          :false-value="false"
-          :true-value="true"
+          :input-value="value[field.name]"
           @change="setField(field, $event)"
         ></v-checkbox>
         <div v-else>

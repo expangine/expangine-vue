@@ -1,7 +1,7 @@
 
 import { ObjectType, AnyType } from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '@/runtime/TypeVisuals';
-import { ObjectFormInputs } from './ObjectFormTypes';
+import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
 
 
@@ -20,14 +20,14 @@ const ObjectVisuals: TypeVisuals<ObjectType, true, false> =
     settings: { 
       input: 'form', 
       defaultValue: Object.create(null),
-      options: ObjectFormInputs.getDefaultOptions(), 
+      options: ObjectFormInput.getDefaultOptions(), 
       sub: Object.create(null),
     },
   }),
   defaultInput: 'form',
   inputsOrder: ['form'],
   inputs: {
-    form: ObjectFormInputs,
+    form: ObjectFormInput,
   },
 };
 

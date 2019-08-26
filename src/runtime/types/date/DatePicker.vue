@@ -1,23 +1,22 @@
 <template>
   <ex-date-picker
     v-bind="settings.options"
-    :value="value"
     :read-only="readOnly"
     :with-time="type.options.withTime"
     :text-props="textProps"
     :date-props="dateProps"
-    @input="input"
+    v-model="computedValue"
   ></ex-date-picker>
 </template>
 
 <script lang="ts">
 import { DateType } from 'expangine-runtime';
 import { formatDate } from '../../../common';
-import { PickerOptions } from './PickerTypes';
+import { DatePickerOptions } from './DatePickerTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<DateType, PickerOptions, Date>(Date).extend({
+export default TypeInputBase<DateType, DatePickerOptions, Date>(Date).extend({
   name: 'DatePicker',
   computed: {
     hasHint(): boolean {

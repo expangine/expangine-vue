@@ -6,28 +6,20 @@
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
-    v-model="valueNumber"
+    v-model.number="computedValue"
     @blur="fix"
   ></v-text-field>
 </template>
 
 <script lang="ts">
 import { NumberType } from 'expangine-runtime';
-import { TextBoxOptions } from './TextBoxTypes';
+import { NumberTextBoxOptions } from './NumberTextBoxTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<NumberType, TextBoxOptions, number | string>([Number, String]).extend({
+export default TypeInputBase<NumberType, NumberTextBoxOptions, number | string>([Number, String]).extend({
   name: 'NumberTextBox',
   computed: {
-    valueNumber: {
-      get(): string {
-        return isFinite(parseFloat(this.value as string)) ? this.value.toString() : '';
-      },
-      set(value: string) {
-        this.input(parseFloat(value));
-      },
-    },
     hasHint(): boolean {
       return !this.hideHint;
     },

@@ -63,6 +63,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, defs } from 'expangine-runtime';
+import * as ex from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
 import VisualsStarting from '../runtime/types/object';
 import Registry from '../runtime';
@@ -80,6 +81,7 @@ export default Vue.extend({
   async mounted() {
     (window as any).registry = Registry;
     (window as any).home = this;
+    (window as any).ex = ex;
 
     await this.loadType();
     this.loadData();

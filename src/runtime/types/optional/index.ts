@@ -2,8 +2,8 @@
 import { OptionalType, AnyType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
-import OptionalEditor from './OptionalEditor.vue';
 import { confirm } from '@/app/Confirm';
+import OptionalEditor from './OptionalEditor.vue';
 
 
 const OptionalVisuals: TypeVisuals<OptionalType, false, true, OptionalSubs> = 

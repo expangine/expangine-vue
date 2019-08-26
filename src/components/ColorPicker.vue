@@ -12,7 +12,7 @@
         append-icon="mdi-close"
         :value="value"
         @input="input"
-        @click:append.prevent="clear"
+        @click:clear="$emit('click:clear')"
       ></v-text-field>
     </template>
     <v-color-picker
@@ -61,9 +61,6 @@ export default Vue.extend({
   methods: {
     input(value: string) {
       this.$emit('input', value);
-    },
-    clear() {
-      this.input('');
     },
   },
 });

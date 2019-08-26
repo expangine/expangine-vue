@@ -6,8 +6,7 @@
     :persistent-hint="hasHint"
     :readonly="readOnly"
     :error="invalid"
-    :value="value"
-    @change="input"
+    v-model="computedValue"
   >
     <v-radio 
       :label="settings.options.labelTrue" 

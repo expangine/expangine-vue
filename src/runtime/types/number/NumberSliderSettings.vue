@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { NumberType } from 'expangine-runtime';
-import { SliderOptions } from './SliderTypes';
+import { NumberSliderOptions } from './NumberSliderTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
 import { ListOptions, SimpleFieldSettings } from '../../../common';
 
@@ -20,7 +20,7 @@ const thumbLabelOptions: ListOptions<string | boolean> = [
   { text: 'Show always', value: 'always' },
 ];
 
-const fields: SimpleFieldSettings<SliderOptions> = [
+const fields: SimpleFieldSettings<NumberSliderOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'step', type: 'number', label: 'Step' },
@@ -28,7 +28,7 @@ const fields: SimpleFieldSettings<SliderOptions> = [
   { name: 'dark', type: 'boolean', label: 'Dark' },
 ];
 
-export default TypeSettingsBase<NumberType, SliderOptions>().extend({
+export default TypeSettingsBase<NumberType, NumberSliderOptions>().extend({
   name: 'NumberSliderSettings',
   computed: {
     optionFields: () => fields,

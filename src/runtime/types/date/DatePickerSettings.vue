@@ -8,18 +8,15 @@
 </template>
 
 <script lang="ts">
-import { NumberType } from 'expangine-runtime';
-import { TextBoxOptions } from './TextBoxTypes';
+import { DateType } from 'expangine-runtime';
+import { DatePickerOptions } from './DatePickerTypes';
 import { SimpleFieldSettings } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
-const fields: SimpleFieldSettings<TextBoxOptions> = [
+const fields: SimpleFieldSettings<DatePickerOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
-  { name: 'prefix', type: 'text', label: 'Prefix' },
-  { name: 'suffix', type: 'text', label: 'Suffix' },
-  { name: 'placeholder', type: 'text', label: 'Placeholder' },
   { name: 'dark', type: 'boolean', label: 'Dark' },
   { name: 'filled', type: 'boolean', label: 'Filled' },
   { name: 'solo', type: 'boolean', label: 'Solo' },
@@ -28,8 +25,8 @@ const fields: SimpleFieldSettings<TextBoxOptions> = [
   { name: 'flat', type: 'boolean', label: 'Flat' },
 ];
 
-export default TypeSettingsBase<NumberType, TextBoxOptions>().extend({
-  name: 'NumberTextBoxSettings',
+export default TypeSettingsBase<DateType, DatePickerOptions>().extend({
+  name: 'DatePickerSettings',
   computed: {
     optionFields: () => fields,
   },
