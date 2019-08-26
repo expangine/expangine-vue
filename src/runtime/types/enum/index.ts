@@ -5,6 +5,7 @@ import { TextBoxInput } from '../text/TextBoxTypes';
 import { EnumSubs } from './EnumTypes';
 import { EnumSelectInput } from './EnumSelectTypes';
 import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
+import { EnumSliderInput } from './EnumSliderTypes';
 import EnumEditor from './EnumEditor.vue';
 
 
@@ -38,10 +39,11 @@ const EnumVisuals: TypeVisuals<EnumType, true, false, EnumSubs> =
     },
   }),
   defaultInput: 'dropdown',
-  inputsOrder: ['dropdown', 'autocomplete'],
+  inputsOrder: ['dropdown', 'autocomplete', 'slider'],
   inputs: {
     dropdown: EnumSelectInput,
     autocomplete: EnumAutocompleteInput,
+    slider: EnumSliderInput,
   },
 };
 

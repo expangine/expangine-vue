@@ -33,7 +33,7 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListListS
   }),
   getName: (options) => options.title || options.itemName,
   getSummary: (options) => (
-    `<strong>List</strong> ${options.title || options.itemName}`
+    `<strong>List</strong>: ${options.title || options.itemName}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

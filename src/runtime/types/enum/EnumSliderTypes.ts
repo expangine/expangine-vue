@@ -2,11 +2,11 @@
 import { EnumType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
 import { EnumSubs } from './EnumTypes';
-import EnumAutocomplete from './EnumAutocomplete.vue';
-import EnumAutocompleteSettings from './EnumAutocompleteSettings.vue';
+import EnumSlider from './EnumSlider.vue';
+import EnumSliderSettings from './EnumSliderSettings.vue';
 
 
-export interface EnumAutocompleteOptions
+export interface EnumSliderOptions
 {
   label: string;
   hint: string;
@@ -18,12 +18,12 @@ export interface EnumAutocompleteOptions
   flat: boolean;
 }
 
-export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOptions, EnumSubs> = 
+export const EnumSliderInput: TypeVisualInput<EnumType, EnumSliderOptions, EnumSubs> = 
 {
-  name: 'Autocomplete',
-  description: 'An autocomplete where the option text is the enum key and the value is the enum value.',
-  input: EnumAutocomplete,
-  settings: EnumAutocompleteSettings,
+  name: 'Slider',
+  description: 'A slider where the labels are the enum keys and the values are the enum values.',
+  input: EnumSlider,
+  settings: EnumSliderSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',
@@ -37,7 +37,7 @@ export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOp
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Autocomplete</strong>: ${options.label || options.hint}`
+    `<strong>Slider</strong>: ${options.label || options.hint}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },
