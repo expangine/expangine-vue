@@ -3,7 +3,7 @@ import { isString } from 'expangine-runtime';
 
 export type ListOptions<T = string> = Array<{ text: string; value: T }>;
 
-export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol];
+export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol, Map];
 
 export type SimpleTypes = 'text' | 'number' | 'boolean' | 'combo' | 'select' | 'date' | 'color' | 'object' | 'items';
 

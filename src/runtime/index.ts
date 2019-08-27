@@ -9,6 +9,7 @@ import OptionalVisuals from './types/optional';
 import ManyVisuals from './types/many';
 import ListVisuals from './types/list';
 import EnumVisuals from './types/enum';
+import MapVisuals from './types/map';
 
 
 export default new Registry()
@@ -21,4 +22,5 @@ export default new Registry()
   .addType(ManyVisuals)
   .addType(ListVisuals)
   .addType(EnumVisuals)
+  .addType(MapVisuals)
 ;

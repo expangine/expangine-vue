@@ -8,8 +8,8 @@
 
 <script lang="ts">
 import { BooleanType } from 'expangine-runtime';
-import { BooleanRadioOptions } from './BooleanRadioTypes';
 import { SimpleFieldSettings } from '../../../common';
+import { BooleanRadioOptions } from './BooleanRadioTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
