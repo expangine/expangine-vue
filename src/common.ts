@@ -5,7 +5,7 @@ export type ListOptions<T = string> = Array<{ text: string; value: T }>;
 
 export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol];
 
-export type SimpleTypes = 'text' | 'number' | 'boolean' | 'combo' | 'select' | 'date' | 'color' | 'object';
+export type SimpleTypes = 'text' | 'number' | 'boolean' | 'combo' | 'select' | 'date' | 'color' | 'object' | 'items';
 
 export type SimpleTypeForType<V> =
   V extends string
@@ -18,6 +18,8 @@ export type SimpleTypeForType<V> =
     ? 'date'
 : V extends string[]
     ? 'combo'
+: V extends ListOptions<any>
+    ? 'items'
 : V extends object
     ? 'object'
 : SimpleTypes;
@@ -32,6 +34,7 @@ export interface SimpleFieldOption<N = string, T = SimpleTypes, V = any>
   details?: string;
   fields?: SimpleFieldSettings<any>;
   defaultValue?: V;
+  valueType?: 'text' | 'number';
 }
 
 export type SimpleFieldOptionForProperty<O, K extends keyof O> = SimpleFieldOption<K, SimpleTypeForType<O[K]>, O[K]>;

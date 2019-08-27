@@ -107,9 +107,61 @@
           :input-value="value[field.name]"
           @change="setField(field, $event)"
         ></v-checkbox>
-        <div v-else>
+        <template v-else-if="field.type === 'items'">
+          <v-list class="pt-0">
+            <v-list-item>
+              <v-list-item-icon class="ma-0 mr-2 pt-1">
+                <v-btn icon color="primary" @click="addItem(field)">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-list-item-icon>
+              <v-list-item-content class="pa-0">
+                <v-list-item-title>{{ field.label }}</v-list-item-title>
+                <v-list-item-subtitle>{{ field.details }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <template v-for="(item, itemIndex) in getItems(field)">
+              <v-list-item :key="itemIndex">
+                <v-list-item-icon class="mr-2 pt-1">
+                  <v-btn icon @click="removeItem(field, itemIndex)">
+                    <v-icon>mdi-minus</v-icon>
+                  </v-btn>
+                </v-list-item-icon>
+                <v-list-item-content class="pa-0">
+                  <v-container class="pa-0">
+                    <v-row>
+                      <v-col cols="6">
+                        <v-text-field
+                          outlined
+                          hide-details
+                          label="Text"
+                          type="text"
+                          :readonly="readOnly"
+                          :value="item.text"
+                          @input="setItemText(field, itemIndex, $event)"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                          outlined
+                          hide-details
+                          label="Value"
+                          :type="field.valueType || 'text'"
+                          :readonly="readOnly"
+                          :value="item.value"
+                          @input="setItemValue(field, itemIndex, $event)"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </template>
+        <template v-else>
           <strong>{{ field.type }}</strong> not supported.
-        </div>
+        </template>
       </v-list-item>
     </template>
   </v-list>
@@ -119,6 +171,7 @@
 import Vue from 'vue';
 import { TypeSettings } from '../runtime/TypeVisuals';
 import { SimpleFieldOption } from '../common';
+import { isArray } from 'expangine-runtime';
 
 
 export default Vue.extend({
@@ -162,6 +215,40 @@ export default Vue.extend({
       } else {
         this.$set(this.value, field.name, value);
       }
+      this.update();
+    },
+    getItems(field: SimpleFieldOption) {
+      let items = this.value[field.name];
+      if (!isArray(items)) {
+        this.$set(this.value, field.name, items = []);
+      }
+      return items;
+    },
+    removeItem(field: SimpleFieldOption, index: number) {
+      const items = this.getItems(field);
+      items.splice(index, 1);
+      this.update();
+    },
+    setItemText(field: SimpleFieldOption, index: number, text: string) {
+      const items = this.getItems(field);
+      this.$set(items[index], 'text', text);
+      this.update();
+    },
+    setItemValue(field: SimpleFieldOption, index: number, value: string) {
+      const items = this.getItems(field);
+      this.$set(items[index], 'value', value);
+      this.update();
+    },
+    addItem(field: SimpleFieldOption) {
+      const items = this.getItems(field);
+      const count = items.length + 1;
+      items.push({
+        text: 'Text #' + count,
+        value: field.valueType === 'number' ? count : 'Value #' + count,
+      });
+      this.update();
+    },
+    update() {
       this.$emit('input', this.value);
     },
   },
