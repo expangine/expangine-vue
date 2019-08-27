@@ -39,7 +39,7 @@ export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object)
       },
     },
     fieldSettings(): TypeSettings<any> | null {
-      return this.settings.sub ? this.settings.sub[this.prop] : null;
+      return this.settings.sub[this.prop];
     },
     fieldType(): Type {
       return this.type.options.props[this.prop];

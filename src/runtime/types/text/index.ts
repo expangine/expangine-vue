@@ -3,6 +3,7 @@ import { TextType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
 import { TextBoxInput } from './TextBoxTypes';
 import { TextAreaInput } from './TextAreaTypes';
+import { TextComboInput } from './TextComboTypes';
 import TextEditor from './TextEditor.vue';
 
 
@@ -24,10 +25,11 @@ const TextVisuals: TypeVisuals<TextType, true, false> =
     },
   }),
   defaultInput: 'textbox',
-  inputsOrder: ['textbox', 'textarea'],
+  inputsOrder: ['textbox', 'textarea', 'combo'],
   inputs: {
     textbox: TextBoxInput,
     textarea: TextAreaInput,
+    combo: TextComboInput,
   },
 };
 
