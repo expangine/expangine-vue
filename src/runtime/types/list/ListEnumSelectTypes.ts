@@ -1,24 +1,23 @@
 
-import { ListType, TextType } from 'expangine-runtime';
+import { ListType, EnumType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
 import { ListSubs } from './ListTypes';
-import ListCombo from './ListCombo.vue';
-import ListComboSettings from './ListComboSettings.vue';
+import ListEnumSelect from './ListEnumSelect.vue';
+import ListEnumSelectSettings from './ListEnumSelectSettings.vue';
 
 
-export interface ListComboOptions
+export interface ListEnumSelectOptions
 {
   label: string;
-  items: string[];
   hint: string;
   prefix: string;
   suffix: string;
   placeholder: string;
-  chips: boolean;
-  smallChips: boolean;
-  deletableChips: boolean;
   singleLine: boolean;
   clearable: boolean;
+  smallChips: boolean;
+  deletableChips: boolean;
+  chips: boolean;
   dark: boolean;
   filled: boolean;
   solo: boolean;
@@ -27,17 +26,16 @@ export interface ListComboOptions
   flat: boolean;
 }
 
-export const ListComboInput: TypeVisualInput<ListType, ListComboOptions, ListSubs> = 
+export const ListEnumSelectInput: TypeVisualInput<ListType, ListEnumSelectOptions, ListSubs> = 
 {
-  name: 'Text Combobox',
-  description: 'A combobox allows the user to enter a list of text, with a list of existing values to choose from',
+  name: 'Enum Dropdown',
+  description: 'A dropdown for an Enum that allows you to select multiple values.',
   hideSubSettings: true,
-  input: ListCombo,
-  settings: ListComboSettings,
-  isVisible: (type) => type.options.item instanceof TextType,
+  input: ListEnumSelect,
+  settings: ListEnumSelectSettings,
+  isVisible: (type) => type.options.item instanceof EnumType,
   getDefaultOptions: () => ({
     label: '',
-    items: [],
     hint: '',
     prefix: '',
     suffix: '',
@@ -56,7 +54,7 @@ export const ListComboInput: TypeVisualInput<ListType, ListComboOptions, ListSub
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Text Combobox</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Enum Dropdown</strong>: ${options.label || options.placeholder || options.hint}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

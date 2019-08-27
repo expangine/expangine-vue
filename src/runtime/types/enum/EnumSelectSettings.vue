@@ -1,9 +1,8 @@
 <template>
   <ex-simple-fields
-    :value="value"
     :fields="optionFields"
     :read-only="readOnly"
-    @input="input"
+    v-model="computedValue"
   ></ex-simple-fields>
 </template>
 

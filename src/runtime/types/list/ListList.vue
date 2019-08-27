@@ -72,13 +72,14 @@
 
 <script lang="ts">
 import { Type, ListType, isNumber } from 'expangine-runtime';
-import { ListListOptions, ListListSubs } from './ListListTypes';
-import { confirm } from '../../../app/Confirm';
-import TypeInputBase from '../TypeInputBase';
 import { TypeSettings } from '../../TypeVisuals';
+import { confirm } from '../../../app/Confirm';
+import { ListSubs } from './ListTypes';
+import { ListListOptions } from './ListListTypes';
+import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<ListType, ListListOptions, any[], ListListSubs>(Array).extend({
+export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).extend({
   name: 'ListList',
   computed: {
     itemType(): Type {

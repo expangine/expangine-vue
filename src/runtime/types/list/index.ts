@@ -1,13 +1,15 @@
 
 import { ListType, AnyType, TextType } from 'expangine-runtime';
 import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { ListListInput, ListListSubs } from './ListListTypes';
-import { ListComboInput } from './ListComboTypes';
+import { ListSubs } from './ListTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
+import { ListListInput } from './ListListTypes';
+import { ListComboInput } from './ListComboTypes';
+import { ListEnumSelectInput } from './ListEnumSelectTypes';
 import ListEditor from './ListEditor.vue';
 
 
-const ListVisuals: TypeVisuals<ListType, true, false, ListListSubs> =
+const ListVisuals: TypeVisuals<ListType, true, false, ListSubs> =
 {
   type: ListType,
   newInstance: () => ListType.forItem(new AnyType({ })),
@@ -32,10 +34,11 @@ const ListVisuals: TypeVisuals<ListType, true, false, ListListSubs> =
     },
   }),
   defaultInput: 'list',
-  inputsOrder: ['list', 'combo'],
+  inputsOrder: ['list', 'combo', 'select'],
   inputs: {
     list: ListListInput,
     combo: ListComboInput,
+    select: ListEnumSelectInput,
   },
 };
 

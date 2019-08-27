@@ -1,9 +1,9 @@
 
 import { ListType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { ListSubs } from './ListTypes';
 import ListList from './ListList.vue';
 import ListListSettings from './ListListSettings.vue';
-import OptionalVisuals from '../optional';
 
 
 export interface ListListOptions
@@ -15,9 +15,7 @@ export interface ListListOptions
   hideSort: boolean;
 }
 
-export type ListListSubs = 'item';
-
-export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListListSubs> = 
+export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs> = 
 {
   name: 'List',
   description: 'A list allows multiple values of a given type.',

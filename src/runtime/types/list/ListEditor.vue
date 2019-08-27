@@ -28,6 +28,7 @@
           <strong>List</strong>
         </v-list-item-title>
         <v-list-item-subtitle 
+          v-if="!disableSubSettings"
           v-html="summary"
         ></v-list-item-subtitle>
         <v-list-item-subtitle 
@@ -48,6 +49,7 @@
           :registry="registry"
           :parent="type"
           :read-only="readOnly"
+          :disable-sub-settings="hideSubSettings"
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="onChangeType"
@@ -59,9 +61,9 @@
 
 <script lang="ts">
 import { Type, ListType, ListOptions, isNumber } from 'expangine-runtime';
-import { TypeAndSettings } from '../../TypeVisuals';
-import { ListListSubs } from './ListListTypes';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
+import { TypeAndSettings } from '../../TypeVisuals';
+import { ListSubs } from './ListTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
 
@@ -70,8 +72,7 @@ const fields: SimpleFieldSettings<ListOptions> = [
   { name: 'max', type: 'number', label: 'Max' },
 ];
 
-
-export default TypeEditorBase<ListType, any, ListListSubs>().extend({
+export default TypeEditorBase<ListType, any, ListSubs>().extend({
   name: 'ListEditor',
   computed: {
     optionFields: () => fields,

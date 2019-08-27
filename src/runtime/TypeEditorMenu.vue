@@ -85,7 +85,7 @@
       </v-menu>
 
       <v-menu 
-        v-if="settings.input"
+        v-if="settings.input && !disableSubSettings"
         offset-x
         min-width="400"
         :close-on-content-click="false"

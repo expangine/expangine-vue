@@ -48,6 +48,7 @@ export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unk
 {
   name: string;
   description: string;
+  hideSubSettings?: boolean;
   settings: VueConstructor;
   input: VueConstructor;
   isVisible: (type: T) => boolean;

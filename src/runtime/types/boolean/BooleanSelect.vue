@@ -6,8 +6,7 @@
     :readonly="readOnly"
     :error="invalid"
     :items="items"
-    :value="value"
-    @input="input"
+    v-model="computedValue"
   ></v-select>
 </template>
 

@@ -7,6 +7,7 @@
         :registry="registry"
         :parent="parent"
         :read-only="readOnly"
+        :disable-sub-settings="disableSubSettings"
         @input:type="updateType"
         @input:settings="updateSettings"
         @change:type="changeType"
@@ -20,6 +21,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <ex-type-editor
+                  disable-sub-settings
                   :type="type.options.key"
                   :settings="settings.sub.key"
                   :registry="registry"
@@ -37,6 +39,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <ex-type-editor
+                  disable-sub-settings
                   :type="type.options.value"
                   :settings="settings.sub.value"
                   :registry="registry"
@@ -102,6 +105,7 @@
         <strong>Enum</strong>
       </v-list-item-title>
       <v-list-item-subtitle 
+        v-if="!disableSubSettings"
         v-html="summary"
       ></v-list-item-subtitle>
       <v-list-item-subtitle 

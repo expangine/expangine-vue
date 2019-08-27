@@ -9,8 +9,10 @@ import EnumSelectSettings from './EnumSelectSettings.vue';
 export interface EnumSelectOptions
 {
   label: string;
-  dark: boolean;
   hint: string;
+  // TODO placeholder
+  dark: boolean;
+  // TODO singleLine
   filled: boolean;
   outlined: boolean;
   dense: boolean;

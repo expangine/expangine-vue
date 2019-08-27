@@ -7,6 +7,7 @@
         :registry="registry"
         :parent="parent"
         :read-only="readOnly"
+        :disable-sub-settings="disableSubSettings"
         @input:type="updateType"
         @input:settings="updateSettings"
         @change:type="changeType"
@@ -52,6 +53,7 @@
         <strong>Boolean</strong> 
       </v-list-item-title>
       <v-list-item-subtitle 
+        v-if="!disableSubSettings"
         v-html="summary"
       ></v-list-item-subtitle>
     </v-list-item-content>

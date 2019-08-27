@@ -18,6 +18,7 @@
           <strong>Object</strong>
         </v-list-item-title>
         <v-list-item-subtitle 
+          v-if="!disableSubSettings"
           v-html="summary"
         ></v-list-item-subtitle>
         <v-list-item-subtitle 

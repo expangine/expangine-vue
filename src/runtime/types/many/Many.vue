@@ -26,12 +26,11 @@
     </v-list-item-avatar>
     <v-list-item-content class="pa-1">
       <ex-type-input
-        :value="value"
         :type="subType"
         :read-only="readOnly"
         :registry="registry"
         :settings="subTypeSettings"
-        @input="input"
+        v-model="computedValue"
       ></ex-type-input>
     </v-list-item-content>
   </v-list-item>
@@ -53,7 +52,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
   }),
   computed: {
     subType(): Type {
-      return this.currentType || this.type.getExactType(this.value);
+      return this.currentType || this.type.getExactType(this.value) || this.type.options[0];
     },
     subTypeSettings(): TypeSettings<any, any> {
       return this.settings.sub[this.subType.getId()];

@@ -10,7 +10,9 @@ export default function <T extends Type, O>()
     {
       input(): void;
     },
-    unknown,
+    {
+      computedValue: O;
+    },
     {
       type: T;
       value: O;
@@ -29,6 +31,16 @@ export default function <T extends Type, O>()
       readOnly: {
         type: Boolean,
         default: false,
+      },
+    },
+    computed: {
+      computedValue: {
+        get(): O {
+          return this.value;
+        },
+        set(value: O) {
+          this.$emit('input', value);
+        },
       },
     },
     methods: {

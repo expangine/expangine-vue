@@ -28,6 +28,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       inputInput: VueConstructor;
       summary: string;
       hasDefault: boolean;
+      hideSubSettings: boolean;
     },
     {
       type: T;
@@ -35,6 +36,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       readOnly: boolean;
       registry: Registry;
       settings: TypeSettings<O, S>;
+      disableSubSettings: boolean;
     }
   >({
     props: {
@@ -56,6 +58,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       settings: {
         type: Object as () => TypeSettings<O, S>,
         required: true,
+      },
+      disableSubSettings: {
+        type: Boolean,
+        default: false,
       },
     },
     computed: {
@@ -100,6 +106,9 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
       inputInput(): VueConstructor {
         return this.inputSelected.input;
+      },
+      hideSubSettings(): boolean {
+        return !!this.inputSelected.hideSubSettings;
       },
       summary(): string {
         return this.inputSelected.getSummary(this.settings.options);
