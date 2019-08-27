@@ -7,6 +7,7 @@ import { ListListInput } from './ListListTypes';
 import { ListComboInput } from './ListComboTypes';
 import { ListEnumSelectInput } from './ListEnumSelectTypes';
 import { ListEnumAutocompleteInput } from './ListEnumAutocompleteTypes';
+import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import ListEditor from './ListEditor.vue';
 
 
@@ -35,12 +36,13 @@ const ListVisuals: TypeVisuals<ListType, true, false, ListSubs> =
     },
   }),
   defaultInput: 'list',
-  inputsOrder: ['list', 'combo', 'select', 'autocomplete'],
+  inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox'],
   inputs: {
     list: ListListInput,
     combo: ListComboInput,
     select: ListEnumSelectInput,
     autocomplete: ListEnumAutocompleteInput,
+    checkbox: ListEnumCheckboxInput,
   },
 };
 

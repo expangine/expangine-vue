@@ -31,15 +31,6 @@ export default TypeInputBase<EnumType, EnumRadioOptions, any, EnumSubs>(PropType
     entries(): Array<[any, any]> {
       return toArray(this.type.options.constants.entries());
     },
-    keys(): any[] {
-      return this.entries.map(([k, v]) => k);
-    },
-    values(): any[] {
-      return this.entries.map(([k, v]) => v);
-    },
-    max(): number {
-      return this.keys.length - 1;
-    },
     hasHint(): boolean {
       return !this.hideHint;
     },
