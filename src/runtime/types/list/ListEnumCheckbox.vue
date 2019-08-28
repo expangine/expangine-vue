@@ -37,6 +37,9 @@ import { ListSubs } from './ListTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
+const MIN_INPUT_WIDTH = 1000;
+const GRID_COLUMNS = 12;
+
 export default TypeInputBase<ListType, ListEnumCheckboxOptions, any[], ListSubs>(Array).extend({
   name: 'ListEnumCheckbox',
   data: () => ({
@@ -55,10 +58,10 @@ export default TypeInputBase<ListType, ListEnumCheckboxOptions, any[], ListSubs>
       return toArray(this.enumType.options.constants.entries());
     },
     minWidth(): number {
-      return this.settings.options.minWidth || 1000;
+      return this.settings.options.minWidth || MIN_INPUT_WIDTH;
     },
     columns(): number {
-      return Math.floor(this.minWidth / this.width * 12);
+      return Math.floor(this.minWidth / this.width * GRID_COLUMNS);
     },
   },
   methods: {
