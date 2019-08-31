@@ -54,6 +54,14 @@
                     Rename
                   </v-list-item>
                 </v-list>
+                <ex-type-hook-list
+                  :registry="registry"
+                  :parent="type"
+                  :parent-settings="settings"
+                  :type="propType"
+                  :type-settings="settings.sub[prop]"
+                  :read-only="readOnly"
+                ></ex-type-hook-list>
               </v-menu>
             </td>
             <td class="pl-0">

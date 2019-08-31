@@ -25,7 +25,19 @@
     </v-list-item>
     <v-list-item>
       <v-list-item-avatar class="cell-top large-avatar">
-        <v-chip label link outlined color="accent">Key</v-chip>
+        <v-menu :disabled="readOnly">
+          <template #activator="{ on }">
+            <v-chip label link outlined v-on="on" color="accent">Key</v-chip>
+          </template>
+          <ex-type-hook-list
+            :registry="registry"
+            :parent="type"
+            :parent-settings="settings"
+            :type="type.options.key"
+            :type-settings="settings.sub.key"
+            :read-only="readOnly"
+          ></ex-type-hook-list>
+        </v-menu>
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor
@@ -43,7 +55,19 @@
     </v-list-item>
     <v-list-item>
       <v-list-item-avatar class="cell-top large-avatar">
-        <v-chip label link outlined color="accent">Value</v-chip>
+        <v-menu :disabled="readOnly">
+          <template #activator="{ on }">
+            <v-chip label link outlined v-on="on" color="accent">Value</v-chip>
+          </template>
+          <ex-type-hook-list
+            :registry="registry"
+            :parent="type"
+            :parent-settings="settings"
+            :type="type.options.value"
+            :type-settings="settings.sub.value"
+            :read-only="readOnly"
+          ></ex-type-hook-list>
+        </v-menu>
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor

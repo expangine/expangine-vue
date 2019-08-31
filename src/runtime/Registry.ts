@@ -4,6 +4,7 @@ import { TypeVisuals } from './TypeVisuals';
 import { ListOptions, ListOptionsPriority } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuildHandler } from './TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyHandler } from './TypeModifier';
+import { TypeHook, TypeHookHandler, TypeHookInput } from './TypeHook';
 
 
 export class Registry
@@ -14,6 +15,7 @@ export class Registry
   public types: TypeVisuals[];
   public builders: TypeBuilder[];
   public modifiers: TypeModifier[];
+  public hooks: TypeHook[];
 
   public constructor(defs: Definitions)
   {
@@ -22,6 +24,7 @@ export class Registry
     this.types = [];
     this.builders = [];
     this.modifiers = [];
+    this.hooks = [];
   }
 
   public addBuilder<T extends Type = Type>(builder: TypeBuilder<T>): this
@@ -34,6 +37,13 @@ export class Registry
   public addModifier<T extends Type = Type>(modifier: TypeModifier<T>): this
   {
     this.modifiers.push(modifier);
+
+    return this;
+  }
+
+  public addHook(hook: TypeHook): this
+  {
+    this.hooks.push(hook);
 
     return this;
   }
@@ -74,6 +84,23 @@ export class Registry
 
     for (const modifier of this.modifiers) {
       const option = modifier.getOption(input);
+
+      if (option) {
+        out.push(option);
+      }
+    }
+
+    out.sort((a, b) => a.priority - b.priority);
+
+    return out;
+  }
+
+  public getTypeHooksFor(input: TypeHookInput): ListOptions<TypeHookHandler>
+  {
+    const out: ListOptionsPriority<TypeHookHandler> = [];
+
+    for (const hook of this.hooks) {
+      const option = hook.getOption(input);
 
       if (option) {
         out.push(option);

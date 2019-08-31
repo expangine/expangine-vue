@@ -171,7 +171,6 @@ import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './types/TypeEditorBase';
 
 
-
 export default TypeEditorBase<Type, any>().extend({
   data: () => ({
     editing: false,

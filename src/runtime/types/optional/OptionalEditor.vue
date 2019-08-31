@@ -12,6 +12,14 @@
             Make Required
           </v-list-item>
         </v-list>
+        <ex-type-hook-list
+          :registry="registry"
+          :parent="type"
+          :parent-settings="settings"
+          :type="type.options"
+          :type-settings="settings.sub.innerType"
+          :read-only="readOnly"
+        ></ex-type-hook-list>
       </v-menu>
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">
