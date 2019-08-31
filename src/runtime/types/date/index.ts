@@ -1,34 +1,38 @@
 
 import { DateType } from 'expangine-runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
+import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
 import { DateTextBoxInput } from './DateTextBoxTypes';
 import DateEditor from './DateEditor.vue';
 
 
-const DateVisuals: TypeVisuals<DateType, true, false> = 
+export const DateVisuals = createVisuals(
 {
   type: DateType,
-  newInstance: () => new DateType({}),
   name: 'Date',
   description: 'A date value',
   editor: DateEditor,
-  buildable: true,
-  buildLabel: 'Date',
-  onBuild: async () => ({
-    type: new DateType({ }), 
-    settings: { 
-      input: 'picker', 
-      defaultValue: new Date(),
-      options: DatePickerInput.getDefaultOptions(), 
-    },
-  }),
   defaultInput: 'picker',
   inputsOrder: ['picker', 'textbox'],
   inputs: {
     picker: DatePickerInput,
     textbox: DateTextBoxInput,
   },
-};
+});
 
-export default DateVisuals;
+export const DateBuilder: TypeBuilder<DateType> =
+{
+  getOption: () => ({
+    text: 'Date',
+    priority: 6,
+    value: async () => ({
+      type: new DateType({ }), 
+      settings: { 
+        input: 'picker', 
+        defaultValue: new Date(),
+        options: DatePickerInput.getDefaultOptions(), 
+      },
+    }),
+  }),
+};

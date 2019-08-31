@@ -21,7 +21,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       isOptional: boolean;
       isAlternative: boolean;
       isOnly: boolean;
-      visuals: TypeVisuals<T, any, any, S>;
+      visuals: TypeVisuals<T, S>;
       inputs: ListOptions;
       inputSelected: TypeVisualInput<T, O, S>;
       inputSettings: VueConstructor;
@@ -77,7 +77,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       isOnly(): boolean {
         return !this.isAlternative;
       },
-      visuals(): TypeVisuals<T, any, any, S> {
+      visuals(): TypeVisuals<T, S> {
         return this.registry.getVisuals(this.type);
       },
       inputs(): ListOptions {
@@ -99,7 +99,8 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
         return items;
       },
       inputSelected(): TypeVisualInput<T, O, S> {
-        return this.visuals.inputs[this.settings.input];
+        return this.visuals.inputs[this.settings.input] ||
+               this.visuals.inputs[this.visuals.defaultInput as string];
       },
       inputSettings(): VueConstructor {
         return this.inputSelected.settings;

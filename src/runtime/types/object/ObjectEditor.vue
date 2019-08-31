@@ -118,20 +118,23 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
   },
   methods: {
     async add() {
-      const addType = await getBuildType({ 
+      const chosen = await getBuildType({
+        input: {
+          registry: this.registry,
+          parent: this.type,
+          parentSettings: this.settings,
+        },
         title: 'Add Property',
-        registry: this.registry,
       });
 
-      if (!this.addProp || !addType) {
+      const propName = this.addProp;
+
+      if (!propName || !chosen) {
         return;
       }
 
-      const propName = this.addProp;
-      const { type: propType, settings: propSettings } = await addType.onBuild(this.type, this.settings);
-
-      this.$set(this.type.options.props, propName, propType);
-      this.$set(this.settings.sub, propName, propSettings);
+      this.$set(this.type.options.props, propName, chosen.type);
+      this.$set(this.settings.sub, propName, chosen.settings);
 
       this.addProp = '';
 

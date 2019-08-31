@@ -1,34 +1,37 @@
 
-import { ObjectType, AnyType } from 'expangine-runtime';
-import { TypeVisuals, TypeSettings } from '@/runtime/TypeVisuals';
+import { ObjectType } from 'expangine-runtime';
+import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
 
 
-const ObjectVisuals: TypeVisuals<ObjectType, true, false> = 
-{
+export const ObjectVisuals = createVisuals({
   type: ObjectType,
-  newInstance: () => new ObjectType({ props: {} }),
   name: 'Object',
   description: 'An object is a collection of named fields.',
   editor: ObjectEditor,
   allowsDefault: false,
-  buildable: true,
-  buildLabel: 'Object',
-  onBuild: async (parent, parentSettings) => ({
-    type: new ObjectType({ props: {} }),
-    settings: { 
-      input: 'form', 
-      defaultValue: Object.create(null),
-      options: ObjectFormInput.getDefaultOptions(), 
-      sub: Object.create(null),
-    },
-  }),
   defaultInput: 'form',
   inputsOrder: ['form'],
   inputs: {
     form: ObjectFormInput,
   },
-};
+});
 
-export default ObjectVisuals;
+export const ObjectBuilder: TypeBuilder<ObjectType> = 
+{
+  getOption: () => ({
+    text: 'Object',
+    priority: 3,
+    value: async () => ({
+      type: new ObjectType({ props: Object.create(null) }),
+      settings: { 
+        input: 'form', 
+        defaultValue: Object.create(null),
+        options: ObjectFormInput.getDefaultOptions(), 
+        sub: Object.create(null),
+      },
+    }),
+  }),
+};

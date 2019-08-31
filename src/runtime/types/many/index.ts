@@ -1,54 +1,60 @@
 
 import { ManyType } from 'expangine-runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { ManyInput, ManySubs } from './ManyTypes';
-import ManyEditor from './ManyEditor.vue';
+import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeModifier } from '@/runtime/TypeModifier';
 import { getBuildType } from '@/app/BuildType';
+import { ManyInput } from './ManyTypes';
+import ManyEditor from './ManyEditor.vue';
 
 
-const ManyVisuals: TypeVisuals<ManyType, false, true, ManySubs> = 
-{
+export const ManyVisuals = createVisuals({
   type: ManyType,
-  newInstance: () => new ManyType([]),
   name: 'Many',
   description: 'A type that represents any number of possible types.',
   editor: ManyEditor,
-  modifiable: true,
-  modifyLabel: 'Add Alternative Type',
-  canModify: (type, parent) => !(parent instanceof ManyType),
-  onModify: async (existingType, existingSettings) => {
-    const alternativeType = await getBuildType({
-      title: 'Alternative Type',
-      ok: 'Add',
-      exclude: {
-        [existingType.getId()]: true,
-      },
-    });
-
-    if (!alternativeType) {
-      return null;
-    }
-
-    const { type, settings } = await alternativeType.onBuild();
-    
-    return {
-      type: new ManyType([existingType, type]),
-      settings: {
-        input: 'many',
-        options: undefined,
-        defaultValue: undefined,
-        sub: {
-          [existingType.getId()]: existingSettings,
-          [type.getId()]: settings,
-        },
-      },
-    };
-  },
   defaultInput: 'many',
   inputsOrder: ['many'],
   inputs: {
     many: ManyInput,
   },
-};
+});
 
-export default ManyVisuals;
+export const ManyModifier: TypeModifier<ManyType> = 
+{
+  getOption: (input) => {
+    const { parent, type, typeSettings } = input;
+
+    if (parent instanceof ManyType) {
+      return false;
+    }
+
+    return {
+      text: 'Add Alternative Type',
+      priority: 2,
+      value: async () => {
+        const chosen = await getBuildType({
+          input,
+          title: 'Alternative Type',
+          ok: 'Add',
+        });
+    
+        if (!chosen) {
+          return false;
+        }
+        
+        return {
+          type: new ManyType([type, chosen.type]),
+          settings: {
+            input: 'many',
+            options: undefined,
+            defaultValue: undefined,
+            sub: [
+              typeSettings,
+              chosen.settings,
+            ],
+          },
+        };
+      },
+    };
+  },
+};

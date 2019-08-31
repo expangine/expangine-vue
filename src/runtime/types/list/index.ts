@@ -1,7 +1,7 @@
 
-import { ListType, AnyType, TextType } from 'expangine-runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
-import { ListSubs } from './ListTypes';
+import { ListType, TextType } from 'expangine-runtime';
+import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';
 import { ListComboInput } from './ListComboTypes';
@@ -11,30 +11,11 @@ import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import ListEditor from './ListEditor.vue';
 
 
-const ListVisuals: TypeVisuals<ListType, true, false, ListSubs> =
-{
+export const ListVisuals = createVisuals({
   type: ListType,
-  newInstance: () => ListType.forItem(new AnyType({ })),
   name: 'List',
   description: 'A list of values.',
   editor: ListEditor,
-  buildable: true,
-  buildLabel: 'List',
-  onBuild: async () => ({
-    type: ListType.forItem(new TextType({ })),
-    settings: {
-      input: 'list',
-      defaultValue: [],
-      options: ListListInput.getDefaultOptions(),
-      sub: { 
-        item: { 
-          input: 'textbox', 
-          defaultValue: '',
-          options: TextBoxInput.getDefaultOptions(), 
-        },
-      },
-    },
-  }),
   defaultInput: 'list',
   inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox'],
   inputs: {
@@ -44,6 +25,27 @@ const ListVisuals: TypeVisuals<ListType, true, false, ListSubs> =
     autocomplete: ListEnumAutocompleteInput,
     checkbox: ListEnumCheckboxInput,
   },
-};
+});
 
-export default ListVisuals;
+export const ListBuilder: TypeBuilder<ListType> = 
+{
+  getOption: () => ({
+    text: 'List',
+    priority: 4,
+    value: async () => ({
+      type: ListType.forItem(new TextType({ })),
+      settings: {
+        input: 'list',
+        defaultValue: [],
+        options: ListListInput.getDefaultOptions(),
+        sub: { 
+          item: { 
+            input: 'textbox', 
+            defaultValue: '',
+            options: TextBoxInput.getDefaultOptions(), 
+          },
+        },
+      },
+    }),
+  }),
+};

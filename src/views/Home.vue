@@ -65,12 +65,12 @@ import Vue from 'vue';
 import { Type, defs } from 'expangine-runtime';
 import * as ex from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
-import VisualsStarting from '../runtime/types/object';
+import { TypeBuildResult } from '../runtime/TypeBuilder';
+import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import Registry from '../runtime';
 import { confirm } from '../app/Confirm';
 
 
-const Visuals: TypeVisuals<any, true, any> = VisualsStarting;
 
 function copy(a: any): any {
   return JSON.parse(JSON.stringify(a));
@@ -106,12 +106,23 @@ export default Vue.extend({
     },
   },
   methods: {
+    async getDefaultTypes(): Promise<TypeBuildResult | false> {
+      const builtOption = await DefaultBuilder.getOption({
+        registry: this.registry,
+      });
+
+      return builtOption ? await builtOption.value() : false;
+    },
     async reset() {
       if (!await confirm()) {
         return;
       }
 
-      const built = await Visuals.onBuild();
+      const built = await this.getDefaultTypes();
+
+      if (!built) {
+        return;
+      }
 
       this.type = built.type;
       this.settings = built.settings;
@@ -172,7 +183,11 @@ export default Vue.extend({
       localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
     },
     async loadType() {
-      const defaults = await Visuals.onBuild();
+      const defaults = await this.getDefaultTypes();
+
+      if (!defaults) {
+        return;
+      }
 
       this.type = this.loadVar('type', defaults.type, (t) => defs.getType(t));
       this.settings = this.loadVar('settings', defaults.settings);

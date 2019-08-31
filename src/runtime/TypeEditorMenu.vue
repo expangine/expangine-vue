@@ -140,20 +140,14 @@
         </v-card>
       </v-menu>
 
-      <template v-if="!readOnly">
+      <template v-if="!readOnly && editing">
         <template v-for="modify in modifiableOptions">
-          <v-list-item :key="modify.text" @click="onModify(modify.value)">
+          <v-list-item :key="modify.text" @click="onModify(modify)">
             <v-list-item-title 
               v-html="modify.text"
             ></v-list-item-title>
           </v-list-item>
         </template>
-
-        <v-list-item @click="changeType">
-          <v-list-item-title>
-            Change Type
-          </v-list-item-title>
-        </v-list-item>
       </template>
 
     </v-list>
@@ -165,7 +159,7 @@ import { Type } from 'expangine-runtime';
 import { ListOptions } from '../common';
 import { TypeVisuals } from './TypeVisuals';
 import { confirm } from '../app/Confirm';
-import { getBuildType } from '../app/BuildType';
+import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './types/TypeEditorBase';
 
 
@@ -183,8 +177,14 @@ export default TypeEditorBase<Type, any>().extend({
         return !!this.$slots.configure;
       },
     },
-    modifiableOptions(): ListOptions<TypeVisuals<any, any, true>> {
-      return this.registry.getModifiableTypeOptions(this.type, this.parent);
+    modifiableOptions(): ListOptions<TypeModifyHandler> {
+      window.console.log('compute modifiableOptions');
+      return this.registry.getTypeModifiersFor({
+        registry: this.registry,
+        parent: this.parent,
+        type: this.type,
+        typeSettings: this.settings,
+      });
     },
     defaultValue: {
       get(): any {
@@ -212,25 +212,8 @@ export default TypeEditorBase<Type, any>().extend({
       this.settings.options = next;
       this.updateSettings();
     },
-    async changeType() {
-      const newType = await getBuildType({ 
-        registry: this.registry, 
-        title: 'Choose New Type',
-        ok: 'Change',
-        exclude: { [this.type.getId()]: true },
-      });
-
-      if (!newType) {
-        return;
-      }
-
-      const result = await newType.onBuild();
-
-      this.$emit('change:type', result);
-      this.done();
-    },
-    async onModify(modifiableType: TypeVisuals<any, any, true>) {
-      const result = await modifiableType.onModify(this.type, this.settings);
+    async onModify(modifier: TypeModifyOption) {
+      const result = await modifier.value();
 
       if (result) {
         this.$emit('change:type', result);

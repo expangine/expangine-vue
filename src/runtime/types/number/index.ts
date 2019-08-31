@@ -1,29 +1,18 @@
 
 import { NumberType } from 'expangine-runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
+import { createVisuals } from '@/runtime/TypeVisuals';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
 import { NumberSliderInput } from './NumberSliderTypes';
 import { NumberComboInput } from './NumberComboTypes';
 import NumberEditor from './NumberEditor.vue';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 
 
-const NumberVisuals: TypeVisuals<NumberType, true, false> = 
-{
+export const NumberVisuals = createVisuals({
   type: NumberType,
-  newInstance: () => new NumberType({}),
   name: 'Number',
   description: 'A number value',
   editor: NumberEditor,
-  buildable: true,
-  buildLabel: 'Number',
-  onBuild: async () => ({
-    type: new NumberType({ }), 
-    settings: { 
-      input: 'textbox', 
-      defaultValue: 0,
-      options: NumberTextBoxInput.getDefaultOptions(), 
-    },
-  }),
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'slider', 'combo'],
   inputs: {
@@ -31,6 +20,20 @@ const NumberVisuals: TypeVisuals<NumberType, true, false> =
     slider: NumberSliderInput,
     combo: NumberComboInput,
   },
-};
+});
 
-export default NumberVisuals;
+export const NumberBuilder: TypeBuilder<NumberType> = 
+{
+  getOption: () => ({
+    text: 'Number',
+    priority: 2,
+    value: async () => ({
+      type: new NumberType({ }), 
+      settings: { 
+        input: 'textbox', 
+        defaultValue: 0,
+        options: NumberTextBoxInput.getDefaultOptions(), 
+      },
+    }),
+  }),
+};

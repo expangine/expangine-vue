@@ -7,7 +7,7 @@ import ManySettings from './ManySettings.vue';
 
 export type ManyOptions = void;
 
-export type ManySubs = string;
+export type ManySubs = number;
 
 export const ManyInput: TypeVisualInput<ManyType, ManyOptions, ManySubs> = 
 {

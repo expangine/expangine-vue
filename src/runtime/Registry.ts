@@ -1,19 +1,41 @@
 
-import { Type } from 'expangine-runtime';
-import { TypeVisuals, TypeSettings } from './TypeVisuals';
-import { ListOptions } from '@/common';
+import { Type, Definitions } from 'expangine-runtime';
+import { TypeVisuals } from './TypeVisuals';
+import { ListOptions, ListOptionsPriority } from '@/common';
+import { TypeBuilder, TypeBuildInput, TypeBuildHandler } from './TypeBuilder';
+import { TypeModifier, TypeModifyInput, TypeModifyHandler } from './TypeModifier';
 
 
 export class Registry
 {
   
+  public defs: Definitions;
   public typeMap: Record<string, TypeVisuals>;
   public types: TypeVisuals[];
+  public builders: TypeBuilder[];
+  public modifiers: TypeModifier[];
 
-  public constructor()
+  public constructor(defs: Definitions)
   {
+    this.defs = defs;
     this.typeMap = Object.create(null);
     this.types = [];
+    this.builders = [];
+    this.modifiers = [];
+  }
+
+  public addBuilder<T extends Type = Type>(builder: TypeBuilder<T>): this
+  {
+    this.builders.push(builder);
+
+    return this;
+  }
+
+  public addModifier<T extends Type = Type>(modifier: TypeModifier<T>): this
+  {
+    this.modifiers.push(modifier);
+
+    return this;
   }
 
   public addType(type: TypeVisuals<any, any, any>): this
@@ -29,34 +51,36 @@ export class Registry
     return this.typeMap[type.getId()] as unknown as TypeVisuals<T>;
   }
 
-  public getBuildableTypeOptions(exclude?: Record<string, any>): ListOptions<TypeVisuals<any, true, any>>
+  public getTypeBuildersFor(input: TypeBuildInput): ListOptions<TypeBuildHandler>
   {
-    const out: ListOptions<TypeVisuals<any, true, any>> = [];
-    const types = this.types;
+    const out: ListOptionsPriority<TypeBuildHandler> = [];
 
-    for (const value of types)
-    {
-      if (value.buildable && (!exclude || !exclude[value.type.id]))
-      {
-        out.push({ text: value.buildLabel, value });
+    for (const builder of this.builders) {
+      const option = builder.getOption(input);
+
+      if (option) {
+        out.push(option);
       }
     }
+
+    out.sort((a, b) => a.priority - b.priority);
 
     return out;
   }
 
-  public getModifiableTypeOptions(forType: Type, parent?: Type): ListOptions<TypeVisuals<any, any, true>>
+  public getTypeModifiersFor(input: TypeModifyInput): ListOptions<TypeModifyHandler>
   {
-    const out: ListOptions<TypeVisuals<any, any, true>> = [];
-    const types = this.types;
+    const out: ListOptionsPriority<TypeModifyHandler> = [];
 
-    for (const value of types)
-    {
-      if (value.modifiable && value.canModify(forType, parent))
-      {
-        out.push({ text: value.modifyLabel, value });
+    for (const modifier of this.modifiers) {
+      const option = modifier.getOption(input);
+
+      if (option) {
+        out.push(option);
       }
     }
+
+    out.sort((a, b) => a.priority - b.priority);
 
     return out;
   }

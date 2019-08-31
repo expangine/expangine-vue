@@ -1,6 +1,7 @@
 
 import { BooleanType } from 'expangine-runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
+import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { BooleanCheckboxInput } from './BooleanCheckboxTypes';
 import { BooleanSwitchInput } from './BooleanSwitchTypes';
 import { BooleanRadioInput } from './BooleanRadioTypes';
@@ -8,23 +9,11 @@ import { BooleanSelectInput } from './BooleanSelectTypes';
 import BooleanEditor from './BooleanEditor.vue';
 
 
-const BooleanVisuals: TypeVisuals<BooleanType, true, false> = 
-{
+export const BooleanVisuals = createVisuals({
   type: BooleanType,
-  newInstance: () => new BooleanType({}),
   name: 'Boolean',
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   editor: BooleanEditor,
-  buildable: true,
-  buildLabel: 'Boolean',
-  onBuild: async () => ({
-    type: new BooleanType({ }), 
-    settings: { 
-      input: 'checkbox', 
-      defaultValue: false,
-      options: BooleanCheckboxInput.getDefaultOptions(), 
-    },
-  }),
   defaultInput: 'checkbox',
   inputsOrder: ['checkbox', 'switch', 'radio', 'select'],
   inputs: {
@@ -33,6 +22,20 @@ const BooleanVisuals: TypeVisuals<BooleanType, true, false> =
     radio: BooleanRadioInput,
     select: BooleanSelectInput,
   },
-};
+});
 
-export default BooleanVisuals;
+export const BooleanBuilder: TypeBuilder<BooleanType> =
+{
+  getOption: () => ({
+    text: 'Boolean',
+    priority: 5,
+    value: async () => ({
+      type: new BooleanType({ }), 
+      settings: { 
+        input: 'checkbox', 
+        defaultValue: false,
+        options: BooleanCheckboxInput.getDefaultOptions(), 
+      },
+    }),
+  }),
+};

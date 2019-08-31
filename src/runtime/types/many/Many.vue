@@ -54,8 +54,11 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
     subType(): Type {
       return this.currentType || this.type.getExactType(this.value) || this.type.options[0];
     },
+    subTypeIndex(): number {
+      return this.type.options.indexOf(this.subType);
+    },
     subTypeSettings(): TypeSettings<any, any> {
-      return this.settings.sub[this.subType.getId()];
+      return this.settings.sub[this.subTypeIndex];
     },
   },
   methods: {
@@ -67,7 +70,8 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
         return;
       }
 
-      const subSettings = this.settings.sub[innerType.getId()];
+      const innerIndex = this.type.options.indexOf(innerType);
+      const subSettings = this.settings.sub[innerIndex];
       const newValue = innerType.isValid(this.value)
         ? this.value
         : innerType.fromJson(subSettings.defaultValue);

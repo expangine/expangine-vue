@@ -17,7 +17,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
     {
       computedValue: V;
       invalid: boolean;
-      visuals: TypeVisuals<T, any, any, S>;
+      visuals: TypeVisuals<T, S>;
       inputSelected: TypeVisualInput<T, O>
     },
     {
@@ -61,7 +61,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
       invalid(): boolean {
         return !this.type.isValid(this.value);
       },
-      visuals(): TypeVisuals<T, any, any, S> {
+      visuals(): TypeVisuals<T, S> {
         return this.registry.getVisuals(this.type);
       },
       inputSelected(): TypeVisualInput<T, O, S> {

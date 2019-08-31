@@ -1,7 +1,7 @@
 <template>
   <v-list class="pa-0">
     <template v-for="(innerType, index) in type.options">
-      <v-list-item :key="innerType.getId()">
+      <v-list-item :key="index">
         <v-list-item-avatar class="cell-top pt-1 mr-0">
           <v-menu :close-on-content-click="false" :disabled="readOnly">
             <template #activator="{ on }">
@@ -23,7 +23,7 @@
           <ex-type-editor
             :type="innerType"
             :parent="type"
-            :settings="settings.sub[innerType.getId()]"
+            :settings="settings.sub[index]"
             :registry="registry"
             :read-only="readOnly"
             @input:type="updateType"
@@ -40,9 +40,9 @@
 import { Type, ManyType } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { confirm } from '../../../app/Confirm';
+import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
-import { getBuildType } from '../../../app/BuildType';
 
 
 export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
@@ -54,12 +54,12 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       }
 
       this.type.options.splice(index, 1);
-      this.$delete(this.settings.sub, innerType.getId());
+      this.settings.sub.splice(index, 1);
 
       if (this.type.options.length === 1) 
       {
         const onlyType = this.type.options[0];
-        const onlySettings = this.settings.sub[onlyType.getId()];
+        const onlySettings = this.settings.sub[0];
 
         this.changeType({ 
           type: onlyType,
@@ -72,27 +72,26 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       }
     },
     async addType(index: number, afterType: Type) {
-      const newType = await getBuildType({
-        registry: this.registry,
+      const chosen = await getBuildType({
+        input: {
+          registry: this.registry,
+        },
         title: 'Add Type',
         ok: 'Add',
-        exclude: this.settings.sub,
       });
 
-      if (!newType) {
+      if (!chosen) {
         return;
       }
 
-      const { type, settings } = await newType.onBuild();
-
-      this.type.options.splice(index + 1, 0, type);
-      this.$set(this.settings.sub, type.getId(), settings);
+      this.type.options.splice(index + 1, 0, chosen.type);
+      this.settings.sub.splice(index + 1, 0, chosen.settings);
 
       this.updateTypeAndSettings();
     },
     onChangeType(index: number, innerType: Type, { type: newType, settings: newSettings }: TypeAndSettings) {
       this.$set(this.type.options, index, newType);
-      this.$set(this.settings.sub, innerType.getId(), newSettings);
+      this.$set(this.settings.sub, index, newSettings);
       
       this.updateTypeAndSettings();
     },

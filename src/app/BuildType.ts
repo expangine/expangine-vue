@@ -1,31 +1,30 @@
 
-import { Registry } from '@/runtime/Registry';
-import DefaultRegistry from '@/runtime';
-import { TypeVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuildResult, TypeBuildInput, TypeBuildOption } from '@/runtime/TypeBuilder';
+import { OptionalModifierTransform } from '@/runtime/types/optional';
 import { getPromiser } from './Promiser';
 
 
 export interface BuildTypeOptions
 {
-  registry: Registry;
-  exclude?: Record<string, any>;
+  input: TypeBuildInput;
   title: string;
   ok: string;
   cancel: string;
   visible: boolean;
-  type: TypeVisuals<any, true, any> | null;
+  optional: boolean;
+  type: TypeBuildOption | null;
   handle: (ok: boolean) => void;
 }
 
 export function getBuildTypeDefaults(): BuildTypeOptions
 {
   return {
-    registry: DefaultRegistry,
-    exclude: undefined,
+    input: null as unknown as TypeBuildInput,
     title: 'Choose Type',
     ok: 'Ok',
     cancel: 'Cancel',
     visible: false,
+    optional: false,
     type: null,
     handle: () => { /**/ },
   };
@@ -33,17 +32,31 @@ export function getBuildTypeDefaults(): BuildTypeOptions
 
 export const buildTypeDialog = getBuildTypeDefaults();
 
-export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Promise<TypeVisuals<any, true, any> | null>
+export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Promise<TypeBuildResult | false>
 {
-  const { resolve, promise } = getPromiser<TypeVisuals<any, true, any> | null>();
+  const { resolve, promise } = getPromiser<TypeBuildResult | false>();
 
   Object.assign(buildTypeDialog, getBuildTypeDefaults());
   Object.assign(buildTypeDialog, options);
 
   buildTypeDialog.visible = true;
-  buildTypeDialog.handle = (ok: boolean) => {
+  buildTypeDialog.handle = async (ok: boolean) => {
     buildTypeDialog.visible = false;
-    ok ? resolve(buildTypeDialog.type) : resolve(null);
+    if (!ok || !buildTypeDialog.type) {
+      return resolve(false);
+    }
+
+    const chosen = await buildTypeDialog.type.value();
+
+    if (!chosen) {
+      return resolve(false);
+    }
+
+    const result = buildTypeDialog.optional
+      ? OptionalModifierTransform(chosen.type, chosen.settings)
+      : chosen;
+
+    return resolve(result);
   };
 
   return promise;
