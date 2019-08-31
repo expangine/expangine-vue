@@ -1,0 +1,29 @@
+<template>
+  <ex-simple-fields
+    remove-empty
+    :value="type.options"
+    :fields="optionFields"
+    :read-only="readOnly"
+    @input="updateType"
+  ></ex-simple-fields>
+</template>
+
+<script lang="ts">
+import { NumberType, NumberOptions } from 'expangine-runtime';
+import { SimpleFieldSettings } from '../../../common';
+import TypeEditorBase from '../TypeEditorBase';
+
+
+const fields: SimpleFieldSettings<NumberOptions> = [
+  { name: 'min', type: 'number', label: 'Min' },
+  { name: 'max', type: 'number', label: 'Max' },
+  { name: 'whole', type: 'boolean', label: 'Whole' },
+];
+
+export default TypeEditorBase<NumberType, any>().extend({
+  name: 'NumberEditor',
+  computed: {
+    optionFields: () => fields,
+  },
+});
+</script>

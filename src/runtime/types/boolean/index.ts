@@ -7,6 +7,7 @@ import { BooleanSwitchInput } from './BooleanSwitchTypes';
 import { BooleanRadioInput } from './BooleanRadioTypes';
 import { BooleanSelectInput } from './BooleanSelectTypes';
 import BooleanEditor from './BooleanEditor.vue';
+import BooleanOptions from './BooleanOptions.vue';
 
 
 export const BooleanVisuals = createVisuals({
@@ -14,6 +15,7 @@ export const BooleanVisuals = createVisuals({
   name: 'Boolean',
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   editor: BooleanEditor,
+  options: BooleanOptions,
   defaultInput: 'checkbox',
   inputsOrder: ['checkbox', 'switch', 'radio', 'select'],
   inputs: {

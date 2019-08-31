@@ -11,17 +11,7 @@
         @input:type="updateType"
         @input:settings="updateSettings"
         @change:type="changeType"
-      >
-        <template #configure>
-          <ex-simple-fields
-            remove-empty
-            :value="type.options"
-            :fields="optionFields"
-            :read-only="readOnly"
-            @input="updateType"
-          ></ex-simple-fields>
-        </template>
-      </ex-type-editor-menu>
+      ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title class="primary--text">

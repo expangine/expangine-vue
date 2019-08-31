@@ -8,6 +8,7 @@ import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
 import { EnumSliderInput } from './EnumSliderTypes';
 import { EnumRadioInput } from './EnumRadioTypes';
 import EnumEditor from './EnumEditor.vue';
+import EnumOptions from './EnumOptions.vue';
 
 
 export const EnumVisuals = createVisuals({
@@ -15,6 +16,7 @@ export const EnumVisuals = createVisuals({
   name: 'Enum',
   description: 'A list of key value pairs.',
   editor: EnumEditor,
+  options: EnumOptions,
   defaultInput: 'dropdown',
   inputsOrder: ['dropdown', 'autocomplete', 'slider', 'radio'],
   inputs: {

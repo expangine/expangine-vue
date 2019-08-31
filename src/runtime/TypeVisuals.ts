@@ -34,6 +34,7 @@ export interface TypeVisuals<
   name: string;
   description: string;
   editor: VueConstructor;
+  options?: VueConstructor;
   allowsDefault?: boolean;
   defaultInput: keyof OptionMap;
   inputsOrder: Array<keyof OptionMap>;

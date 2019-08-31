@@ -1,11 +1,12 @@
 
 import { NumberType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
+import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
 import { NumberSliderInput } from './NumberSliderTypes';
 import { NumberComboInput } from './NumberComboTypes';
 import NumberEditor from './NumberEditor.vue';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import NumberOptions from './NumberOptions.vue';
 
 
 export const NumberVisuals = createVisuals({
@@ -13,6 +14,7 @@ export const NumberVisuals = createVisuals({
   name: 'Number',
   description: 'A number value',
   editor: NumberEditor,
+  options: NumberOptions,
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'slider', 'combo'],
   inputs: {

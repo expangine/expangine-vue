@@ -9,7 +9,6 @@
       </v-btn>
     </template>
     <v-list>
-
       <v-menu 
         offset-x
         min-width="400"
@@ -66,7 +65,11 @@
               max-height="300" 
               class="scrollable mt-3 py-3"
             >
-              <slot name="configure"></slot>
+              <component
+                :is="visuals.options"
+                v-bind="$props"
+                v-on="$listeners"
+              ></component>
             </v-sheet>
           </v-list>
           <v-card-actions>
@@ -176,11 +179,8 @@ export default TypeEditorBase<Type, any>().extend({
     inputing: false,
   }),
   computed: {
-    hasConfigure: {
-      cache: false,
-      get(): boolean {
-        return !!this.$slots.configure;
-      },
+    hasConfigure(): boolean {
+      return !!this.visuals.options;
     },
     modifiableOptions(): ListOptions<TypeModifyHandler> {
       return this.registry.getTypeModifiersFor({

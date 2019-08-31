@@ -9,6 +9,7 @@ import { ListEnumSelectInput } from './ListEnumSelectTypes';
 import { ListEnumAutocompleteInput } from './ListEnumAutocompleteTypes';
 import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import ListEditor from './ListEditor.vue';
+import ListOptions from './ListOptions.vue';
 
 
 export const ListVisuals = createVisuals({
@@ -16,6 +17,7 @@ export const ListVisuals = createVisuals({
   name: 'List',
   description: 'A list of values.',
   editor: ListEditor,
+  options: ListOptions,
   defaultInput: 'list',
   inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox'],
   inputs: {

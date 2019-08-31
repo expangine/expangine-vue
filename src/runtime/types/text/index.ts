@@ -6,6 +6,7 @@ import { TextBoxInput } from './TextBoxTypes';
 import { TextAreaInput } from './TextAreaTypes';
 import { TextComboInput } from './TextComboTypes';
 import TextEditor from './TextEditor.vue';
+import TextOptions from './TextOptions.vue';
 
 
 export const TextVisuals = createVisuals({
@@ -13,6 +14,7 @@ export const TextVisuals = createVisuals({
   name: 'Text',
   description: 'A text value',
   editor: TextEditor,
+  options: TextOptions,
   defaultInput: 'textbox',
   inputsOrder: ['textbox', 'textarea', 'combo'],
   inputs: {

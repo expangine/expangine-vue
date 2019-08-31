@@ -5,6 +5,7 @@ import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
 import { DateTextBoxInput } from './DateTextBoxTypes';
 import DateEditor from './DateEditor.vue';
+import DateOptions from './DateOptions.vue';
 
 
 export const DateVisuals = createVisuals(
@@ -13,6 +14,7 @@ export const DateVisuals = createVisuals(
   name: 'Date',
   description: 'A date value',
   editor: DateEditor,
+  options: DateOptions,
   defaultInput: 'picker',
   inputsOrder: ['picker', 'textbox'],
   inputs: {
