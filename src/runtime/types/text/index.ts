@@ -5,6 +5,7 @@ import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
 import { TextAreaInput } from './TextAreaTypes';
 import { TextComboInput } from './TextComboTypes';
+import { TextRadioInput } from './TextRadioTypes';
 import TextEditor from './TextEditor.vue';
 import TextOptions from './TextOptions.vue';
 
@@ -16,11 +17,12 @@ export const TextVisuals = createVisuals({
   editor: TextEditor,
   options: TextOptions,
   defaultInput: 'textbox',
-  inputsOrder: ['textbox', 'textarea', 'combo'],
+  inputsOrder: ['textbox', 'textarea', 'combo', 'radio'],
   inputs: {
     textbox: TextBoxInput,
     textarea: TextAreaInput,
     combo: TextComboInput,
+    radio: TextRadioInput,
   },
 });
 

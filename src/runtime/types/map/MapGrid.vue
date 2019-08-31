@@ -13,6 +13,8 @@
             </v-list-item-content>
         </v-list-item>
       </v-col>
+    </v-row>
+    <v-row>
       <template v-for="(entry, entryIndex) in entries">
         <v-col :key="entry.id" :cols="rowColumns" class="pa-0">
           <v-list-item :class="{ 'error white--text': entry.invalid }">
