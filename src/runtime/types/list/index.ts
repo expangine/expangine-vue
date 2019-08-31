@@ -31,6 +31,7 @@ export const ListBuilder: TypeBuilder<ListType> =
 {
   getOption: () => ({
     text: 'List',
+    description: 'An collection/list/array of values',
     priority: 4,
     value: async () => ({
       type: ListType.forItem(new TextType({ })),

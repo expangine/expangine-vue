@@ -28,6 +28,7 @@ export const BooleanBuilder: TypeBuilder<BooleanType> =
 {
   getOption: () => ({
     text: 'Boolean',
+    description: 'A true/false value',
     priority: 5,
     value: async () => ({
       type: new BooleanType({ }), 

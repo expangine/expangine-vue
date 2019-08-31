@@ -18,6 +18,7 @@ export type TypeBuildHandler<T extends Type = Type> = () => Promise<TypeBuildRes
 export interface TypeBuildOption<T extends Type = Type>
 {
   text: string;
+  description?: string;
   value: TypeBuildHandler<T>;
   priority: number;
 }

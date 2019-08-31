@@ -143,9 +143,14 @@
       <template v-if="!readOnly && editing">
         <template v-for="modify in modifiableOptions">
           <v-list-item :key="modify.text" @click="onModify(modify)">
-            <v-list-item-title 
-              v-html="modify.text"
-            ></v-list-item-title>
+            <v-list-item-content>
+              <v-list-item-title 
+                v-html="modify.text"
+              ></v-list-item-title>
+              <v-list-item-subtitle
+                v-html="modify.description"
+              ></v-list-item-subtitle>
+            </v-list-item-content>
           </v-list-item>
         </template>
       </template>
@@ -178,7 +183,6 @@ export default TypeEditorBase<Type, any>().extend({
       },
     },
     modifiableOptions(): ListOptions<TypeModifyHandler> {
-      window.console.log('compute modifiableOptions');
       return this.registry.getTypeModifiersFor({
         registry: this.registry,
         parent: this.parent,
@@ -217,8 +221,8 @@ export default TypeEditorBase<Type, any>().extend({
 
       if (result) {
         this.$emit('change:type', result);
-        this.done();
       }
+      this.done();
     },
     done() {
       this.configuring = false;

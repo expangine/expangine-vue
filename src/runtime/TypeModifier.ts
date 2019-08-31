@@ -17,6 +17,7 @@ export type TypeModifyHandler<T extends Type = Type> = () => Promise<TypeModifyR
 export interface TypeModifyOption<T extends Type = Type>
 {
   text: string;
+  description?: string;
   value: TypeModifyHandler<T>;
   priority: number;
 }

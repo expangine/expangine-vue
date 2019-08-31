@@ -26,6 +26,7 @@ export const NumberBuilder: TypeBuilder<NumberType> =
 {
   getOption: () => ({
     text: 'Number',
+    description: 'A decimal or whole number',
     priority: 2,
     value: async () => ({
       type: new NumberType({ }), 

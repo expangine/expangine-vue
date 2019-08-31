@@ -22,9 +22,9 @@ export const OptionalVisuals = createVisuals({
 export const OptionalModifier: TypeModifier<OptionalType> = 
 {
   getOption: (input) => {
-    const { type, typeSettings } = input;
+    const { type, typeSettings, parent } = input;
 
-    if (type instanceof OptionalType) {
+    if (parent instanceof OptionalType) {
       return false;
     }
 

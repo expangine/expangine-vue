@@ -15,6 +15,8 @@ import { EnumVisuals, EnumBuilder } from './types/enum';
 import { MapVisuals, MapBuilder, MapModifierFromObject } from './types/map';
 
 import { ChangeTypeModifier } from './hooks/ChangeTypeModifier';
+import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
+
 
 export default new Registry(defs)
   .addType(BooleanVisuals)
@@ -39,4 +41,6 @@ export default new Registry(defs)
     .addBuilder(MapBuilder)
     .addModifier(MapModifierFromObject)
   .addModifier(ChangeTypeModifier)
+  .addBuilder(PasteBuilder)
+  .addModifier(CopyModifier)
 ;

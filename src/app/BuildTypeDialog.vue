@@ -9,13 +9,27 @@
         <v-select
           solo
           filled
-          hide-details
           return-object
           placeholder="- Select Type -"
+          :hint="hint"
+          :persistent-hint="persistentHint"
           :value-comparator="compareStrict"
           :items="items"
           v-model="type"
-        ></v-select>
+        >
+          <template #item="{ item, on }">
+            <v-list-item v-on="on">
+              <v-list-item-content>
+                <v-list-item-title 
+                  v-html="item.text"
+                ></v-list-item-title>
+                <v-list-item-subtitle 
+                  v-html="item.description"
+                ></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-select>
         <v-switch
           inset
           hide-details
@@ -55,6 +69,12 @@ export default Vue.extend({
       return this.input
         ? this.input.registry.getTypeBuildersFor(this.input)
         : [];
+    },
+    hint(): string {
+      return this.type ? this.type.description || '' : '';
+    },
+    persistentHint(): boolean {
+      return !!this.hint;
     },
   },
   methods: {

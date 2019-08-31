@@ -29,6 +29,7 @@ export const EnumBuilder: TypeBuilder<EnumType> =
 {
   getOption: () => ({
     text: 'Enum',
+    description: 'A value which is taken from a list of key-value pairs',
     priority: 7,
     value: async () => ({
       type: new EnumType({ key: new TextType({}), value: new TextType({}), constants: new Map() }),

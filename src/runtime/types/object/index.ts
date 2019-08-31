@@ -23,6 +23,7 @@ export const ObjectBuilder: TypeBuilder<ObjectType> =
 {
   getOption: () => ({
     text: 'Object',
+    description: 'An entity with defined property names and types',
     priority: 3,
     value: async () => ({
       type: new ObjectType({ props: Object.create(null) }),

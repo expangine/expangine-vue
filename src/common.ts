@@ -1,9 +1,18 @@
 import { PropType } from 'vue';
 import { isString } from 'expangine-runtime';
 
-export type ListOptions<T = string> = Array<{ text: string; value: T }>;
+export type ListOptions<T = string> = Array<{ 
+  text: string; 
+  description?: string; 
+  value: T 
+}>;
 
-export type ListOptionsPriority<T = string> = Array<{ text: string; value: T, priority: number }>;
+export type ListOptionsPriority<T = string> = Array<{ 
+  text: string; 
+  description?: string; 
+  value: T, 
+  priority: number 
+}>;
 
 export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol, Map];
 

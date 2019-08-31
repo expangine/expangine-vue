@@ -26,6 +26,7 @@ export const MapBuilder: TypeBuilder<MapType> =
 {
   getOption: () => ({
     text: 'Map',
+    description: 'A dictionary of key-value pairs',
     priority: 8,
     value: async () => ({
       type: MapType.forItem(new TextType({}), new TextType({})),
@@ -69,6 +70,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
 
     return {
       text: 'Convert to Map',
+      description: 'The value will be a many type and the key will be text',
       priority: 3,
       value: async () => {
         if (!await confirm()) {
