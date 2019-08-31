@@ -5,7 +5,7 @@ import { Registry } from './Registry';
 
 import { BooleanVisuals, BooleanBuilder } from './types/boolean';
 import { TextVisuals, TextBuilder } from './types/text';
-import { ObjectVisuals, ObjectBuilder } from './types/object';
+import { ObjectVisuals, ObjectBuilder, ObjectModifierToObject } from './types/object';
 import { NumberVisuals, NumberBuilder } from './types/number';
 import { DateVisuals, DateBuilder } from './types/date';
 import { OptionalVisuals, OptionalModifier } from './types/optional';
@@ -25,6 +25,7 @@ export default new Registry(defs)
     .addBuilder(TextBuilder)
   .addType(ObjectVisuals)
     .addBuilder(ObjectBuilder)
+    .addModifier(ObjectModifierToObject)
   .addType(NumberVisuals)
     .addBuilder(NumberBuilder)
   .addType(DateVisuals)

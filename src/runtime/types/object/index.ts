@@ -1,9 +1,12 @@
 
-import { ObjectType } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
+import { ObjectType, MapType, TextType, ManyType, Type } from 'expangine-runtime';
+import { friendlyList } from '@/common';
+import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { TypeModifier } from '@/runtime/TypeModifier';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
+import { confirm } from '@/app/Confirm';
 
 
 export const ObjectVisuals = createVisuals({
@@ -35,4 +38,66 @@ export const ObjectBuilder: TypeBuilder<ObjectType> =
       },
     }),
   }),
+};
+
+export const ObjectModifierToObject: TypeModifier<ObjectType> =
+{
+  getOption: (input) => {
+    const { registry } = input;
+    let { type, typeSettings } = input;
+
+    if (type instanceof ObjectType)
+    {
+      return false;
+    }
+
+    if (type instanceof MapType)
+    {
+      if (!(type.options.key instanceof TextType))
+      {
+        return false;
+      }
+
+      type = type.options.value;
+      typeSettings = (typeSettings as TypeSettings<any, string>).sub.value;
+    }
+
+    const props: Type[] = type instanceof ManyType
+      ? type.options
+      : [type];
+    const settings: TypeSettings[] = type instanceof ManyType
+      ? (typeSettings as TypeSettings<any, number>).sub
+      : [typeSettings];
+
+    const names = props.map((p) => registry.getVisuals(p).name);
+
+    return {
+      text: 'Convert to Object',
+      description: friendlyList(names),
+      priority: 15,
+      value: async () => {
+        if (!await confirm()) {
+          return false;
+        }
+
+        const propMap = Object.create(null);
+        const propSettings = Object.create(null);
+
+        for (let i = 0; i < props.length; i++) {
+          propMap[i] = props[i];
+          propSettings[i] = settings[i];
+        }
+
+        return {
+          type: new ObjectType({ props: propMap }),
+          settings: { 
+            input: 'form', 
+            defaultValue: Object.create(null),
+            options: ObjectFormInput.getDefaultOptions(), 
+            sub: propSettings,
+          },
+        };        
+      },
+    };
+  },
 };

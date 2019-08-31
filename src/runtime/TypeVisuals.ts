@@ -6,16 +6,6 @@ import { Registry } from './Registry';
 
 export type SubsType = string | number | unknown;
 
-
-export interface TypeModifiable<Subs extends SubsType = unknown>
-{
-  modifiable: true;
-  modifyLabel: string;
-  canModify: (type: Type, parent?: Type) => boolean;
-  onModify: (registry: Registry, type: Type, settings: TypeSettings<any, any>) => 
-    Promise<TypeAndSettings<any, Subs> | null>;
-}
-
 export function createVisuals<
   T extends Type, 
   Subs extends SubsType,
