@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType } from 'expangine-runtime';
 import { friendlyList } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
@@ -62,10 +62,10 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
       typeSettings = (typeSettings as TypeSettings<any, string>).sub.value;
     }
 
-    const props: Type[] = type instanceof ManyType
+    const props: Type[] = type instanceof ManyType || type instanceof TupleType
       ? type.options
       : [type];
-    const settings: TypeSettings[] = type instanceof ManyType
+    const settings: TypeSettings[] = type instanceof ManyType || type instanceof TupleType
       ? (typeSettings as TypeSettings<any, number>).sub
       : [typeSettings];
 
