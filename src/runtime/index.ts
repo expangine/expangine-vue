@@ -8,7 +8,7 @@ import { TextVisuals, TextBuilder } from './types/text';
 import { ObjectVisuals, ObjectBuilder, ObjectModifierToObject } from './types/object';
 import { NumberVisuals, NumberBuilder } from './types/number';
 import { DateVisuals, DateBuilder } from './types/date';
-import { OptionalVisuals, OptionalModifier } from './types/optional';
+import { OptionalVisuals, OptionalModifier, OptionalModifierRequire } from './types/optional';
 import { ManyVisuals, ManyModifier } from './types/many';
 import { ListVisuals, ListBuilder } from './types/list';
 import { EnumVisuals, EnumBuilder } from './types/enum';
@@ -33,6 +33,7 @@ export default new Registry(defs)
     .addBuilder(DateBuilder)
   .addType(OptionalVisuals)
     .addModifier(OptionalModifier)
+    .addModifier(OptionalModifierRequire)
   .addType(ManyVisuals)
     .addModifier(ManyModifier)
   .addType(ListVisuals)

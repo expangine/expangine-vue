@@ -5,7 +5,7 @@
   >
     <template #activator="{ on }">
       <v-btn icon v-on="on">
-        <v-icon>mdi-settings</v-icon>
+        <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
     <v-list>
@@ -171,6 +171,12 @@ import TypeEditorBase from './types/TypeEditorBase';
 
 
 export default TypeEditorBase<Type, any>().extend({
+  props: {
+    icon: {
+      type: String,
+      default: 'mdi-settings',
+    },
+  },
   data: () => ({
     editing: false,
     configuring: false,

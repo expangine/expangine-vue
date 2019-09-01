@@ -1,26 +1,18 @@
 <template>
   <v-list-item>
     <v-list-item-avatar class="cell-top mr-0 pt-1">
-      <v-menu :close-on-content-click="false" :disabled="readOnly">
-        <template #activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-help-circle-outline</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="makeRequired">
-            Make Required
-          </v-list-item>
-        </v-list>
-        <ex-type-hook-list
-          :registry="registry"
-          :parent="type"
-          :parent-settings="settings"
-          :type="type.options"
-          :type-settings="settings.sub.innerType"
-          :read-only="readOnly"
-        ></ex-type-hook-list>
-      </v-menu>
+      <ex-type-editor-menu
+        icon="mdi-help-circle-outline"
+        :type="type"
+        :settings="settings"
+        :registry="registry"
+        :parent="parent"
+        :read-only="readOnly"
+        :disable-sub-settings="disableSubSettings"
+        @input:type="updateType"
+        @input:settings="updateSettings"
+        @change:type="changeType"
+      ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">
       <ex-type-editor
@@ -48,16 +40,6 @@ import TypeEditorBase from '../TypeEditorBase';
 export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().extend({
   name: 'OptionalEditor',
   methods: {
-    async makeRequired() {
-      if (!await confirm()) {
-        return;
-      }
-
-      this.changeType({ 
-        type: this.type.options, 
-        settings: this.settings.sub.innerType,
-      });
-    },
     onChangeType({ type: innerType, settings }: TypeAndSettings) {
       this.type.options = innerType;
       this.settings.sub.innerType = settings;

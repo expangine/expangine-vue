@@ -1,6 +1,6 @@
 <template>
-  <v-list-item v-if="hasValue">
-    <v-list-item-avatar class="cell-top mr-0 pt-1">
+  <v-list-item v-if="hasValue" class="pa-0">
+    <v-list-item-avatar class="cell-top mr-1 pt-2">
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="removeValue" v-on="on">
@@ -10,7 +10,7 @@
         <span>{{ removeLabel }}</span>
       </v-tooltip>
     </v-list-item-avatar>
-    <v-list-item-content class="pa-1">
+    <v-list-item-content class="pa-0 pt-1">
       <ex-type-input
         :type="type.options"
         :read-only="readOnly"

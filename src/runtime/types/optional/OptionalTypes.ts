@@ -1,8 +1,8 @@
 
-import { TextType, OptionalType } from 'expangine-runtime';
+import { OptionalType } from 'expangine-runtime';
+import { TypeVisualInput } from '@/runtime/TypeVisuals';
 import Optional from './Optional.vue';
 import OptionalSettings from './OptionalSettings.vue';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 
 export interface OptionalOptions
