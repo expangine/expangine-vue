@@ -38,7 +38,6 @@ export default TypeInputBase<DateType, DatePickerOptions, Date>(Date).extend({
       return {
         ...this.settings.options,
         readonly: true,
-        prependInnerIcon: 'mdi-calendar',
         hideDetails: this.hideHint,
         persistentHint: this.hasHint,
         error: this.invalid,

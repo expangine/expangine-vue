@@ -19,6 +19,13 @@ const fields: SimpleFieldSettings<DateTextBoxOptions> = [
   { name: 'prefix', type: 'text', label: 'Prefix' },
   { name: 'suffix', type: 'text', label: 'Suffix' },
   { name: 'placeholder', type: 'text', label: 'Placeholder' },
+  { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
+  { name: 'appendIcon', type: 'icon', label: 'Append Icon' },
+  { name: 'prependInnerIcon', type: 'icon', label: 'Prepend Inner Icon' },
+  { name: 'appendOuterIcon', type: 'icon', label: 'Append Outer Icon' },
+  { name: 'clearIcon', type: 'icon', label: 'Clear Icon', details: 'default: Close' },
+  { name: 'backgroundColor', type: 'color', label: 'Background Color' },
+  { name: 'color', type: 'color', label: 'Color' },
   { name: 'dark', type: 'boolean', label: 'Dark' },
   { name: 'filled', type: 'boolean', label: 'Filled' },
   { name: 'solo', type: 'boolean', label: 'Solo' },
@@ -34,7 +41,3 @@ export default TypeSettingsBase<DateType, DateTextBoxOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

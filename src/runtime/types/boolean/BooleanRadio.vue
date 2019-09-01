@@ -9,11 +9,17 @@
   >
     <v-radio 
       :label="settings.options.labelTrue" 
+      :off-icon="settings.options.offIcon"
+      :on-icon="settings.options.onIcon"
+      :color="settings.options.color"
       :value="true"
     ></v-radio>
 
     <v-radio 
       :label="settings.options.labelFalse" 
+      :off-icon="settings.options.offIcon"
+      :on-icon="settings.options.onIcon"
+      :color="settings.options.color"
       :value="false"
     ></v-radio>
 

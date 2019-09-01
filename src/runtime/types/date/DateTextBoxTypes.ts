@@ -18,6 +18,13 @@ export interface DateTextBoxOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const DateTextBoxInput: TypeVisualInput<DateType, DateTextBoxOptions> = 
@@ -40,6 +47,7 @@ export const DateTextBoxInput: TypeVisualInput<DateType, DateTextBoxOptions> =
     outlined: false,
     dense: false,
     flat: false,
+    prependInnerIcon: 'mdi-calendar',
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (

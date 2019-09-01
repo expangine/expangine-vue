@@ -22,6 +22,13 @@ const thumbLabelOptions: ListOptions<string | boolean> = [
 const fields: SimpleFieldSettings<NumberSliderOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
+  { name: 'appendIcon', type: 'icon', label: 'Append Icon' },
+  { name: 'backgroundColor', type: 'color', label: 'Background Color' },
+  { name: 'color', type: 'color', label: 'Color' },
+  { name: 'thumbColor', type: 'color', label: 'Thumb Color' },
+  { name: 'trackColor', type: 'color', label: 'Track Color' },
+  { name: 'trackFillColor', type: 'color', label: 'Track Fill Color' },
   { name: 'step', type: 'number', label: 'Step' },
   { name: 'thumbLabel', type: 'select', label: 'Thumb Label', items: thumbLabelOptions },
   { name: 'dark', type: 'boolean', label: 'Dark' },

@@ -12,6 +12,13 @@ export interface NumberSliderOptions
   dark: boolean;
   step: number;
   thumbLabel: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  thumbColor?: string;
+  trackColor?: string;
+  trackFillColor?: string;
 }
 
 export const NumberSliderInput: TypeVisualInput<NumberType, NumberSliderOptions> = 

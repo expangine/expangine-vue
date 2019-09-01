@@ -18,6 +18,13 @@ export interface NumberTextBoxOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const NumberTextBoxInput: TypeVisualInput<NumberType, NumberTextBoxOptions> = 

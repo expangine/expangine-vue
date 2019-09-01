@@ -21,6 +21,12 @@ export interface TextRadioOptions
   dense: boolean;
   flat: boolean;
   otherLabel: string;
+  prependIcon?: string;
+  appendIcon?: string;
+  offIcon?: string;
+  onIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const TextRadioInput: TypeVisualInput<TextType, TextRadioOptions> = 

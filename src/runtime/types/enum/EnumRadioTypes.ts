@@ -12,6 +12,12 @@ export interface EnumRadioOptions
   hint: string;
   dark: boolean;
   row: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
+  offIcon?: string;
+  onIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const EnumRadioInput: TypeVisualInput<EnumType, EnumRadioOptions, EnumSubs> = 

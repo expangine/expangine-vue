@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item>
       <v-text-field
-        outlined
+        filled
         label="Title"
         v-model="value.title"
         @input="input"
@@ -10,7 +10,7 @@
     </v-list-item>
     <v-list-item>
       <v-select
-        outlined
+        filled
         label="Sizes"
         hint="Columns and offsets work in a 12 column grid. A column/offset for one size is applied to all smaller sizes without a setting."
         persistent-hint

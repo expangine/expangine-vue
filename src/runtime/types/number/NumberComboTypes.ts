@@ -22,6 +22,14 @@ export interface NumberComboOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  itemColor?: string;
 }
 
 export const NumberComboInput: TypeVisualInput<NumberType, NumberComboOptions> = 

@@ -11,6 +11,10 @@ export interface BooleanSwitchOptions
   dark: boolean;
   hint: string;
   inset: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptions> = 

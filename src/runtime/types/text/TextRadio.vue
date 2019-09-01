@@ -12,10 +12,16 @@
         :key="item"
         :label="item"
         :value="item"
+        :off-icon="settings.options.offIcon"
+        :on-icon="settings.options.onIcon"
+        :color="settings.options.color"
       ></v-radio>
     </template>
     <v-radio
       :value="otherId"
+      :off-icon="settings.options.offIcon"
+      :on-icon="settings.options.onIcon"
+      :color="settings.options.color"
     >
       <template #label>
         <v-text-field 

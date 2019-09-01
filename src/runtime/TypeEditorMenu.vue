@@ -111,12 +111,11 @@
           <v-sheet max-height="300" :dark="settings.options && settings.options.dark" class="scrollable mx-4 my-2 pa-3" elevation="2">
             <div class="pb-2">Preview</div>
             <component
-              read-only
               :is="inputInput"
               :type="type"
               :settings="settings"
               :registry="registry"
-              :value="defaultValue"
+              :value="previewValue"
             ></component>
           </v-sheet>
           <v-sheet tile max-height="300" class="scrollable mt-3 py-3">
@@ -176,6 +175,7 @@ export default TypeEditorBase<Type, any>().extend({
     editing: false,
     configuring: false,
     inputing: false,
+    previewing: null,
   }),
   computed: {
     hasConfigure(): boolean {
@@ -188,6 +188,14 @@ export default TypeEditorBase<Type, any>().extend({
         type: this.type,
         typeSettings: this.settings,
       });
+    },
+    previewValue: {
+      get(): any {
+        return this.previewing || this.type.fromJson(this.settings.defaultValue);
+      },
+      set(value: any) {
+        this.previewing = value;
+      },
     },
     defaultValue: {
       get(): any {

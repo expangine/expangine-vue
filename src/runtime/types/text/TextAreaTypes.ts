@@ -24,6 +24,13 @@ export interface TextAreaOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> = 

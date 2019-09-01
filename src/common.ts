@@ -20,7 +20,7 @@ export type SimpleTypes = 'text' | 'number' | 'boolean' | 'combo' | 'select' | '
 
 export type SimpleTypeForType<V> =
   V extends string
-    ? 'text' | 'select' | 'color' | 'select'
+    ? 'text' | 'select' | 'color' | 'select' | 'icon'
 : V extends number
     ? 'number' | 'select'
 : V extends boolean

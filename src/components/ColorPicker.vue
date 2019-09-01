@@ -4,22 +4,26 @@
     max-width="300"
     :disabled="readOnly"
     :close-on-content-click="false" 
+    v-model="menu"
   >
     <template #activator="{ on }">
       <v-text-field
         v-bind="$props"
-        v-on="on"
-        append-icon="mdi-close"
-        :value="value"
-        @input="input"
+        v-model="textValue"
+        append-icon="mdi-format-color-fill"
+        @click:append="menu = true"
         @click:clear="$emit('click:clear')"
       ></v-text-field>
     </template>
     <v-color-picker
       v-bind="$props"
-      :value="value"
-      @input="input"
+      v-model="colorModel"
     ></v-color-picker>
+    <v-toolbar dense>
+      <v-btn text color="primary" @click="cancel">Cancel</v-btn>
+      <div class="flex-grow-1"></div>    
+      <v-btn color="primary" @click="ok">OK</v-btn>
+    </v-toolbar>
   </v-menu>
 </template>
 
@@ -30,7 +34,6 @@ export default Vue.extend({
   props: {
     value: {
       type: String,
-      required: true,
     },
     readOnly: {
       type: Boolean,
@@ -58,7 +61,42 @@ export default Vue.extend({
       type: Boolean,
     },
   },
+  data: () => ({
+    menu: false,
+    colorValue: '',
+  }),
+  computed: {
+    textValue: {
+      get(): string | undefined {
+        return this.value || undefined;
+      },
+      set(value: string) {
+        if (value === null) {
+          this.colorValue = '';
+        }
+        this.input(value);
+      },
+    },
+    colorModel: {
+      get(): string | undefined {
+        return this.colorValue || this.value || undefined;
+      },
+      set(color: any) {
+        this.colorValue = color ? color.hex ? color.hex : color : undefined;
+      },
+    },
+  },
   methods: {
+    ok() {
+      if (this.colorValue) {
+        this.input(this.colorValue);
+      }
+      this.menu = false;
+    },
+    cancel()  {
+      this.colorValue = '';
+      this.menu = false;
+    },
     input(value: string) {
       this.$emit('input', value);
     },

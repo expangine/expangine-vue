@@ -11,6 +11,9 @@
         :key="constant[0]"
         :label="constant[0]"
         :value="constant[1]"
+        :off-icon="settings.options.offIcon"
+        :on-icon="settings.options.onIcon"
+        :color="settings.options.color"
       ></v-radio>
     </template>
   </v-radio-group>

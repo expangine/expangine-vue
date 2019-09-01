@@ -17,6 +17,14 @@ export interface BooleanSelectOptions
   dense: boolean;
   solo: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  itemColor?: string;
 }
 
 export const BooleanSelectInput: TypeVisualInput<BooleanType, BooleanSelectOptions> = 

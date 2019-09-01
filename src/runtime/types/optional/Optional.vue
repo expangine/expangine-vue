@@ -4,10 +4,10 @@
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="removeValue" v-on="on">
-            <v-icon>mdi-minus</v-icon>
+            <v-icon>{{ removeIcon }}</v-icon>
           </v-btn>
         </template>
-        <span>Remove Optional Value</span>
+        <span>{{ removeLabel }}</span>
       </v-tooltip>
     </v-list-item-avatar>
     <v-list-item-content class="pa-1">
@@ -54,6 +54,12 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
     },
     valueName(): string {
       return this.innerTypeInput.getName(this.innerTypeSettings.options) || this.innerTypeVisuals.name;
+    },
+    removeIcon(): string {
+      return this.settings.options.removeIcon || 'mdi-minus';
+    },
+    removeLabel(): string {
+      return this.settings.options.removeLabel || 'Remove Optional Value';
     },
   },
   methods: {

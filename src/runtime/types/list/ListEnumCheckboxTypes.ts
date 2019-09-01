@@ -12,6 +12,13 @@ export interface ListEnumCheckboxOptions
   hint: string;
   dark: boolean;
   minWidth: number;
+  prependIcon?: string;
+  appendIcon?: string;
+  offIcon?: string;
+  onIcon?: string;
+  indeterminateIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const ListEnumCheckboxInput: TypeVisualInput<ListType, ListEnumCheckboxOptions, ListSubs> = 

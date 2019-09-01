@@ -24,6 +24,14 @@ export interface ListEnumSelectOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  itemColor?: string;
 }
 
 export const ListEnumSelectInput: TypeVisualInput<ListType, ListEnumSelectOptions, ListSubs> = 

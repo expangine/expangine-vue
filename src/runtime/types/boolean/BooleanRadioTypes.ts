@@ -12,6 +12,12 @@ export interface BooleanRadioOptions
   dark: boolean;
   hint: string;
   row: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
+  offIcon?: string;
+  onIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const BooleanRadioInput: TypeVisualInput<BooleanType, BooleanRadioOptions> = 

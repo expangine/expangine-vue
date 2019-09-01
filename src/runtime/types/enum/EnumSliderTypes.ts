@@ -16,6 +16,13 @@ export interface EnumSliderOptions
   dense: boolean;
   solo: boolean;
   flat: boolean;
+  prependIcon?: string;
+  appendIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  thumbColor?: string;
+  trackColor?: string;
+  trackFillColor?: string;
 }
 
 export const EnumSliderInput: TypeVisualInput<EnumType, EnumSliderOptions, EnumSubs> = 

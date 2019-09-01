@@ -80,6 +80,7 @@
         <ex-color-picker
           v-else-if="field.type === 'color'"
           filled
+          show-swatches
           :read-only="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
           :hint="field.details"
@@ -90,6 +91,32 @@
           @input="setField(field, $event)"
           @click:clear="setField(field)"
         ></ex-color-picker>
+        <v-autocomplete
+          v-else-if="field.type === 'icon'"
+          filled
+          :items="icons"
+          :readonly="readOnly"
+          :hide-details="hideDetails(field, fieldIndex)"
+          :hint="field.details"
+          :persistent-hint="!!field.details"
+          :clearable="!field.required && !readOnly"
+          :label="field.label"
+          :value="value[field.name]"
+          @input="setField(field, $event)"
+          @click:clear="setField(field)"
+        >
+          <template #item="{ item, on }">
+            <v-list-item v-on="on">
+              <v-list-item-icon>
+                <v-icon>{{ item.value }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.text }}</v-list-item-title>
+                <v-list-item-subtitle>{{ item.value }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-autocomplete>
         <ex-simple-fields
           v-else-if="field.type === 'object'"
           :read-only="readOnly"
@@ -132,7 +159,7 @@
                     <v-row>
                       <v-col cols="6">
                         <v-text-field
-                          outlined
+                          filled
                           hide-details
                           label="Text"
                           type="text"
@@ -143,7 +170,7 @@
                       </v-col>
                       <v-col cols="6">
                         <v-text-field
-                          outlined
+                          filled
                           hide-details
                           label="Value"
                           :type="field.valueType || 'text'"
@@ -169,9 +196,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { isArray } from 'expangine-runtime';
 import { TypeSettings } from '../runtime/TypeVisuals';
 import { SimpleFieldOption } from '../common';
-import { isArray } from 'expangine-runtime';
+import { Icons } from '../app/Icons';
+
 
 
 export default Vue.extend({
@@ -196,6 +225,9 @@ export default Vue.extend({
     defaults: {
       type: Object,
     },
+  },
+  computed: {
+    icons: () => Icons,
   },
   methods: {
     hideDetails(field: SimpleFieldOption, index: number) {

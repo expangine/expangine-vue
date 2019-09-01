@@ -10,14 +10,22 @@ export interface EnumSelectOptions
 {
   label: string;
   hint: string;
-  // TODO placeholder
   dark: boolean;
-  // TODO singleLine
+  placeholder: string;
+  singleLine: boolean;
   filled: boolean;
   outlined: boolean;
   dense: boolean;
   solo: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
+  itemColor?: string;
 }
 
 export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumSubs> = 
@@ -31,15 +39,17 @@ export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumS
     label: '',
     dark: false,
     hint: '',
+    placeholder: '',
     filled: false,
+    singleLine: false,
     outlined: false,
     dense: false,
     solo: false,
     flat: false,
   }),
-  getName: (options) => options.label || options.hint,
+  getName: (options) => options.label || options.hint || options.placeholder,
   getSummary: (options) => (
-    `<strong>Dropdown</strong>: ${options.label || options.hint}`
+    `<strong>Dropdown</strong>: ${options.label || options.hint || options.placeholder}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

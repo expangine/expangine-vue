@@ -16,6 +16,13 @@ import TypeSettingsBase from '../TypeSettingsBase';
 const fields: SimpleFieldSettings<EnumSliderOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
   { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
+  { name: 'appendIcon', type: 'icon', label: 'Append Icon' },
+  { name: 'backgroundColor', type: 'color', label: 'Background Color' },
+  { name: 'color', type: 'color', label: 'Color' },
+  { name: 'thumbColor', type: 'color', label: 'Thumb Color' },
+  { name: 'trackColor', type: 'color', label: 'Track Color' },
+  { name: 'trackFillColor', type: 'color', label: 'Track Fill Color' },
   { name: 'dark', type: 'boolean', label: 'Dark' },
   { name: 'filled', type: 'boolean', label: 'Filled' },
   { name: 'solo', type: 'boolean', label: 'Solo' },

@@ -15,6 +15,13 @@ export interface DatePickerOptions
   outlined: boolean;
   dense: boolean;
   flat: boolean;
+  prependIcon?: string;
+  prependInnerIcon?: string;
+  appendIcon?: string;
+  appendOuterIcon?: string;
+  clearIcon?: string;
+  backgroundColor?: string;
+  color?: string;
 }
 
 export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> = 
@@ -33,6 +40,7 @@ export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> =
     outlined: false,
     dense: false,
     flat: false,
+    prependInnerIcon: 'mdi-calendar',
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
