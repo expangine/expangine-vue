@@ -21,24 +21,15 @@
     <v-list-item>
       <v-simple-table>
         <thead>
-          <th>Order</th>
-          <th>Property</th>
+          <th>Index</th>
           <th>Columns</th>
           <th>Offsets</th>
         </thead>
         <tbody>
           <template v-for="(col, index) in value.columns">
-            <tr :key="col.prop">
+            <tr :key="index">
               <td>
-                <v-btn icon block height="32" @click="move(index, -1)">
-                  <v-icon>mdi-chevron-up</v-icon>
-                </v-btn>
-                <v-btn icon block height="32" @click="move(index, 1)">
-                  <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
-              </td>
-              <td>
-                {{ col.prop }}
+                {{ index }}
               </td>
               <td class="pa-1">
                 <v-select
@@ -63,32 +54,15 @@
             </tr>
           </template>
         </tbody>
-        <tfoot v-if="hasOutside">
-          <td>
-            <v-btn icon @click="add">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-          </td>
-          <td colspan="3" class="pa-1">
-            <v-select
-              filled
-              solo
-              hide-details
-              label="Property"
-              :items="outsideOptions"
-              v-model="outside"
-            ></v-select>
-          </td>
-        </tfoot>
       </v-simple-table>
     </v-list-item>
   </v-list>
 </template>
 
 <script lang="ts">
-import { ObjectType } from 'expangine-runtime';
+import { TupleType } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
-import { ObjectFormOptions } from './ObjectFormTypes';
+import { TupleGridOptions } from './TupleGridTypes';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
@@ -133,53 +107,15 @@ const offsetOptions: ListOptions<number | undefined> = [
   { text: '11', value: 11 },
 ];
 
-export default TypeSettingsBase<ObjectType, ObjectFormOptions>().extend({
-  name: 'ObjectFormSettings',
+export default TypeSettingsBase<TupleType, TupleGridOptions>().extend({
+  name: 'TupleGridSettings',
   data: () => ({
-    outside: null as null | string,
     size: sizeOptions[0].value,
   }),
   computed: {
     sizeOptions: () => sizeOptions,
     columnOptions: () => columnOptions,
     offsetOptions: () => offsetOptions,
-    hasOutside(): boolean {
-      return this.outsideOptions.length > 0;
-    },
-    outsideOptions(): ListOptions<string> {
-      const columns = this.value.columns;
-      const props = Object.assign({}, this.type.options.props);
-      
-      for (const col of columns) {
-        delete props[col.prop];
-      }
-
-      const outside = Object.keys(props);
-
-      return outside.map((prop) => ({
-        text: prop,
-        value: prop,
-      }));
-    },
-  },
-  methods: {
-    add() {
-      const prop = this.outside || this.outsideOptions[0].value;
-
-      this.value.columns.push({ prop, cols: 12 });
-      this.input();
-    },
-    move(index: number, dir: number) {
-      const columns = this.value.columns;
-      const next = index + dir;
-      if (next < 0 || next >= columns.length) {
-        return;
-      }
-      const temp = columns[index];
-      this.$set(columns, index, columns[next]);
-      this.$set(columns, next, temp);
-      this.input();
-    },
   },
 });
 </script>

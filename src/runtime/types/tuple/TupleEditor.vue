@@ -1,0 +1,128 @@
+<template>
+  <v-list class="pa-0">
+    <v-list-item>
+      <v-list-item-avatar class="cell-top pt-1 mr-3">
+        <ex-type-editor-menu
+          :type="type"
+          :settings="settings"
+          :registry="registry"
+          :parent="parent"
+          :read-only="readOnly"
+          @input:type="updateType"
+          @input:settings="updateSettings"
+          @change:type="changeType"
+        ></ex-type-editor-menu>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title class="primary--text">
+          <strong>Tuple</strong>
+        </v-list-item-title>
+        <v-list-item-subtitle 
+          v-if="!disableSubSettings"
+          v-html="summary"
+        ></v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    <template v-for="(innerType, index) in type.options">
+      <v-list-item :key="index">
+        <v-list-item-avatar class="cell-top pt-1 mr-0">
+          <v-menu :close-on-content-click="false" :disabled="readOnly">
+            <template #activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-horizontal</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="removeType(index, innerType)">
+                Remove Type
+              </v-list-item>
+              <v-list-item @click="addType(index, innerType)">
+                Add Type
+              </v-list-item>
+              <!-- Sort -->
+            </v-list>
+            <ex-type-hook-list
+              :registry="registry"
+              :parent="type"
+              :parent-settings="settings"
+              :type="innerType"
+              :type-settings="settings.sub[index]"
+              :read-only="readOnly"
+            ></ex-type-hook-list>
+          </v-menu>
+        </v-list-item-avatar>
+        <v-list-item-content class="pa-0">
+          <ex-type-editor
+            :type="innerType"
+            :parent="type"
+            :settings="settings.sub[index]"
+            :registry="registry"
+            :read-only="readOnly"
+            @input:type="updateType"
+            @input:settings="updateSettings"
+            @change:type="onChangeType(index, innerType, $event)"
+          ></ex-type-editor>
+        </v-list-item-content>
+      </v-list-item>
+    </template>
+  </v-list>
+</template>
+
+<script lang="ts">
+import { Type, TupleType } from 'expangine-runtime';
+import { friendlyList } from '../../../common';
+import { TypeAndSettings } from '../../TypeVisuals';
+import { confirm } from '../../../app/Confirm';
+import { getBuildType } from '../../../app/BuildType';
+import { TupleSubs } from './TupleTypes';
+import TypeEditorBase from '../TypeEditorBase';
+
+
+export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
+  name: 'TupleEditor',
+  methods: {
+    async removeType(index: number, innerType: Type) {
+      if (!await confirm()) {
+        return;
+      }
+
+      this.type.options.splice(index, 1);
+      this.settings.sub.splice(index, 1);
+
+      this.inputSelected.onSubRemove(index, this.type, this.settings);
+
+      this.updateTypeAndSettings();
+    },
+    async addType(index: number, afterType: Type) {
+      const chosen = await getBuildType({
+        input: {
+          registry: this.registry,
+        },
+        title: `Add Type [${index + 2}]`,
+        ok: 'Add',
+      });
+
+      if (!chosen) {
+        return;
+      }
+
+      this.type.options.splice(index + 1, 0, chosen.type);
+      this.settings.sub.splice(index + 1, 0, chosen.settings);
+
+      this.inputSelected.onSubAdd(index + 1, this.type, this.settings);
+
+      this.updateTypeAndSettings();
+    },
+    onChangeType(index: number, innerType: Type, { type: newType, settings: newSettings }: TypeAndSettings) {
+      this.$set(this.type.options, index, newType);
+      this.$set(this.settings.sub, index, newSettings);
+      
+      this.updateTypeAndSettings();
+    },
+  },
+});
+</script>
+
+<style lang="sass" scoped>
+
+</style>

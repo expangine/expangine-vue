@@ -219,7 +219,15 @@ export default TypeEditorBase<Type, any>().extend({
       const result = await modifier.value();
 
       if (result) {
-        this.$emit('change:type', result);
+        if (result.kind === 'change') {
+          this.changeType(result);
+        }
+        if (result.kind === 'update') {
+          this.updateTypeAndSettings();
+        }
+        if (result.transform) {
+          this.transform(result.transform);
+        }
       }
       this.done();
     },

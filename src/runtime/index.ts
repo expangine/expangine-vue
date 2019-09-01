@@ -13,6 +13,7 @@ import { ManyVisuals, ManyModifier } from './types/many';
 import { ListVisuals, ListBuilder } from './types/list';
 import { EnumVisuals, EnumBuilder } from './types/enum';
 import { MapVisuals, MapBuilder, MapModifierFromObject } from './types/map';
+import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType } from './types/tuple';
 
 import { ChangeTypeModifier } from './hooks/ChangeTypeModifier';
 import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
@@ -41,6 +42,10 @@ export default new Registry(defs)
   .addType(MapVisuals)
     .addBuilder(MapBuilder)
     .addModifier(MapModifierFromObject)
+  .addType(TupleVisuals)
+    .addBuilder(TupleBuilder)
+    .addModifier(TupleModifierFromObject)
+    .addModifier(TupleModifierAddType)
   .addModifier(ChangeTypeModifier)
   .addBuilder(PasteBuilder)
   .addModifier(CopyModifier)

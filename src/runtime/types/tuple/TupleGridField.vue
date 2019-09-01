@@ -9,41 +9,41 @@
 </template>
 
 <script lang="ts">
-import { Type, ObjectType } from 'expangine-runtime';
-import { ObjectFormOptions } from './ObjectFormTypes';
+import { Type, TupleType } from 'expangine-runtime';
 import { TypeSettings } from '../../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
+import { TupleGridOptions } from './TupleGridTypes';
 
 
-export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object).extend({
-  name: 'ObjectFormField',
+export default TypeInputBase<TupleType, TupleGridOptions, any, number>(Array).extend({
+  name: 'TupleGridField',
   props: {
-    prop: {
-      type: String,
+    index: {
+      type: Number,
       required: true,
     },
   },
   computed: {
     field: {
       get(): any {
-        let current = this.value[this.prop];
+        let current = this.value[this.index];
         if (current === undefined && this.fieldSettings) {
           current = this.fieldType.fromJson(this.fieldSettings.defaultValue);
-          this.$set(this.value, this.prop, current);
+          this.$set(this.value, this.index, current);
           this.update();
         }
         return current;
       }, 
       set(value: any) {
-        this.$set(this.value, this.prop, value);
+        this.$set(this.value, this.index, value);
         this.update();
       },
     },
     fieldSettings(): TypeSettings<any> | null {
-      return this.settings.sub[this.prop];
+      return this.settings.sub[this.index];
     },
     fieldType(): Type {
-      return this.type.options.props[this.prop];
+      return this.type.options[this.index];
     },
   },
 });

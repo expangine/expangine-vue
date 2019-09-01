@@ -102,13 +102,13 @@
 
 <script lang="ts">
 import { ObjectType } from 'expangine-runtime';
+import { friendlyList } from '../../../common';
 import { confirm } from '../../../app/Confirm';
 import { input } from '../../../app/Input';
 import { notify } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
-import { friendlyList } from '../../../common';
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({

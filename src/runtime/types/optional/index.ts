@@ -1,7 +1,7 @@
 
 import { Type, OptionalType } from 'expangine-runtime';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
-import { TypeModifier } from '@/runtime/TypeModifier';
+import { TypeModifier, TypeModifyResult } from '@/runtime/TypeModifier';
 import { OptionalInput } from './OptionalTypes';
 import { confirm } from '@/app/Confirm';
 import OptionalEditor from './OptionalEditor.vue';
@@ -36,7 +36,10 @@ export const OptionalModifier: TypeModifier<OptionalType> =
           return false;
         }
     
-        return OptionalModifierTransform(type, typeSettings);
+        return {
+          kind: 'change',
+          ...OptionalModifierTransform(type, typeSettings),
+        };
       },
     };
   },

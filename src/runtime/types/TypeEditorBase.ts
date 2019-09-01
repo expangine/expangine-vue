@@ -1,6 +1,6 @@
 
 import Vue, { VueConstructor } from 'vue';
-import { Type, OptionalType, ManyType } from 'expangine-runtime';
+import { Type, OptionalType, ManyType, Expression } from 'expangine-runtime';
 import { ListOptions } from '@/common';
 import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings, SubsType } from '../TypeVisuals';
 import { Registry } from '../Registry';
@@ -15,6 +15,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       updateType(): void;
       updateTypeAndSettings(): void;
       changeType(result: TypeAndSettings): void;
+      transform(transform: Expression): void;
     },
     {
       isRequired: boolean;
@@ -131,6 +132,9 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
       changeType(result: TypeAndSettings) {
         this.$emit('change:type', result);
+      },
+      transform(transform: Expression) {
+        this.$emit('transform', transform);
       },
     },
   });

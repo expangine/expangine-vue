@@ -1,5 +1,5 @@
 
-import { Type } from 'expangine-runtime';
+import { Type, Expression } from 'expangine-runtime';
 import { TypeSettings } from './TypeVisuals';
 import { Registry } from './Registry';
 
@@ -29,6 +29,8 @@ export interface TypeModifier<T extends Type = Type>
 
 export interface TypeModifyResult<T extends Type = Type>
 {
+  kind: 'change' | 'update';
   type: T;
   settings: TypeSettings;
+  transform?: Expression;
 }

@@ -67,7 +67,3 @@ export default TypeInputBase<ObjectType, ObjectFormOptions, object>(Object).exte
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

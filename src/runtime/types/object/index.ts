@@ -89,6 +89,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
         }
 
         return {
+          kind: 'change',
           type: new ObjectType({ props: propMap }),
           settings: { 
             input: 'form', 

@@ -43,6 +43,7 @@ export const ManyModifier: TypeModifier<ManyType> =
         }
         
         return {
+          kind: 'change',
           type: new ManyType([type, chosen.type]),
           settings: {
             input: 'many',

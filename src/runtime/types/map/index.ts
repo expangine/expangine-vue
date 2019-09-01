@@ -106,6 +106,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
         }
 
         return {
+          kind: 'change',
           type: MapType.forItem(valueType, new TextType({})),
           settings: {
             input: 'grid',
