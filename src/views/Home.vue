@@ -43,6 +43,7 @@
             :settings="settings"
             @input:type="saveType"
             @input:settings="saveType"
+            @transform="transform"
           ></ex-type-editor>
         </v-list>
         <v-list v-if="isPopulate">
@@ -62,13 +63,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, defs } from 'expangine-runtime';
+import { Type, defs, Expression, runtime, isString } from 'expangine-runtime';
 import * as ex from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
 import { TypeBuildResult } from '../runtime/TypeBuilder';
 import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import Registry from '../runtime';
-import { confirm } from '../app/Confirm';
+import { getConfirmation } from '../app/Confirm';
+import { sendNotification } from '../app/Notify';
 
 
 
@@ -114,7 +116,7 @@ export default Vue.extend({
       return builtOption ? await builtOption.value() : false;
     },
     async reset() {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 
@@ -130,6 +132,13 @@ export default Vue.extend({
 
       this.saveType();
       this.saveData();
+    },
+    transform(expr: Expression) {
+      if (expr instanceof Expression) {
+        const cmd = runtime.getCommand(expr);
+
+        cmd({ value: this.data });
+      }
     },
     exportJson() {
       if (!this.type) {
@@ -149,9 +158,31 @@ export default Vue.extend({
       finput.type = 'file';
       finput.multiple = true;
       finput.accept = '.json';
-      finput.onchange = (e) => (window as any).console.log(finput.files);
+      finput.onchange = (e) => finput.files && finput.files.length > 0 ? this.importFile(finput.files[0]) : undefined;
       finput.click();
       finput.remove();
+    },
+    importFile(file: File) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (isString(reader.result)) {
+          try {
+            const parsed = JSON.parse(reader.result);
+
+            this.importData(parsed);
+          } catch (e) {
+            sendNotification({ message: 'The file selected did not contain a valid JSON value.' });
+          }
+        } else {
+          sendNotification({ message: 'The file selected was not a valid file.' });
+        }
+      };
+      reader.readAsText(file);
+    },
+    importData(imported: any) {
+      this.type = this.registry.defs.getType(imported.type);
+      this.settings = imported.settings;
+      this.data = this.type.fromJson(imported.data);
     },
     downloadFile(name: string, contents: any, type?: string) {
       const blob = new Blob([contents], {type: type || 'text/plain'});

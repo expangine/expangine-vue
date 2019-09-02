@@ -36,6 +36,6 @@ export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> =
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Picker</strong>: ${options.label}`
+    `<strong>Picker</strong>: ${options.label || options.hint || ''}`
   ),
 };

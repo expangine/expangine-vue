@@ -14,7 +14,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 const fields: SimpleFieldSettings<MapGridOptions> = [
-  { name: 'title', type: 'text', label: 'Title' },
+  { name: 'title', type: 'text', label: 'Title', defaultValue: '' },
   { name: 'minKeyWidth', type: 'number', label: 'Minimum Key Column Width', required: true },
   { name: 'minValueWidth', type: 'number', label: 'Minimum Value Column Width', required: true },
 ];

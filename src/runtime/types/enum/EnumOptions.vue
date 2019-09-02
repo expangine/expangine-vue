@@ -89,7 +89,7 @@
 
 <script lang="ts">
 import { EnumType, EnumOptions, toArray } from 'expangine-runtime';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { TypeAndSettings, TypeSettings } from '../../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import TypeEditorBase from '../TypeEditorBase';
@@ -123,7 +123,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
       this.updateTypeAndSettings();
     },
     async removeConstant(index: number) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
       

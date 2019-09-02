@@ -32,8 +32,8 @@ const fields: SimpleFieldSettings<DateOptions> = [
   { name: 'forceMax', type: 'date', label: 'Force Max' },
   { name: 'forceStartOf', type: 'select', label: 'Force Start Of', items: unitOptions },
   { name: 'forceEndOf', type: 'select', label: 'Force End Of', items: unitOptions },
-  { name: 'withTime', type: 'boolean', label: 'With Time' },
-  { name: 'parseAsUTC', type: 'boolean', label: 'Parse as UTC' },
+  { name: 'withTime', type: 'boolean', label: 'With Time', defaultValue: false },
+  { name: 'parseAsUTC', type: 'boolean', label: 'Parse as UTC', defaultValue: false },
 ];
 
 export default TypeEditorBase<DateType, any>().extend({

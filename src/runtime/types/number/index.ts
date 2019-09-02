@@ -1,5 +1,5 @@
 
-import { NumberType } from 'expangine-runtime';
+import { NumberType, NumberOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
@@ -13,6 +13,7 @@ export const NumberVisuals = createVisuals({
   type: NumberType,
   name: 'Number',
   description: 'A number value',
+  create: () => OperationExpression.create(NumberOps.create, {}),
   editor: NumberEditor,
   options: NumberOptions,
   defaultInput: 'textbox',

@@ -9,10 +9,10 @@ import ListListSettings from './ListListSettings.vue';
 export interface ListListOptions
 {
   title?: string;
-  itemName: string;
-  hideRemove: boolean;
-  hideInsert: boolean;
-  hideSort: boolean;
+  itemName?: string;
+  hideRemove?: boolean;
+  hideInsert?: boolean;
+  hideSort?: boolean;
 }
 
 export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs> = 
@@ -22,15 +22,10 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs>
   input: ListList,
   settings: ListListSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    itemName: 'Item',
-    hideRemove: false,
-    hideInsert: false,
-    hideSort: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.title || options.itemName,
   getSummary: (options) => (
-    `<strong>List</strong>: ${options.title || options.itemName}`
+    `<strong>List</strong>: ${options.title || options.itemName || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

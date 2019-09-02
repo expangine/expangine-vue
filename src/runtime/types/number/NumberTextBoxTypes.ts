@@ -37,6 +37,6 @@ export const NumberTextBoxInput: TypeVisualInput<NumberType, NumberTextBoxOption
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
 };

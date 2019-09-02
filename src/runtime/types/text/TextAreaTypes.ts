@@ -45,6 +45,6 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Textarea</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Textarea</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
 };

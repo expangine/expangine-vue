@@ -25,7 +25,7 @@ export function getConfirmDefaults(): ConfirmOptions {
 export const confirmDialog = getConfirmDefaults();
 
 
-export async function confirm(options: Partial<ConfirmOptions> = {}): Promise<boolean> 
+export async function getConfirmation(options: Partial<ConfirmOptions> = {}): Promise<boolean> 
 {
   const { resolve, promise } = getPromiser<boolean>();
 

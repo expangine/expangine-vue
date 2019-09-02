@@ -45,7 +45,7 @@ export const ListEnumAutocompleteInput: TypeVisualInput<ListType, ListEnumAutoco
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Enum Autocomplete</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Enum Autocomplete</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

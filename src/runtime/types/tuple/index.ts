@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, TupleOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -14,6 +14,7 @@ export const TupleVisuals = createVisuals({
   type: TupleType,
   name: 'Tuple',
   description: 'A fixed size array of types',
+  create: () => OperationExpression.create(TupleOps.create, {}),
   editor: TupleEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],

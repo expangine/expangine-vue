@@ -1,9 +1,9 @@
 
-import { Type, OptionalType } from 'expangine-runtime';
+import { Type, OptionalType, ConstantExpression } from 'expangine-runtime';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeModifier, TypeModifyResult } from '@/runtime/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
-import { confirm } from '@/app/Confirm';
+import { getConfirmation } from '@/app/Confirm';
 import OptionalEditor from './OptionalEditor.vue';
 
 
@@ -11,6 +11,7 @@ export const OptionalVisuals = createVisuals({
   type: OptionalType,
   name: 'Optional',
   description: 'An optional value',
+  create: (registry, type) => registry.getVisuals(type.options).create(registry, type.options),
   editor: OptionalEditor,
   defaultInput: 'optional',
   inputsOrder: ['optional'],
@@ -32,7 +33,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
       text: 'Make Optional',
       priority: 2,
       value: async () => {
-        if (!await confirm()) {
+        if (!await getConfirmation()) {
           return false;
         }
     
@@ -58,7 +59,7 @@ export const OptionalModifierRequire: TypeModifier =
       text: 'Make Required',
       priority: 1,
       value: async () => {
-        if (!await confirm()) {
+        if (!await getConfirmation()) {
           return false;
         }
 

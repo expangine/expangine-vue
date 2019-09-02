@@ -14,12 +14,12 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 const fields: SimpleFieldSettings<TextComboOptions> = [
-  { name: 'label', type: 'text', label: 'Label' },
+  { name: 'label', type: 'text', label: 'Label', defaultValue: '' },
   { name: 'items', type: 'combo', label: 'Available Values', required: true },
-  { name: 'hint', type: 'text', label: 'Hint' },
-  { name: 'prefix', type: 'text', label: 'Prefix' },
-  { name: 'suffix', type: 'text', label: 'Suffix' },
-  { name: 'placeholder', type: 'text', label: 'Placeholder' },
+  { name: 'hint', type: 'text', label: 'Hint', defaultValue: '' },
+  { name: 'prefix', type: 'text', label: 'Prefix', defaultValue: '' },
+  { name: 'suffix', type: 'text', label: 'Suffix', defaultValue: '' },
+  { name: 'placeholder', type: 'text', label: 'Placeholder', defaultValue: '' },
   { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
   { name: 'appendIcon', type: 'icon', label: 'Append Icon' },
   { name: 'prependInnerIcon', type: 'icon', label: 'Prepend Inner Icon' },
@@ -28,13 +28,13 @@ const fields: SimpleFieldSettings<TextComboOptions> = [
   { name: 'backgroundColor', type: 'color', label: 'Background Color' },
   { name: 'color', type: 'color', label: 'Color' },
   { name: 'itemColor', type: 'color', label: 'Item Color' },
-  { name: 'singleLine', type: 'boolean', label: 'Single Line' },
-  { name: 'dark', type: 'boolean', label: 'Dark' },
-  { name: 'filled', type: 'boolean', label: 'Filled' },
-  { name: 'solo', type: 'boolean', label: 'Solo' },
-  { name: 'outlined', type: 'boolean', label: 'Outlined' },
-  { name: 'dense', type: 'boolean', label: 'Dense' },
-  { name: 'flat', type: 'boolean', label: 'Flat' },
+  { name: 'singleLine', type: 'boolean', label: 'Single Line', defaultValue: false },
+  { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },
+  { name: 'filled', type: 'boolean', label: 'Filled', defaultValue: false },
+  { name: 'solo', type: 'boolean', label: 'Solo', defaultValue: false },
+  { name: 'outlined', type: 'boolean', label: 'Outlined', defaultValue: false },
+  { name: 'dense', type: 'boolean', label: 'Dense', defaultValue: false },
+  { name: 'flat', type: 'boolean', label: 'Flat', defaultValue: false },
 ];
 
 export default TypeSettingsBase<TextType, TextComboOptions>().extend({

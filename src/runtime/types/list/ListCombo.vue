@@ -14,7 +14,6 @@
 <script lang="ts">
 import { ListType } from 'expangine-runtime';
 import { ListComboOptions } from './ListComboTypes';
-import { confirm } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import TypeInputBase from '../TypeInputBase';
 

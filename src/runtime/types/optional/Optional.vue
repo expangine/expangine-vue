@@ -29,7 +29,7 @@
 import { OptionalType } from 'expangine-runtime';
 import { OptionalOptions, OptionalSubs } from './OptionalTypes';
 import { PropTypeAny } from '../../../common';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { TypeVisuals, TypeVisualInput, TypeSettings } from '../../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
 
@@ -64,7 +64,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
   },
   methods: {
     async removeValue() {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
       this.$emit('input', undefined);

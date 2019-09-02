@@ -47,7 +47,7 @@
 <script lang="ts">
 import { Type, ManyType } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
@@ -57,7 +57,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
   name: 'ManyEditor',
   methods: {
     async removeType(index: number, innerType: Type) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 

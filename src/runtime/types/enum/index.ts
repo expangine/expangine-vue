@@ -15,6 +15,7 @@ export const EnumVisuals = createVisuals({
   type: EnumType,
   name: 'Enum',
   description: 'A list of key value pairs.',
+  create: (registry, type) => registry.getVisuals(type.options.value).create(registry, type.options.value),
   editor: EnumEditor,
   options: EnumOptions,
   defaultInput: 'dropdown',

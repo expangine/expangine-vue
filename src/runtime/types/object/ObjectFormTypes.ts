@@ -35,7 +35,7 @@ export const ObjectFormInput: TypeVisualInput<ObjectType, ObjectFormOptions, str
   }),
   getName: (options) => options.title,
   getSummary: (options) => (
-    `<strong>Form</strong>: ${options.title}`
+    `<strong>Form</strong>: ${options.title || ''}`
   ),
   onSubAdd: (prop, type, settings) => {
     const columns = settings.options.columns;

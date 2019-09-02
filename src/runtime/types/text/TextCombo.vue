@@ -12,7 +12,6 @@
 <script lang="ts">
 import { TextType } from 'expangine-runtime';
 import { TextComboOptions } from './TextComboTypes';
-import { confirm } from '../../../app/Confirm';
 import TypeInputBase from '../TypeInputBase';
 
 

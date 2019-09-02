@@ -16,7 +16,7 @@ import TypeEditorBase from '../TypeEditorBase';
 const fields: SimpleFieldSettings<NumberOptions> = [
   { name: 'min', type: 'number', label: 'Min' },
   { name: 'max', type: 'number', label: 'Max' },
-  { name: 'whole', type: 'boolean', label: 'Whole' },
+  { name: 'whole', type: 'boolean', label: 'Whole', defaultValue: false },
 ];
 
 export default TypeEditorBase<NumberType, any>().extend({

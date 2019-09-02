@@ -14,14 +14,14 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 const fields: SimpleFieldSettings<BooleanSwitchOptions> = [
-  { name: 'label', type: 'text', label: 'Label' },
-  { name: 'hint', type: 'text', label: 'Hint' },
+  { name: 'label', type: 'text', label: 'Label', defaultValue: '' },
+  { name: 'hint', type: 'text', label: 'Hint', defaultValue: '' },
   { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
   { name: 'appendIcon', type: 'icon', label: 'Append Icon' },
   { name: 'backgroundColor', type: 'color', label: 'Background Color' },
   { name: 'color', type: 'color', label: 'Color' },
-  { name: 'inset', type: 'boolean', label: 'Inset' },
-  { name: 'dark', type: 'boolean', label: 'Dark' },
+  { name: 'inset', type: 'boolean', label: 'Inset', defaultValue: false },
+  { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },
 ];
 
 export default TypeSettingsBase<BooleanType, BooleanSwitchOptions>().extend({

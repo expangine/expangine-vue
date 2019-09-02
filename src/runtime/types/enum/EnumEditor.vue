@@ -32,7 +32,6 @@
 
 <script lang="ts">
 import { EnumType, toArray } from 'expangine-runtime';
-import { confirm } from '../../../app/Confirm';
 import { EnumSubs } from './EnumTypes';
 import { friendlyList } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';

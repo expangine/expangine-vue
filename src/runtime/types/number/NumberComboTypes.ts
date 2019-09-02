@@ -44,6 +44,6 @@ export const NumberComboInput: TypeVisualInput<NumberType, NumberComboOptions> =
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Combobox</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Combobox</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
 };

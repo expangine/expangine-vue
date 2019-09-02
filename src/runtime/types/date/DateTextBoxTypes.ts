@@ -39,6 +39,6 @@ export const DateTextBoxInput: TypeVisualInput<DateType, DateTextBoxOptions> =
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Textbox</strong>: ${options.label}`
+    `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
 };

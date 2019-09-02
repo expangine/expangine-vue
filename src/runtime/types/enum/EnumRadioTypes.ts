@@ -35,7 +35,7 @@ export const EnumRadioInput: TypeVisualInput<EnumType, EnumRadioOptions, EnumSub
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Radio</strong>: ${options.label || options.hint}`
+    `<strong>Radio</strong>: ${options.label || options.hint || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

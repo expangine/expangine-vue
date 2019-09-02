@@ -21,7 +21,7 @@ export function getNotifyDefaults(): NotifyOptions
 
 export const notifyDialog = getNotifyDefaults();
 
-export function notify(options: Partial<NotifyOptions> = {}): Promise<boolean>
+export function sendNotification(options: Partial<NotifyOptions> = {}): Promise<boolean>
 {
   const { resolve, promise } = getPromiser<boolean>();
 

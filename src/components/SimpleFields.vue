@@ -236,7 +236,7 @@ export default Vue.extend({
     },
     setField(field: SimpleFieldOption, value: any) {
       const defaults = this.defaults;
-      const isEmpty = value === undefined || value === null;
+      const isEmpty = value === undefined || value === null || value === field.defaultValue;
       if (isEmpty && !field.required) {
         this.$delete(this.value, field.name);
       } else {

@@ -31,6 +31,6 @@ export const NumberSliderInput: TypeVisualInput<NumberType, NumberSliderOptions>
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Slider</strong>: ${options.label || options.hint}`
+    `<strong>Slider</strong>: ${options.label || options.hint || ''}`
   ),
 };

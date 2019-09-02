@@ -15,7 +15,6 @@
 <script lang="ts">
 import { ListType, toArray, EnumType } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
-import { confirm } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import { ListEnumAutocompleteOptions } from './ListEnumAutocompleteTypes';
 import TypeInputBase from '../TypeInputBase';

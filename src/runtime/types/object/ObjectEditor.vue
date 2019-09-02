@@ -74,6 +74,7 @@
                 @input:type="updateType"
                 @input:settings="updateSettings"
                 @change:type="onChangeType(prop, $event)"
+                @transform="transformProp(prop, $event)"
               ></ex-type-editor>
             </td>
           </tr>
@@ -101,11 +102,12 @@
 </template>
 
 <script lang="ts">
-import { ObjectType } from 'expangine-runtime';
+import { ObjectType, OperationExpression, ObjectOps, GetExpression, ConstantExpression, ChainExpression, 
+  UpdateExpression, Expression, toExpr } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
-import { confirm } from '../../../app/Confirm';
-import { input } from '../../../app/Input';
-import { notify } from '../../../app/Notify';
+import { getConfirmation } from '../../../app/Confirm';
+import { getInput } from '../../../app/Input';
+import { sendNotification } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
@@ -149,9 +151,17 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
       this.updateTypeAndSettings();
+
+      this.transform(
+        OperationExpression.create(ObjectOps.set, {
+          object: GetExpression.create(['value']),
+          key: toExpr(propName),
+          value: this.registry.getCreate(chosen.type),
+        }),
+      );
     },
     async remove(prop: string) {
-      if (!await confirm({ message: `Remove ${prop}?`})) {
+      if (!await getConfirmation({ message: `Remove ${prop}?`})) {
         return;
       }
 
@@ -161,9 +171,16 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$delete(this.settings.sub, prop);
 
       this.updateTypeAndSettings();
+
+      this.transform(
+        OperationExpression.create(ObjectOps.delete, {
+          object: GetExpression.create(['value']),
+          key: toExpr(prop),
+        }),
+      );
     },
     async rename(prop: string) {
-      const newProp = await input({ 
+      const newProp = await getInput({ 
         title: 'Rename',
         message: 'Enter a new name for this property',
         label: 'Name',
@@ -174,10 +191,10 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         return;
       }
       if (newProp === prop) {
-        return notify({ message: 'The property name will remain the same.' });
+        return sendNotification({ message: 'The property name will remain the same.' });
       }
       if (newProp in this.type.options.props) {
-        return notify({ message: 'A property with that name already exists.' });
+        return sendNotification({ message: 'A property with that name already exists.' });
       }
 
       this.inputSelected.onSubMove(prop, newProp, this.type, this.settings);
@@ -193,13 +210,43 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.updateTypeAndSettings();
 
-      notify({ message: `${prop} renamed to ${newProp}` });
+      sendNotification({ message: `${prop} renamed to ${newProp}` });
+
+      this.transform(
+        new ChainExpression([
+          UpdateExpression.create(
+            ['value', newProp],
+            GetExpression.create(['value', prop]),
+          ),
+          OperationExpression.create(ObjectOps.delete, {
+            object: GetExpression.create(['value']),
+            key: toExpr(prop),
+          }),
+        ]),
+      );
+    },
+    transformProp(prop: string, transform: Expression) {
+      this.transform(
+        UpdateExpression.create(
+          ['value', prop],
+          transform,
+          'value',
+        ),
+      );
     },
     onChangeType(prop: string, result: TypeAndSettings) {
       this.type.options.props[prop] = result.type;
       this.settings.sub[prop] = result.settings;
 
       this.updateTypeAndSettings();
+
+      this.transform(
+        OperationExpression.create(ObjectOps.set, {
+          object: GetExpression.create(['value']),
+          key: toExpr(prop),
+          value: this.registry.getCreate(result.type),
+        }),
+      );
     },
   },
 });

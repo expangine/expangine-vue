@@ -36,7 +36,7 @@ export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOp
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Autocomplete</strong>: ${options.label || options.hint}`
+    `<strong>Autocomplete</strong>: ${options.label || options.hint || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

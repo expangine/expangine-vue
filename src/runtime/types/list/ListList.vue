@@ -73,7 +73,7 @@
 <script lang="ts">
 import { Type, ListType, isNumber } from 'expangine-runtime';
 import { TypeSettings } from '../../TypeVisuals';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import { ListListOptions } from './ListListTypes';
 import TypeInputBase from '../TypeInputBase';
@@ -115,7 +115,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
   },
   methods: {
     async removeAt(index: number) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 

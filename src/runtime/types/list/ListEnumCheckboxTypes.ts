@@ -33,7 +33,7 @@ export const ListEnumCheckboxInput: TypeVisualInput<ListType, ListEnumCheckboxOp
   }),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Enum Checkboxes</strong>: ${options.label || options.hint}`
+    `<strong>Enum Checkboxes</strong>: ${options.label || options.hint || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

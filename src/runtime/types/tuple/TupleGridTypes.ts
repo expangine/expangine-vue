@@ -35,7 +35,7 @@ export const TupleGridInput: TypeVisualInput<TupleType, TupleGridOptions, TupleS
   }),
   getName: (options) => options.title,
   getSummary: (options) => (
-    `<strong>Grid</strong>: ${options.title}`
+    `<strong>Grid</strong>: ${options.title || ''}`
   ),
   onSubAdd: (prop, type, settings) => {
     settings.options.columns.splice(prop, 0, { cols: 12 });

@@ -27,6 +27,6 @@ export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptio
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Switch</strong>: ${options.label}`
+    `<strong>Switch</strong>: ${options.label || options.hint || ''}`
   ),
 };

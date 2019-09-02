@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { MapType, toArray } from 'expangine-runtime';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
 import { TypeSettings } from '../../TypeVisuals';
@@ -156,7 +156,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       this.update();
     },
     async removeEntry(index: number) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 

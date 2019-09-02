@@ -165,7 +165,6 @@
 import { Type } from 'expangine-runtime';
 import { ListOptions } from '../common';
 import { TypeVisuals } from './TypeVisuals';
-import { confirm } from '../app/Confirm';
 import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './types/TypeEditorBase';
 

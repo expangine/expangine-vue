@@ -42,6 +42,6 @@ export const BooleanSelectInput: TypeVisualInput<BooleanType, BooleanSelectOptio
     `${options.labelTrue} / ${options.labelFalse}`
   ),
   getSummary: (options) => (
-    `<strong>Dropdown</strong>: ${options.label} ${options.labelTrue} / ${options.labelFalse}`
+    `<strong>Dropdown</strong>: ${options.label || ''} ${options.labelTrue} / ${options.labelFalse}`
   ),
 };

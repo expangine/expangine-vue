@@ -1,6 +1,6 @@
 
 import { VueConstructor } from 'vue';
-import { Type, TypeClass } from 'expangine-runtime';
+import { Type, TypeClass, Expression } from 'expangine-runtime';
 import { Registry } from './Registry';
 
 
@@ -23,6 +23,7 @@ export interface TypeVisuals<
   type: TypeClass<T>;
   name: string;
   description: string;
+  create: (registry: Registry, type: T) => Expression;
   editor: VueConstructor;
   options?: VueConstructor;
   allowsDefault?: boolean;

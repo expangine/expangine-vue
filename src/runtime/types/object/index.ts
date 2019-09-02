@@ -1,18 +1,20 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, 
+  OperationExpression } from 'expangine-runtime';
 import { friendlyList } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
-import { confirm } from '@/app/Confirm';
+import { getConfirmation } from '@/app/Confirm';
 
 
 export const ObjectVisuals = createVisuals({
   type: ObjectType,
   name: 'Object',
   description: 'An object is a collection of named fields.',
+  create: () => OperationExpression.create(ObjectOps.create, {}),
   editor: ObjectEditor,
   allowsDefault: false,
   defaultInput: 'form',
@@ -76,7 +78,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
       description: friendlyList(names),
       priority: 15,
       value: async () => {
-        if (!await confirm()) {
+        if (!await getConfirmation()) {
           return false;
         }
 

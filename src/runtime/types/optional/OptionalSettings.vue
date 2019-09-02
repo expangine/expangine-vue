@@ -14,7 +14,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 
 const fields: SimpleFieldSettings<OptionalOptions> = [
-  { name: 'removeLabel', type: 'text', label: 'Remove Label' },
+  { name: 'removeLabel', type: 'text', label: 'Remove Label', defaultValue: '' },
   { name: 'removeIcon', type: 'icon', label: 'Remove Icon' },
 ];
 

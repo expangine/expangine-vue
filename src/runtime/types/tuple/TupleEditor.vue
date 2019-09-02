@@ -72,7 +72,7 @@
 import { Type, TupleType } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { TypeAndSettings } from '../../TypeVisuals';
-import { confirm } from '../../../app/Confirm';
+import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TypeEditorBase from '../TypeEditorBase';
@@ -82,7 +82,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
   name: 'TupleEditor',
   methods: {
     async removeType(index: number, innerType: Type) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 

@@ -1,5 +1,5 @@
 
-import { Type, Definitions } from 'expangine-runtime';
+import { Type, Definitions, Expression } from 'expangine-runtime';
 import { TypeVisuals } from './TypeVisuals';
 import { ListOptions, ListOptionsPriority } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuildHandler } from './TypeBuilder';
@@ -110,6 +110,11 @@ export class Registry
     out.sort((a, b) => a.priority - b.priority);
 
     return out;
+  }
+
+  public getCreate(type: Type): Expression
+  {
+    return this.getVisuals(type).create(this, type);
   }
 
 }

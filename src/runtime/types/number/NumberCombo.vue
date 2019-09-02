@@ -13,7 +13,6 @@
 <script lang="ts">
 import { NumberType } from 'expangine-runtime';
 import { NumberComboOptions } from './NumberComboTypes';
-import { confirm } from '../../../app/Confirm';
 import TypeInputBase from '../TypeInputBase';
 
 

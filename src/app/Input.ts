@@ -28,7 +28,7 @@ export function getInputDefaults(): InputOptions {
 
 export const inputDialog = getInputDefaults();
 
-export async function input(options: Partial<InputOptions> = {}): Promise<string | null> 
+export async function getInput(options: Partial<InputOptions> = {}): Promise<string | null> 
 {
   const { resolve, promise } = getPromiser<string | null>();
 

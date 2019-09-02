@@ -1,5 +1,5 @@
 
-import { DateType } from 'expangine-runtime';
+import { DateType, OperationExpression, DateOps } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
@@ -13,6 +13,7 @@ export const DateVisuals = createVisuals(
   type: DateType,
   name: 'Date',
   description: 'A date value',
+  create: () => OperationExpression.create(DateOps.create, {}),
   editor: DateEditor,
   options: DateOptions,
   defaultInput: 'picker',

@@ -3,7 +3,7 @@ import { TypeModifier } from '../TypeModifier';
 import { TypeSettings } from '../TypeVisuals';
 import { Registry } from '../Registry';
 import { TypeBuilder } from '../TypeBuilder';
-import { notify } from '@/app/Notify';
+import { sendNotification } from '@/app/Notify';
 
 
 
@@ -22,7 +22,7 @@ export const CopyModifier: TypeModifier =
       copySettings = typeSettings;
       copyRegistry = registry;
 
-      notify({ message: 'Type Copied!' });
+      sendNotification({ message: 'Type Copied!' });
       return false;
     },
   }),

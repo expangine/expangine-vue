@@ -36,19 +36,9 @@ import { SimpleFieldSettings, friendlyList } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
 
 
-const fields: SimpleFieldSettings<TextOptions> = [
-  { name: 'min', type: 'number', label: 'Min' },
-  { name: 'max', type: 'number', label: 'Max' },
-  { name: 'requireUpper', type: 'boolean', label: 'Require Upper'},
-  { name: 'requireLower', type: 'boolean', label: 'Require Lower'},
-  { name: 'forceUpper', type: 'boolean', label: 'Force Upper'},
-  { name: 'forceLower', type: 'boolean', label: 'Force Lower'},
-];
-
 export default TypeEditorBase<TextType, any>().extend({
   name: 'TextEditor',
   computed: {
-    optionFields: () => fields,
     description(): string {
       const { min, max, requireUpper, requireLower, forceUpper, forceLower } = this.type.options;
       const things: string[] = [];

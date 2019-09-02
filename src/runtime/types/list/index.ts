@@ -1,5 +1,5 @@
 
-import { ListType, TextType } from 'expangine-runtime';
+import { ListType, TextType, ListOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -16,6 +16,7 @@ export const ListVisuals = createVisuals({
   type: ListType,
   name: 'List',
   description: 'A list of values.',
+  create: () => OperationExpression.create(ListOps.create, {}),
   editor: ListEditor,
   options: ListOptions,
   defaultInput: 'list',

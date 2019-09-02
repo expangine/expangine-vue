@@ -29,6 +29,6 @@ export const BooleanCheckboxInput: TypeVisualInput<BooleanType, BooleanCheckboxO
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
-    `<strong>Checkbox</strong>: ${options.label}`
+    `<strong>Checkbox</strong>: ${options.label || options.hint || ''}`
   ),
 };

@@ -27,7 +27,7 @@ export const MapGridInput: TypeVisualInput<MapType, MapGridOptions, MapSubs> =
   }),
   getName: (options) => options.title,
   getSummary: (options) => (
-    `<strong>Grid</strong>: ${options.title}`
+    `<strong>Grid</strong>: ${options.title || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

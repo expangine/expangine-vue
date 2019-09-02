@@ -1,5 +1,5 @@
 
-import { TextType } from 'expangine-runtime';
+import { TextType, TextOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
@@ -14,6 +14,7 @@ export const TextVisuals = createVisuals({
   type: TextType,
   name: 'Text',
   description: 'A text value',
+  create: () => OperationExpression.create(TextOps.create, {}),
   editor: TextEditor,
   options: TextOptions,
   defaultInput: 'textbox',

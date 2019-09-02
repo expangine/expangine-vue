@@ -38,10 +38,10 @@
 
 <script lang="ts">
 import { Type, ManyType } from 'expangine-runtime';
-import { ManyOptions, ManySubs } from './ManyTypes';
 import { PropTypeAny } from '../../../common';
+import { getConfirmation } from '../../../app/Confirm';
 import { TypeSettings } from '../../TypeVisuals';
-import { confirm } from '../../../app/Confirm';
+import { ManyOptions, ManySubs } from './ManyTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
@@ -66,7 +66,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
       return innerType === this.subType;
     },
     async changeType(innerType: Type) {
-      if (!await confirm()) {
+      if (!await getConfirmation()) {
         return;
       }
 

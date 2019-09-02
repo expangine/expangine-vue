@@ -42,6 +42,6 @@ export const TextRadioInput: TypeVisualInput<TextType, TextRadioOptions> =
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Radio</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Radio</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
 };

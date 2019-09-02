@@ -45,7 +45,7 @@ export const ListEnumSelectInput: TypeVisualInput<ListType, ListEnumSelectOption
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
-    `<strong>Enum Dropdown</strong>: ${options.label || options.placeholder || options.hint}`
+    `<strong>Enum Dropdown</strong>: ${options.label || options.placeholder || options.hint || ''}`
   ),
   onSubAdd: () => { /**/ },
   onSubRemove: () => { /**/ },

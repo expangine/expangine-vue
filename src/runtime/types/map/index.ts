@@ -1,6 +1,6 @@
 
-import { Type, MapType, TextType, ObjectType, ManyType, AnyType } from 'expangine-runtime';
-import { confirm } from '@/app/Confirm';
+import { Type, MapType, TextType, ObjectType, ManyType, AnyType, OperationExpression, MapOps } from 'expangine-runtime';
+import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -14,6 +14,7 @@ export const MapVisuals = createVisuals({
   type: MapType,
   name: 'Map',
   description: 'A collection of key-value pairs.',
+  create: () => OperationExpression.create(MapOps.create, {}),
   editor: MapEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],
@@ -73,7 +74,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
       description: 'The value will be a many type and the key will be text',
       priority: 3,
       value: async () => {
-        if (!await confirm()) {
+        if (!await getConfirmation()) {
           return false;
         }
     

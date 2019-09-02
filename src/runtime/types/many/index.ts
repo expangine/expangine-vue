@@ -11,6 +11,7 @@ export const ManyVisuals = createVisuals({
   type: ManyType,
   name: 'Many',
   description: 'A type that represents any number of possible types.',
+  create: (registry, type) => registry.getVisuals(type.options[0]).create(registry, type.options[0]),
   editor: ManyEditor,
   defaultInput: 'many',
   inputsOrder: ['many'],
