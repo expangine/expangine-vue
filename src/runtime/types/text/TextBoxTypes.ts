@@ -7,22 +7,22 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface TextBoxOptions
 {
-  label: string;
-  type: string;
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  autocomplete: string;
-  singleLine: boolean;
-  counter: boolean;
-  clearable: boolean;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  type?: string;
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  autocomplete?: string;
+  singleLine?: boolean;
+  counter?: boolean;
+  clearable?: boolean;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -40,22 +40,7 @@ export const TextBoxInput: TypeVisualInput<TextType, TextBoxOptions> =
   settings: TextBoxSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
     autocomplete: 'new-password',
-    singleLine: false,
-    counter: false,
-    clearable: false,
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
-    type: 'text',
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options: TextBoxOptions) => (

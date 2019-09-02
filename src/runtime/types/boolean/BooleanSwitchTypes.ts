@@ -7,10 +7,10 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface BooleanSwitchOptions
 {
-  label: string;
-  dark: boolean;
-  hint: string;
-  inset: boolean;
+  label?: string;
+  dark?: boolean;
+  hint?: string;
+  inset?: boolean;
   prependIcon?: string;
   appendIcon?: string;
   backgroundColor?: string;
@@ -24,12 +24,7 @@ export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptio
   input: BooleanSwitch,
   settings: BooleanSwitchSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    label: '',
-    dark: false,
-    hint: '',
-    inset: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
     `<strong>Switch</strong>: ${options.label}`

@@ -29,7 +29,7 @@ export default TypeInputBase<ListType, ListComboOptions, string[], ListSubs>(Arr
       return !this.settings.options.hint;
     },
     clearable(): boolean {
-      return !this.readOnly && this.settings.options.clearable;
+      return !(this.readOnly || !this.settings.options.clearable);
     },
   },
 });

@@ -8,10 +8,10 @@ import EnumRadioSettings from './EnumRadioSettings.vue';
 
 export interface EnumRadioOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  row: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  row?: boolean;
   prependIcon?: string;
   appendIcon?: string;
   offIcon?: string;

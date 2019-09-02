@@ -8,16 +8,16 @@ import EnumSelectSettings from './EnumSelectSettings.vue';
 
 export interface EnumSelectOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  placeholder: string;
-  singleLine: boolean;
-  filled: boolean;
-  outlined: boolean;
-  dense: boolean;
-  solo: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  placeholder?: string;
+  singleLine?: boolean;
+  filled?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  solo?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -35,18 +35,7 @@ export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumS
   input: EnumSelect,
   settings: EnumSelectSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    label: '',
-    dark: false,
-    hint: '',
-    placeholder: '',
-    filled: false,
-    singleLine: false,
-    outlined: false,
-    dense: false,
-    solo: false,
-    flat: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint || options.placeholder,
   getSummary: (options) => (
     `<strong>Dropdown</strong>: ${options.label || options.hint || options.placeholder}`

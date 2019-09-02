@@ -8,23 +8,23 @@ import ListComboSettings from './ListComboSettings.vue';
 
 export interface ListComboOptions
 {
-  label: string;
-  items: string[];
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  chips: boolean;
-  smallChips: boolean;
-  deletableChips: boolean;
-  singleLine: boolean;
-  clearable: boolean;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  items?: string[];
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  chips?: boolean;
+  smallChips?: boolean;
+  deletableChips?: boolean;
+  singleLine?: boolean;
+  clearable?: boolean;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -44,23 +44,7 @@ export const ListComboInput: TypeVisualInput<ListType, ListComboOptions, ListSub
   settings: ListComboSettings,
   isVisible: (type) => type.options.item instanceof TextType,
   getDefaultOptions: () => ({
-    label: '',
     items: [],
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
-    chips: true,
-    smallChips: false,
-    deletableChips: false,
-    singleLine: false,
-    clearable: false,
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (

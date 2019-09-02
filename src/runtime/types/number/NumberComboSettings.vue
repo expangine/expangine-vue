@@ -15,7 +15,7 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 const fields: SimpleFieldSettings<NumberComboOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
-  { name: 'items', type: 'items', label: 'Available Values', valueType: 'number' },
+  { name: 'items', type: 'items', label: 'Available Values', valueType: 'number', required: true },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'prefix', type: 'text', label: 'Prefix' },
   { name: 'suffix', type: 'text', label: 'Suffix' },

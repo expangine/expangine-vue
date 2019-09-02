@@ -7,17 +7,17 @@ import NumberTextBoxSettings from './NumberTextBoxSettings.vue';
 
 export interface NumberTextBoxOptions
 {
-  label: string;
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -34,19 +34,7 @@ export const NumberTextBoxInput: TypeVisualInput<NumberType, NumberTextBoxOption
   input: NumberTextBox,
   settings: NumberTextBoxSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
     `<strong>Textbox</strong>: ${options.label || options.placeholder || options.hint}`

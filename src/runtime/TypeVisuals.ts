@@ -41,7 +41,7 @@ export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unk
   settings: VueConstructor;
   input: VueConstructor;
   isVisible: (type: T) => boolean;
-  getName: (options: Options) => string;
+  getName: (options: Options) => string | undefined;
   getSummary: (options: Options) => string;
   getDefaultOptions: () => Options;
 } & (

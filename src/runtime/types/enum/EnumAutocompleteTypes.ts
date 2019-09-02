@@ -8,14 +8,14 @@ import EnumAutocompleteSettings from './EnumAutocompleteSettings.vue';
 
 export interface EnumAutocompleteOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  filled: boolean;
-  outlined: boolean;
-  dense: boolean;
-  solo: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  filled?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  solo?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -33,16 +33,7 @@ export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOp
   input: EnumAutocomplete,
   settings: EnumAutocompleteSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    dark: false,
-    filled: false,
-    outlined: false,
-    dense: false,
-    solo: false,
-    flat: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
     `<strong>Autocomplete</strong>: ${options.label || options.hint}`

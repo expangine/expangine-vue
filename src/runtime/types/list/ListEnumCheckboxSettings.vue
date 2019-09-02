@@ -24,7 +24,7 @@ const fields: SimpleFieldSettings<ListEnumCheckboxOptions> = [
   { name: 'backgroundColor', type: 'color', label: 'Background Color' },
   { name: 'color', type: 'color', label: 'Color' },
   { name: 'dark', type: 'boolean', label: 'Dark' },
-  { name: 'minWidth', type: 'number', label: 'Min Checkbox Width' },
+  { name: 'minWidth', type: 'number', label: 'Min Checkbox Width', required: true },
 ];
 
 export default TypeSettingsBase<EnumType, ListEnumCheckboxOptions>().extend({

@@ -9,19 +9,19 @@ import NumberComboSettings from './NumberComboSettings.vue';
 
 export interface NumberComboOptions
 {
-  label: string;
+  label?: string;
   items: ListOptions<number>;
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  singleLine: boolean;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  singleLine?: boolean;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -40,19 +40,7 @@ export const NumberComboInput: TypeVisualInput<NumberType, NumberComboOptions> =
   settings: NumberComboSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    label: '',
     items: [],
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
-    singleLine: false,
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (

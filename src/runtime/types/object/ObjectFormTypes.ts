@@ -7,7 +7,7 @@ import ObjectFormSettings from './ObjectFormSettings.vue';
 
 export interface ObjectFormOptions
 {
-  title: string;
+  title?: string;
   columns: Array<{
     prop: string;
     cols: number | string;
@@ -31,7 +31,6 @@ export const ObjectFormInput: TypeVisualInput<ObjectType, ObjectFormOptions, str
   settings: ObjectFormSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    title: '',
     columns: [],
   }),
   getName: (options) => options.title,

@@ -7,16 +7,16 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface BooleanSelectOptions
 {
-  label: string;
+  label?: string;
   labelTrue: string;
   labelFalse: string;
-  dark: boolean;
-  hint: string;
-  filled: boolean;
-  outlined: boolean;
-  dense: boolean;
-  solo: boolean;
-  flat: boolean;
+  dark?: boolean;
+  hint?: string;
+  filled?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  solo?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -35,16 +35,8 @@ export const BooleanSelectInput: TypeVisualInput<BooleanType, BooleanSelectOptio
   settings: BooleanSelectSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    label: '',
-    labelTrue: '',
-    labelFalse: '',
-    dark: false,
-    hint: '',
-    filled: false,
-    outlined: false,
-    dense: false,
-    solo: false,
-    flat: false,
+    labelTrue: 'True',
+    labelFalse: 'False',
   }),
   getName: (options) => (
     `${options.labelTrue} / ${options.labelFalse}`

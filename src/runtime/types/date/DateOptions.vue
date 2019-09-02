@@ -1,6 +1,5 @@
 <template>
   <ex-simple-fields
-    remove-empty
     :value="type.options"
     :fields="optionFields"
     :read-only="readOnly"

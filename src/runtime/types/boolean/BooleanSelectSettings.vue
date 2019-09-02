@@ -15,8 +15,8 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 const fields: SimpleFieldSettings<BooleanSelectOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
-  { name: 'labelTrue', type: 'text', label: 'True Label' },
-  { name: 'labelFalse', type: 'text', label: 'False Label' },
+  { name: 'labelTrue', type: 'text', label: 'True Label', required: true },
+  { name: 'labelFalse', type: 'text', label: 'False Label', required: true },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
   { name: 'appendIcon', type: 'icon', label: 'Append Icon' },

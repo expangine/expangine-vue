@@ -8,9 +8,9 @@ import ListEnumCheckboxSettings from './ListEnumCheckboxSettings.vue';
 
 export interface ListEnumCheckboxOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
   minWidth: number;
   prependIcon?: string;
   appendIcon?: string;
@@ -29,9 +29,6 @@ export const ListEnumCheckboxInput: TypeVisualInput<ListType, ListEnumCheckboxOp
   settings: ListEnumCheckboxSettings,
   isVisible: (type) => type.options.item instanceof EnumType,
   getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    dark: false,
     minWidth: 1000,
   }),
   getName: (options) => options.label || options.hint,

@@ -31,7 +31,7 @@ export default TypeInputBase<ListType, ListEnumAutocompleteOptions, any[], ListS
       return !this.settings.options.hint;
     },
     clearable(): boolean {
-      return !this.readOnly && this.settings.options.clearable;
+      return !(this.readOnly || !this.settings.options.clearable);
     },
     enumType(): EnumType {
       return this.type.options.item as EnumType;

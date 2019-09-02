@@ -7,8 +7,8 @@ import OptionalSettings from './OptionalSettings.vue';
 
 export interface OptionalOptions
 {
-  removeIcon: string;
-  removeLabel: string;
+  removeIcon?: string;
+  removeLabel?: string;
 }
 
 export type OptionalSubs = 'innerType';
@@ -20,10 +20,7 @@ export const OptionalInput: TypeVisualInput<OptionalType, OptionalOptions, Optio
   input: Optional,
   settings: OptionalSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    removeIcon: 'mdi-minus',
-    removeLabel: 'Remove Optional Value',
-  }),
+  getDefaultOptions: () => ({}),
   getName: () => '',
   getSummary: () => (
     `<strong>Optional</strong>`

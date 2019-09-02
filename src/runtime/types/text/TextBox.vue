@@ -27,7 +27,7 @@ export default TypeInputBase<TextType, TextBoxOptions, string>(String).extend({
       return !this.settings.options.hint;
     },
     clearable(): boolean {
-      return !this.readOnly && this.settings.options.clearable;
+      return !(this.readOnly || !this.settings.options.clearable);
     },
     counter(): number | boolean {
       return this.settings.options.counter

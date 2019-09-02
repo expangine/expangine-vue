@@ -218,10 +218,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    removeEmpty: {
-      type: Boolean,
-      default: false,
-    },
     defaults: {
       type: Object,
     },
@@ -240,9 +236,8 @@ export default Vue.extend({
     },
     setField(field: SimpleFieldOption, value: any) {
       const defaults = this.defaults;
-      if (defaults && defaults[field.name] === value && !field.required) {
-        this.$delete(this.value, field.name);
-      } else if (this.removeEmpty && (value === undefined || value === null)) {
+      const isEmpty = value === undefined || value === null;
+      if (isEmpty && !field.required) {
         this.$delete(this.value, field.name);
       } else {
         this.$set(this.value, field.name, value);

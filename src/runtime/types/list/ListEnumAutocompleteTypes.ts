@@ -8,22 +8,22 @@ import ListEnumAutocompleteSettings from './ListEnumAutocompleteSettings.vue';
 
 export interface ListEnumAutocompleteOptions
 {
-  label: string;
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  singleLine: boolean;
-  clearable: boolean;
-  smallChips: boolean;
-  deletableChips: boolean;
-  chips: boolean;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  singleLine?: boolean;
+  clearable?: boolean;
+  smallChips?: boolean;
+  deletableChips?: boolean;
+  chips?: boolean;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -42,24 +42,7 @@ export const ListEnumAutocompleteInput: TypeVisualInput<ListType, ListEnumAutoco
   input: ListEnumAutocomplete,
   settings: ListEnumAutocompleteSettings,
   isVisible: (type) => type.options.item instanceof EnumType,
-  getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
-    chips: true,
-    smallChips: false,
-    deletableChips: false,
-    singleLine: false,
-    clearable: false,
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (
     `<strong>Enum Autocomplete</strong>: ${options.label || options.placeholder || options.hint}`

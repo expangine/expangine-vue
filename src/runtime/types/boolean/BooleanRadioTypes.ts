@@ -9,9 +9,9 @@ export interface BooleanRadioOptions
 {
   labelTrue: string;
   labelFalse: string;
-  dark: boolean;
-  hint: string;
-  row: boolean;
+  dark?: boolean;
+  hint?: string;
+  row?: boolean;
   prependIcon?: string;
   appendIcon?: string;
   offIcon?: string;
@@ -28,11 +28,8 @@ export const BooleanRadioInput: TypeVisualInput<BooleanType, BooleanRadioOptions
   settings: BooleanRadioSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    labelTrue: '',
-    labelFalse: '',
-    dark: false,
-    hint: '',
-    row: false,
+    labelTrue: 'True',
+    labelFalse: 'False',
   }),
   getName: (options) => (
     `${options.labelTrue} / ${options.labelFalse}`

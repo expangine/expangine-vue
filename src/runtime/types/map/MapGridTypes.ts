@@ -9,7 +9,7 @@ import MapGridSettings from './MapGridSettings.vue';
 
 export interface MapGridOptions
 {
-  title: string;
+  title?: string;
   minKeyWidth: number;
   minValueWidth: number;
 }
@@ -22,7 +22,6 @@ export const MapGridInput: TypeVisualInput<MapType, MapGridOptions, MapSubs> =
   settings: MapGridSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    title: '',
     minKeyWidth: 300,
     minValueWidth: 300,
   }),

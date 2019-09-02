@@ -15,10 +15,10 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 const fields: SimpleFieldSettings<ListListOptions> = [
   { name: 'title', type: 'text', label: 'Title' },
-  { name: 'itemName', type: 'text', label: 'Item Name' },
-  { name: 'hideRemove', type: 'boolean', label: 'Hide Remove' },
-  { name: 'hideInsert', type: 'boolean', label: 'Hide Insert' },
-  { name: 'hideSort', type: 'boolean', label: 'Hide Sort' },
+  { name: 'itemName', type: 'text', label: 'Item Name', required: true },
+  { name: 'hideRemove', type: 'boolean', label: 'Hide Remove', required: true },
+  { name: 'hideInsert', type: 'boolean', label: 'Hide Insert', required: true },
+  { name: 'hideSort', type: 'boolean', label: 'Hide Sort', required: true },
 ];
 
 export default TypeSettingsBase<ListType, ListListOptions>().extend({

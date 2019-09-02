@@ -7,9 +7,9 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface BooleanCheckboxOptions
 {
-  label: string;
-  dark: boolean;
-  hint: string;
+  label?: string;
+  dark?: boolean;
+  hint?: string;
   prependIcon?: string;
   appendIcon?: string;
   offIcon?: string;
@@ -26,11 +26,7 @@ export const BooleanCheckboxInput: TypeVisualInput<BooleanType, BooleanCheckboxO
   input: BooleanCheckbox,
   settings: BooleanCheckboxSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({
-    label: '',
-    dark: false,
-    hint: '',
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
     `<strong>Checkbox</strong>: ${options.label}`

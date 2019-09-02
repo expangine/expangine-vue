@@ -7,11 +7,11 @@ import NumberSliderSettings from './NumberSliderSettings.vue';
 
 export interface NumberSliderOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  step: number;
-  thumbLabel: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  step?: number;
+  thumbLabel?: boolean;
   prependIcon?: string;
   appendIcon?: string;
   backgroundColor?: string;
@@ -28,13 +28,7 @@ export const NumberSliderInput: TypeVisualInput<NumberType, NumberSliderOptions>
   input: NumberSlider,
   settings: NumberSliderSettings,
   isVisible: (type) => isNumber(type.options.min) && isNumber(type.options.max),
-  getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    dark: false,
-    step: 1,
-    thumbLabel: false,
-  }),
+  getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,
   getSummary: (options) => (
     `<strong>Slider</strong>: ${options.label || options.hint}`

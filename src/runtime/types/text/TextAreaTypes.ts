@@ -7,23 +7,23 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface TextAreaOptions
 {
-  label: string;
-  hint: string;
-  prefix: string;
-  suffix: string;
-  placeholder: string;
-  rows: number;
-  rowHeight: number;
-  autocomplete: string;
-  autoGrow: boolean;
-  counter: boolean;
-  clearable: boolean;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  prefix?: string;
+  suffix?: string;
+  placeholder?: string;
+  rows?: number;
+  rowHeight?: number;
+  autocomplete?: string;
+  autoGrow?: boolean;
+  counter?: boolean;
+  clearable?: boolean;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -41,23 +41,7 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
   settings: TextAreaSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    prefix: '',
-    suffix: '',
-    placeholder: '',
-    rows: 5,
     autocomplete: 'new-password',
-    autoGrow: false,
-    rowHeight: 24,
-    counter: false,
-    clearable: false,
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
   }),
   getName: (options) => options.label || options.placeholder || options.hint,
   getSummary: (options) => (

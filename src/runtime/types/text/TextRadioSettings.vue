@@ -15,8 +15,8 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 const fields: SimpleFieldSettings<TextRadioOptions> = [
   { name: 'label', type: 'text', label: 'Label' },
-  { name: 'otherLabel', type: 'text', label: 'Other Label' },
-  { name: 'items', type: 'combo', label: 'Available Values' },
+  { name: 'otherLabel', type: 'text', label: 'Other Label', required: true },
+  { name: 'items', type: 'combo', label: 'Available Values', required: true },
   { name: 'hint', type: 'text', label: 'Hint' },
   { name: 'prefix', type: 'text', label: 'Prefix' },
   { name: 'suffix', type: 'text', label: 'Suffix' },

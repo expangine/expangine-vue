@@ -8,14 +8,14 @@ import EnumSliderSettings from './EnumSliderSettings.vue';
 
 export interface EnumSliderOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  filled: boolean;
-  outlined: boolean;
-  dense: boolean;
-  solo: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  filled?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  solo?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   appendIcon?: string;
   backgroundColor?: string;

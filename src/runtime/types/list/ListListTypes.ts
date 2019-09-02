@@ -8,7 +8,7 @@ import ListListSettings from './ListListSettings.vue';
 
 export interface ListListOptions
 {
-  title: string;
+  title?: string;
   itemName: string;
   hideRemove: boolean;
   hideInsert: boolean;
@@ -23,7 +23,6 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs>
   settings: ListListSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    title: '',
     itemName: 'Item',
     hideRemove: false,
     hideInsert: false,

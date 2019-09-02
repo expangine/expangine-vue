@@ -7,14 +7,14 @@ import { TypeVisualInput } from '@/runtime/TypeVisuals';
 
 export interface DatePickerOptions
 {
-  label: string;
-  hint: string;
-  dark: boolean;
-  filled: boolean;
-  solo: boolean;
-  outlined: boolean;
-  dense: boolean;
-  flat: boolean;
+  label?: string;
+  hint?: string;
+  dark?: boolean;
+  filled?: boolean;
+  solo?: boolean;
+  outlined?: boolean;
+  dense?: boolean;
+  flat?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;
@@ -32,14 +32,6 @@ export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> =
   settings: PickerSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    label: '',
-    hint: '',
-    dark: false,
-    filled: false,
-    solo: false,
-    outlined: false,
-    dense: false,
-    flat: false,
     prependInnerIcon: 'mdi-calendar',
   }),
   getName: (options) => options.label || options.hint,

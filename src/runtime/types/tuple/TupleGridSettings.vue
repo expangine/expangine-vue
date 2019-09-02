@@ -117,6 +117,14 @@ export default TypeSettingsBase<TupleType, TupleGridOptions>().extend({
     columnOptions: () => columnOptions,
     offsetOptions: () => offsetOptions,
   },
+  mounted() {
+    const { columns } = this.value;
+    const optionCount = this.type.options.length;
+
+    while (columns.length < optionCount){ 
+      columns.push({ cols: 12 });
+    }
+  },
 });
 </script>
 

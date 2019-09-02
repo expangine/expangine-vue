@@ -8,7 +8,7 @@ import TupleGridSettings from './TupleGridSettings.vue';
 
 export interface TupleGridOptions
 {
-  title: string;
+  title?: string;
   columns: Array<{
     cols: number | string;
     sm?: number | string;
@@ -31,7 +31,6 @@ export const TupleGridInput: TypeVisualInput<TupleType, TupleGridOptions, TupleS
   settings: TupleGridSettings,
   isVisible: () => true,
   getDefaultOptions: () => ({
-    title: '',
     columns: [],
   }),
   getName: (options) => options.title,
