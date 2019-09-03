@@ -2,7 +2,7 @@
 import { Type, MapType, TextType, ObjectType, ManyType, AnyType, OperationExpression, MapOps } from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
 import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -130,4 +130,31 @@ export const MapModifierFromObject: TypeModifier<MapType> =
       },
     };
   },
+};
+
+export const MapBuilderWrapper: TypeBuilderWrapper =
+{
+  getOption: () => ({
+    text: 'Map of...',
+    priority: 3,
+    value: async ([{ type, settings }]) => ({
+      type: MapType.forItem(type, new TextType({})),
+      settings: {
+        input: 'grid',
+        defaultValue: [],
+        options: MapGridInput.getDefaultOptions(),
+        sub: {
+          key: { 
+            input: 'textbox', 
+            defaultValue: '',
+            options: {
+              ...TextBoxInput.getDefaultOptions(),
+              label: 'Key',
+            }, 
+          },
+          value: settings,
+        },
+      },
+    }),
+  }),
 };

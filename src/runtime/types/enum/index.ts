@@ -1,7 +1,7 @@
 
 import { EnumType, TextType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { EnumSelectInput } from './EnumSelectTypes';
 import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
@@ -38,7 +38,7 @@ export const EnumBuilder: TypeBuilder<EnumType> =
       type: new EnumType({ key: new TextType({}), value: new TextType({}), constants: new Map() }),
       settings: {
       input: 'dropdown',
-      defaultValue: [],
+      defaultValue: '',
       options: EnumSelectInput.getDefaultOptions(),
       sub: { 
         key: { 
@@ -53,6 +53,30 @@ export const EnumBuilder: TypeBuilder<EnumType> =
         },
       },
     },
+    }),
+  }),
+};
+
+export const EnumBuilderWrapper: TypeBuilderWrapper =
+{
+  getOption: () => ({
+    text: 'Enum of...',
+    priority: 4,
+    value: async ([{ type, settings }]) => ({
+      type: new EnumType({ key: new TextType({}), value: type, constants: new Map() }),
+      settings: {
+        input: 'dropdown',
+        defaultValue: settings.defaultValue,
+        options: EnumSelectInput.getDefaultOptions(),
+        sub: { 
+          key: { 
+            input: 'textbox', 
+            defaultValue: '',
+            options: TextBoxInput.getDefaultOptions(), 
+          },
+          value: settings,
+        },
+      },
     }),
   }),
 };

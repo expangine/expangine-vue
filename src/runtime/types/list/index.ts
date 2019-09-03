@@ -1,7 +1,7 @@
 
 import { ListType, TextType, ListOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';
 import { ListComboInput } from './ListComboTypes';
@@ -48,6 +48,25 @@ export const ListBuilder: TypeBuilder<ListType> =
             defaultValue: '',
             options: TextBoxInput.getDefaultOptions(), 
           },
+        },
+      },
+    }),
+  }),
+};
+
+export const ListBuilderWrapper: TypeBuilderWrapper =
+{
+  getOption: () => ({
+    text: 'List of...',
+    priority: 2,
+    value: async ([{ type, settings }]) => ({
+      type: ListType.forItem(type),
+      settings: {
+        input: 'list',
+        defaultValue: [],
+        options: ListListInput.getDefaultOptions(),
+        sub: {
+          item: settings,
         },
       },
     }),

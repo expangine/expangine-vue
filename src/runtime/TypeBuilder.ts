@@ -33,3 +33,20 @@ export interface TypeBuildResult<T extends Type = Type>
   type: T;
   settings: TypeSettings;
 }
+
+export type TypeBuilderWrapHandler = (results: Array<TypeBuildResult<any>>) => Promise<TypeBuildResult<any> | false>;
+
+export interface TypeBuilderWrapOption
+{
+  text: string;
+  description?: string;
+  multiple?: boolean;
+  allowDuplicates?: boolean;
+  priority: number;
+  value: TypeBuilderWrapHandler;
+}
+
+export interface TypeBuilderWrapper
+{
+  getOption: (input: TypeBuildInput) => TypeBuilderWrapOption | false;
+}

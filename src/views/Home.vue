@@ -138,6 +138,8 @@ export default Vue.extend({
         const cmd = runtime.getCommand(expr);
 
         cmd({ value: this.data });
+
+        this.saveData();
       }
     },
     exportJson() {

@@ -10,15 +10,40 @@
           solo
           filled
           return-object
+          :value-comparator="compareStrict"
+          :items="wrappers"
+          v-model="wrapper"
+        >
+          <template #item="{ item, on, attrs }">
+            <v-list-item v-on="on" v-bind="attrs">
+              <v-list-item-content>
+                <v-list-item-title 
+                  v-html="item.text"
+                ></v-list-item-title>
+                <v-list-item-subtitle 
+                  v-html="item.description"
+                ></v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-select>
+        <v-select
+          solo
+          filled
+          return-object
           placeholder="- Select Type -"
           :hint="hint"
           :persistent-hint="persistentHint"
           :value-comparator="compareStrict"
-          :items="items"
-          v-model="type"
+          :items="options"
+          :multiple="isMultiple"
+          v-model="types"
         >
-          <template #item="{ item, on }">
-            <v-list-item v-on="on">
+          <template #item="{ item, on, attrs }">
+            <v-list-item v-on="on" v-bind="attrs">
+              <v-list-item-icon v-if="isMultiple">
+                {{ indexOf(item) }}
+              </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title 
                   v-html="item.text"
@@ -57,29 +82,38 @@
 <script lang="ts">
 import Vue from 'vue';
 import { buildTypeDialog } from './BuildType';
-import { ListOptions } from '../common';
+import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler } from '../runtime/TypeBuilder';
+import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, 
+  TypeBuilderWrapOption } from '../runtime/TypeBuilder';
 
 
 export default Vue.extend({
   data: () => buildTypeDialog,
   computed: {
-    items(): ListOptions<TypeBuildHandler> {
-      return this.input
-        ? this.input.registry.getTypeBuildersFor(this.input)
-        : [];
+    selectedTypes(): TypeBuildOption[] {
+      return asArray(this.types);
     },
     hint(): string {
-      return this.type ? this.type.description || '' : '';
+      return friendlyList(this.selectedTypes.map((t) => t.description || '').filter((d) => !!d));
     },
     persistentHint(): boolean {
       return !!this.hint;
+    },
+    allowsDuplicate(): boolean {
+      return !!(this.wrapper && this.wrapper.allowDuplicates);
+    },
+    isMultiple(): boolean {
+      return !!(this.wrapper && this.wrapper.multiple);
     },
   },
   methods: {
     compareStrict(a: any, b: any): boolean {
       return a === b;
+    },
+    indexOf(option: TypeBuildOption): string {
+      const i = this.selectedTypes.indexOf(option);
+      return i === -1 ? '' : `[${i}]`;
     },
   },
 });

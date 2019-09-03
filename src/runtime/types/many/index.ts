@@ -2,6 +2,7 @@
 import { ManyType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeModifier } from '@/runtime/TypeModifier';
+import { TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { getBuildType } from '@/app/BuildType';
 import { ManyInput } from './ManyTypes';
 import ManyEditor from './ManyEditor.vue';
@@ -59,4 +60,22 @@ export const ManyModifier: TypeModifier<ManyType> =
       },
     };
   },
+};
+
+export const ManyBuilderWrapper: TypeBuilderWrapper =
+{
+  getOption: () => ({
+    text: 'Possibly multiple types...',
+    priority: 5,
+    multiple: true,
+    value: async (results) => ({
+      type: new ManyType(results.map((r) => r.type)),
+      settings: {
+        input: 'many',
+        defaultValue: results[0].type.create(),
+        options: undefined,
+        sub: results.map((r) => r.settings),
+      },
+    }),
+  }),
 };

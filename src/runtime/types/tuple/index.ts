@@ -1,7 +1,7 @@
 
 import { Type, TupleType, ObjectType, TupleOps, OperationExpression } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
 import { friendlyList } from '@/common';
 import { TupleGridInput } from './TupleGridTypes';
@@ -148,4 +148,22 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
       }),
     };
   },
+};
+
+export const TupleBuilderWrapper: TypeBuilderWrapper =
+{
+  getOption: () => ({
+    text: 'A tuple of...',
+    priority: 6,
+    multiple: true,
+    value: async (results) => ({
+      type: new TupleType(results.map((r) => r.type)),
+      settings: {
+        input: 'grid',
+        defaultValue: [],
+        options: TupleGridInput.getDefaultOptions(),
+        sub: results.map((r) => r.settings),
+      },
+    }),
+  }),
 };

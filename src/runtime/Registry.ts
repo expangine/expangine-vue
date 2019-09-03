@@ -2,9 +2,12 @@
 import { Type, Definitions, Expression } from 'expangine-runtime';
 import { TypeVisuals } from './TypeVisuals';
 import { ListOptions, ListOptionsPriority } from '@/common';
-import { TypeBuilder, TypeBuildInput, TypeBuildHandler } from './TypeBuilder';
-import { TypeModifier, TypeModifyInput, TypeModifyHandler } from './TypeModifier';
-import { TypeHook, TypeHookHandler, TypeHookInput } from './TypeHook';
+import { TypeBuilder, TypeBuildInput, TypeBuildHandler, TypeBuilderWrapper, 
+  TypeBuilderWrapHandler, 
+  TypeBuildOption,
+  TypeBuilderWrapOption} from './TypeBuilder';
+import { TypeModifier, TypeModifyInput, TypeModifyHandler, TypeModifyOption } from './TypeModifier';
+import { TypeHook, TypeHookHandler, TypeHookInput, TypeHookOption } from './TypeHook';
 
 
 export class Registry
@@ -14,6 +17,7 @@ export class Registry
   public typeMap: Record<string, TypeVisuals>;
   public types: TypeVisuals[];
   public builders: TypeBuilder[];
+  public builderWrappers: TypeBuilderWrapper[];
   public modifiers: TypeModifier[];
   public hooks: TypeHook[];
 
@@ -23,6 +27,7 @@ export class Registry
     this.typeMap = Object.create(null);
     this.types = [];
     this.builders = [];
+    this.builderWrappers = [];
     this.modifiers = [];
     this.hooks = [];
   }
@@ -30,6 +35,13 @@ export class Registry
   public addBuilder<T extends Type = Type>(builder: TypeBuilder<T>): this
   {
     this.builders.push(builder);
+
+    return this;
+  }
+
+  public addBuilderWrapper(wrapper: TypeBuilderWrapper): this
+  {
+    this.builderWrappers.push(wrapper);
 
     return this;
   }
@@ -61,9 +73,9 @@ export class Registry
     return this.typeMap[type.getId()] as unknown as TypeVisuals<T>;
   }
 
-  public getTypeBuildersFor(input: TypeBuildInput): ListOptions<TypeBuildHandler>
+  public getTypeBuildersFor(input: TypeBuildInput): TypeBuildOption[]
   {
-    const out: ListOptionsPriority<TypeBuildHandler> = [];
+    const out: TypeBuildOption[] = [];
 
     for (const builder of this.builders) {
       const option = builder.getOption(input);
@@ -78,9 +90,26 @@ export class Registry
     return out;
   }
 
-  public getTypeModifiersFor(input: TypeModifyInput): ListOptions<TypeModifyHandler>
+  public getTypeBuilderWrappersFor(input: TypeBuildInput): TypeBuilderWrapOption[]
   {
-    const out: ListOptionsPriority<TypeModifyHandler> = [];
+    const out: TypeBuilderWrapOption[] = [];
+
+    for (const wrapper of this.builderWrappers) {
+      const option = wrapper.getOption(input);
+
+      if (option) {
+        out.push(option);
+      }
+    }
+
+    out.sort((a, b) => a.priority - b.priority);
+
+    return out;
+  }
+
+  public getTypeModifiersFor(input: TypeModifyInput): TypeModifyOption[]
+  {
+    const out: TypeModifyOption[] = [];
 
     for (const modifier of this.modifiers) {
       const option = modifier.getOption(input);
@@ -95,9 +124,9 @@ export class Registry
     return out;
   }
 
-  public getTypeHooksFor(input: TypeHookInput): ListOptions<TypeHookHandler>
+  public getTypeHooksFor(input: TypeHookInput): TypeHookOption[]
   {
-    const out: ListOptionsPriority<TypeHookHandler> = [];
+    const out: TypeHookOption[] = [];
 
     for (const hook of this.hooks) {
       const option = hook.getOption(input);

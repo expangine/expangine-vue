@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { isString } from 'expangine-runtime';
+import { isString, isArray } from 'expangine-runtime';
 
 export type ListOptions<T = string> = Array<{ 
   text: string; 
@@ -104,4 +104,13 @@ export function formatDate<O = undefined>(
 export function pad2(n: number)
 {
   return n < 10 ? '0' + n : n;
+}
+
+export function asArray<T>(value: T[] | T | null | undefined): T[]
+{
+  return isArray(value)
+    ? value
+    : value === null || value === undefined
+      ? []
+      : [value];
 }

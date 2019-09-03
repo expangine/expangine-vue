@@ -9,14 +9,16 @@ import { ObjectVisuals, ObjectBuilder, ObjectModifierToObject } from './types/ob
 import { NumberVisuals, NumberBuilder } from './types/number';
 import { DateVisuals, DateBuilder } from './types/date';
 import { OptionalVisuals, OptionalModifier, OptionalModifierRequire } from './types/optional';
-import { ManyVisuals, ManyModifier } from './types/many';
-import { ListVisuals, ListBuilder } from './types/list';
-import { EnumVisuals, EnumBuilder } from './types/enum';
-import { MapVisuals, MapBuilder, MapModifierFromObject } from './types/map';
-import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType } from './types/tuple';
+import { ManyVisuals, ManyModifier, ManyBuilderWrapper } from './types/many';
+import { ListVisuals, ListBuilder, ListBuilderWrapper } from './types/list';
+import { EnumVisuals, EnumBuilder, EnumBuilderWrapper } from './types/enum';
+import { MapVisuals, MapBuilder, MapModifierFromObject, MapBuilderWrapper } from './types/map';
+import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType, 
+  TupleBuilderWrapper } from './types/tuple';
 
 import { ChangeTypeModifier } from './hooks/ChangeTypeModifier';
 import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
+import { DefaultWrapper } from './hooks/DefaultWrapper';
 
 
 export default new Registry(defs)
@@ -36,18 +38,24 @@ export default new Registry(defs)
     .addModifier(OptionalModifierRequire)
   .addType(ManyVisuals)
     .addModifier(ManyModifier)
+    .addBuilderWrapper(ManyBuilderWrapper)
   .addType(ListVisuals)
     .addBuilder(ListBuilder)
+    .addBuilderWrapper(ListBuilderWrapper)
   .addType(EnumVisuals)
     .addBuilder(EnumBuilder)
+    .addBuilderWrapper(EnumBuilderWrapper)
   .addType(MapVisuals)
     .addBuilder(MapBuilder)
     .addModifier(MapModifierFromObject)
+    .addBuilderWrapper(MapBuilderWrapper)
   .addType(TupleVisuals)
     .addBuilder(TupleBuilder)
     .addModifier(TupleModifierFromObject)
     .addModifier(TupleModifierAddType)
+    .addBuilderWrapper(TupleBuilderWrapper)
   .addModifier(ChangeTypeModifier)
   .addBuilder(PasteBuilder)
   .addModifier(CopyModifier)
+  .addBuilderWrapper(DefaultWrapper)
 ;
