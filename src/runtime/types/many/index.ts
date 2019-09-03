@@ -6,6 +6,7 @@ import { TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { getBuildType } from '@/app/BuildType';
 import { ManyInput } from './ManyTypes';
 import ManyEditor from './ManyEditor.vue';
+import { initializeSubs } from '@/common';
 
 
 export const ManyVisuals = createVisuals({
@@ -24,7 +25,7 @@ export const ManyVisuals = createVisuals({
 export const ManyModifier: TypeModifier<ManyType> = 
 {
   getOption: (input) => {
-    const { parent, type, typeSettings } = input;
+    const { parent, type, typeSettings, registry } = input;
 
     if (parent instanceof ManyType) {
       return false;
@@ -44,7 +45,7 @@ export const ManyModifier: TypeModifier<ManyType> =
           return false;
         }
         
-        return {
+        return initializeSubs(registry, {
           kind: 'change',
           type: new ManyType([type, chosen.type]),
           settings: {
@@ -56,7 +57,7 @@ export const ManyModifier: TypeModifier<ManyType> =
               chosen.settings,
             ],
           },
-        };
+        });
       },
     };
   },
@@ -64,11 +65,11 @@ export const ManyModifier: TypeModifier<ManyType> =
 
 export const ManyBuilderWrapper: TypeBuilderWrapper =
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Possibly multiple types...',
     priority: 5,
     multiple: true,
-    value: async (results) => ({
+    value: async (results) => (initializeSubs(registry, {
       type: new ManyType(results.map((r) => r.type)),
       settings: {
         input: 'many',
@@ -76,6 +77,6 @@ export const ManyBuilderWrapper: TypeBuilderWrapper =
         options: undefined,
         sub: results.map((r) => r.settings),
       },
-    }),
+    })),
   }),
 };

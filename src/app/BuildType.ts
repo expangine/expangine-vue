@@ -82,7 +82,7 @@ export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Pro
     }
 
     const result = buildTypeDialog.optional
-      ? OptionalModifierTransform(wrapped.type, wrapped.settings)
+      ? OptionalModifierTransform(buildTypeDialog.input.registry, wrapped.type, wrapped.settings)
       : wrapped;
 
     return resolve(result);

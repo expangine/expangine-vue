@@ -9,6 +9,7 @@ import { EnumSliderInput } from './EnumSliderTypes';
 import { EnumRadioInput } from './EnumRadioTypes';
 import EnumEditor from './EnumEditor.vue';
 import EnumOptions from './EnumOptions.vue';
+import { initializeSubs } from '@/common';
 
 
 export const EnumVisuals = createVisuals({
@@ -30,11 +31,11 @@ export const EnumVisuals = createVisuals({
 
 export const EnumBuilder: TypeBuilder<EnumType> = 
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Enum',
     description: 'A value which is taken from a list of key-value pairs',
     priority: 7,
-    value: async () => ({
+    value: async () => (initializeSubs(registry, {
       type: new EnumType({ key: new TextType({}), value: new TextType({}), constants: new Map() }),
       settings: {
       input: 'dropdown',
@@ -53,16 +54,16 @@ export const EnumBuilder: TypeBuilder<EnumType> =
         },
       },
     },
-    }),
+    })),
   }),
 };
 
 export const EnumBuilderWrapper: TypeBuilderWrapper =
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Enum of...',
     priority: 4,
-    value: async ([{ type, settings }]) => ({
+    value: async ([{ type, settings }]) => (initializeSubs(registry, {
       type: new EnumType({ key: new TextType({}), value: type, constants: new Map() }),
       settings: {
         input: 'dropdown',
@@ -77,6 +78,6 @@ export const EnumBuilderWrapper: TypeBuilderWrapper =
           value: settings,
         },
       },
-    }),
+    })),
   }),
 };

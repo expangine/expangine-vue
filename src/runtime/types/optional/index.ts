@@ -5,6 +5,8 @@ import { TypeModifier, TypeModifyResult } from '@/runtime/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '@/app/Confirm';
 import OptionalEditor from './OptionalEditor.vue';
+import { initializeSubs } from '@/common';
+import { Registry } from '@/runtime/Registry';
 
 
 export const OptionalVisuals = createVisuals({
@@ -23,7 +25,7 @@ export const OptionalVisuals = createVisuals({
 export const OptionalModifier: TypeModifier<OptionalType> = 
 {
   getOption: (input) => {
-    const { type, typeSettings, parent } = input;
+    const { type, typeSettings, registry, parent } = input;
 
     if (parent instanceof OptionalType || type instanceof OptionalType) {
       return false;
@@ -39,7 +41,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
     
         return {
           kind: 'change',
-          ...OptionalModifierTransform(type, typeSettings),
+          ...OptionalModifierTransform(registry, type, typeSettings),
         };
       },
     };
@@ -49,7 +51,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
 export const OptionalModifierRequire: TypeModifier = 
 {
   getOption: (input) => {
-    const { type, typeSettings } = input;
+    const { type, typeSettings, registry } = input;
 
     if (!(type instanceof OptionalType)) {
       return false;
@@ -63,25 +65,25 @@ export const OptionalModifierRequire: TypeModifier =
           return false;
         }
 
-        return {
+        return initializeSubs(registry, {
           kind: 'change',
           type: type.options,
           settings: (typeSettings as TypeSettings<any, OptionalSubs>).sub.innerType,
-        };
+        });
       },
     };
   },
 };
 
-export function OptionalModifierTransform(type: Type, typeSettings: TypeSettings)
+export function OptionalModifierTransform(registry: Registry, type: Type, typeSettings: TypeSettings)
 {
-  return {
+  return initializeSubs(registry, {
     type: new OptionalType(type),
     settings: { 
       input: 'optional',
-      options: undefined,
+      options: Object.create(null),
       defaultValue: undefined,
       sub: { innerType: typeSettings },
     },
-  };
+  });
 }

@@ -55,7 +55,7 @@
           :hide-details="hideDetails(field, fieldIndex)"
           :hint="field.details"
           :persistent-hint="!!field.details"
-          :clearable="!field.required && removeEmpty && !readOnly"
+          :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
           @input="setField(field, toNumber($event))"

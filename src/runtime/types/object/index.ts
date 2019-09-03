@@ -1,7 +1,7 @@
 
 import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, 
   OperationExpression } from 'expangine-runtime';
-import { friendlyList } from '@/common';
+import { friendlyList, initializeSubs } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -26,11 +26,11 @@ export const ObjectVisuals = createVisuals({
 
 export const ObjectBuilder: TypeBuilder<ObjectType> = 
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Object',
     description: 'An entity with defined property names and types',
     priority: 3,
-    value: async () => ({
+    value: async () => (initializeSubs(registry, {
       type: new ObjectType({ props: Object.create(null) }),
       settings: { 
         input: 'form', 
@@ -38,7 +38,7 @@ export const ObjectBuilder: TypeBuilder<ObjectType> =
         options: ObjectFormInput.getDefaultOptions(), 
         sub: Object.create(null),
       },
-    }),
+    })),
   }),
 };
 
@@ -90,7 +90,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
           propSettings[i] = settings[i];
         }
 
-        return {
+        return initializeSubs(registry, {
           kind: 'change',
           type: new ObjectType({ props: propMap }),
           settings: { 
@@ -99,7 +99,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
             options: ObjectFormInput.getDefaultOptions(), 
             sub: propSettings,
           },
-        };        
+        });        
       },
     };
   },

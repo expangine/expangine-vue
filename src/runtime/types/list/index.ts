@@ -10,6 +10,7 @@ import { ListEnumAutocompleteInput } from './ListEnumAutocompleteTypes';
 import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
+import { initializeSubs } from '@/common';
 
 
 export const ListVisuals = createVisuals({
@@ -32,11 +33,11 @@ export const ListVisuals = createVisuals({
 
 export const ListBuilder: TypeBuilder<ListType> = 
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'List',
     description: 'An collection/list/array of values',
     priority: 4,
-    value: async () => ({
+    value: async () => (initializeSubs(registry, {
       type: ListType.forItem(new TextType({ })),
       settings: {
         input: 'list',
@@ -50,16 +51,16 @@ export const ListBuilder: TypeBuilder<ListType> =
           },
         },
       },
-    }),
+    })),
   }),
 };
 
 export const ListBuilderWrapper: TypeBuilderWrapper =
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'List of...',
     priority: 2,
-    value: async ([{ type, settings }]) => ({
+    value: async ([{ type, settings }]) => (initializeSubs(registry, {
       type: ListType.forItem(type),
       settings: {
         input: 'list',
@@ -69,6 +70,6 @@ export const ListBuilderWrapper: TypeBuilderWrapper =
           item: settings,
         },
       },
-    }),
+    })),
   }),
 };

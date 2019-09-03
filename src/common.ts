@@ -1,5 +1,9 @@
 import { PropType } from 'vue';
-import { isString, isArray } from 'expangine-runtime';
+import { isString, isArray, isObject } from 'expangine-runtime';
+import { TypeAndSettings, TypeSettings, TypeVisualInput } from './runtime/TypeVisuals';
+import { Registry } from './runtime/Registry';
+import { TypeBuildResult } from './runtime/TypeBuilder';
+import { TypeModifyResult } from './runtime/TypeModifier';
 
 export type ListOptions<T = string> = Array<{ 
   text: string; 
@@ -113,4 +117,47 @@ export function asArray<T>(value: T[] | T | null | undefined): T[]
     : value === null || value === undefined
       ? []
       : [value];
+}
+
+export function initializeSubs<
+  T extends TypeAndSettings | TypeBuildResult | TypeModifyResult
+>(registry: Registry, value: T): T
+{
+  const { type, settings } = value;
+
+  const visuals = registry.getVisuals(type);
+  const input = visuals.inputs[settings.input];
+
+  if (isSubArray(settings))
+  {
+    const subs = settings.sub;
+    const inputNumber = input as TypeVisualInput<any, any, number>;
+
+    for (let i = 0; i < subs.length; i++)
+    {
+      inputNumber.onSubAdd(i, type, settings);
+    }
+  }
+  else if (isSubObject(settings))
+  {
+    const subs = settings.sub;
+    const inputString = input as TypeVisualInput<any, any, string>;
+
+    for (const prop in subs)
+    {
+      inputString.onSubAdd(prop, type, settings);
+    }
+  }
+
+  return value;
+}
+
+export function isSubArray(settings: any): settings is TypeSettings<any, number>
+{
+  return isArray(settings.sub);
+}
+
+export function isSubObject(settings: any): settings is TypeSettings<any, string>
+{
+  return isObject(settings.sub);
 }

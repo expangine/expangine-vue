@@ -8,6 +8,7 @@ import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';
 import MapEditor from './MapEditor.vue';
+import { initializeSubs } from '@/common';
 
 
 export const MapVisuals = createVisuals({
@@ -25,11 +26,11 @@ export const MapVisuals = createVisuals({
 
 export const MapBuilder: TypeBuilder<MapType> = 
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Map',
     description: 'A dictionary of key-value pairs',
     priority: 8,
-    value: async () => ({
+    value: async () => (initializeSubs(registry, {
       type: MapType.forItem(new TextType({}), new TextType({})),
       settings: {
         input: 'grid',
@@ -54,7 +55,7 @@ export const MapBuilder: TypeBuilder<MapType> =
           },
         },
       },
-    }),
+    })),
   }),
 };
 
@@ -106,7 +107,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
           };
         }
 
-        return {
+        return initializeSubs(registry, {
           kind: 'change',
           type: MapType.forItem(valueType, new TextType({})),
           settings: {
@@ -126,7 +127,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
               value,
             },
           },
-        };
+        });
       },
     };
   },
@@ -134,10 +135,10 @@ export const MapModifierFromObject: TypeModifier<MapType> =
 
 export const MapBuilderWrapper: TypeBuilderWrapper =
 {
-  getOption: () => ({
+  getOption: ({ registry }) => ({
     text: 'Map of...',
     priority: 3,
-    value: async ([{ type, settings }]) => ({
+    value: async ([{ type, settings }]) => (initializeSubs(registry, {
       type: MapType.forItem(type, new TextType({})),
       settings: {
         input: 'grid',
@@ -155,6 +156,6 @@ export const MapBuilderWrapper: TypeBuilderWrapper =
           value: settings,
         },
       },
-    }),
+    })),
   }),
 };

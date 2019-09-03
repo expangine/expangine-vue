@@ -3,7 +3,7 @@ import { Type, TupleType, ObjectType, TupleOps, OperationExpression } from 'expa
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
-import { friendlyList } from '@/common';
+import { friendlyList, initializeSubs } from '@/common';
 import { TupleGridInput } from './TupleGridTypes';
 import TupleEditor from './TupleEditor.vue';
 import { getBuildType } from '@/app/BuildType';
@@ -53,18 +53,15 @@ export const TupleBuilder: TypeBuilder<TupleType> =
         return false;
       }
 
-      return {
+      return initializeSubs(input.registry, {
         type: new TupleType(types),
         settings: {
           input: 'grid',
-          options: {
-            title: '',
-            columns: types.map((t) => ({ cols: 12 })),
-          },
+          options: TupleGridInput.getDefaultOptions(),
           defaultValue: types.map((t) => t.create()),
           sub: settings,
         },
-      };
+      });
     },
   }),
 };
@@ -96,7 +93,7 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
           return false;
         }
 
-        const visuals = input.registry.getVisuals(type);
+        const visuals = registry.getVisuals(type);
         const inputSelected = visuals.inputs[typeSettings.input] as TypeVisualInput<TupleType, any, TupleSubs>;
 
         type.options.push(chosen.type);
@@ -104,11 +101,11 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
 
         inputSelected.onSubAdd(type.options.length, type, typeSettings);
 
-        return {
+        return initializeSubs(registry, {
           kind: 'update',
           type,
           settings: typeSettings,
-        };
+        });
       },
     };
   },
@@ -117,7 +114,7 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
 export const TupleModifierFromObject: TypeModifier<TupleType> = 
 {
   getOption: (input) => {
-    const { type, typeSettings } = input;
+    const { type, typeSettings, registry } = input;
     if (!(type instanceof ObjectType)) {
       return false;
     }
@@ -136,7 +133,7 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
       text: 'Convert to Tuple',
       description: friendlyList(names),
       priority: 14,
-      value: async () => ({
+      value: async () => (initializeSubs(registry, {
         kind: 'change',
         type: new TupleType(values),
         settings: {
@@ -145,18 +142,18 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
           defaultValue: [],
           sub: settings,
         },
-      }),
+      })),
     };
   },
 };
 
 export const TupleBuilderWrapper: TypeBuilderWrapper =
 {
-  getOption: () => ({
+  getOption: (input) => ({
     text: 'A tuple of...',
     priority: 6,
     multiple: true,
-    value: async (results) => ({
+    value: async (results) => (initializeSubs(input.registry, {
       type: new TupleType(results.map((r) => r.type)),
       settings: {
         input: 'grid',
@@ -164,6 +161,6 @@ export const TupleBuilderWrapper: TypeBuilderWrapper =
         options: TupleGridInput.getDefaultOptions(),
         sub: results.map((r) => r.settings),
       },
-    }),
+    })),
   }),
 };
