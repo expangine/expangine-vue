@@ -1,7 +1,7 @@
 
 import { Type, Definitions, Expression } from 'expangine-runtime';
 import { TypeVisuals } from './TypeVisuals';
-import { ListOptions, ListOptionsPriority } from '@/common';
+import { ListOptions, ListOptionsPriority, obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuildHandler, TypeBuilderWrapper, 
   TypeBuilderWrapHandler, 
   TypeBuildOption,
@@ -24,7 +24,7 @@ export class Registry
   public constructor(defs: Definitions)
   {
     this.defs = defs;
-    this.typeMap = Object.create(null);
+    this.typeMap = obj();
     this.types = [];
     this.builders = [];
     this.builderWrappers = [];
@@ -144,6 +144,11 @@ export class Registry
   public getCreate(type: Type): Expression
   {
     return this.getVisuals(type).create(this, type);
+  }
+
+  public getIsValid(type: Type): Expression
+  {
+    return this.getVisuals(type).isValid(this, type);
   }
 
 }

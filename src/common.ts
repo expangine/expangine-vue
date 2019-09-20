@@ -66,6 +66,18 @@ export function friendlyList(things: string[]): string
   }
 }
 
+export function obj<K extends string>(values?: Record<K, any>): Record<K, any>
+{
+  const x = Object.create(null);
+
+  if (values)
+  {
+    Object.assign(x, values);
+  }
+
+  return x;
+}
+
 export function formatDate<O = undefined>(
   date: Date | string | undefined, 
   otherwise: O, 

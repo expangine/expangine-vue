@@ -11,6 +11,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="changeType"
+          @transform="transform"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -102,8 +103,7 @@
 </template>
 
 <script lang="ts">
-import { ObjectType, OperationExpression, ObjectOps, GetExpression, ConstantExpression, ChainExpression, 
-  UpdateExpression, Expression, toExpr } from 'expangine-runtime';
+import { ObjectType, ExpressionBuilder, ObjectOps, Expression } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { getConfirmation } from '../../../app/Confirm';
 import { getInput } from '../../../app/Input';
@@ -111,6 +111,8 @@ import { sendNotification } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
 import { TypeAndSettings } from '../../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
+import { TypeBuildResult } from '../../TypeBuilder';
+import { TypeModifyResult } from '../../TypeModifier';
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({
@@ -152,10 +154,12 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.updateTypeAndSettings();
 
+      const ex = new ExpressionBuilder();
+
       this.transform(
-        OperationExpression.create(ObjectOps.set, {
-          object: GetExpression.create(['value']),
-          key: toExpr(propName),
+        ex.op(ObjectOps.set, {
+          object: ex.get('value'),
+          key: propName,
           value: this.registry.getCreate(chosen.type),
         }),
       );
@@ -172,11 +176,16 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.updateTypeAndSettings();
 
+      const ex = new ExpressionBuilder();
+
       this.transform(
-        OperationExpression.create(ObjectOps.delete, {
-          object: GetExpression.create(['value']),
-          key: toExpr(prop),
-        }),
+        ex.body(
+          ex.op(ObjectOps.delete, {
+            object: ex.get('value'),
+            key: prop,
+          }),
+          ex.get('value'),
+        ),
       );
     },
     async rename(prop: string) {
@@ -212,41 +221,39 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       sendNotification({ message: `${prop} renamed to ${newProp}` });
 
+      const ex = new ExpressionBuilder();
+
       this.transform(
-        new ChainExpression([
-          UpdateExpression.create(
-            ['value', newProp],
-            GetExpression.create(['value', prop]),
-          ),
-          OperationExpression.create(ObjectOps.delete, {
-            object: GetExpression.create(['value']),
-            key: toExpr(prop),
+        ex.body(
+          ex.op(ObjectOps.set, {
+            object: ex.get('value'),
+            key: newProp,
+            value: ex.get('value', prop),
           }),
-        ]),
-      );
-    },
-    transformProp(prop: string, transform: Expression) {
-      this.transform(
-        UpdateExpression.create(
-          ['value', prop],
-          transform,
-          'value',
+          ex.op(ObjectOps.delete, {
+            object: ex.get('value'),
+            key: prop,
+          }),
+          ex.get('value'),
         ),
       );
     },
-    onChangeType(prop: string, result: TypeAndSettings) {
+    transformProp(prop: string, transform: Expression) {
+      const ex = new ExpressionBuilder();
+
+      this.transform(
+        ex.body(
+          ex.update('value', prop)
+            .to(transform, 'value'),
+          ex.get('value'),
+        ),
+      );
+    },
+    onChangeType(prop: string, result: TypeModifyResult) {
       this.type.options.props[prop] = result.type;
       this.settings.sub[prop] = result.settings;
 
       this.updateTypeAndSettings();
-
-      this.transform(
-        OperationExpression.create(ObjectOps.set, {
-          object: GetExpression.create(['value']),
-          key: toExpr(prop),
-          value: this.registry.getCreate(result.type),
-        }),
-      );
     },
   },
 });

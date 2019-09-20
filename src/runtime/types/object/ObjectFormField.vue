@@ -30,6 +30,7 @@ export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object)
         if (current === undefined && this.fieldSettings) {
           current = this.fieldType.fromJson(this.fieldSettings.defaultValue);
           this.$set(this.value, this.prop, current);
+          current = this.value[this.prop];
           this.update();
         }
         return current;

@@ -1,5 +1,5 @@
 
-import { DateType, OperationExpression, DateOps } from 'expangine-runtime';
+import { DateType, ExpressionBuilder, DateOps } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
@@ -8,12 +8,15 @@ import DateEditor from './DateEditor.vue';
 import DateOptions from './DateOptions.vue';
 
 
+const ex = new ExpressionBuilder();
+
 export const DateVisuals = createVisuals(
 {
   type: DateType,
   name: 'Date',
   description: 'A date value',
-  create: () => OperationExpression.create(DateOps.create, {}),
+  create: () => ex.op(DateOps.create, {}),
+  isValid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),
   editor: DateEditor,
   options: DateOptions,
   defaultInput: 'picker',

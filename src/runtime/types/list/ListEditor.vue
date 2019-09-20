@@ -11,6 +11,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="changeType"
+          @transform="transform"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -43,6 +44,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="onChangeType"
+          @transform="transformItem"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -50,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, ListOptions, isNumber } from 'expangine-runtime';
+import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { ListSubs } from './ListTypes';
@@ -82,6 +84,18 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
     },
   },
   methods: {
+    transformItem(transform: Expression) {
+      const ex = new ExpressionBuilder();
+
+      this.transform(
+        ex.op(ListOps.map, {
+          list: ex.get('value'),
+          transform,
+        }, {
+          item: 'value',
+        }),
+      );
+    },
     onChangeType({ type: innerType, settings }: TypeAndSettings) {
       this.type.options.item = innerType;
       this.settings.sub.item = settings;

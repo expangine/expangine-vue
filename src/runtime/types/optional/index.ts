@@ -1,19 +1,28 @@
 
-import { Type, OptionalType, ConstantExpression } from 'expangine-runtime';
+import { Type, OptionalType, AnyOps, ExpressionBuilder} from 'expangine-runtime';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
-import { TypeModifier, TypeModifyResult } from '@/runtime/TypeModifier';
+import { TypeModifier } from '@/runtime/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '@/app/Confirm';
 import OptionalEditor from './OptionalEditor.vue';
-import { initializeSubs } from '@/common';
+import { initializeSubs, obj } from '@/common';
 import { Registry } from '@/runtime/Registry';
 
+
+const ex = new ExpressionBuilder();
 
 export const OptionalVisuals = createVisuals({
   type: OptionalType,
   name: 'Optional',
   description: 'An optional value',
   create: (registry, type) => registry.getVisuals(type.options).create(registry, type.options),
+  isValid: (registry, type) => ex.or(
+    ex.op(AnyOps.isEqual, {
+      value: ex.get('value'),
+      test: ex.const(undefined),
+    }),
+    registry.getIsValid(type.options),
+  ),
   editor: OptionalEditor,
   defaultInput: 'optional',
   inputsOrder: ['optional'],
@@ -81,9 +90,9 @@ export function OptionalModifierTransform(registry: Registry, type: Type, typeSe
     type: new OptionalType(type),
     settings: { 
       input: 'optional',
-      options: Object.create(null),
+      options: obj(),
       defaultValue: undefined,
-      sub: { innerType: typeSettings },
+      sub: obj({ innerType: typeSettings }),
     },
   });
 }

@@ -24,6 +24,7 @@ export interface TypeVisuals<
   name: string;
   description: string;
   create: (registry: Registry, type: T) => Expression;
+  isValid: (registry: Registry, type: T) => Expression;
   editor: VueConstructor;
   options?: VueConstructor;
   allowsDefault?: boolean;

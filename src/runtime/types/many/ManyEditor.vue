@@ -37,6 +37,7 @@
             @input:type="updateType"
             @input:settings="updateSettings"
             @change:type="onChangeType(index, innerType, $event)"
+            @transform="transformType(index, innerType, $event)"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -45,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ManyType } from 'expangine-runtime';
+import { Type, ManyType, Expression, ExpressionBuilder } from 'expangine-runtime';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
@@ -64,6 +65,8 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       this.type.options.splice(index, 1);
       this.settings.sub.splice(index, 1);
 
+      const destType = this.type.options[0];
+
       if (this.type.options.length === 1) 
       {
         const onlyType = this.type.options[0];
@@ -78,6 +81,21 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       {
         this.updateTypeAndSettings();
       }
+
+      const ex = new ExpressionBuilder();
+      const destVisual = this.registry.getVisuals(destType);
+      const cast = `${innerType.getId()}:~${destType.getId()}`;
+      const castOperation = innerType.getOperations()[cast];
+      const transform = castOperation
+        ? ex.op(castOperation, { value: ex.get('value') })
+        : destVisual.create(this.registry, destType);
+
+      this.transform(
+        ex
+          .if(destVisual.isValid(this.registry, destType))
+          .then(ex.get('value'))
+          .else(transform),
+      );
     },
     async addType(index: number, afterType: Type) {
       const chosen = await getBuildType({
@@ -102,6 +120,16 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       this.$set(this.settings.sub, index, newSettings);
       
       this.updateTypeAndSettings();
+    },
+    transformType(index: number, innerType: Type, transform: Expression) {
+      const ex = new ExpressionBuilder();
+      const isValid = this.visuals.isValid(this.registry, this.type);
+
+      this.transform(ex
+        .if(ex.not(isValid))
+        .then(transform)
+        .else(ex.get('value')),
+      );
     },
   },
 });

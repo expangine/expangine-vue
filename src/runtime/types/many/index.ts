@@ -1,5 +1,5 @@
 
-import { ManyType } from 'expangine-runtime';
+import { ManyType, OrExpression } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeModifier } from '@/runtime/TypeModifier';
 import { TypeBuilderWrapper } from '@/runtime/TypeBuilder';
@@ -14,6 +14,9 @@ export const ManyVisuals = createVisuals({
   name: 'Many',
   description: 'A type that represents any number of possible types.',
   create: (registry, type) => registry.getVisuals(type.options[0]).create(registry, type.options[0]),
+  isValid: (registry, type) => new OrExpression(
+    type.options.map((t) => registry.getIsValid(t)),
+  ),
   editor: ManyEditor,
   defaultInput: 'many',
   inputsOrder: ['many'],

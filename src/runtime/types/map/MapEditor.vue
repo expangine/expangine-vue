@@ -11,6 +11,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="changeType"
+          @transform="transform"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -50,6 +51,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="onChangeKey"
+          @transform="transformKey"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -80,6 +82,7 @@
           @input:type="updateType"
           @input:settings="updateSettings"
           @change:type="onChangeValue"
+          @transform="transformValue"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -87,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { MapType, MapOptions } from 'expangine-runtime';
+import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeAndSettings } from '../../TypeVisuals';
 import { MapSubs } from './MapTypes';
@@ -108,6 +111,29 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
       this.$set(this.settings.sub, 'value', valueSettings);
 
       this.updateTypeAndSettings();
+    },
+    transformKey(transform: Expression) {
+      const ex = new ExpressionBuilder();
+
+      this.transform(
+        ex.op(MapOps.map, {
+          map: ex.get('value'),
+          transformKey: transform,
+        }, {
+          key: 'value',
+          value: 'actualValue',
+        }),
+      );
+    },
+    transformValue(transform: Expression) {
+      const ex = new ExpressionBuilder();
+
+      this.transform(
+        ex.op(MapOps.map, {
+          map: ex.get('value'),
+          transform,
+        }),
+      );
     },
   },
 });

@@ -2,6 +2,14 @@
   <v-list>
     <v-list-item v-if="settings.options.title">
       <v-list-item-avatar class="mr-0">
+        <v-tooltip>
+          <template #activator="{ on }">
+            <v-btn icon v-if="canAdd" v-on="on" @click="addItem">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </template>
+          <span>Add {{ itemName }}</span>
+        </v-tooltip>
       </v-list-item-avatar>
       <v-list-item-content>
         {{ settings.options.title }}
@@ -9,7 +17,7 @@
     </v-list-item>
     <template v-for="(item, itemIndex) in value">
       <v-list-item :key="itemIndex">
-        <v-list-item-avatar class="mr-0">
+        <v-list-item-avatar class="cell-top pt-1 mr-0">
           <v-menu>
             <template #activator="{ on }">
               <v-btn icon v-on="on">

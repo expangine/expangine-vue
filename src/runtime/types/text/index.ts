@@ -1,5 +1,5 @@
 
-import { TextType, TextOps, OperationExpression } from 'expangine-runtime';
+import { TextType, TextOps, ExpressionBuilder } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
@@ -10,11 +10,14 @@ import TextEditor from './TextEditor.vue';
 import TextOptions from './TextOptions.vue';
 
 
+const ex = new ExpressionBuilder();
+
 export const TextVisuals = createVisuals({
   type: TextType,
   name: 'Text',
   description: 'A text value',
-  create: () => OperationExpression.create(TextOps.create, {}),
+  create: () => ex.op(TextOps.create, {}),
+  isValid: () => ex.op(TextOps.isValid, {value: ex.get('value')}),
   editor: TextEditor,
   options: TextOptions,
   defaultInput: 'textbox',

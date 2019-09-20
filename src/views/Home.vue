@@ -63,7 +63,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, defs, Expression, runtime, isString } from 'expangine-runtime';
+import { Type, defs, Expression, isString } from 'expangine-runtime';
+import { LiveRuntime } from 'expangine-runtime-live';
 import * as ex from 'expangine-runtime';
 import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
 import { TypeBuildResult } from '../runtime/TypeBuilder';
@@ -82,6 +83,7 @@ export default Vue.extend({
   name: 'home',
   async mounted() {
     (window as any).registry = Registry;
+    (window as any).runtime = LiveRuntime;
     (window as any).home = this;
     (window as any).ex = ex;
 
@@ -135,11 +137,13 @@ export default Vue.extend({
     },
     transform(expr: Expression) {
       if (expr instanceof Expression) {
-        const cmd = runtime.getCommand(expr);
+        const cmd = LiveRuntime.getCommand(expr);
 
         cmd({ value: this.data });
 
         this.saveData();
+
+        window.console.log(expr);
       }
     },
     exportJson() {

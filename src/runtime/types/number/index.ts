@@ -1,5 +1,5 @@
 
-import { NumberType, NumberOps, OperationExpression } from 'expangine-runtime';
+import { NumberType, NumberOps, ExpressionBuilder } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
@@ -9,11 +9,14 @@ import NumberEditor from './NumberEditor.vue';
 import NumberOptions from './NumberOptions.vue';
 
 
+const ex = new ExpressionBuilder();
+
 export const NumberVisuals = createVisuals({
   type: NumberType,
   name: 'Number',
   description: 'A number value',
-  create: () => OperationExpression.create(NumberOps.create, {}),
+  create: () => ex.op(NumberOps.create, {}),
+  isValid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),
   editor: NumberEditor,
   options: NumberOptions,
   defaultInput: 'textbox',

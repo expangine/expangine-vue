@@ -10,8 +10,10 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "expangine-runtime": "git+https://github.com/expangine/expangine-runtime.git#master",
+    "expangine-runtime-live": "git+https://github.com/expangine/expangine-runtime-live.git#master",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
+    "source-map-loader": "^0.2.4",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuetify": "^2.0.11"

@@ -16,7 +16,8 @@ export const EnumVisuals = createVisuals({
   type: EnumType,
   name: 'Enum',
   description: 'A list of key value pairs.',
-  create: (registry, type) => registry.getVisuals(type.options.value).create(registry, type.options.value),
+  create: (registry, type) => registry.getCreate(type.options.value),
+  isValid: (registry, type) => registry.getIsValid(type.options.value),
   editor: EnumEditor,
   options: EnumOptions,
   defaultInput: 'dropdown',
@@ -31,12 +32,12 @@ export const EnumVisuals = createVisuals({
 
 export const EnumBuilder: TypeBuilder<EnumType> = 
 {
-  getOption: ({ registry }) => ({
+  getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Enum',
     description: 'A value which is taken from a list of key-value pairs',
     priority: 7,
     value: async () => (initializeSubs(registry, {
-      type: new EnumType({ key: new TextType({}), value: new TextType({}), constants: new Map() }),
+      type: new EnumType({ key: new TextType({}), value: existingType || new TextType({}), constants: new Map() }),
       settings: {
       input: 'dropdown',
       defaultValue: '',
@@ -47,7 +48,7 @@ export const EnumBuilder: TypeBuilder<EnumType> =
           defaultValue: '',
           options: TextBoxInput.getDefaultOptions(), 
         },
-        value: { 
+        value: existingSettings || { 
           input: 'textbox', 
           defaultValue: '',
           options: TextBoxInput.getDefaultOptions(), 

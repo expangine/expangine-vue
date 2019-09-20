@@ -12,6 +12,7 @@
         @input:type="updateType"
         @input:settings="updateSettings"
         @change:type="changeType"
+        @transform="transform"
       ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">

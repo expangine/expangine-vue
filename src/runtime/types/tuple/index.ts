@@ -1,5 +1,7 @@
 
-import { Type, TupleType, ObjectType, TupleOps, OperationExpression } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, TupleOps, OperationExpression, AndExpression, GetExpression, 
+  DefineExpression, 
+  ExpressionBuilder} from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -10,11 +12,22 @@ import { getBuildType } from '@/app/BuildType';
 import { TupleSubs } from './TupleTypes';
 
 
+const ex = new ExpressionBuilder();
+
 export const TupleVisuals = createVisuals({
   type: TupleType,
   name: 'Tuple',
   description: 'A fixed size array of types',
   create: () => OperationExpression.create(TupleOps.create, {}),
+  isValid: (registry, type) => ex
+    .op(TupleOps.isValid, {
+      value: ex.get('value'),
+    })
+    .and(type.options.map((t, i) => ex
+      .define({ value: ex.get('value', i) })
+      .run(registry.getIsValid(t)),
+    ),
+  ),
   editor: TupleEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],
@@ -25,7 +38,7 @@ export const TupleVisuals = createVisuals({
 
 export const TupleBuilder: TypeBuilder<TupleType> = 
 {
-  getOption: (input) => ({
+  getOption: ({ registry, parent, parentSettings, existingType, existingSettings }) => ({
     text: 'Tuple',
     description: 'A fixed size array of types',
     priority: 10,
@@ -33,27 +46,32 @@ export const TupleBuilder: TypeBuilder<TupleType> =
       const types: Type[] = [];
       const settings: TypeSettings[] = [];
 
-      for (;;) {
-        const chosen = await getBuildType({
-          input,
-          title: `Choose Type [${types.length + 1}]`,
-          ok: 'Add Type',
-          cancel: types.length === 0 ? 'Cancel' : 'Done',
-        });
-
-        if (!chosen) {
-          break;
+      if (existingType && existingSettings) {
+        types.push(existingType);
+        settings.push(existingSettings);
+      } else  {
+        for (;;) {
+          const chosen = await getBuildType({
+            input: { registry, parent, parentSettings },
+            title: `Choose Type [${types.length + 1}]`,
+            ok: 'Add Type',
+            cancel: types.length === 0 ? 'Cancel' : 'Done',
+          });
+  
+          if (!chosen) {
+            break;
+          }
+  
+          types.push(chosen.type);
+          settings.push(chosen.settings);
         }
-
-        types.push(chosen.type);
-        settings.push(chosen.settings);
       }
 
       if (types.length === 0) {
         return false;
       }
 
-      return initializeSubs(input.registry, {
+      return initializeSubs(registry, {
         type: new TupleType(types),
         settings: {
           input: 'grid',

@@ -1,7 +1,7 @@
 
 import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, 
-  OperationExpression } from 'expangine-runtime';
-import { friendlyList, initializeSubs } from '@/common';
+  ExpressionBuilder } from 'expangine-runtime';
+import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
 import { TypeBuilder } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -10,11 +10,14 @@ import ObjectEditor from './ObjectEditor.vue';
 import { getConfirmation } from '@/app/Confirm';
 
 
+const ex = new ExpressionBuilder();
+
 export const ObjectVisuals = createVisuals({
   type: ObjectType,
   name: 'Object',
   description: 'An object is a collection of named fields.',
-  create: () => OperationExpression.create(ObjectOps.create, {}),
+  create: () => ex.op(ObjectOps.create, {}),
+  isValid: () => ex.op(ObjectOps.isValid, {value: ex.get('value')}),
   editor: ObjectEditor,
   allowsDefault: false,
   defaultInput: 'form',
@@ -26,17 +29,17 @@ export const ObjectVisuals = createVisuals({
 
 export const ObjectBuilder: TypeBuilder<ObjectType> = 
 {
-  getOption: ({ registry }) => ({
+  getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Object',
     description: 'An entity with defined property names and types',
     priority: 3,
     value: async () => (initializeSubs(registry, {
-      type: new ObjectType({ props: Object.create(null) }),
+      type: new ObjectType({ props: existingType ? obj({ value: existingType }) : obj() }),
       settings: { 
         input: 'form', 
-        defaultValue: Object.create(null),
+        defaultValue: obj(),
         options: ObjectFormInput.getDefaultOptions(), 
-        sub: Object.create(null),
+        sub: existingType ? obj({ value: existingSettings }) : obj(),
       },
     })),
   }),
@@ -82,8 +85,8 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
           return false;
         }
 
-        const propMap = Object.create(null);
-        const propSettings = Object.create(null);
+        const propMap = obj();
+        const propSettings = obj();
 
         for (let i = 0; i < props.length; i++) {
           propMap[i] = props[i];
@@ -95,7 +98,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
           type: new ObjectType({ props: propMap }),
           settings: { 
             input: 'form', 
-            defaultValue: Object.create(null),
+            defaultValue: obj(),
             options: ObjectFormInput.getDefaultOptions(), 
             sub: propSettings,
           },

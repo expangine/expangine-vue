@@ -1,5 +1,5 @@
 
-import { Type, MapType, TextType, ObjectType, ManyType, AnyType, OperationExpression, MapOps } from 'expangine-runtime';
+import { Type, MapType, TextType, ObjectType, ManyType, MapOps, ExpressionBuilder, ListOps} from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals } from '@/runtime/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
@@ -11,11 +11,34 @@ import MapEditor from './MapEditor.vue';
 import { initializeSubs } from '@/common';
 
 
+const ex = new ExpressionBuilder();
+
 export const MapVisuals = createVisuals({
   type: MapType,
   name: 'Map',
   description: 'A collection of key-value pairs.',
-  create: () => OperationExpression.create(MapOps.create, {}),
+  create: () => ex.op(MapOps.create, {}),
+  isValid: (registry, type) => ex.and(
+    ex.op(MapOps.isValid, {
+      value: ex.get('value'),
+    }),
+    ex.not(ex.op(ListOps.contains, {
+      list: ex.op(MapOps.values, { map: ex.get('value') }),
+      item: ex.const(null),
+      isEqual: ex.not(registry.getIsValid(type.options.value)),
+    }, {
+      value: 'ignore',
+      test: 'value',
+    })),
+    ex.not(ex.op(ListOps.contains, {
+      list: ex.op(MapOps.keys, { map: ex.get('value') }),
+      item: ex.const(null),
+      isEqual: ex.not(registry.getIsValid(type.options.key)),
+    }, {
+      value: 'ignore',
+      test: 'value',
+    })),
+  ),
   editor: MapEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],
@@ -26,12 +49,12 @@ export const MapVisuals = createVisuals({
 
 export const MapBuilder: TypeBuilder<MapType> = 
 {
-  getOption: ({ registry }) => ({
+  getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Map',
     description: 'A dictionary of key-value pairs',
     priority: 8,
     value: async () => (initializeSubs(registry, {
-      type: MapType.forItem(new TextType({}), new TextType({})),
+      type: MapType.forItem(existingType || new TextType({}), new TextType({})),
       settings: {
         input: 'grid',
         defaultValue: [],
@@ -45,7 +68,7 @@ export const MapBuilder: TypeBuilder<MapType> =
               label: 'Key',
             }, 
           },
-          value: { 
+          value: existingSettings || { 
             input: 'textbox', 
             defaultValue: '',
             options: {

@@ -17,6 +17,7 @@
             @input:type="updateType"
             @input:settings="updateSettings"
             @change:type="onChangeKey"
+            @transform="transformKey"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -35,6 +36,7 @@
             @input:type="updateType"
             @input:settings="updateSettings"
             @change:type="onChangeValue"
+            @transform="transformValue"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -88,7 +90,9 @@
 </template>
 
 <script lang="ts">
-import { EnumType, EnumOptions, toArray } from 'expangine-runtime';
+import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExpression, MapOps, 
+  ConstantExpression } from 'expangine-runtime';
+import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeAndSettings, TypeSettings } from '../../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
@@ -121,6 +125,33 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
       this.$set(this.settings.sub, 'value', valueSettings);
 
       this.updateTypeAndSettings();
+    },
+    transformKey(transformKey: Expression) {
+      const map = new ConstantExpression(this.type.options.constants);
+      const updateKeys = LiveRuntime.getCommand(
+        OperationExpression.create(MapOps.map, {
+          map,
+          transformKey,
+        }, {
+          key: 'value',
+          value: 'actualValue',
+        }),
+      );
+
+      this.type.options.constants = updateKeys({});
+    },
+    transformValue(transform: Expression) {
+      const map = new ConstantExpression(this.type.options.constants);
+      const updateValues = LiveRuntime.getCommand(
+        OperationExpression.create(MapOps.map, {
+          map,
+          transform,
+        }),
+      );
+
+      this.type.options.constants = updateValues({});
+
+      this.transform(transform);
     },
     async removeConstant(index: number) {
       if (!await getConfirmation()) {
