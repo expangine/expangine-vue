@@ -15,8 +15,11 @@ export const DateVisuals = createVisuals(
   type: DateType,
   name: 'Date',
   description: 'A date value',
-  create: () => ex.op(DateOps.create, {}),
-  isValid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),
+  exprs: {
+    create: () => ex.op(DateOps.create, {}),
+    valid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),
+    compare: () => ex.op(DateOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
+  },
   editor: DateEditor,
   options: DateOptions,
   defaultInput: 'picker',

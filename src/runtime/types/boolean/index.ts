@@ -16,8 +16,11 @@ export const BooleanVisuals = createVisuals({
   type: BooleanType,
   name: 'Boolean',
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
-  create: () => ex.op(BooleanOps.create, {}),
-  isValid: () => ex.op(BooleanOps.isValid, {value: ex.get('value')}),
+  exprs: {
+    create: () => ex.op(BooleanOps.create, {}),
+    valid: () => ex.op(BooleanOps.isValid, {value: ex.get('value')}),
+    compare: () => ex.op(BooleanOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
+  },
   editor: BooleanEditor,
   options: BooleanOptions,
   defaultInput: 'checkbox',

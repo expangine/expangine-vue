@@ -16,8 +16,11 @@ export const TextVisuals = createVisuals({
   type: TextType,
   name: 'Text',
   description: 'A text value',
-  create: () => ex.op(TextOps.create, {}),
-  isValid: () => ex.op(TextOps.isValid, {value: ex.get('value')}),
+  exprs: {
+    create: () => ex.op(TextOps.create, {}),
+    valid: () => ex.op(TextOps.isValid, {value: ex.get('value')}),
+    compare: () => ex.op(TextOps.compare, {value: ex.get('value'), test: ex.get('test'), ignoreCase: ex.const(true)}),
+  },
   editor: TextEditor,
   options: TextOptions,
   defaultInput: 'textbox',

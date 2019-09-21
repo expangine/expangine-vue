@@ -117,13 +117,19 @@
             </v-list-item>
           </template>
         </v-autocomplete>
-        <ex-simple-fields
-          v-else-if="field.type === 'object'"
-          :read-only="readOnly"
-          :fields="field.fields"
-          :value="value[field.name]"
-          @input="setField(field, $event)"
-        ></ex-simple-fields>
+        <v-list-item-content v-else-if="field.type === 'object'">
+          <h4>{{ field.label }}</h4>
+          <ex-simple-fields
+            v-if="value[field.name]"
+            :read-only="readOnly"
+            :fields="field.fields"
+            :value="value[field.name]"
+            @input="setField(field, $event)"
+          ></ex-simple-fields>
+          <v-btn v-else
+            @click="addFieldObject(field)"
+          >Add {{ field.label }}</v-btn>
+        </v-list-item-content>
         <v-checkbox
           v-else-if="field.type === 'boolean'"
           :readonly="readOnly"
@@ -242,6 +248,10 @@ export default Vue.extend({
       } else {
         this.$set(this.value, field.name, value);
       }
+      this.update();
+    },
+    addFieldObject(field: SimpleFieldOption) {
+      this.$set(this.value, field.name, {});
       this.update();
     },
     getItems(field: SimpleFieldOption) {

@@ -31,7 +31,7 @@ export const ChangeTypeModifier: TypeModifier =
       const castOperation = type.getOperations()[cast];
       const transform = castOperation
         ? ex.op(castOperation, { value: ex.get('value') })
-        : visual.create(registry, type);
+        : visual.exprs.create(registry, type);
 
       return {
         kind: 'change',

@@ -88,11 +88,11 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       const castOperation = innerType.getOperations()[cast];
       const transform = castOperation
         ? ex.op(castOperation, { value: ex.get('value') })
-        : destVisual.create(this.registry, destType);
+        : destVisual.exprs.create(this.registry, destType);
 
       this.transform(
         ex
-          .if(destVisual.isValid(this.registry, destType))
+          .if(destVisual.exprs.valid(this.registry, destType))
           .then(ex.get('value'))
           .else(transform),
       );
@@ -123,7 +123,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
     },
     transformType(index: number, innerType: Type, transform: Expression) {
       const ex = new ExpressionBuilder();
-      const isValid = this.visuals.isValid(this.registry, this.type);
+      const isValid = this.visuals.exprs.valid(this.registry, this.type);
 
       this.transform(ex
         .if(ex.not(isValid))

@@ -23,8 +23,11 @@ export interface TypeVisuals<
   type: TypeClass<T>;
   name: string;
   description: string;
-  create: (registry: Registry, type: T) => Expression;
-  isValid: (registry: Registry, type: T) => Expression;
+  exprs: {
+    create: (registry: Registry, type: T) => Expression;
+    valid: (registry: Registry, type: T) => Expression;
+    compare: (registry: Registry, type: T) => Expression;
+  };
   editor: VueConstructor;
   options?: VueConstructor;
   allowsDefault?: boolean;

@@ -1,7 +1,8 @@
 
 import { Type, TupleType, ObjectType, TupleOps, OperationExpression, AndExpression, GetExpression, 
   DefineExpression, 
-  ExpressionBuilder} from 'expangine-runtime';
+  ExpressionBuilder,
+  NumberOps} from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
 import { TypeModifier } from '@/runtime/TypeModifier';
@@ -18,16 +19,31 @@ export const TupleVisuals = createVisuals({
   type: TupleType,
   name: 'Tuple',
   description: 'A fixed size array of types',
-  create: () => OperationExpression.create(TupleOps.create, {}),
-  isValid: (registry, type) => ex
-    .op(TupleOps.isValid, {
-      value: ex.get('value'),
-    })
-    .and(type.options.map((t, i) => ex
-      .define({ value: ex.get('value', i) })
-      .run(registry.getIsValid(t)),
+  exprs: {
+    create: () => ex.op(TupleOps.create, {}),
+    valid: (registry, type) => ex
+      .op(TupleOps.isValid, {
+        value: ex.get('value'),
+      })
+      .and(type.options.map((t, i) => ex
+        .define({ value: ex.get('value', i) })
+        .run(registry.getValid(t)),
+      ),
     ),
-  ),
+    compare: (registry, type) => ex.or(
+      ex.op(NumberOps.cmp, {
+        value: ex.get('value', 'length'),
+        test: ex.get('test', 'length'),
+      }),
+      ...type.options.map((t, i) => ex
+        .define({
+          value: ex.get('value', i),
+          test: ex.get('test', i),
+        })
+        .run(registry.getCompare(t)),
+      ),
+    ),
+  },
   editor: TupleEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],

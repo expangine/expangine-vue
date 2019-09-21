@@ -15,8 +15,11 @@ export const NumberVisuals = createVisuals({
   type: NumberType,
   name: 'Number',
   description: 'A number value',
-  create: () => ex.op(NumberOps.create, {}),
-  isValid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),
+  exprs: {
+    create: () => ex.op(NumberOps.create, {}),
+    valid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),
+    compare: () => ex.op(NumberOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
+  },
   editor: NumberEditor,
   options: NumberOptions,
   defaultInput: 'textbox',

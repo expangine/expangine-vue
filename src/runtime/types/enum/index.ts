@@ -16,8 +16,11 @@ export const EnumVisuals = createVisuals({
   type: EnumType,
   name: 'Enum',
   description: 'A list of key value pairs.',
-  create: (registry, type) => registry.getCreate(type.options.value),
-  isValid: (registry, type) => registry.getIsValid(type.options.value),
+  exprs: {
+    create: (registry, type) => registry.getCreate(type.options.value),
+    valid: (registry, type) => registry.getValid(type.options.value),
+    compare: (registry, type) => registry.getCompare(type.options.value),
+  },
   editor: EnumEditor,
   options: EnumOptions,
   defaultInput: 'dropdown',

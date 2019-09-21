@@ -8,6 +8,7 @@ import { ListComboInput } from './ListComboTypes';
 import { ListEnumSelectInput } from './ListEnumSelectTypes';
 import { ListEnumAutocompleteInput } from './ListEnumAutocompleteTypes';
 import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
+import { ListObjectTableInput } from './ListObjectTableTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
 import { initializeSubs } from '@/common';
@@ -19,30 +20,38 @@ export const ListVisuals = createVisuals({
   type: ListType,
   name: 'List',
   description: 'A list of values.',
-  create: () => ex.op(ListOps.create, {}),
-  isValid: (registry, type) => ex.and(
-    ex.op(ListOps.isValid, {
+  exprs: {
+    create: () => ex.op(ListOps.create, {}),
+    valid: (registry, type) => ex.and(
+      ex.op(ListOps.isValid, {
+        value: ex.get('value'),
+      }),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.get('value'),
+        item: ex.const(null),
+        isEqual: ex.not(registry.getValid(type.options.item)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+    ),
+    compare: (registry, type) => ex.op(ListOps.cmp, {
       value: ex.get('value'),
+      test: ex.get('test'),
+      compare: registry.getCompare(type),
     }),
-    ex.not(ex.op(ListOps.contains, {
-      list: ex.get('value'),
-      item: ex.const(null),
-      isEqual: ex.not(registry.getIsValid(type.options.item)),
-    }, {
-      value: 'ignore',
-      test: 'value',
-    })),
-  ),
+  },
   editor: ListEditor,
   options: ListOptions,
   defaultInput: 'list',
-  inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox'],
+  inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox', 'table'],
   inputs: {
     list: ListListInput,
     combo: ListComboInput,
     select: ListEnumSelectInput,
     autocomplete: ListEnumAutocompleteInput,
     checkbox: ListEnumCheckboxInput,
+    table: ListObjectTableInput,
   },
 });
 

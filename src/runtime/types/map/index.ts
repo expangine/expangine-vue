@@ -17,28 +17,35 @@ export const MapVisuals = createVisuals({
   type: MapType,
   name: 'Map',
   description: 'A collection of key-value pairs.',
-  create: () => ex.op(MapOps.create, {}),
-  isValid: (registry, type) => ex.and(
-    ex.op(MapOps.isValid, {
+  exprs: {
+    create: () => ex.op(MapOps.create, {}),
+    valid: (registry, type) => ex.and(
+      ex.op(MapOps.isValid, {
+        value: ex.get('value'),
+      }),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.op(MapOps.values, { map: ex.get('value') }),
+        item: ex.const(null),
+        isEqual: ex.not(registry.getValid(type.options.value)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+      ex.not(ex.op(ListOps.contains, {
+        list: ex.op(MapOps.keys, { map: ex.get('value') }),
+        item: ex.const(null),
+        isEqual: ex.not(registry.getValid(type.options.key)),
+      }, {
+        value: 'ignore',
+        test: 'value',
+      })),
+    ),
+    compare: (registry, type) => ex.op(MapOps.cmp, {
       value: ex.get('value'),
+      test: ex.get('test'),
+      compare: registry.getCompare(type.options.value),
     }),
-    ex.not(ex.op(ListOps.contains, {
-      list: ex.op(MapOps.values, { map: ex.get('value') }),
-      item: ex.const(null),
-      isEqual: ex.not(registry.getIsValid(type.options.value)),
-    }, {
-      value: 'ignore',
-      test: 'value',
-    })),
-    ex.not(ex.op(ListOps.contains, {
-      list: ex.op(MapOps.keys, { map: ex.get('value') }),
-      item: ex.const(null),
-      isEqual: ex.not(registry.getIsValid(type.options.key)),
-    }, {
-      value: 'ignore',
-      test: 'value',
-    })),
-  ),
+  },
   editor: MapEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],

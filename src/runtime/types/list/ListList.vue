@@ -136,9 +136,9 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       return next >= 0 && next < this.value.length && !this.settings.options.hideSort;
     },
     moveTo(from: number, to: number) {
-      const temp = this.value[from];
-      this.$set(this.value, from, this.value[to]);
-      this.$set(this.value, to, temp);
+      const moving = this.value[from];
+      this.value.splice(from, 1);
+      this.value.splice(to, 0, moving);
       this.update();
     },
     move(index: number, dir: number) {

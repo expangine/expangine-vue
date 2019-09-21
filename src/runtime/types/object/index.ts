@@ -16,8 +16,11 @@ export const ObjectVisuals = createVisuals({
   type: ObjectType,
   name: 'Object',
   description: 'An object is a collection of named fields.',
-  create: () => ex.op(ObjectOps.create, {}),
-  isValid: () => ex.op(ObjectOps.isValid, {value: ex.get('value')}),
+  exprs: {
+    create: () => ex.op(ObjectOps.create, {}),
+    valid: () => ex.op(ObjectOps.isValid, {value: ex.get('value')}),
+    compare: () => ex.op(ObjectOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
+  },
   editor: ObjectEditor,
   allowsDefault: false,
   defaultInput: 'form',

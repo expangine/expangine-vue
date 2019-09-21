@@ -143,12 +143,17 @@ export class Registry
 
   public getCreate(type: Type): Expression
   {
-    return this.getVisuals(type).create(this, type);
+    return this.getVisuals(type).exprs.create(this, type);
   }
 
-  public getIsValid(type: Type): Expression
+  public getValid(type: Type): Expression
   {
-    return this.getVisuals(type).isValid(this, type);
+    return this.getVisuals(type).exprs.valid(this, type);
+  }
+
+  public getCompare(type: Type): Expression
+  {
+    return this.getVisuals(type).exprs.compare(this, type);
   }
 
 }
