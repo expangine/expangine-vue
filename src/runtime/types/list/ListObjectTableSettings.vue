@@ -74,6 +74,7 @@ const fields: SimpleFieldSettings<ListObjectTableOptions> = [
   { name: 'fixedHeader', type: 'boolean', label: 'Fixed Header', defaultValue: false },
   { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },
   { name: 'dense', type: 'boolean', label: 'Dense', defaultValue: false },
+  { name: 'paging', type: 'boolean', label: 'Pagination?', defaultValue: false },
   { name: 'pageSize', type: 'number', label: 'Page Size', required: true },
   { name: 'pagination', type: 'object', label: 'Pagination', fields: [
     { name: 'circle', type: 'boolean', label: 'Circular?' },

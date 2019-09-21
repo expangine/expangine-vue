@@ -13,6 +13,16 @@ export interface ListListOptions
   hideRemove?: boolean;
   hideInsert?: boolean;
   hideSort?: boolean;
+  paging?: boolean;
+  pageSize: number;
+  pagination: {
+    circle?: boolean;
+    color?: string;
+    dark?: boolean;
+    nextIcon?: string;
+    prevIcon?: string;
+    totalVisible?: number;
+  };
 }
 
 export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs> = 
@@ -22,7 +32,7 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs>
   input: ListList,
   settings: ListListSettings,
   isVisible: () => true,
-  getDefaultOptions: () => ({}),
+  getDefaultOptions: () => ({ pageSize: 10, pagination: {} }),
   getName: (options) => options.title || options.itemName,
   getSummary: (options) => (
     `<strong>List</strong>: ${options.title || options.itemName || ''}`

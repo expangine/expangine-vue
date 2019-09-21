@@ -78,7 +78,7 @@
                       Move Down
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item v-if="canMove(rowIndex, 1)" @click="moveTo(rowIndex, value.length - 1)">
+                  <v-list-item v-if="canMove(rowIndex, 1)" @click="moveTo(rowIndex, rowCount - 1)">
                     <v-list-item-content>
                       Move to Bottom
                     </v-list-item-content>
@@ -102,7 +102,7 @@
           </tr>
         </template>
       </tbody>
-      <tfoot v-if="pagination">
+      <tfoot v-if="hasPaging">
         <tr>
           <td :colspan="columns.length + 1" class="pt-3">
             <v-pagination
@@ -137,6 +137,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     pageIndex: 1,
     sortProp: null as null | string,
     sortDesc: false,
+    rowCount: 0,
   }),
   computed: {
     itemType(): ObjectType {
@@ -165,7 +166,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
         return false;
       }
       if (isNumber(this.type.options.min)) {
-        return this.value.length > this.type.options.min;
+        return this.rowCount > this.type.options.min;
       }
       return true;
     },
@@ -177,9 +178,12 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     },
     canAdd(): boolean {
       if (isNumber(this.type.options.max)) {
-        return this.value.length < this.type.options.max;
+        return this.rowCount < this.type.options.max;
       }
       return true;
+    },
+    rowCount(): number {
+      return this.value.length;
     },
     columns(): any[] {
       return this.settings.options.columns;
@@ -187,8 +191,8 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     pagination(): any {
       return this.settings.options.pagination;
     },
-    rowCount(): number {
-      return this.value.length;
+    hasPaging(): boolean {
+      return !!this.settings.options.paging && !!this.pagination;
     },
     pageSize(): number {
       return this.settings.options.pageSize || 10;
@@ -197,10 +201,14 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       return Math.ceil(this.rowCount / this.pageSize);
     },
     pageStart(): number {
-      return Math.min(Math.min(this.pageIndex - 1, this.pageCount - 1) * this.pageSize, this.rowCount);
+      return this.hasPaging
+        ? Math.min(Math.min(this.pageIndex - 1, this.pageCount - 1) * this.pageSize, this.rowCount)
+        : 0;
     },
     pageEnd(): number {
-      return Math.min(this.pageStart + this.pageSize, this.rowCount);
+      return this.hasPaging
+        ? Math.min(this.pageStart + this.pageSize, this.rowCount)
+        : this.rowCount;
     },
     sortComparator(): false | ((a: any, b: any) => number) {
       const prop = this.sortProp;
@@ -235,6 +243,12 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       return this.sorted.slice(this.pageStart, this.pageEnd);
     },
   },
+  watch: {
+    value: {
+      deep: true,
+      handler: () => { /* nothing */ },
+    },
+  },
   methods: {
     async removeAt(pageIndex: number) {
       const index = pageIndex + this.pageStart;
@@ -244,12 +258,13 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
 
       this.value.splice(index, 1);
       this.update();
+      this.$forceUpdate();
     },
     canMove(pageIndex: number, dir: number) {
       const index = pageIndex + this.pageStart;
       const next = index + dir;
 
-      return next >= 0 && next < this.value.length && !this.settings.options.hideSort;
+      return next >= 0 && next < this.rowCount && !this.settings.options.hideSort;
     },
     moveTo(pageIndex: number, to: number) {
       const from = pageIndex + this.pageStart;
@@ -265,6 +280,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       const index = pageIndex + this.pageStart;
       this.value.splice(index, 0, this.itemType.fromJson(this.itemSettings.defaultValue));
       this.update();
+      this.$forceUpdate();
     },
     setItem(pageIndex: number, item: any) {
       const index = pageIndex + this.pageStart;
@@ -275,6 +291,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
       this.pageIndex = this.pageCount;
       this.update();
+      this.$forceUpdate();
     },
     getSortingIcon(prop: string) {
       return this.sortProp === prop

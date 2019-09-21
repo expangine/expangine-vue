@@ -17,13 +17,14 @@ export interface ListObjectTableOptions
   dense?: boolean;
   fixedHeader?: boolean;
   height?: number;
+  paging?: boolean;
   pageSize: number;
   columns: Array<{
     align?: 'left' | 'right' | 'center';
     label: string;
     prop: string;
   }>;
-  pagination?: {
+  pagination: {
     circle?: boolean;
     color?: string;
     dark?: boolean;
@@ -44,6 +45,7 @@ export const ListObjectTableInput: TypeVisualInput<ListType, ListObjectTableOpti
   getDefaultOptions: () => ({
     columns: [],
     pageSize: 10,
+    pagination: {},
   }),
   getName: (options) => options.title || options.itemName,
   getSummary: (options) => (
