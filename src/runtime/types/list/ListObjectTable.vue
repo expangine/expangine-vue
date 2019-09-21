@@ -137,7 +137,6 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     pageIndex: 1,
     sortProp: null as null | string,
     sortDesc: false,
-    rowCount: 0,
   }),
   computed: {
     itemType(): ObjectType {
