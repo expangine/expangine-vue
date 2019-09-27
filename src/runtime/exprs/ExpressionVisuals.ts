@@ -11,6 +11,7 @@ export type ExpressionTypes = 'body' | 'condition' | 'value';
 export interface ExpressionVisuals<E extends Expression = any> 
 {
   expr: ExpressionClass<E>;
+  create: (forType: Type | null) => E;
   name: string;
   description: string;
   viewer: VueConstructor;

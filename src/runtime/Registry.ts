@@ -5,7 +5,7 @@ import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
 import { TypeHook, TypeHookInput, TypeHookOption } from './types/TypeHook';
-import { ExpressionVisuals } from './exprs/ExpressionVisuals';
+import { ExpressionVisuals, ExpressionTypes } from './exprs/ExpressionVisuals';
 
 
 export class Registry
@@ -40,6 +40,31 @@ export class Registry
     this.exprs.push(expr);
 
     return this;
+  }
+
+  public getExpressionVisuals<E extends Expression>(expr: E): ExpressionVisuals<E>
+  {
+    return this.exprMap[expr.getId()];
+  }
+
+  public getExpressionsValid(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null): ExpressionVisuals[]
+  {
+    return this.exprs.filter((visual) =>
+    {
+      const typeSettings = visual.types[type];
+
+      return typeSettings.isValid(requiredType, expr, exprType);
+    });
+  }
+
+  public getExpressionsStart(type: ExpressionTypes, requiredType: Type | null): ExpressionVisuals[]
+  {
+    return this.exprs.filter((visual) =>
+    {
+      const typeSettings = visual.types[type];
+
+      return typeSettings.isStart(requiredType);
+    });
   }
 
   public addType(type: TypeVisuals<any, any, any>): this

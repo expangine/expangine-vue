@@ -113,7 +113,7 @@ export default Vue.extend({
     registry: Registry,
     readOnly: false,
     data: null as null | any,
-    program: NoExpression.instance,
+    program: NoExpression.instance as Expression,
     showComplexity: false,
   }),
   computed: {
@@ -240,6 +240,16 @@ export default Vue.extend({
 
       localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
     },
+    saveProgram(program: Expression) {
+      this.program = program;
+
+      window.console.log('saving program');
+
+      localStorage.setItem('program', JSON.stringify(this.program.encode()));
+    },
+    resetProgram() {
+      this.saveProgram(NoExpression.instance);
+    },
     async loadType() {
       const defaults = await this.getDefaultTypes();
 
@@ -249,15 +259,6 @@ export default Vue.extend({
 
       this.type = this.loadVar('type', defaults.type, (t) => defs.getType(t));
       this.settings = this.loadVar('settings', defaults.settings);
-    },
-    resetProgram() {
-      this.program = NoExpression.instance;
-      this.saveProgram();
-    },
-    saveProgram() {
-      window.console.log('saving program');
-
-      localStorage.setItem('program', JSON.stringify(this.program.encode()));
     },
     loadData() {
       if (this.settings === null || this.type === null) {

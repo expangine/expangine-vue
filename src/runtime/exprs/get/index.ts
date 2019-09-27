@@ -8,6 +8,7 @@ import GetViewer from './GetViewer.vue';
 export const GetVisuals: ExpressionVisuals<GetExpression> =
 {
   expr: GetExpression,
+  create: () => new GetExpression([]),
   name: 'Get',
   description: 'Get a value',
   viewer: GetViewer,

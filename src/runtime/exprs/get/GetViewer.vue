@@ -9,6 +9,6 @@ import { GetExpression } from 'expangine-runtime';
 
 
 export default ExpressionBase<GetExpression>().extend({
-  
+  name: 'GetViewer',
 });
 </script>

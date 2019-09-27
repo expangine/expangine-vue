@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { Expression, Type, NoExpression } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
+import { ExpressionVisuals } from './ExpressionVisuals';
 
 
 export default function<E extends Expression>()
@@ -21,6 +22,7 @@ export default function<E extends Expression>()
       invalid: boolean;
       hasValue: boolean;
       isRemovable: boolean;
+      visuals: ExpressionVisuals<E>;
     },
     {
       value: E;
@@ -88,6 +90,9 @@ export default function<E extends Expression>()
       },
       isRemovable(): boolean {
         return !this.readOnly && this.canRemove;
+      },
+      visuals(): ExpressionVisuals<E> {
+        return this.registry.getExpressionVisuals(this.value);
       },
     },
     methods: {

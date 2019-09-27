@@ -20,6 +20,7 @@ import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
 import { DefaultWrapper } from './hooks/DefaultWrapper';
 
 import { GetVisuals } from './exprs/get';
+import { ConstantVisuals } from './exprs/constant';
 
 
 export default new Registry(defs)
@@ -62,4 +63,5 @@ export default new Registry(defs)
   .addTypeBuilderWrapper(DefaultWrapper)
   // Expressions
   .addExpression(GetVisuals)
+  .addExpression(ConstantVisuals)
 ;
