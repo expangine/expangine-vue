@@ -1,8 +1,8 @@
 
 import { TextType } from 'expangine-runtime';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import TextArea from './TextArea.vue';
 import TextAreaSettings from './TextAreaSettings.vue';
-import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 
 
 export interface TextAreaOptions

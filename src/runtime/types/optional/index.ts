@@ -4,9 +4,9 @@ import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '@/app/Confirm';
-import OptionalEditor from './OptionalEditor.vue';
 import { initializeSubs, obj } from '@/common';
 import { Registry } from '@/runtime/Registry';
+import OptionalEditor from './OptionalEditor.vue';
 
 
 const ex = new ExpressionBuilder();

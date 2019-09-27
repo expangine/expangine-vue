@@ -30,6 +30,7 @@
 import { BooleanType, BooleanOptions } from 'expangine-runtime';
 import TypeEditorBase from '../TypeEditorBase';
 
+
 export default TypeEditorBase<BooleanType, any>().extend({
   name: 'BooleanEditor',
 });

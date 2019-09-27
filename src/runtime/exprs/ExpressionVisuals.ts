@@ -13,9 +13,9 @@ export interface ExpressionVisuals<E extends Expression = any>
   expr: ExpressionClass<E>;
   name: string;
   description: string;
-  types: Record<ExpressionTypes, ExpressionTypeDefinition<E>>;
   viewer: VueConstructor;
   editor: VueConstructor;
+  types: Record<ExpressionTypes, ExpressionTypeDefinition<E>>;
 }
 
 export interface ExpressionTypeDefinition<E extends Expression>
@@ -29,7 +29,7 @@ export type ExpressionStarter =
   (requiredType: Type | null) => boolean;
 
 export type ExpressionValidator<E extends Expression> = 
-  (requiredType: Type | null, expr: E, exprType: Type | null) => boolean;
+  (requiredType: Type | null, expr: E, exprType: Type | null) => any;
 
 export type ExpressionModifier<E extends Expression> = 
   (requiredType: Type | null, expr: Expression, exprType: Type) => ListOptions<ExpressionModifierCallback<E>>;

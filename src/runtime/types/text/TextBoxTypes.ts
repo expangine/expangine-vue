@@ -1,8 +1,8 @@
 
 import { TextType } from 'expangine-runtime';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import TextBox from './TextBox.vue';
 import TextBoxSettings from './TextBoxSettings.vue';
-import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 
 
 export interface TextBoxOptions

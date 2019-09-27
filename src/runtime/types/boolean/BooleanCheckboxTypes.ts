@@ -1,8 +1,8 @@
 
 import { BooleanType } from 'expangine-runtime';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import BooleanCheckbox from './BooleanCheckbox.vue';
 import BooleanCheckboxSettings from './BooleanCheckboxSettings.vue';
-import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 
 
 export interface BooleanCheckboxOptions

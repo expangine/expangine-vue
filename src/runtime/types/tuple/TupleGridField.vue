@@ -11,8 +11,8 @@
 <script lang="ts">
 import { Type, TupleType } from 'expangine-runtime';
 import { TypeSettings } from '../TypeVisuals';
-import TypeInputBase from '../TypeInputBase';
 import { TupleGridOptions } from './TupleGridTypes';
+import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<TupleType, TupleGridOptions, any, number>(Array).extend({

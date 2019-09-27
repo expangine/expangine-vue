@@ -84,8 +84,7 @@ import Vue from 'vue';
 import { buildTypeDialog } from './BuildType';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, 
-  TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
+import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
 
 
 export default Vue.extend({

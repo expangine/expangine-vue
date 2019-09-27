@@ -1,5 +1,5 @@
 
-import { ManyType, OrExpression, ExpressionBuilder, AnyOps } from 'expangine-runtime';
+import { ManyType, ExpressionBuilder, AnyOps } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';

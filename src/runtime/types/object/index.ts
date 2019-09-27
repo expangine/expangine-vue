@@ -1,13 +1,12 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, 
-  ExpressionBuilder } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
+import { getConfirmation } from '@/app/Confirm';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
-import { getConfirmation } from '@/app/Confirm';
 
 
 const ex = new ExpressionBuilder();

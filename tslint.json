@@ -17,6 +17,7 @@
     "one-line": false,
     "no-trailing-whitespace": false,
     "quotemark": [true, "single"],
-    "forin": false
+    "forin": false,
+    "max-line-length": false
   }
 }

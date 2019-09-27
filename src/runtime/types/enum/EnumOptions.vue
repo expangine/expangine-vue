@@ -90,8 +90,7 @@
 </template>
 
 <script lang="ts">
-import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExpression, MapOps, 
-  ConstantExpression } from 'expangine-runtime';
+import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExpression, MapOps, ConstantExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeAndSettings, TypeSettings } from '../TypeVisuals';

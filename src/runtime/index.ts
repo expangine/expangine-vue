@@ -13,15 +13,17 @@ import { ManyVisuals, ManyModifier, ManyBuilderWrapper } from './types/many';
 import { ListVisuals, ListBuilder, ListBuilderWrapper } from './types/list';
 import { EnumVisuals, EnumBuilder, EnumBuilderWrapper } from './types/enum';
 import { MapVisuals, MapBuilder, MapModifierFromObject, MapBuilderWrapper } from './types/map';
-import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType, 
-  TupleBuilderWrapper } from './types/tuple';
+import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType, TupleBuilderWrapper } from './types/tuple';
 
 import { ChangeTypeModifier } from './hooks/ChangeTypeModifier';
 import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
 import { DefaultWrapper } from './hooks/DefaultWrapper';
 
+import { GetVisuals } from './exprs/get';
+
 
 export default new Registry(defs)
+  // Types
   .addType(BooleanVisuals)
     .addTypeBuilder(BooleanBuilder)
   .addType(TextVisuals)
@@ -58,4 +60,6 @@ export default new Registry(defs)
   .addTypeBuilder(PasteBuilder)
   .addTypeModifier(CopyModifier)
   .addTypeBuilderWrapper(DefaultWrapper)
+  // Expressions
+  .addExpression(GetVisuals)
 ;
