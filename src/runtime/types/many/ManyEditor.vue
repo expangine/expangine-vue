@@ -83,7 +83,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       }
 
       const ex = new ExpressionBuilder();
-      const destVisual = this.registry.getVisuals(destType);
+      const destVisual = this.registry.getTypeVisuals(destType);
       const cast = `${innerType.getId()}:~${destType.getId()}`;
       const castOperation = innerType.getOperations()[cast];
       const transform = castOperation

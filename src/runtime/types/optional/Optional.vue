@@ -44,7 +44,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
       },
     },
     innerTypeVisuals(): TypeVisuals {
-      return this.registry.getVisuals(this.type.options);
+      return this.registry.getTypeVisuals(this.type.options);
     },
     innerTypeSettings(): TypeSettings<any> {
       return this.settings.sub.innerType;

@@ -133,7 +133,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
         ex.op(ListOps.insert, {
           list: ex.get('value'),
           index: index + 1,
-          item: this.registry.getCreate(chosen.type),
+          item: this.registry.getTypeCreate(chosen.type),
         }),
       );
     },

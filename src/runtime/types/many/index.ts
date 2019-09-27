@@ -16,9 +16,9 @@ export const ManyVisuals = createVisuals({
   name: 'Many',
   description: 'A type that represents any number of possible types.',
   exprs: {
-    create: (registry, type) => registry.getCreate(type.options[0]),
+    create: (registry, type) => registry.getTypeCreate(type.options[0]),
     valid: (registry, type) => ex.or(
-      ...type.options.map((t) => registry.getValid(t)),
+      ...type.options.map((t) => registry.getTypeValid(t)),
     ),
     compare: (registry, type) => ex.op(AnyOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
   },

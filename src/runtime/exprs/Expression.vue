@@ -13,13 +13,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { ExpressionTypes } from './ExpressionVisuals';
 import ExpressionBase from './ExpressionBase';
 
 
 export default ExpressionBase().extend({
   props: {
     type: {
-      type: String,
+      type: String as () => ExpressionTypes,
       required: true,
     },
   },

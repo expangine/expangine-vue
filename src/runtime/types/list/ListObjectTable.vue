@@ -218,7 +218,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       if (!propType) {
         return false;
       }
-      const comparator = this.registry.getCompare(propType);
+      const comparator = this.registry.getTypeCompare(propType);
       if (!comparator) {
         return false;
       }

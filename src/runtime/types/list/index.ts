@@ -29,7 +29,7 @@ export const ListVisuals = createVisuals({
       ex.not(ex.op(ListOps.contains, {
         list: ex.get('value'),
         item: ex.const(null),
-        isEqual: ex.not(registry.getValid(type.options.item)),
+        isEqual: ex.not(registry.getTypeValid(type.options.item)),
       }, {
         value: 'ignore',
         test: 'value',
@@ -38,7 +38,7 @@ export const ListVisuals = createVisuals({
     compare: (registry, type) => ex.op(ListOps.cmp, {
       value: ex.get('value'),
       test: ex.get('test'),
-      compare: registry.getCompare(type),
+      compare: registry.getTypeCompare(type),
     }),
   },
   editor: ListEditor,

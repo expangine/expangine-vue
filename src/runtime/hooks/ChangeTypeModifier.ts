@@ -26,7 +26,7 @@ export const ChangeTypeModifier: TypeModifier =
       }
 
       const ex = new ExpressionBuilder();
-      const visual = registry.getVisuals(chosen.type);
+      const visual = registry.getTypeVisuals(chosen.type);
       const cast = `${type.getId()}:~${chosen.type.getId()}`;
       const castOperation = type.getOperations()[cast];
       const transform = castOperation

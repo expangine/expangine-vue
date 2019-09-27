@@ -62,7 +62,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
         return !this.type.isValid(this.value);
       },
       visuals(): TypeVisuals<T, S> {
-        return this.registry.getVisuals(this.type);
+        return this.registry.getTypeVisuals(this.type);
       },
       inputSelected(): TypeVisualInput<T, O, S> {
         return this.visuals.inputs[this.settings.input];

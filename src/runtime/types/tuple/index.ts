@@ -27,7 +27,7 @@ export const TupleVisuals = createVisuals({
       })
       .and(type.options.map((t, i) => ex
         .define({ value: ex.get('value', i) })
-        .run(registry.getValid(t)),
+        .run(registry.getTypeValid(t)),
       ),
     ),
     compare: (registry, type) => ex.or(
@@ -40,7 +40,7 @@ export const TupleVisuals = createVisuals({
           value: ex.get('value', i),
           test: ex.get('test', i),
         })
-        .run(registry.getCompare(t)),
+        .run(registry.getTypeCompare(t)),
       ),
     ),
   },
@@ -127,7 +127,7 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
           return false;
         }
 
-        const visuals = registry.getVisuals(type);
+        const visuals = registry.getTypeVisuals(type);
         const inputSelected = visuals.inputs[typeSettings.input] as TypeVisualInput<TupleType, any, TupleSubs>;
 
         type.options.push(chosen.type);

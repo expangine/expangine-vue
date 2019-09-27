@@ -35,7 +35,7 @@ export const PasteBuilder: TypeBuilder =
       return false;
     }
 
-    const visuals = copyRegistry.getVisuals(copyType);
+    const visuals = copyRegistry.getTypeVisuals(copyType);
     const inputs = visuals.inputs[copySettings.input];
     const summary = inputs.getSummary(copySettings.options);
 

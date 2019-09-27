@@ -26,7 +26,7 @@ export const MapVisuals = createVisuals({
       ex.not(ex.op(ListOps.contains, {
         list: ex.op(MapOps.values, { map: ex.get('value') }),
         item: ex.const(null),
-        isEqual: ex.not(registry.getValid(type.options.value)),
+        isEqual: ex.not(registry.getTypeValid(type.options.value)),
       }, {
         value: 'ignore',
         test: 'value',
@@ -34,7 +34,7 @@ export const MapVisuals = createVisuals({
       ex.not(ex.op(ListOps.contains, {
         list: ex.op(MapOps.keys, { map: ex.get('value') }),
         item: ex.const(null),
-        isEqual: ex.not(registry.getValid(type.options.key)),
+        isEqual: ex.not(registry.getTypeValid(type.options.key)),
       }, {
         value: 'ignore',
         test: 'value',
@@ -43,7 +43,7 @@ export const MapVisuals = createVisuals({
     compare: (registry, type) => ex.op(MapOps.cmp, {
       value: ex.get('value'),
       test: ex.get('test'),
-      compare: registry.getCompare(type.options.value),
+      compare: registry.getTypeCompare(type.options.value),
     }),
   },
   editor: MapEditor,
@@ -128,7 +128,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
           valueType = propTypes[0];
           value = propSettings[0];
         } else {
-          const manyVisual = registry.getVisuals(valueType);
+          const manyVisual = registry.getTypeVisuals(valueType);
           value = {
             input: manyVisual.defaultInput as string,
             defaultValue: undefined,

@@ -79,7 +79,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
         return !this.isAlternative;
       },
       visuals(): TypeVisuals<T, S> {
-        return this.registry.getVisuals(this.type);
+        return this.registry.getTypeVisuals(this.type);
       },
       inputs(): ListOptions {
         const { inputsOrder, inputs } = this.visuals;

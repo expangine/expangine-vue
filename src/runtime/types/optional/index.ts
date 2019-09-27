@@ -23,13 +23,13 @@ export const OptionalVisuals = createVisuals({
   name: 'Optional',
   description: 'An optional value',
   exprs: {
-    create: (registry, type) => registry.getCreate(type.options),
+    create: (registry, type) => registry.getTypeCreate(type.options),
     valid: (registry, type) => ex.or(
       ex.op(AnyOps.isEqual, {
         value: ex.get('value'),
         test: ex.const(undefined),
       }),
-      registry.getValid(type.options),
+      registry.getTypeValid(type.options),
     ),
     compare: (registry, type) => ex.define({
       valueMissing: isUndefined('value'),
@@ -41,7 +41,7 @@ export const OptionalVisuals = createVisuals({
       .then(ex.const(1))
       .if(ex.get('testMissing'))
       .then(ex.const(-1))
-      .else(registry.getCompare(type.options)),
+      .else(registry.getTypeCompare(type.options)),
     ),
   },
   editor: OptionalEditor,

@@ -137,7 +137,7 @@ export function initializeSubs<
 {
   const { type, settings } = value;
 
-  const visuals = registry.getVisuals(type);
+  const visuals = registry.getTypeVisuals(type);
   const input = visuals.inputs[settings.input];
 
   if (isSubArray(settings))

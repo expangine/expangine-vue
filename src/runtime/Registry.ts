@@ -8,6 +8,7 @@ import { TypeBuilder, TypeBuildInput, TypeBuildHandler, TypeBuilderWrapper,
   TypeBuilderWrapOption} from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyHandler, TypeModifyOption } from './types/TypeModifier';
 import { TypeHook, TypeHookHandler, TypeHookInput, TypeHookOption } from './types/TypeHook';
+import { ExpressionVisuals } from './exprs/ExpressionVisuals';
 
 
 export class Registry
@@ -16,46 +17,30 @@ export class Registry
   public defs: Definitions;
   public typeMap: Record<string, TypeVisuals>;
   public types: TypeVisuals[];
-  public builders: TypeBuilder[];
-  public builderWrappers: TypeBuilderWrapper[];
-  public modifiers: TypeModifier[];
-  public hooks: TypeHook[];
+  public typeBuilders: TypeBuilder[];
+  public typeBuilderWrappers: TypeBuilderWrapper[];
+  public typeModifiers: TypeModifier[];
+  public typeHooks: TypeHook[];
+  public exprMap: Record<string, ExpressionVisuals>;
+  public exprs: ExpressionVisuals[];
 
   public constructor(defs: Definitions)
   {
     this.defs = defs;
     this.typeMap = obj();
     this.types = [];
-    this.builders = [];
-    this.builderWrappers = [];
-    this.modifiers = [];
-    this.hooks = [];
+    this.typeBuilders = [];
+    this.typeBuilderWrappers = [];
+    this.typeModifiers = [];
+    this.typeHooks = [];
+    this.exprMap = obj();
+    this.exprs = [];
   }
 
-  public addBuilder<T extends Type = Type>(builder: TypeBuilder<T>): this
+  public addExpression(expr: ExpressionVisuals): this
   {
-    this.builders.push(builder);
-
-    return this;
-  }
-
-  public addBuilderWrapper(wrapper: TypeBuilderWrapper): this
-  {
-    this.builderWrappers.push(wrapper);
-
-    return this;
-  }
-
-  public addModifier<T extends Type = Type>(modifier: TypeModifier<T>): this
-  {
-    this.modifiers.push(modifier);
-
-    return this;
-  }
-
-  public addHook(hook: TypeHook): this
-  {
-    this.hooks.push(hook);
+    this.exprMap[expr.expr.id] = expr;
+    this.exprs.push(expr);
 
     return this;
   }
@@ -68,7 +53,35 @@ export class Registry
     return this;
   }
 
-  public getVisuals<T extends Type>(type: T): TypeVisuals<T>
+  public addTypeBuilder<T extends Type = Type>(builder: TypeBuilder<T>): this
+  {
+    this.typeBuilders.push(builder);
+
+    return this;
+  }
+
+  public addTypeBuilderWrapper(wrapper: TypeBuilderWrapper): this
+  {
+    this.typeBuilderWrappers.push(wrapper);
+
+    return this;
+  }
+
+  public addTypeModifier<T extends Type = Type>(modifier: TypeModifier<T>): this
+  {
+    this.typeModifiers.push(modifier);
+
+    return this;
+  }
+
+  public addTypeHook(hook: TypeHook): this
+  {
+    this.typeHooks.push(hook);
+
+    return this;
+  }
+
+  public getTypeVisuals<T extends Type>(type: T): TypeVisuals<T>
   {
     return this.typeMap[type.getId()] as unknown as TypeVisuals<T>;
   }
@@ -77,7 +90,7 @@ export class Registry
   {
     const out: TypeBuildOption[] = [];
 
-    for (const builder of this.builders) {
+    for (const builder of this.typeBuilders) {
       const option = builder.getOption(input);
 
       if (option) {
@@ -94,7 +107,7 @@ export class Registry
   {
     const out: TypeBuilderWrapOption[] = [];
 
-    for (const wrapper of this.builderWrappers) {
+    for (const wrapper of this.typeBuilderWrappers) {
       const option = wrapper.getOption(input);
 
       if (option) {
@@ -111,7 +124,7 @@ export class Registry
   {
     const out: TypeModifyOption[] = [];
 
-    for (const modifier of this.modifiers) {
+    for (const modifier of this.typeModifiers) {
       const option = modifier.getOption(input);
 
       if (option) {
@@ -128,7 +141,7 @@ export class Registry
   {
     const out: TypeHookOption[] = [];
 
-    for (const hook of this.hooks) {
+    for (const hook of this.typeHooks) {
       const option = hook.getOption(input);
 
       if (option) {
@@ -141,19 +154,19 @@ export class Registry
     return out;
   }
 
-  public getCreate(type: Type): Expression
+  public getTypeCreate(type: Type): Expression
   {
-    return this.getVisuals(type).exprs.create(this, type);
+    return this.getTypeVisuals(type).exprs.create(this, type);
   }
 
-  public getValid(type: Type): Expression
+  public getTypeValid(type: Type): Expression
   {
-    return this.getVisuals(type).exprs.valid(this, type);
+    return this.getTypeVisuals(type).exprs.valid(this, type);
   }
 
-  public getCompare(type: Type): Expression
+  public getTypeCompare(type: Type): Expression
   {
-    return this.getVisuals(type).exprs.compare(this, type);
+    return this.getTypeVisuals(type).exprs.compare(this, type);
   }
 
 }

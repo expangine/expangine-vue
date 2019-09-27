@@ -160,7 +160,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         ex.op(ObjectOps.set, {
           object: ex.get('value'),
           key: propName,
-          value: this.registry.getCreate(chosen.type),
+          value: this.registry.getTypeCreate(chosen.type),
         }),
       );
     },

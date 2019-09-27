@@ -18,7 +18,7 @@
               :key="innerType.getId()" 
               :disabled="isDisabledType(innerType)"
               @click="changeType(innerType)">
-              Change to {{ registry.getVisuals(innerType).name }}
+              Change to {{ registry.getTypeVisuals(innerType).name }}
             </v-list-item>
           </template>
         </v-list>
