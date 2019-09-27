@@ -1,6 +1,6 @@
 
 import { TextType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import TextRadio from './TextRadio.vue';
 import TextRadioSettings from './TextRadioSettings.vue';
 

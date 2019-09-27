@@ -1,9 +1,9 @@
 
 import { Type, MapType, TextType, ObjectType, ManyType, MapOps, ExpressionBuilder, ListOps} from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
-import { TypeSettings, createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
-import { TypeModifier } from '@/runtime/TypeModifier';
+import { TypeSettings, createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
+import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';

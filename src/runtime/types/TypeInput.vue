@@ -1,13 +1,13 @@
 <template>
-  <div v-if="visuals">
+  <div v-if="inputSelected">
     <component 
-      :is="visuals.editor" 
+      :is="inputSelected.input" 
       v-bind="$props"
       v-on="$listeners"
     ></component>
   </div>
   <div v-else-if="type">
-    No editor is configured for the {{ type.id }} type.
+    No input is configured for the {{ type.id }} type.
   </div>
   <div v-else>
     No type was given.
@@ -16,10 +16,11 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
-import TypeEditorBase from './types/TypeEditorBase';
+import { PropTypeAny } from '../../common';
+import TypeInputBase from './TypeInputBase';
 
 
-export default TypeEditorBase<Type, any>().extend({
+export default TypeInputBase<Type, any, any>(PropTypeAny).extend({
   
 });
 </script>

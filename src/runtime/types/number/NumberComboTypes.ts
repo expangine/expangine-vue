@@ -1,7 +1,7 @@
 
 import { NumberType } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import NumberCombo from './NumberCombo.vue';
 import NumberComboSettings from './NumberComboSettings.vue';
 

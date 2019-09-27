@@ -1,7 +1,7 @@
 
 import { EnumType, TextType } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { EnumSelectInput } from './EnumSelectTypes';
 import { EnumAutocompleteInput } from './EnumAutocompleteTypes';

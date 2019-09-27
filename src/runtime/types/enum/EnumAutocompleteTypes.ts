@@ -1,6 +1,6 @@
 
 import { EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import EnumAutocomplete from './EnumAutocomplete.vue';
 import EnumAutocompleteSettings from './EnumAutocompleteSettings.vue';

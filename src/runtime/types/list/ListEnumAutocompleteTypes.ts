@@ -1,6 +1,6 @@
 
 import { ListType, EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListEnumAutocomplete from './ListEnumAutocomplete.vue';
 import ListEnumAutocompleteSettings from './ListEnumAutocompleteSettings.vue';

@@ -1,6 +1,6 @@
 
 import { NumberType, isNumber } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import NumberSlider from './NumberSlider.vue';
 import NumberSliderSettings from './NumberSliderSettings.vue';
 

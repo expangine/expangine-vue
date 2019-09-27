@@ -1,6 +1,6 @@
 
 import { EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import EnumSlider from './EnumSlider.vue';
 import EnumSliderSettings from './EnumSliderSettings.vue';

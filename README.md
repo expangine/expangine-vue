@@ -34,3 +34,31 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## Expressions
+
+- An expression...
+  - Can be the start of the condition/body/value
+  - Can be valid for condition/body/value
+  - Can be modified to a new expression for a condition/body/value
+- Expressions can be removed and the parent expression
+- Expressions that set a value are shaded a special color
+- Expressions that are not a valid type are a special color
+- Expression has an editor
+- Expression has a text-based representation
+- `ex-expression`
+  - `context` = Type for the context
+  - `read-only` = The expression can't be changed
+  - `registry` = The registry with type and expression information
+  - `required-type` = Type given where the type of the expression has to be compatible with the required type
+  - `show-complexity` = Color expression based on complexity
+  - `mutates` = If the expression mutates 
+  - `can-remove` = If the expression can be removed
+  - `@remove` = When the expression has been removed
+  - `value` = The expression
+  - `@input` = Event when expression or sub-expression changes
+- `ex-expression-starter`
+  - `type` = condition/body/value
+- Operation has a text-based representation
+- Operation has an editor

@@ -1,6 +1,6 @@
 
 import { ListType, EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListEnumSelect from './ListEnumSelect.vue';
 import ListEnumSelectSettings from './ListEnumSelectSettings.vue';

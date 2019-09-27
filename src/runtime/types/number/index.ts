@@ -1,7 +1,7 @@
 
 import { NumberType, NumberOps, ExpressionBuilder } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
 import { NumberSliderInput } from './NumberSliderTypes';
 import { NumberComboInput } from './NumberComboTypes';

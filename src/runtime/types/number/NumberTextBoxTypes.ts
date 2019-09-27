@@ -1,6 +1,6 @@
 
 import { NumberType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import NumberTextBox from './NumberTextBox.vue';
 import NumberTextBoxSettings from './NumberTextBoxSettings.vue';
 

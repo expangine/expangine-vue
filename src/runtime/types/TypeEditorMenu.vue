@@ -163,10 +163,10 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
-import { ListOptions } from '../common';
+import { ListOptions } from '../../common';
 import { TypeVisuals } from './TypeVisuals';
 import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
-import TypeEditorBase from './types/TypeEditorBase';
+import TypeEditorBase from './TypeEditorBase';
 
 
 export default TypeEditorBase<Type, any>().extend({

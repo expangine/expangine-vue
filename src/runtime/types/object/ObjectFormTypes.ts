@@ -1,6 +1,6 @@
 
 import { ObjectType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import ObjectForm from './ObjectForm.vue';
 import ObjectFormSettings from './ObjectFormSettings.vue';
 

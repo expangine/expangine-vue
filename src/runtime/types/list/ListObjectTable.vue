@@ -120,7 +120,7 @@
 <script lang="ts">
 import { Type, ListType, isNumber, ObjectType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import { ListObjectTableOptions } from './ListObjectTableTypes';

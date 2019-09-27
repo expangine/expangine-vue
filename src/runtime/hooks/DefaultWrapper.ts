@@ -1,4 +1,4 @@
-import { TypeBuilderWrapper } from '../TypeBuilder';
+import { TypeBuilderWrapper } from '../types/TypeBuilder';
 
 
 export const DefaultWrapper: TypeBuilderWrapper =

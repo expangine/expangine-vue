@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

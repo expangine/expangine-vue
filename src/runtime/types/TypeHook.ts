@@ -1,4 +1,4 @@
-import { Registry } from './Registry';
+import { Registry } from '../Registry';
 import { Type } from 'expangine-runtime';
 import { TypeSettings } from './TypeVisuals';
 

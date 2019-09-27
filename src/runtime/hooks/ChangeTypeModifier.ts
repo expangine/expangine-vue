@@ -1,6 +1,6 @@
 
 import { getBuildType } from '@/app/BuildType';
-import { TypeModifier } from '../TypeModifier';
+import { TypeModifier } from '../types/TypeModifier';
 import { UpdateExpression, OperationExpression, GetExpression, ExpressionBuilder } from 'expangine-runtime';
 
 

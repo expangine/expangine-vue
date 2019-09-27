@@ -1,7 +1,7 @@
 
 import Vue, { PropType } from 'vue';
 import { Type } from 'expangine-runtime';
-import { TypeVisuals, TypeVisualInput, TypeSettings, SubsType } from '../TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, SubsType } from './TypeVisuals';
 import { Registry } from '../Registry';
 
 

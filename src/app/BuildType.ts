@@ -1,6 +1,6 @@
 
 import { asArray } from '@/common';
-import { TypeBuildResult, TypeBuildInput, TypeBuildOption, TypeBuilderWrapOption } from '@/runtime/TypeBuilder';
+import { TypeBuildResult, TypeBuildInput, TypeBuildOption, TypeBuilderWrapOption } from '@/runtime/types/TypeBuilder';
 import { OptionalModifierTransform } from '@/runtime/types/optional';
 import { getPromiser } from './Promiser';
 

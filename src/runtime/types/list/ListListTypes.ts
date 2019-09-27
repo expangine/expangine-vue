@@ -1,6 +1,6 @@
 
 import { ListType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListList from './ListList.vue';
 import ListListSettings from './ListListSettings.vue';

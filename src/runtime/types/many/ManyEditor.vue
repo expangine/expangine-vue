@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { Type, ManyType, Expression, ExpressionBuilder } from 'expangine-runtime';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';

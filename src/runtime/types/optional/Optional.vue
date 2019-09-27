@@ -30,7 +30,7 @@ import { OptionalType } from 'expangine-runtime';
 import { OptionalOptions, OptionalSubs } from './OptionalTypes';
 import { PropTypeAny } from '../../../common';
 import { getConfirmation } from '../../../app/Confirm';
-import { TypeVisuals, TypeVisualInput, TypeSettings } from '../../TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
 
 

@@ -1,6 +1,6 @@
 
 import { EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import EnumRadio from './EnumRadio.vue';
 import EnumRadioSettings from './EnumRadioSettings.vue';

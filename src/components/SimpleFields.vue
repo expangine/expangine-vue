@@ -203,7 +203,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { isArray } from 'expangine-runtime';
-import { TypeSettings } from '../runtime/TypeVisuals';
+import { TypeSettings } from '../runtime/types/TypeVisuals';
 import { SimpleFieldOption } from '../common';
 import { Icons } from '../app/Icons';
 

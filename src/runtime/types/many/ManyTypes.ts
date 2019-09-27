@@ -1,6 +1,6 @@
 
 import { ManyType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import Many from './Many.vue';
 import ManySettings from './ManySettings.vue';
 

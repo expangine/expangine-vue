@@ -1,7 +1,7 @@
 
 import { DateType, ExpressionBuilder, DateOps } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
 import { DateTextBoxInput } from './DateTextBoxTypes';
 import DateEditor from './DateEditor.vue';

@@ -10,7 +10,7 @@
 <script lang="ts">
 import { Type, ListType, ListOptions } from 'expangine-runtime';
 import { SimpleFieldSettings } from '../../../common';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

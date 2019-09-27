@@ -73,7 +73,7 @@
 <script lang="ts">
 import { Type, TupleType, Expression, ExpressionBuilder, ListOps } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';

@@ -109,10 +109,10 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
-import { TypeBuildResult } from '../../TypeBuilder';
-import { TypeModifyResult } from '../../TypeModifier';
+import { TypeBuildResult } from '../TypeBuilder';
+import { TypeModifyResult } from '../TypeModifier';
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({

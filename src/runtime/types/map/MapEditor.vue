@@ -92,7 +92,7 @@
 <script lang="ts">
 import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { MapSubs } from './MapTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

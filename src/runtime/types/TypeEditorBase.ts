@@ -2,7 +2,7 @@
 import Vue, { VueConstructor } from 'vue';
 import { Type, OptionalType, ManyType, Expression } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings, SubsType } from '../TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings, SubsType } from './TypeVisuals';
 import { Registry } from '../Registry';
 
 

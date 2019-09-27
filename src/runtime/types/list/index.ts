@@ -1,7 +1,7 @@
 
 import { ListType, TextType, ListOps, OperationExpression, GetExpression, ExpressionBuilder } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';
 import { ListComboInput } from './ListComboTypes';

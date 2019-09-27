@@ -40,7 +40,7 @@
 import { Type, ManyType } from 'expangine-runtime';
 import { PropTypeAny } from '../../../common';
 import { getConfirmation } from '../../../app/Confirm';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import { ManyOptions, ManySubs } from './ManyTypes';
 import TypeInputBase from '../TypeInputBase';
 

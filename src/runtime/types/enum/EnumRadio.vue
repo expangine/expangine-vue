@@ -22,7 +22,7 @@
 <script lang="ts">
 import { EnumType, toArray } from 'expangine-runtime';
 import { EnumRadioOptions } from './EnumRadioTypes';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import { ListOptions, PropTypeAny } from '../../../common';
 import TypeInputBase from '../TypeInputBase';

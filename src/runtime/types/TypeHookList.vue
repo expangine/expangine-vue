@@ -16,10 +16,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type } from 'expangine-runtime';
-import { ListOptions } from '../common';
+import { ListOptions } from '../../common';
 import { TypeSettings } from './TypeVisuals';
 import { TypeHookHandler, TypeHookOption } from './TypeHook';
-import { Registry } from './Registry';
+import { Registry } from '../Registry';
 
 
 export default Vue.extend({

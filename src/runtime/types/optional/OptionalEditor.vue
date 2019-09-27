@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { OptionalType } from 'expangine-runtime';
-import { TypeAndSettings } from '../../TypeVisuals';
+import { TypeAndSettings } from '../TypeVisuals';
 import { OptionalSubs, OptionalOptions } from './OptionalTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Type, ObjectType } from 'expangine-runtime';
 import { ObjectFormOptions } from './ObjectFormTypes';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
 
 

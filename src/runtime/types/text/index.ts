@@ -1,7 +1,7 @@
 
 import { TextType, TextOps, ExpressionBuilder } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
 import { TextAreaInput } from './TextAreaTypes';
 import { TextComboInput } from './TextComboTypes';

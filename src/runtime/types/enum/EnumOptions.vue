@@ -94,7 +94,7 @@ import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExp
   ConstantExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
-import { TypeAndSettings, TypeSettings } from '../../TypeVisuals';
+import { TypeAndSettings, TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

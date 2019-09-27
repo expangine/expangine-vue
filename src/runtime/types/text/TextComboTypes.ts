@@ -1,6 +1,6 @@
 
 import { TextType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import TextCombo from './TextCombo.vue';
 import TextComboSettings from './TextComboSettings.vue';
 

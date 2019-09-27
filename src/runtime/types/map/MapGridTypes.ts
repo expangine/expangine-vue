@@ -1,6 +1,6 @@
 
 import { MapType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { MapSubs } from './MapTypes';
 import MapGrid from './MapGrid.vue';
 import MapGridSettings from './MapGridSettings.vue';

@@ -31,7 +31,7 @@
 <script lang="ts">
 import { ListType, toArray, EnumType } from 'expangine-runtime';
 import { ListOptions, PropTypeAny } from '../../../common';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import { ListEnumCheckboxOptions } from './ListEnumCheckboxTypes';
 import { ListSubs } from './ListTypes';
 import TypeInputBase from '../TypeInputBase';

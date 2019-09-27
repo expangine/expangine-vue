@@ -61,7 +61,7 @@ import { MapType, toArray } from 'expangine-runtime';
 import { getConfirmation } from '../../../app/Confirm';
 import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
-import { TypeSettings } from '../../TypeVisuals';
+import { TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
 
 

@@ -1,13 +1,13 @@
 
 import { Type, Definitions, Expression } from 'expangine-runtime';
-import { TypeVisuals } from './TypeVisuals';
+import { TypeVisuals } from './types/TypeVisuals';
 import { ListOptions, ListOptionsPriority, obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuildHandler, TypeBuilderWrapper, 
   TypeBuilderWrapHandler, 
   TypeBuildOption,
-  TypeBuilderWrapOption} from './TypeBuilder';
-import { TypeModifier, TypeModifyInput, TypeModifyHandler, TypeModifyOption } from './TypeModifier';
-import { TypeHook, TypeHookHandler, TypeHookInput, TypeHookOption } from './TypeHook';
+  TypeBuilderWrapOption} from './types/TypeBuilder';
+import { TypeModifier, TypeModifyInput, TypeModifyHandler, TypeModifyOption } from './types/TypeModifier';
+import { TypeHook, TypeHookHandler, TypeHookInput, TypeHookOption } from './types/TypeHook';
 
 
 export class Registry

@@ -3,9 +3,9 @@ import { Type, TupleType, ObjectType, TupleOps, OperationExpression, AndExpressi
   DefineExpression, 
   ExpressionBuilder,
   NumberOps} from 'expangine-runtime';
-import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/TypeVisuals';
-import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/TypeBuilder';
-import { TypeModifier } from '@/runtime/TypeModifier';
+import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
+import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { friendlyList, initializeSubs } from '@/common';
 import { TupleGridInput } from './TupleGridTypes';
 import TupleEditor from './TupleEditor.vue';

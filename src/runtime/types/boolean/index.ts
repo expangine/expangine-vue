@@ -1,7 +1,7 @@
 
 import { BooleanType, OperationExpression, BooleanOps, GetExpression, ExpressionBuilder } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/TypeVisuals';
-import { TypeBuilder } from '@/runtime/TypeBuilder';
+import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { BooleanCheckboxInput } from './BooleanCheckboxTypes';
 import { BooleanSwitchInput } from './BooleanSwitchTypes';
 import { BooleanRadioInput } from './BooleanRadioTypes';

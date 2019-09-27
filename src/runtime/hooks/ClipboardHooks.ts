@@ -1,8 +1,8 @@
 import { Type, copy } from 'expangine-runtime';
-import { TypeModifier } from '../TypeModifier';
-import { TypeSettings } from '../TypeVisuals';
+import { TypeModifier } from '../types/TypeModifier';
+import { TypeSettings } from '../types/TypeVisuals';
 import { Registry } from '../Registry';
-import { TypeBuilder } from '../TypeBuilder';
+import { TypeBuilder } from '../types/TypeBuilder';
 import { sendNotification } from '@/app/Notify';
 
 

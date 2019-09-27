@@ -1,6 +1,6 @@
 
 import { ListType, TextType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListCombo from './ListCombo.vue';
 import ListComboSettings from './ListComboSettings.vue';

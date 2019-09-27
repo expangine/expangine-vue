@@ -2,7 +2,7 @@
 import { BooleanType } from 'expangine-runtime';
 import BooleanRadio from './BooleanRadio.vue';
 import BooleanRadioSettings from './BooleanRadioSettings.vue';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 
 
 export interface BooleanRadioOptions

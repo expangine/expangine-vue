@@ -1,7 +1,7 @@
 
 import { Type, OptionalType, AnyOps, ExpressionBuilder} from 'expangine-runtime';
-import { createVisuals, TypeSettings } from '@/runtime/TypeVisuals';
-import { TypeModifier } from '@/runtime/TypeModifier';
+import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
+import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '@/app/Confirm';
 import OptionalEditor from './OptionalEditor.vue';

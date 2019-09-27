@@ -1,6 +1,6 @@
 
 import { TupleType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TupleSubs } from './TupleTypes';
 import TupleGrid from './TupleGrid.vue';
 import TupleGridSettings from './TupleGridSettings.vue';

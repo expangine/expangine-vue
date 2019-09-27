@@ -1,9 +1,9 @@
 import { PropType } from 'vue';
 import { isString, isArray, isObject } from 'expangine-runtime';
-import { TypeAndSettings, TypeSettings, TypeVisualInput } from './runtime/TypeVisuals';
+import { TypeAndSettings, TypeSettings, TypeVisualInput } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
-import { TypeBuildResult } from './runtime/TypeBuilder';
-import { TypeModifyResult } from './runtime/TypeModifier';
+import { TypeBuildResult } from './runtime/types/TypeBuilder';
+import { TypeModifyResult } from './runtime/types/TypeModifier';
 
 export type ListOptions<T = string> = Array<{ 
   text: string; 

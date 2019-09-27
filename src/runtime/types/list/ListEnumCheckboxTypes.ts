@@ -1,6 +1,6 @@
 
 import { ListType, EnumType } from 'expangine-runtime';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListEnumCheckbox from './ListEnumCheckbox.vue';
 import ListEnumCheckboxSettings from './ListEnumCheckboxSettings.vue';

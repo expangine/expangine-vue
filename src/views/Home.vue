@@ -19,6 +19,9 @@
               <v-btn text>
                 Data
               </v-btn>
+              <v-btn text>
+                Program
+              </v-btn>
             </v-btn-toggle>
             <v-btn text @click="reset">
               Reset
@@ -56,6 +59,19 @@
             @input="saveData"
           ></ex-type-input>
         </v-list>
+        <v-list v-if="isProgram">
+          <ex-expression
+            can-remove
+            type="body"
+            :value="program"
+            :context="type"
+            :read-only="readOnly"
+            :registry="registry"
+            :show-complexity="showComplexity"
+            @remove="resetProgram"
+            @input="saveProgram"
+          ></ex-expression>
+        </v-list>
       </v-col>
     </v-row>
   </v-container>
@@ -63,11 +79,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, defs, Expression, isString } from 'expangine-runtime';
+import { Type, defs, Expression, isString, NoExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import * as ex from 'expangine-runtime';
-import { TypeVisuals, TypeSettings } from '../runtime/TypeVisuals';
-import { TypeBuildResult } from '../runtime/TypeBuilder';
+import { TypeVisuals, TypeSettings } from '../runtime/types/TypeVisuals';
+import { TypeBuildResult } from '../runtime/types/TypeBuilder';
 import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import Registry from '../runtime';
 import { getConfirmation } from '../app/Confirm';
@@ -97,6 +113,8 @@ export default Vue.extend({
     registry: Registry,
     readOnly: false,
     data: null as null | any,
+    program: NoExpression.instance,
+    showComplexity: false,
   }),
   computed: {
     isReady(): boolean {
@@ -107,6 +125,9 @@ export default Vue.extend({
     },
     isPopulate(): boolean {
       return this.mode === 1;
+    },
+    isProgram(): boolean {
+      return this.mode === 2;
     },
   },
   methods: {
@@ -228,6 +249,15 @@ export default Vue.extend({
 
       this.type = this.loadVar('type', defaults.type, (t) => defs.getType(t));
       this.settings = this.loadVar('settings', defaults.settings);
+    },
+    resetProgram() {
+      this.program = NoExpression.instance;
+      this.saveProgram();
+    },
+    saveProgram() {
+      window.console.log('saving program');
+
+      localStorage.setItem('program', JSON.stringify(this.program.encode()));
     },
     loadData() {
       if (this.settings === null || this.type === null) {

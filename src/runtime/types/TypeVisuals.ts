@@ -1,7 +1,7 @@
 
 import { VueConstructor } from 'vue';
 import { Type, TypeClass, Expression } from 'expangine-runtime';
-import { Registry } from './Registry';
+import { Registry } from '../Registry';
 
 
 export type SubsType = string | number | unknown;

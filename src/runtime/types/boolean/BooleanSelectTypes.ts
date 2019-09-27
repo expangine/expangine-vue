@@ -2,7 +2,7 @@
 import { BooleanType } from 'expangine-runtime';
 import BooleanSelect from './BooleanSelect.vue';
 import BooleanSelectSettings from './BooleanSelectSettings.vue';
-import { TypeVisualInput } from '@/runtime/TypeVisuals';
+import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 
 
 export interface BooleanSelectOptions
