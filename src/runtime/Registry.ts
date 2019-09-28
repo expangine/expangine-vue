@@ -1,6 +1,6 @@
 
 import { Type, Definitions, Expression } from 'expangine-runtime';
-import { TypeVisuals } from './types/TypeVisuals';
+import { TypeVisuals, TypeSubOption } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
@@ -189,6 +189,16 @@ export class Registry
   public getTypeCompare(type: Type): Expression
   {
     return this.getTypeVisuals(type).exprs.compare(this, type);
+  }
+
+  public getTypeSubOptions(type: Type): TypeSubOption[]
+  {
+    return this.getTypeVisuals(type).subOptions(this, type);
+  }
+
+  public getTypeDescribe(type: Type): string
+  {
+    return this.getTypeVisuals(type).describe(this, type);
   }
 
 }

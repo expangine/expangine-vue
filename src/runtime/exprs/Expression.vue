@@ -1,22 +1,37 @@
 <template>
-  <div v-if="hasValue && visuals">
+  <span v-if="hasValue && visuals" class="ex-expression">
     <component
       v-if="readOnly"
       :is="visuals.viewer"
       v-bind="$props"
       v-on="$listeners"
     ></component>
-    <component
-      v-else
-      :is="visuals.editor"
-      v-bind="$props"
-      v-on="$listeners"
-    ></component>
-  </div>
-  <div v-else-if="hasValue">
+    <span v-else>
+      <v-menu offset-y>
+        <template #activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>mdi-settings</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="requestRemove">
+            <v-list-item-content>
+              Remove
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <component
+        :is="visuals.editor"
+        v-bind="$props"
+        v-on="$listeners"
+      ></component>
+    </span>
+  </span>
+  <span v-else-if="hasValue">
     No expression visuals exist for {{ value.getId() }}.
-  </div>
-  <div v-else>
+  </span>
+  <span v-else>
     <v-menu>
       <template #activator="{ on }">
         <v-btn text v-on="on">Select a {{ type }} expression</v-btn>
@@ -32,7 +47,7 @@
         </template>
       </v-list>
     </v-menu>
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
@@ -43,11 +58,6 @@ import ExpressionBase from './ExpressionBase';
 
 export default ExpressionBase().extend({
   name: 'Expression',
-  props: {
-    type: {
-      type: String as () => ExpressionTypes,
-    },
-  },
   computed: {
     starters(): ExpressionVisuals[] {
       return this.registry.getExpressionsStart(this.type, this.requiredType);
@@ -60,3 +70,9 @@ export default ExpressionBase().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.ex-expression {
+  display: inline-block;
+}
+</style>

@@ -17,6 +17,13 @@ export const MapVisuals = createVisuals({
   type: MapType,
   name: 'Map',
   description: 'A collection of key-value pairs.',
+  describe: (registry, type) => 'Map of ' + registry.getTypeDescribe(type.options.key) + ' to ' + registry.getTypeDescribe(type.options.value),
+  subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
+    const text = '[ key ]';
+    const description = 'A ' + registry.getTypeDescribe(type.options.value) + ' with a given ' + registry.getTypeDescribe(type.options.key) + ' key';
+
+    return { key, value, text, description };
+  }),
   exprs: {
     create: () => ex.op(MapOps.create, {}),
     valid: (registry, type) => ex.and(

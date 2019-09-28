@@ -16,6 +16,17 @@ export const TextVisuals = createVisuals({
   type: TextType,
   name: 'Text',
   description: 'A text value',
+  describe: () => 'Text',
+  subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
+    const text = key === 'length'
+      ? 'length'
+      : '[ index ]';
+    const description = key === 'length'
+      ? 'The number of characters in the text'
+      : 'A character at a given index';
+
+    return { key, value, text, description };
+  }),
   exprs: {
     create: () => ex.op(TextOps.create, {}),
     valid: () => ex.op(TextOps.isValid, {value: ex.get('value')}),

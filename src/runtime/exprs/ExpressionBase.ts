@@ -3,7 +3,8 @@ import Vue from 'vue';
 import { Expression, Type, NoExpression } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
-import { ExpressionVisuals } from './ExpressionVisuals';
+import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
+import { TypeVisuals } from '../types/TypeVisuals';
 
 
 export default function<E extends Expression>()
@@ -19,6 +20,7 @@ export default function<E extends Expression>()
     {
       computedValue: E;
       computedType: Type | null;
+      computedTypeVisuals: TypeVisuals | null;
       invalid: boolean;
       hasValue: boolean;
       isRemovable: boolean;
@@ -26,6 +28,7 @@ export default function<E extends Expression>()
     },
     {
       value: E;
+      type: ExpressionTypes;
       context: Type;
       readOnly: boolean;
       registry: Registry;
@@ -38,6 +41,10 @@ export default function<E extends Expression>()
     props: {
       value: {
         type: Object as () => E,
+        required: true,
+      },
+      type: {
+        type: String as () => ExpressionTypes,
         required: true,
       },
       context: {
@@ -79,6 +86,11 @@ export default function<E extends Expression>()
       },
       computedType(): Type | null {
         return this.value.getType(this.registry.defs, this.context);
+      },
+      computedTypeVisuals(): TypeVisuals | null {
+        return this.computedType
+          ? this.registry.getTypeVisuals(this.computedType)
+          : null;
       },
       invalid(): boolean {
         return !!(this.requiredType 

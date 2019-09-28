@@ -22,6 +22,8 @@ export const OptionalVisuals = createVisuals({
   type: OptionalType,
   name: 'Optional',
   description: 'An optional value',
+  describe: (registry, type) => '? ' + registry.getTypeDescribe(type.options),
+  subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options),
     valid: (registry, type) => ex.or(

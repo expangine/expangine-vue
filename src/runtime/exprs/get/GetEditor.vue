@@ -1,32 +1,46 @@
 <template>
-  <div>
-    <template v-for="(segment, index) in value.path">
-      <ex-expression
-        :key="index"
-        :value="segment"
-        :required-type="pathType"
-        :context="context"
-        :read-only="readOnly"
-        :registry="registry"
-        :show-complexity="showComplexity"
-        @input="updateSegment($event, index)"
-      ></ex-expression>
-    </template>
-    <v-select
-      v-model="nextSub"
-      label=">"
-      :items="computedSubTypeOptions"
-      @input="addSegment"
-    ></v-select>
-    <span> => {{ computedType.getId() }}</span>
-  </div>
+  <span>
+    <span>
+      <template v-for="(segment, index) in value.path">
+        <get-segment
+          v-bind="$props"
+          v-on="$listeners"
+          :key="index"
+          :index="index"
+          @input="update"
+        ></get-segment>
+      </template>
+    </span>
+
+    <v-menu offset-y v-if="computedSubTypes.length > 0">
+      <template #activator="{ on }">
+        <v-btn icon v-on="on">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <template v-for="(sub, index) in computedSubTypes">
+          <v-list-item :key="index" @click="addSegment(sub)">
+            <v-list-item-content>
+              <v-list-item-title>{{ sub.text }}</v-list-item-title>
+              <v-list-item-subtitle>{{ sub.description }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+    </v-menu>
+
+  </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { Expression, GetExpression, TypeSub, Type, TypeBuilder, ExpressionBuilder } from 'expangine-runtime';
-import ExpressionBase from '../ExpressionBase';
 import { ListOptions } from '../../../common';
+import ExpressionBase from '../ExpressionBase';
+import GetSegment from './GetSegment.vue';
+import { TypeVisuals } from '../../types/TypeVisuals';
+
 
 
 const ex = new ExpressionBuilder();
@@ -34,18 +48,14 @@ const tp = new TypeBuilder();
 
 export default ExpressionBase<GetExpression>().extend({
   name: 'GetEditor',
-  data: () => ({
-    nextSub: null as null | TypeSub,
-    pathType: tp.many(tp.text(), tp.number()),
-  }),
+  components: {
+    GetSegment,
+  },
   computed: {
     computedSubTypes(): TypeSub[] {
       return this.computedType
-        ? this.computedType.getSubTypes(this.registry.defs)
-        : this.context.getSubTypes(this.registry.defs);
-    },
-    computedSubTypeOptions(): ListOptions<TypeSub> {
-      return this.computedSubTypes.map(this.getSubOption);
+        ? this.registry.getTypeSubOptions(this.computedType)
+        : this.registry.getTypeSubOptions(this.context);
     },
   },
   methods: {
@@ -63,21 +73,6 @@ export default ExpressionBase<GetExpression>().extend({
       }
 
       this.update();
-    },
-    getSubOption(sub: TypeSub) {
-      if (sub.key instanceof Type) {
-        const visual = this.registry.getTypeVisuals(sub.key);
-        return {
-          text: visual.name,
-          description: visual.description,
-          value: sub,
-        };
-      } else {
-        return {
-          text: sub.key + '',
-          value: sub,
-        };
-      }
     },
   },
 });

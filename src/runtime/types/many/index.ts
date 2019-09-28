@@ -1,12 +1,12 @@
 
-import { ManyType, ExpressionBuilder, AnyOps } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { ManyType, ExpressionBuilder, AnyOps, isSameClass, Type } from 'expangine-runtime';
+import { createVisuals, TypeSubOption } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { getBuildType } from '@/app/BuildType';
 import { ManyInput } from './ManyTypes';
 import ManyEditor from './ManyEditor.vue';
-import { initializeSubs } from '@/common';
+import { initializeSubs, friendlyList } from '@/common';
 
 
 const ex = new ExpressionBuilder();
@@ -15,6 +15,28 @@ export const ManyVisuals = createVisuals({
   type: ManyType,
   name: 'Many',
   description: 'A type that represents any number of possible types.',
+  describe: (registry, type) => friendlyList(type.options.map((t) => registry.getTypeDescribe(t)), ' or '),
+  subOptions: (registry, type) => {
+    const options: TypeSubOption[] = [];
+
+    type.options.forEach((sub) => {
+      registry.getTypeSubOptions(sub).forEach((option) => {
+        const matching = options.find((existing) => 
+          existing.key === option.key || (
+            existing.key instanceof Type && 
+            option.key instanceof Type && 
+            isSameClass(existing.key, option.key)
+          ),
+        );
+
+        if (!matching) {
+          options.push(option);
+        }
+      });
+    });
+
+    return options;
+  },
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options[0]),
     valid: (registry, type) => ex.or(

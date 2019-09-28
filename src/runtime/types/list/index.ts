@@ -20,6 +20,17 @@ export const ListVisuals = createVisuals({
   type: ListType,
   name: 'List',
   description: 'A list of values.',
+  describe: (registry, type) => 'List of ' + registry.getTypeDescribe(type.options.item),
+  subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
+    const text = key === 'length'
+      ? 'length'
+      : '[ index ]';
+    const description = key === 'length'
+      ? 'The number of items in the list'
+      : registry.getTypeDescribe(type.options.item) + ' at a given index';
+
+    return { key, value, text, description };
+  }),
   exprs: {
     create: () => ex.op(ListOps.create, {}),
     valid: (registry, type) => ex.and(

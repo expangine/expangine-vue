@@ -1,6 +1,6 @@
 
 import { VueConstructor } from 'vue';
-import { Type, TypeClass, Expression } from 'expangine-runtime';
+import { Type, TypeClass, Expression, TypeSub } from 'expangine-runtime';
 import { Registry } from '../Registry';
 
 
@@ -15,6 +15,12 @@ export function createVisuals<
   return visuals;
 }
 
+export interface TypeSubOption extends TypeSub
+{
+  text: string;
+  description: string;
+}
+
 export interface TypeVisuals<
   T extends Type = Type, 
   Subs extends SubsType = unknown, 
@@ -23,6 +29,8 @@ export interface TypeVisuals<
   type: TypeClass<T>;
   name: string;
   description: string;
+  describe: (registry: Registry, type: T) => string;
+  subOptions: (registry: Registry, type: T) => TypeSubOption[];
   exprs: {
     create: (registry: Registry, type: T) => Expression;
     valid: (registry: Registry, type: T) => Expression;
