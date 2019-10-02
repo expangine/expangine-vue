@@ -6,7 +6,6 @@
     :class="{ three: sorting }"
     v-model="value.cases" 
     @end="update">
-  <!-- <table class="expression-table"> -->
     <template v-for="(group, index) in value.cases">
       <tbody :key="index">
         <tr>
@@ -99,7 +98,6 @@
       </tr>
     </tbody>
   </ex-draggable>
-  <!-- </table> -->
 </template>
 
 <script lang="ts">

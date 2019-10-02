@@ -19,21 +19,38 @@
         </tr>
       </tbody>
     </template>
+    <tbody v-if="!readOnly">
+      <tr>
+        <td></td>
+        <td>
+          <ex-expression
+            v-bind="$props"
+            :value="noop"
+            @input="addExpression"
+          ></ex-expression>
+        </td>
+      </tr>
+    </tbody>
   </ex-draggable>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, ChainExpression } from 'expangine-runtime';
+import { Expression, ChainExpression, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
 export default ExpressionBase<ChainExpression>().extend({
   name: 'BodyEditor',
   computed: {
-    
+    noop(): Expression {
+      return NoExpression.instance;
+    },
   },
   methods: {
+    addExpression(expr: Expression) {
+      this.value.chain.push(expr);
+    },
     updateExpression(index: number, expr?: Expression) {
       if (expr) {
         this.$set(this.value.chain, index, expr);
