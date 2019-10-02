@@ -23,6 +23,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
       getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
         ? [{
             text: 'Transform to Get',
+            description: 'Get the current value',
             value: () => new GetExpression(expr.path),
           }]
         : [],
@@ -33,6 +34,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
       getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
         ? [{
             text: 'Transform to Get',
+            description: 'Get the current value',
             value: () => new GetExpression(expr.path),
           }]
         : [],
@@ -43,6 +45,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
       getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
         ? [{
             text: 'Transform to Get',
+            description: 'Get the current value',
             value: () => new GetExpression(expr.path),
           }]
         : [],

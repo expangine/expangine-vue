@@ -54,9 +54,3 @@ export default ExpressionBase<ChainExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.ghost {
-  background-color: white;
-}
-</style>

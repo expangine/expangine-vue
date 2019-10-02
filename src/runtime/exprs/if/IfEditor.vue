@@ -1,8 +1,18 @@
 <template>
-  <table class="expression-table">
+  <ex-draggable class="expression-table" 
+    tag="table" 
+    ghost-class="ghost"
+    handle=".sorting-handle" 
+    :class="{ three: sorting }"
+    v-model="value.cases" 
+    @end="update">
+  <!-- <table class="expression-table"> -->
     <template v-for="(group, index) in value.cases">
       <tbody :key="index">
         <tr>
+          <td v-if="sorting">
+            <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+          </td>
           <td>
             <ex-expression-menu 
               v-if="index === 0"
@@ -10,7 +20,20 @@
               v-on="$listeners"
               text="If"
               tooltip="If this condition is true, execute the then expression"
-            ></ex-expression-menu>
+            >
+              <template #prepend>
+                <v-list-item @click="sortStart">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Toggle Sort If/Else If
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Re-order the If/Else If cases with dragging
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </ex-expression-menu>
             <ex-chip-menu
               v-else
               text="Else If"
@@ -36,6 +59,7 @@
           </td>
         </tr>
         <tr>
+          <td v-if="sorting"></td>
           <td>
             <ex-chip-menu
               text="Then"
@@ -56,6 +80,7 @@
     </template>  
     <tbody>
       <tr>
+        <td v-if="sorting"></td>
         <td>
           <ex-chip-menu
             text="Else"
@@ -73,7 +98,8 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </ex-draggable>
+  <!-- </table> -->
 </template>
 
 <script lang="ts">
@@ -85,7 +111,13 @@ import { getConfirmation } from '../../../app/Confirm';
 
 export default ExpressionBase<IfExpression>().extend({
   name: 'IfEditor',
+  data: () => ({
+    sorting: false,
+  }),
   methods: {
+    sortStart() {
+      this.sorting = !this.sorting;
+    },
     updateCondition(index: number, condition?: Expression) {
       this.$set(this.value.cases[index], 0, condition || NoExpression.instance);
       this.update();

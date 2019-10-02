@@ -17,7 +17,7 @@
         </template>
       </v-list>
     </v-menu>
-    <span key="start" v-if="hasBrackets">[ </span>
+    <span key="start" v-if="hasBrackets" class="expression-symbol">[ </span>
     <ex-expression
       key="value"
       v-bind="$props"
@@ -29,7 +29,7 @@
       @input="updateSegment"
       @remove="removeSegment"
     ></ex-expression>
-    <span key="end" v-if="hasBrackets"> ]</span>
+    <span key="end" v-if="hasBrackets" class="expression-symbol"> ]</span>
     <path-segment 
       key="next"
       v-if="hasNext"

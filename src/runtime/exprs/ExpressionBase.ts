@@ -82,7 +82,7 @@ export default function<E extends Expression>()
       },
       canRemove: {
         type: Boolean,
-        default: false,
+        default: true,
       },
     },
     computed: {

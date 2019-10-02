@@ -19,7 +19,7 @@
     }
   }
 
-  td {
+  > tbody > tr > td {
     align-self: start !important;
     vertical-align: top !important;
 
@@ -33,5 +33,49 @@
       width: 100%; 
       vertical-align: middle !important;
     }
+
   }
+
+  &.three {
+
+    > tbody > tr > td {
+      align-self: start !important;
+      vertical-align: top !important;
+  
+      &:nth-child(1) { 
+        padding: 12px;
+        white-space: nowrap; 
+      }
+  
+      &:nth-child(2) { 
+        padding: 12px;
+        width: auto;
+        text-align: right; 
+        white-space: nowrap; 
+      }
+  
+      &:nth-child(3) { 
+        width: 100%; 
+        vertical-align: middle !important;
+      }
+  
+    }
+  }
+}
+
+.expression-symbol {
+  font-size: 30px;
+  display: inline-block;
+  position: relative;
+  top: 6px;
+  margin-top: -14px;
+  padding: 2px;
+}
+
+.ghost {
+  background-color: white;
+}
+
+.sorting-handle {
+  cursor: move;
 }

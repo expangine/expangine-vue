@@ -33,6 +33,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
       getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof SetExpression
         ? [{ 
             text: 'Transform to Update', 
+            description: 'Set the current value to a value based on the current value',
             value: () => new UpdateExpression(expr.path, expr instanceof SetExpression ? expr.value : NoExpression.instance),
           }]
         : []

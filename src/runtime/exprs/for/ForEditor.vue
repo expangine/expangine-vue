@@ -6,12 +6,18 @@
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"
-            text="Start"
-            tooltip="The starting value in the For loop">
+            tooltip="The starting value in the For loop"
+            :text="textStart"
+          >
             <template #prepend>
               <v-list-item @click="toggleConfigure">
                 <v-list-item-content>
-                  {{ configureLabel }}
+                  <v-list-item-title>
+                    {{ configureLabel }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Change the counter variable, break variable or max iterations
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </template>
@@ -31,8 +37,8 @@
       <tr>
         <td>
           <ex-chip-menu
-            text="End"
             tooltip="The ending value in the For loop (exclusive)"
+            :text="textEnd"
           ></ex-chip-menu>
         </td>
         <td>
@@ -141,6 +147,12 @@ export default ExpressionBase<ForExpression>().extend({
       return this.configuring
         ? 'Hide For Options'
         : 'Show For Options';
+    },
+    textStart(): string {
+      return `For ${this.value.variable} =`;
+    },
+    textEnd(): string {
+      return `While ${this.value.variable} <`;
     },
   },
   methods: {

@@ -20,6 +20,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
       getModifiers: (type, expr) => expr instanceof IfExpression
         ? [{
             text: 'Add Else If',
+            description: 'Adds a new condition & body at the end of the If',
             value: () => expr.elseif(NoExpression.instance),
           }]
         : [],
@@ -30,6 +31,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
       getModifiers: (type, expr) => expr instanceof IfExpression
         ? [{
             text: 'Add Else If',
+            description: 'Adds a new condition & body at the end of the If',
             value: () => expr.elseif(NoExpression.instance),
           }]
         : [],
@@ -40,6 +42,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
       getModifiers: (type, expr) => expr instanceof IfExpression
         ? [{
             text: 'Add Else If',
+            description: 'Adds a new condition & body at the end of the If',
             value: () => expr.elseif(NoExpression.instance),
           }]
         : [],

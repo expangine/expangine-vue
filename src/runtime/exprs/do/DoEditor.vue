@@ -11,7 +11,12 @@
             <template #prepend>
               <v-list-item @click="toggleConfigure">
                 <v-list-item-content>
-                  {{ configureLabel }}
+                  <v-list-item-title>
+                    {{ configureLabel }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Change the break variable or max iterations
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </template>  

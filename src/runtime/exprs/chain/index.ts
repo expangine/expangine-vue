@@ -27,6 +27,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
         : expr.parent instanceof ChainExpression
           ? [{
               text: 'Insert Expression',
+              description: 'Add an expression at this position',
               value: () => {
                 if (expr.parent instanceof ChainExpression) {
                   const i = expr.parent.chain.indexOf(expr);
@@ -35,7 +36,8 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
                 return expr;
               },
             }, {
-              text: 'Add Expression After',
+              text: 'Add Expression',
+              description: 'Add an expression after this expression',
               value: () => {
                 if (expr.parent instanceof ChainExpression) {
                   const i = expr.parent.chain.indexOf(expr);
@@ -46,6 +48,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
             }]
           : [{
               text: 'Add Expression',
+              description: 'Add an expression after this expression',
               value: () => new ChainExpression([expr, NoExpression.instance]),
             }],
     },

@@ -4,9 +4,14 @@
 
       <slot name="prepend"></slot>
 
-      <v-list-item @click="requestRemove">
+      <v-list-item v-if="canRemove" @click="requestRemove">
         <v-list-item-content>
-          Remove {{ visuals.name }}
+          <v-list-item-title>
+            Remove {{ visuals.name }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            The entire expression will be removed
+          </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -23,7 +28,12 @@
         <template #activator="{ on }">
           <v-list-item v-on="on">
             <v-list-item-content>
-              Replace with...
+              <v-list-item-title>
+                Replace with...
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                The entire expression will be replaced with a new one
+              </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-avatar>
               <v-icon>mdi-menu-right</v-icon>

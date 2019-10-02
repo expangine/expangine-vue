@@ -28,6 +28,7 @@ import { UpdateVisuals } from './exprs/update';
 import { DoVisuals } from './exprs/do';
 import { WhileVisuals } from './exprs/while';
 import { ForVisuals } from './exprs/for';
+import { NotVisuals } from './exprs/not';
 
 
 export default new Registry(defs)
@@ -78,4 +79,5 @@ export default new Registry(defs)
   .addExpression(DoVisuals)
   .addExpression(WhileVisuals)
   .addExpression(ForVisuals)
+  .addExpression(NotVisuals)
 ;
