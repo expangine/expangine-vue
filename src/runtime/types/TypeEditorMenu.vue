@@ -169,7 +169,7 @@ import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './TypeEditorBase';
 
 
-export default TypeEditorBase<Type, any>().extend({
+export default TypeEditorBase<Type, any, any>().extend({
   props: {
     icon: {
       type: String,

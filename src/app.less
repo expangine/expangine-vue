@@ -3,3 +3,35 @@
   align-self: start !important;
   vertical-align: top !important;
 }
+
+.expression-table {
+  width: 100%;
+  border-spacing: 0px;
+  border-left: 1px solid rgba(0,0,0,0.2);
+
+  tr {
+    height: 56px;
+  }
+
+  > tbody {
+    &:nth-child(even) > tr > td {
+      background-color: rgba(0,0,0,0.03);
+    }
+  }
+
+  td {
+    align-self: start !important;
+    vertical-align: top !important;
+
+    &:nth-child(1) { 
+      padding: 12px;
+      text-align: right; 
+      white-space: nowrap; 
+    }
+
+    &:nth-child(2) { 
+      width: 100%; 
+      vertical-align: middle !important;
+    }
+  }
+}

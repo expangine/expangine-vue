@@ -37,6 +37,9 @@ export const ManyVisuals = createVisuals({
 
     return options;
   },
+  subSettings: (registry, type, settings, sub) => {
+    return null; // TODO
+  },
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options[0]),
     valid: (registry, type) => ex.or(

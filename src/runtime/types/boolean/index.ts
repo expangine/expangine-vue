@@ -18,6 +18,7 @@ export const BooleanVisuals = createVisuals({
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   describe: () => 'Boolean',
   subOptions: () => [],
+  subSettings: () => null,
   exprs: {
     create: () => ex.op(BooleanOps.create, {}),
     valid: () => ex.op(BooleanOps.isValid, {value: ex.get('value')}),

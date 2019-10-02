@@ -13,6 +13,7 @@ export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
   description: 'A constant value',
   viewer: ConstantViewer,
   editor: ConstantEditor,
+  isMultiline: () => false,
   types: {
     condition: {
       isStart: () => true,

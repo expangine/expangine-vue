@@ -21,6 +21,11 @@ import { DefaultWrapper } from './hooks/DefaultWrapper';
 
 import { GetVisuals } from './exprs/get';
 import { ConstantVisuals } from './exprs/constant';
+import { SetVisuals } from './exprs/set';
+import { IfVisuals } from './exprs/if';
+import { ChainVisuals } from './exprs/chain';
+import { UpdateVisuals } from './exprs/update';
+import { DoVisuals } from './exprs/do';
 
 
 export default new Registry(defs)
@@ -64,4 +69,9 @@ export default new Registry(defs)
   // Expressions
   .addExpression(GetVisuals)
   .addExpression(ConstantVisuals)
+  .addExpression(SetVisuals)
+  .addExpression(IfVisuals)
+  .addExpression(ChainVisuals)
+  .addExpression(UpdateVisuals)
+  .addExpression(DoVisuals)
 ;

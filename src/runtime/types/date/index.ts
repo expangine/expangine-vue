@@ -17,6 +17,7 @@ export const DateVisuals = createVisuals(
   description: 'A date value',
   describe: () => 'Date',
   subOptions: () => [],
+  subSettings: () => null,
   exprs: {
     create: () => ex.op(DateOps.create, {}),
     valid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),

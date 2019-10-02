@@ -24,6 +24,11 @@ export const MapVisuals = createVisuals({
 
     return { key, value, text, description };
   }),
+  subSettings: (registry, type, settings, sub, forKey) => {
+    return forKey
+      ? settings.sub.key
+      : settings.sub.value;
+  },
   exprs: {
     create: () => ex.op(MapOps.create, {}),
     valid: (registry, type) => ex.and(

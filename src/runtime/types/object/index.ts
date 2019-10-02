@@ -26,6 +26,11 @@ export const ObjectVisuals = createVisuals({
 
     return { key, value, text, description };
   }),
+  subSettings: (registry, type, settings, sub, forKey) => {
+    return isString(sub.key)
+      ? settings.sub[sub.key]
+      : null;
+  },
   exprs: {
     create: () => ex.op(ObjectOps.create, {}),
     valid: () => ex.op(ObjectOps.isValid, {value: ex.get('value')}),

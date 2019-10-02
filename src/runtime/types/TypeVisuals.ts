@@ -31,6 +31,7 @@ export interface TypeVisuals<
   description: string;
   describe: (registry: Registry, type: T) => string;
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
+  subSettings: (registry: Registry, type: T, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
   exprs: {
     create: (registry: Registry, type: T) => Expression;
     valid: (registry: Registry, type: T) => Expression;

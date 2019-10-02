@@ -32,6 +32,10 @@
             <v-btn text @click="importJson">
               Import
             </v-btn>
+            <v-btn text @click="runProgram">
+              <v-icon>mdi-play</v-icon>
+              Run
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
       </v-col>
@@ -67,6 +71,7 @@
             :context="type"
             :read-only="readOnly"
             :registry="registry"
+            :settings="settings"
             :show-complexity="showComplexity"
             @remove="resetProgram"
             @input="saveProgram"
@@ -105,6 +110,7 @@ export default Vue.extend({
 
     await this.loadType();
     this.loadData();
+    this.loadProgram();
   },
   data: () => ({
     mode: 0,
@@ -155,6 +161,7 @@ export default Vue.extend({
 
       this.saveType();
       this.saveData();
+      this.saveProgram(NoExpression.instance);
     },
     transform(expr: Expression) {
       if (expr instanceof Expression) {
@@ -242,6 +249,7 @@ export default Vue.extend({
     },
     saveProgram(program: Expression) {
       this.program = program;
+      this.program.setParent();
 
       window.console.log('saving program');
 
@@ -249,6 +257,13 @@ export default Vue.extend({
     },
     resetProgram() {
       this.saveProgram(NoExpression.instance);
+    },
+    runProgram() {
+      const cmd = LiveRuntime.getCommand(this.program);
+
+      cmd({ value: this.data });
+
+      this.saveData();
     },
     async loadType() {
       const defaults = await this.getDefaultTypes();
@@ -266,6 +281,9 @@ export default Vue.extend({
       }
 
       this.data = this.type.fromJson(this.loadVar('data', copy(this.settings.defaultValue)));
+    },
+    loadProgram() {
+      this.program = this.loadVar('program', NoExpression.instance, (v) => this.registry.defs.getExpression(v));
     },
     loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V): V {
       const stored = localStorage.getItem(varName);

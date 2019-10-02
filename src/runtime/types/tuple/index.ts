@@ -31,6 +31,13 @@ export const TupleVisuals = createVisuals({
 
     return { key, value, text, description };
   }),
+  subSettings: (registry, type, settings, sub, forKey) => {
+    return isNumber(sub.key)
+      ? forKey
+        ? registry.getTypeDefaultSettings(TupleType.indexType)
+        : settings.sub[sub.key]
+      : null;
+  },
   exprs: {
     create: () => ex.op(TupleOps.create, {}),
     valid: (registry, type) => ex

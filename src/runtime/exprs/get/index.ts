@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { GetExpression } from 'expangine-runtime';
+import { GetExpression, SetExpression, UpdateExpression } from 'expangine-runtime';
 
 import GetEditor from './GetEditor.vue';
 import GetViewer from './GetViewer.vue';
@@ -13,21 +13,39 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   description: 'Get a value',
   viewer: GetViewer,
   editor: GetEditor,
+  isMultiline: (registry, expr) => expr.path.some((e) => 
+    registry.getExpressionMultiline(e),
+  ),
   types: {
     condition: {
       isStart: () => true,
-      isValid: (type, expr, exprType) => type && exprType && type.isCompatible(exprType),
-      getModifiers: () => [],
+      isValid: () => true,
+      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
+        ? [{
+            text: 'Transform to Get',
+            value: () => new GetExpression(expr.path),
+          }]
+        : [],
     },
     body: {
       isStart: () => true,
       isValid: () => false,
-      getModifiers: () => [],
+      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
+        ? [{
+            text: 'Transform to Get',
+            value: () => new GetExpression(expr.path),
+          }]
+        : [],
     },
     value: {
       isStart: () => true,
-      isValid: (type, expr, exprType) => type && exprType && type.isCompatible(exprType),
-      getModifiers: () => [],
+      isValid: () => true,
+      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
+        ? [{
+            text: 'Transform to Get',
+            value: () => new GetExpression(expr.path),
+          }]
+        : [],
     },
   },
 };

@@ -31,6 +31,11 @@ export const ListVisuals = createVisuals({
 
     return { key, value, text, description };
   }),
+  subSettings: (registry, type, settings, sub, forKey) => {
+    return !forKey && sub.key === ListType.indexType
+      ? settings.sub.item
+      : null;
+  },
   exprs: {
     create: () => ex.op(ListOps.create, {}),
     valid: (registry, type) => ex.and(

@@ -1,32 +1,16 @@
 <template>
-  <span v-if="hasValue && visuals" class="ex-expression">
+  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline }">
     <component
       v-if="readOnly"
       :is="visuals.viewer"
       v-bind="$props"
       v-on="$listeners"
     ></component>
-    <span v-else>
-      <v-menu offset-y>
-        <template #activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-settings</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="requestRemove">
-            <v-list-item-content>
-              Remove
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <component
-        :is="visuals.editor"
-        v-bind="$props"
-        v-on="$listeners"
-      ></component>
-    </span>
+    <component v-else
+      :is="visuals.editor"
+      v-bind="$props"
+      v-on="$listeners"
+    ></component>
   </span>
   <span v-else-if="hasValue">
     No expression visuals exist for {{ value.getId() }}.
@@ -34,7 +18,10 @@
   <span v-else>
     <v-menu>
       <template #activator="{ on }">
-        <v-btn text v-on="on">Select a {{ type }} expression</v-btn>
+        <v-btn text v-on="on">
+          <v-icon>mdi-plus</v-icon>
+          {{ type }}
+        </v-btn>
       </template>
       <v-list>
         <template v-for="expr in starters">
@@ -52,7 +39,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ExpressionTypes, ExpressionStarter, ExpressionVisuals } from './ExpressionVisuals';
+import { Expression } from 'expangine-runtime';
+import { ListOptions } from '../../common';
+import { ExpressionTypes, ExpressionStarter, ExpressionVisuals, ExpressionModifierCallback } from './ExpressionVisuals';
+import { getConfirmation } from '../../app/Confirm';
 import ExpressionBase from './ExpressionBase';
 
 
@@ -74,5 +64,13 @@ export default ExpressionBase().extend({
 <style lang="less" scoped>
 .ex-expression {
   display: inline-block;
+
+  &.multiline {
+    display: block;
+  }
+
+  &:hover {
+    background-color: rgba(0,0,0,0.05);
+  }
 }
 </style>

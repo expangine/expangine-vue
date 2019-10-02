@@ -1,6 +1,6 @@
 
-import { Type, Definitions, Expression } from 'expangine-runtime';
-import { TypeVisuals, TypeSubOption } from './types/TypeVisuals';
+import { Type, Definitions, Expression, TypeSub } from 'expangine-runtime';
+import { TypeVisuals, TypeSubOption, TypeSettings } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
@@ -49,22 +49,25 @@ export class Registry
 
   public getExpressionsValid(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null): ExpressionVisuals[]
   {
-    return this.exprs.filter((visual) =>
-    {
-      const typeSettings = visual.types[type];
-
-      return typeSettings.isValid(requiredType, expr, exprType);
-    });
+    return this.exprs.filter((visual) => visual.types[type].isValid(requiredType, expr, exprType));
   }
 
   public getExpressionsStart(type: ExpressionTypes, requiredType: Type | null): ExpressionVisuals[]
   {
-    return this.exprs.filter((visual) =>
-    {
-      const typeSettings = visual.types[type];
+    return this.exprs.filter((visual) => visual.types[type].isStart(requiredType));
+  }
 
-      return typeSettings.isStart(requiredType);
-    });
+  public getExpressionsModifiers(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null)
+  {
+    return this.exprs
+      .map((visual) => visual.types[type].getModifiers(requiredType, expr, exprType))
+      .reduce((prev, next) => next.concat(prev), [])
+    ;
+  }
+
+  public getExpressionMultiline(expr: Expression): boolean
+  {
+    return this.getExpressionVisuals(expr).isMultiline(this, expr);
   }
 
   public addType(type: TypeVisuals<any, any, any>): this
@@ -103,9 +106,9 @@ export class Registry
     return this;
   }
 
-  public getTypeVisuals<T extends Type>(type: T): TypeVisuals<T>
+  public getTypeVisuals<T extends Type>(type: T): TypeVisuals<T, any, any>
   {
-    return this.typeMap[type.getId()] as unknown as TypeVisuals<T>;
+    return this.typeMap[type.getId()] as unknown as TypeVisuals<T, any, any>;
   }
 
   public getTypeBuildersFor(input: TypeBuildInput): TypeBuildOption[]
@@ -199,6 +202,33 @@ export class Registry
   public getTypeDescribe(type: Type): string
   {
     return this.getTypeVisuals(type).describe(this, type);
+  }
+
+  public getTypeDefaultSettings(type: Type): TypeSettings
+  {
+    const visuals = this.getTypeVisuals(type);
+    const input = visuals.defaultInput as string;
+
+    return {
+      input,
+      defaultValue: null,
+      options: {
+        outlined: true,
+        ...visuals.inputs[input].getDefaultOptions(),
+      },
+    };
+  }
+
+  public getTypeSubSettings(type: Type, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean): TypeSettings | null
+  {
+    return this.getTypeVisuals(type).subSettings(this, type, settings, sub, forKey) || 
+      (forKey
+        ? sub.key instanceof Type
+          ? this.getTypeDefaultSettings(sub.key)
+          : null
+        : this.getTypeDefaultSettings(sub.value)
+      )
+    ;
   }
 
 }

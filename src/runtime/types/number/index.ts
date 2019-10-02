@@ -17,6 +17,7 @@ export const NumberVisuals = createVisuals({
   description: 'A number value',
   describe: () => 'Number',
   subOptions: () => [],
+  subSettings: () => null,
   exprs: {
     create: () => ex.op(NumberOps.create, {}),
     valid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),
