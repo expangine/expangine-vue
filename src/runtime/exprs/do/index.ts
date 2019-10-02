@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { DoExpression, NoExpression } from 'expangine-runtime';
+import { DoExpression, NoExpression, WhileExpression } from 'expangine-runtime';
 
 import DoEditor from './DoEditor.vue';
 
@@ -22,7 +22,13 @@ export const DoVisuals: ExpressionVisuals<DoExpression> =
     body: {
       isStart: () => true,
       isValid: () => true,
-      getModifiers: () => [],
+      getModifiers: (type, expr) => expr instanceof WhileExpression
+        ? [{
+            text: 'Convert to Do',
+            description: 'A Do executes the expression and continues if the condition is true',
+            value: () => new DoExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
+          }]
+        : [],
     },
     value: {
       isStart: () => false,

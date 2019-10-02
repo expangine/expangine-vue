@@ -26,6 +26,7 @@ import { IfVisuals } from './exprs/if';
 import { ChainVisuals } from './exprs/chain';
 import { UpdateVisuals } from './exprs/update';
 import { DoVisuals } from './exprs/do';
+import { WhileVisuals } from './exprs/while';
 
 
 export default new Registry(defs)
@@ -74,4 +75,5 @@ export default new Registry(defs)
   .addExpression(ChainVisuals)
   .addExpression(UpdateVisuals)
   .addExpression(DoVisuals)
+  .addExpression(WhileVisuals)
 ;

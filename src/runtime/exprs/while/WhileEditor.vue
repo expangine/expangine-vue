@@ -6,27 +6,9 @@
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"
-            text="Do"
-            tooltip="Execute this expression while the above expression is true"
-          ></ex-expression-menu>
-        </td>
-        <td>
-          <ex-expression
-            v-bind="$props"
-            type="body"
-            :value="value.body"
-            :context="bodyContext"
-            @input="updateBody($event)"
-            @remove="updateBody()"
-          ></ex-expression>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <ex-chip-menu
             text="While"
             tooltip="While this expression is true, execute the do expression"
-          ></ex-chip-menu>
+          ></ex-expression-menu>
         </td>
         <td>
           <ex-expression
@@ -36,6 +18,24 @@
             :required-type="conditionType"
             @input="updateCondition($event)"
             @remove="updateCondition()"
+          ></ex-expression>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <ex-chip-menu
+            text="Do"
+            tooltip="Execute this expression while the above expression is true"
+          ></ex-chip-menu>
+        </td>
+        <td>
+          <ex-expression
+            v-bind="$props"
+            type="body"
+            :value="value.body"
+            :context="bodyContext"
+            @input="updateBody($event)"
+            @remove="updateBody()"
           ></ex-expression>
         </td>
       </tr>
@@ -76,11 +76,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, DoExpression, Expression, NoExpression, BooleanType } from 'expangine-runtime';
+import { Type, WhileExpression, Expression, NoExpression, BooleanType } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
-export default ExpressionBase<DoExpression>().extend({
+export default ExpressionBase<WhileExpression>().extend({
   name: 'DoEditor',
   computed: {
     bodyContext(): Type {
