@@ -1,12 +1,12 @@
 <template>
-  <ex-chip-menu :text="text" :tooltip="tooltip" :color="statusColor" :dark="statusDark">
+  <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
     <v-list>
 
       <slot name="prepend"></slot>
 
       <v-list-item @click="requestRemove">
         <v-list-item-content>
-          Remove
+          Remove {{ visuals.name }}
         </v-list-item-content>
       </v-list-item>
 
@@ -80,6 +80,15 @@ export default ExpressionBase().extend({
     statusDark(): boolean {
       return this.invalid;
     },
+    statusTooltip(): string {
+      if (!this.invalid || !this.requiredType || !this.computedType) {
+        return this.tooltip;
+      }
+      const actual = this.registry.getTypeDescribe(this.computedType);
+      const expected = this.registry.getTypeDescribe(this.requiredType);
+
+      return `Expected ${expected} but given ${actual}`;
+    },
     starters(): ExpressionVisuals[] {
       return this.registry.getExpressionsStart(this.type, this.requiredType);
     },
@@ -90,7 +99,7 @@ export default ExpressionBase().extend({
   methods: {
     async changeTo(visuals: ExpressionVisuals) {
       if (await getConfirmation()) {
-        this.input(visuals.create(this.requiredType));
+        this.input(visuals.create(this.requiredType, this.context));
       }
     },
     async modify(callback: ExpressionModifierCallback) {

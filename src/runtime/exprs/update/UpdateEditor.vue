@@ -55,9 +55,9 @@ export default ExpressionBase<UpdateExpression>().extend({
     },
     valueContext(): Type {
       return this.valueType
-        ? this.registry.defs.getContextWithScope(this.context, {
+        ? this.registry.defs.getContext(this.context, {
             [this.value.currentVariable]: this.valueType,
-          }).context
+          })
         : this.context;
     },
   },

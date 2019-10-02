@@ -1,43 +1,41 @@
 <template>
   <span v-if="readOnly">{{ readonlyValue }}</span>
   <span v-else-if="inputType">
-          <ex-expression-menu
-            v-bind="$props"
-            v-on="$listeners"
-            text="Const"
-            tooltip="A constant value">
-            <template #prepend>
-              <v-list-item @click="edit">
-                <v-list-item-content>
-                  Edit
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </ex-expression-menu>
-          <span class="pa-2">{{ readonlyValue }}</span>
-
-          <v-dialog v-model="editing" persistent max-width="600px">
-            <v-card>
-              <v-card-title>
-                <span class="headline">Enter Value</span>
-              </v-card-title>
-              <v-card-text>
-                <ex-type-input
-                  :registry="registry"
-                  :value="value.value"
-                  :type="inputType"
-                  :settings="inputSettings"
-                  v-model="editValue"
-                ></ex-type-input>
-              </v-card-text>
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn color="secondary" text @click="editCancel">Close</v-btn>
-                <v-btn color="primary" text @click="editSave">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
+    <ex-expression-menu
+      v-bind="$props"
+      v-on="$listeners"
+      text="Const"
+      tooltip="A constant value">
+      <template #prepend>
+        <v-list-item @click="edit">
+          <v-list-item-content>
+            Edit
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </ex-expression-menu>
+    <span class="pa-2">{{ readonlyValue }}</span>
+    <v-dialog v-model="editing" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Enter Value</span>
+        </v-card-title>
+        <v-card-text>
+          <ex-type-input
+            :registry="registry"
+            :value="value.value"
+            :type="inputType"
+            :settings="inputSettings"
+            v-model="editValue"
+          ></ex-type-input>
+        </v-card-text>
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn color="secondary" text @click="editCancel">Close</v-btn>
+          <v-btn color="primary" text @click="editSave">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </span>
   <span v-else>
     {{ readonlyValue }}

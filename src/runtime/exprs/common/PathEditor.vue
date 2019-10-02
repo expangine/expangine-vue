@@ -3,10 +3,10 @@
     <path-segment
       v-if="hasSegment"
       v-bind="$props"
-      v-on="$listeners"
       :index="0"
       :sub-settings="settings"
       @input="update"
+      @remove="remove"
     ></path-segment>
     <v-menu offset-y v-if="nextSegments.length > 0">
       <template #activator="{ on }">

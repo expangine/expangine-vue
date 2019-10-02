@@ -55,7 +55,7 @@ export default ExpressionBase().extend({
   },
   methods: {
     startWith(visuals: ExpressionVisuals) {
-      this.input(visuals.create(this.requiredType));
+      this.input(visuals.create(this.requiredType, this.context));
     },
   },
 });
