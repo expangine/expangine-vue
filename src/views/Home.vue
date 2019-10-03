@@ -259,11 +259,15 @@ export default Vue.extend({
       this.saveProgram(NoExpression.instance);
     },
     runProgram() {
+      if (!this.type) {
+        return;
+      }
+
       const cmd = LiveRuntime.getCommand(this.program);
+      const data = copy(this.type.toJson(this.data));
+      const result = cmd(data);
 
-      cmd({ value: this.data });
-
-      this.saveData();
+      window.console.log('ran', 'result', result, 'data', data);
     },
     async loadType() {
       const defaults = await this.getDefaultTypes();
@@ -284,6 +288,7 @@ export default Vue.extend({
     },
     loadProgram() {
       this.program = this.loadVar('program', NoExpression.instance, (v) => this.registry.defs.getExpression(v));
+      this.program.setParent();
     },
     loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V): V {
       const stored = localStorage.getItem(varName);

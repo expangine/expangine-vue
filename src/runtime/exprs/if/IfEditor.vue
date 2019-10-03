@@ -68,7 +68,6 @@
           <td>
             <ex-expression
               v-bind="$props"
-              type="body"
               :value="group[1]"
               @input="updateBody(index, $event)"
               @remove="updateBody(index)"
@@ -89,7 +88,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="body"
             :value="value.otherwise"
             @input="updateElse($event)"
             @remove="updateElse()"

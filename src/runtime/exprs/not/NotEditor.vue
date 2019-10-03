@@ -13,6 +13,7 @@
       key="expression"
       v-bind="$props"
       type="condition"
+      class="expression-inside"
       :value="value.expression"
       :required-type="conditionType"
       @input="updateExpression($event)"

@@ -22,6 +22,7 @@
       key="value"
       v-bind="$props"
       type="value"
+      :class="{ 'expression-inside': hasBrackets }"
       :read-only="segmentReadOnly"
       :required-type="expectedType"
       :value="segment"

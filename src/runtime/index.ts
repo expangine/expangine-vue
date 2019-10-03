@@ -31,6 +31,9 @@ import { ForVisuals } from './exprs/for';
 import { NotVisuals } from './exprs/not';
 import { DefineVisuals } from './exprs/define';
 import { TemplateVisuals } from './exprs/template';
+import { AndVisuals } from './exprs/and';
+import { NoVisuals } from './exprs/no';
+import { OrVisuals } from './exprs/or';
 
 
 export default new Registry(defs)
@@ -84,4 +87,7 @@ export default new Registry(defs)
   .addExpression(NotVisuals)
   .addExpression(DefineVisuals)
   .addExpression(TemplateVisuals)
+  .addExpression(NoVisuals)
+  .addExpression(OrVisuals)
+  .addExpression(AndVisuals)
 ;
