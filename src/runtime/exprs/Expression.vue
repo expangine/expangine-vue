@@ -64,13 +64,14 @@ export default ExpressionBase().extend({
 <style lang="less" scoped>
 .ex-expression {
   display: inline-block;
+  border-left: 1px solid rgba(0,0,0,0.1);
 
   &.multiline {
     display: block;
   }
 
   &:hover {
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(0,0,0,0.02);
   }
 }
 </style>

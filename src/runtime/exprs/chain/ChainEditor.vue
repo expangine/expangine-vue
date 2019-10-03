@@ -1,5 +1,5 @@
 <template>
-  <ex-draggable class="expression-table" v-model="value.chain" tag="table" handle=".sorting-handle" @end="update" ghost-class="ghost">
+  <ex-draggable class="expression-table striped" v-model="value.chain" tag="table" handle=".sorting-handle" @end="update" ghost-class="ghost">
     <template v-for="(expr, index) in value.chain">
       <tbody :key="index">
         <tr>

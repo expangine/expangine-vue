@@ -1,6 +1,6 @@
 <template>
   <span v-if="readOnly">{{ readonlyValue }}</span>
-  <span v-else-if="inputType">
+  <span v-else-if="inputType" class="pl-3">
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
@@ -15,7 +15,7 @@
       </template>
     </ex-expression-menu>
     <span class="pa-2">{{ readonlyValue }}</span>
-    <v-dialog v-model="editing" persistent max-width="600px">
+    <v-dialog v-model="editing" persistent max-width="600px" style="display: inline">
       <v-card>
         <v-card-title>
           <span class="headline">Enter Value</span>

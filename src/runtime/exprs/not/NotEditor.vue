@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="pl-3">
     <ex-expression-menu
       key="menu"
       v-bind="$props"

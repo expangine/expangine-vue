@@ -49,7 +49,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
           : [{
               text: 'Add Expression',
               description: 'Add an expression after this expression',
-              value: () => new ChainExpression([expr, NoExpression.instance]),
+              value: () => new ChainExpression([expr]),
             }],
     },
     value: {

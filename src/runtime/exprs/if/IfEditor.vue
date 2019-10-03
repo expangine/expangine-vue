@@ -1,5 +1,5 @@
 <template>
-  <ex-draggable class="expression-table" 
+  <ex-draggable class="expression-table striped" 
     tag="table" 
     ghost-class="ghost"
     handle=".sorting-handle" 

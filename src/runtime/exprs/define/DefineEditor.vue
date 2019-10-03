@@ -1,5 +1,5 @@
 <template>
-  <table class="expression-table">
+  <table class="expression-table striped">
     <tbody>
       <tr>
         <td>
@@ -74,7 +74,7 @@
       <tr>
         <td>
             <ex-chip-menu
-              text="Run"
+              text="Then"
               tooltip="Execute this expression with the available variables"
             ></ex-chip-menu>
           </td>

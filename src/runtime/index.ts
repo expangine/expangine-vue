@@ -30,6 +30,7 @@ import { WhileVisuals } from './exprs/while';
 import { ForVisuals } from './exprs/for';
 import { NotVisuals } from './exprs/not';
 import { DefineVisuals } from './exprs/define';
+import { TemplateVisuals } from './exprs/template';
 
 
 export default new Registry(defs)
@@ -82,4 +83,5 @@ export default new Registry(defs)
   .addExpression(ForVisuals)
   .addExpression(NotVisuals)
   .addExpression(DefineVisuals)
+  .addExpression(TemplateVisuals)
 ;
