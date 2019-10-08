@@ -116,11 +116,7 @@ export default ExpressionBase<DefineExpression>().extend({
     'value.define': {
       immediate: true,
       handler(defines: ExpressionMap) {
-        this.vars = objectValues(
-          objectMap(this.value.define, (value, key) => 
-            [key, value],
-          ),
-        );
+        this.vars = objectValues(this.value.define, (value, key) => [key, value]);
       },
     },
   },

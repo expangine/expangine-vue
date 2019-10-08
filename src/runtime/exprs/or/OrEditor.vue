@@ -18,7 +18,7 @@
     <v-menu>
       <template #activator="{ on }">
         <v-btn icon v-on="on">
-          <v-icon>mdi-circle-medium</v-icon>
+          <v-icon>mdi-plus</v-icon>
         </v-btn>
       </template>
       <v-list>

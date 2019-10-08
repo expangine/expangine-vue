@@ -76,8 +76,7 @@ export default ExpressionBase().extend({
       return this.path[this.index];
     },
     segmentType(): Type | null {
-      const type = this.segment.getType(this.registry.defs, this.context);
-      return type ? type.getSimplifiedType() : null;
+      return Type.simplify(this.segment.getType(this.registry.defs, this.context));
     },
     dynamicOption(): TypeSubOption | null {
       return this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;
@@ -90,7 +89,7 @@ export default ExpressionBase().extend({
         }
         if (sub.key instanceof Type 
           && this.segmentType 
-          && sub.key.isCompatible(this.segmentType)) {
+          && sub.key.acceptsType(this.segmentType)) {
           return true;
         }
 

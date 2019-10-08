@@ -22,7 +22,7 @@
         v-if="!disableSubSettings"
         v-html="summary"
       ></v-list-item-subtitle>
-      <v-list-item-subtitle 
+    <v-list-item-subtitle 
         v-if="description"
         class="grey--text"
         v-text="description"

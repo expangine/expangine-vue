@@ -85,7 +85,7 @@ export default ExpressionBase().extend({
   },
   computed: {
     statusColor(): string {
-      return this.invalid ? 'red darken-4' : this.color;
+      return this.invalid ? 'error' : this.color;
     },
     statusDark(): boolean {
       return this.invalid;

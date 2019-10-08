@@ -14,6 +14,7 @@ import { ListVisuals, ListBuilder, ListBuilderWrapper } from './types/list';
 import { EnumVisuals, EnumBuilder, EnumBuilderWrapper } from './types/enum';
 import { MapVisuals, MapBuilder, MapModifierFromObject, MapBuilderWrapper } from './types/map';
 import { TupleVisuals, TupleBuilder, TupleModifierFromObject, TupleModifierAddType, TupleBuilderWrapper } from './types/tuple';
+import { AnyVisuals } from './types/any';
 
 import { ChangeTypeModifier } from './hooks/ChangeTypeModifier';
 import { CopyModifier, PasteBuilder } from './hooks/ClipboardHooks';
@@ -34,6 +35,13 @@ import { TemplateVisuals } from './exprs/template';
 import { AndVisuals } from './exprs/and';
 import { NoVisuals } from './exprs/no';
 import { OrVisuals } from './exprs/or';
+import { OperationVisuals } from './exprs/operation';
+
+import AnyOpsVisuals from './ops/AnyOpsVisuals';
+import BooleanOpsVisuals from './ops/BooleanOpsVisuals';
+import DateOpsVisuals from './ops/DateOpsVisuals';
+import ListOpsVisuals from './ops/ListOpsVisuals';
+import MapOpsVisuals from './ops/MapOpsVisuals';
 
 
 export default new Registry(defs)
@@ -70,6 +78,7 @@ export default new Registry(defs)
     .addTypeModifier(TupleModifierFromObject)
     .addTypeModifier(TupleModifierAddType)
     .addTypeBuilderWrapper(TupleBuilderWrapper)
+  .addType(AnyVisuals)
   .addTypeModifier(ChangeTypeModifier)
   .addTypeBuilder(PasteBuilder)
   .addTypeModifier(CopyModifier)
@@ -90,4 +99,11 @@ export default new Registry(defs)
   .addExpression(NoVisuals)
   .addExpression(OrVisuals)
   .addExpression(AndVisuals)
+  .addExpression(OperationVisuals)
+  // Operations
+  .import(AnyOpsVisuals)
+  .import(BooleanOpsVisuals)
+  .import(DateOpsVisuals)
+  .import(ListOpsVisuals)
+  .import(MapOpsVisuals)
 ;

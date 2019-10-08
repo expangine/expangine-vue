@@ -18,7 +18,7 @@
   <span v-else>
     <v-menu>
       <template #activator="{ on }">
-        <v-btn text v-on="on">
+        <v-btn text v-on="on" :color="statusColor">
           <v-icon>mdi-plus</v-icon>
           {{ type }}
         </v-btn>
@@ -32,6 +32,12 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+        <v-list-item key="remove" @click="requestRemove" v-if="canRemove">
+          <v-list-item-content>
+            <v-list-item-title>Remove</v-list-item-title>
+            <v-list-item-subtitle>Cancel adding expression</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-menu>
   </span>
@@ -40,9 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Expression } from 'expangine-runtime';
-import { ListOptions } from '../../common';
-import { ExpressionTypes, ExpressionStarter, ExpressionVisuals, ExpressionModifierCallback } from './ExpressionVisuals';
-import { getConfirmation } from '../../app/Confirm';
+import { ExpressionVisuals } from './ExpressionVisuals';
 import ExpressionBase from './ExpressionBase';
 
 
@@ -51,6 +55,9 @@ export default ExpressionBase().extend({
   computed: {
     starters(): ExpressionVisuals[] {
       return this.registry.getExpressionsStart(this.type, this.requiredType);
+    },
+    statusColor(): string {
+      return this.invalid ? 'error' : 'primary';
     },
   },
   methods: {

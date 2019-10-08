@@ -95,8 +95,7 @@ export default function<E extends Expression>()
         },
       },
       computedType(): Type | null {
-        const type = this.value.getType(this.registry.defs, this.context);
-        return type ? type.getSimplifiedType() : type;
+        return Type.simplify(this.value.getType(this.registry.defs, this.context));
       },
       computedTypeVisuals(): TypeVisuals | null {
         return this.computedType
@@ -109,7 +108,7 @@ export default function<E extends Expression>()
       invalid(): boolean {
         return !!(this.requiredType 
           && this.computedType
-          && !this.requiredType.isCompatible(this.computedType));
+          && !this.requiredType.acceptsType(this.computedType));
       },
       hasValue(): boolean {
         return this.value && this.value !== NoExpression.instance;

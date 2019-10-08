@@ -22,6 +22,8 @@ import ChipMenu from './components/ChipMenu.vue';
 import ColorPicker from './components/ColorPicker.vue';
 import DatePicker from './components/DatePicker.vue';
 import SimpleFields from './components/SimpleFields.vue';
+import Templated from './components/Templated.vue';
+
 
 Vue.config.productionTip = false;
 
@@ -39,6 +41,7 @@ Vue.component('ex-color-picker', ColorPicker);
 Vue.component('ex-date-picker', DatePicker);
 Vue.component('ex-simple-fields', SimpleFields);
 Vue.component('ex-draggable', Draggable);
+Vue.component('ex-templated', Templated);
 
 
 new Vue({

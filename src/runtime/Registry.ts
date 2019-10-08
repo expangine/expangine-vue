@@ -1,11 +1,12 @@
 
-import { Type, Definitions, Expression, TypeSub } from 'expangine-runtime';
+import { Type, Definitions, Expression, TypeSub, Operation } from 'expangine-runtime';
 import { TypeVisuals, TypeSubOption, TypeSettings } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
 import { TypeHook, TypeHookInput, TypeHookOption } from './types/TypeHook';
 import { ExpressionVisuals, ExpressionTypes } from './exprs/ExpressionVisuals';
+import { OperationVisuals } from './ops/OperationVisuals';
 
 
 export class Registry
@@ -20,6 +21,7 @@ export class Registry
   public typeHooks: TypeHook[];
   public exprMap: Record<string, ExpressionVisuals>;
   public exprs: ExpressionVisuals[];
+  public operationMap: Record<string, OperationVisuals>;
 
   public constructor(defs: Definitions)
   {
@@ -32,6 +34,30 @@ export class Registry
     this.typeHooks = [];
     this.exprMap = obj();
     this.exprs = [];
+    this.operationMap = obj();
+  }
+
+  public import(importer: (registry: Registry) => any): this
+  {
+    importer(this);
+
+    return this;
+  }
+
+  public addOperation<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, visuals: OperationVisuals<P, O, S>): this
+  {
+    this.operationMap[op.id] = visuals;
+
+    return this;
+  }
+
+  public getOperationVisuals(id: string): OperationVisuals
+  {
+    return this.operationMap[id] || {
+      name: id,
+      description: id,
+      comments: obj(),
+    };
   }
 
   public addExpression(expr: ExpressionVisuals): this
