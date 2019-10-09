@@ -57,7 +57,9 @@ export default ExpressionBase<ConstantExpression>().extend({
   }),
   computed: {
     inputType(): Type | null {
-      return this.computedType || this.requiredType;
+      return this.invalid && this.requiredType
+        ? this.requiredType
+        : this.computedType || this.requiredType;
     },
     readonlyValue(): string {
       if (!this.inputType) {

@@ -12,6 +12,7 @@ export const NotVisuals: ExpressionVisuals<NotExpression> =
   description: 'Negates the following expression',
   viewer: NotEditor,
   editor: NotEditor,
+  complex: false,
   isMultiline: (registry, expr) => registry.getExpressionMultiline(expr.expression),
   types: {
     condition: {

@@ -46,7 +46,7 @@ export class Registry
 
   public addOperation<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, visuals: OperationVisuals<P, O, S>): this
   {
-    this.operationMap[op.id] = visuals;
+    this.operationMap[op.id] = visuals as OperationVisuals<any, any, any>;
 
     return this;
   }
@@ -94,6 +94,21 @@ export class Registry
   public getExpressionMultiline(expr: Expression): boolean
   {
     return this.getExpressionVisuals(expr).isMultiline(this, expr);
+  }
+
+  public getExpressionComplex(expr: Expression): boolean
+  {
+    return this.getExpressionVisuals(expr).complex;
+  }
+
+  public getExpressionName(expr: Expression): string
+  {
+    return this.getExpressionVisuals(expr).name;
+  }
+
+  public getExpressionDescription(expr: Expression): string
+  {
+    return this.getExpressionVisuals(expr).description;
   }
 
   public addType(type: TypeVisuals<any, any, any>): this

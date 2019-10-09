@@ -1,9 +1,9 @@
 <template>
   <span>
     <template v-for="(name, index) in parts">
-      <span :key="index" v-if="isText(index)" v-html="name"></span>
+      <span :key="index" v-if="isText(index)" v-html="name" :style="textStyle"></span>
       <span :key="index" v-else>
-        <slot name="section" :section="part">{{ name }}</slot>
+        <slot name="section" :section="name">{{ name }}</slot>
       </span>
     </template>
   </span>
@@ -18,6 +18,10 @@ export default Vue.extend({
     template: {
       type: String,
       required: true,
+    },
+    textStyle: {
+      type: Object,
+      default: null,
     },
   },
   computed: {

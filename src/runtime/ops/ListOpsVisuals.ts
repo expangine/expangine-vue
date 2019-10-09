@@ -36,6 +36,9 @@ export default (registry: Registry) =>
       index: 'The index of the item being created',
       last: 'The last item added to the list',
     },
+    defaults: {
+      sameItem: 'true',
+    },
   });
 
   registry.addOperation(ListOps.get, {
@@ -190,6 +193,10 @@ export default (registry: Registry) =>
       item: 'The current item being compared to',
       index: 'The index of the current item',
     },
+    defaults: {
+      reverse: 'false',
+      start: '0 for forward, length - 1 for reverse',
+    },
   });
 
   registry.addOperation(ListOps.copy, {
@@ -202,6 +209,9 @@ export default (registry: Registry) =>
     },
     scopeComments: {
       copy: 'The item to copy',
+    },
+    defaults: {
+      deepCopy: 'none',
     },
   });
 
@@ -267,7 +277,10 @@ export default (registry: Registry) =>
     singleline: 'shuffle {list} {times} times',
     comments: {
       list: 'The list to shuffle',
-      times: 'The number of times to shuffle the list, defaults to 1',
+      times: 'The number of times to shuffle the list',
+    },
+    defaults: {
+      times: '1',
     },
   });
 
@@ -299,6 +312,9 @@ export default (registry: Registry) =>
       list: 'The list getting duplicate items from',
       value: 'The first item to compare',
       test: 'The second item to compare',
+    },
+    defaults: {
+      once: 'false',
     },
   });
 
@@ -359,13 +375,16 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to search through',
       item: 'The item to look for',
-      start: 'The starting index, defaults to 0',
+      start: 'The starting index',
       isEqual: 'The comparison of the item',
     },
     scopeComments: {
       list: 'The list being searched through',
       value: 'The item being looked for',
       test: 'The current item in the list being compared',
+    },
+    defaults: {
+      start: '0',
     },
   });
 
@@ -384,6 +403,9 @@ export default (registry: Registry) =>
       value: 'The item being looked for',
       test: 'The current item in the list being compared',
     },
+    defaults: {
+      start: '0',
+    },
   });
 
   registry.addOperation(ListOps.findIndex, {
@@ -400,6 +422,10 @@ export default (registry: Registry) =>
       list: 'The list being searched through',
       item: 'The current item being looked at',
       index: 'The index of the current item',
+    },
+    defaults: {
+      reverse: 'false',
+      start: '0 for forward, length - 1 for reverse',
     },
   });
 
@@ -465,6 +491,12 @@ export default (registry: Registry) =>
       item: 'The current item to join',
       index: 'The index of the current item',
     },
+    defaults: {
+      delimiter: '", "',
+      prefix: 'none',
+      suffix: 'none',
+      toText: 'system method',
+    },
   });
 
   registry.addOperation(ListOps.each, {
@@ -480,6 +512,9 @@ export default (registry: Registry) =>
       list: 'The list being iterated',
       item: 'The current item being iterated',
       index: 'The index of the current item',
+    },
+    defaults: {
+      reverse: 'false',
     },
   });
 
@@ -516,7 +551,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.map, {
     name: 'Transform List Items',
     description: 'Get a copy of [list] where each item is [transform]ed',
-    singleline: 'get transformed from {list} with transform {transform}',
+    singleline: 'transform {list} with {transform}',
     comments: {
       list: 'The list to transform',
       transform: 'The expression which transforms an item to a new value',
@@ -590,6 +625,9 @@ export default (registry: Registry) =>
       item: 'The current item to group',
       index: 'The index of the current item',
     },
+    defaults: {
+      getValue: 'no transform',
+    },
   });
 
   registry.addOperation(ListOps.toListMap, {
@@ -606,6 +644,9 @@ export default (registry: Registry) =>
       item: 'The current item to group',
       index: 'The index of the current item',
     },
+    defaults: {
+      getValue: 'no transform',
+    },
   });
 
   registry.addOperation(ListOps.toMap, {
@@ -621,6 +662,9 @@ export default (registry: Registry) =>
       list: 'The list being converted',
       item: 'The current item to convert',
       index: 'The index of the current item',
+    },
+    defaults: {
+      getValue: 'no transform',
     },
   });
 
@@ -820,7 +864,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.isNotEqual, {
     name: 'Lists Not Equal?',
     description: 'Determines whether [list] is not equal to [test] using [isEqual] to compare items',
-    singleline: '{list} not equals {test} where items equality is {isEqual}',
+    singleline: '{list} not equal to {test} where items equality is {isEqual}',
     comments: {
       list: 'The list to evaluate',
       test: 'The test list to compare against',

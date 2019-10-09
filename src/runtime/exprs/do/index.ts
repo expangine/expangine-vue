@@ -12,6 +12,7 @@ export const DoVisuals: ExpressionVisuals<DoExpression> =
   description: 'Do an expression repeatedly while a condition is true',
   viewer: DoEditor,
   editor: DoEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

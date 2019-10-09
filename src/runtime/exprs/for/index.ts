@@ -22,6 +22,7 @@ export const ForVisuals: ExpressionVisuals<ForExpression> =
   description: 'Execute an expression a number of times',
   viewer: ForEditor,
   editor: ForEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

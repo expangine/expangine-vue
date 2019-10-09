@@ -41,6 +41,9 @@ export default (registry: Registry) =>
       value: 'The value to check',
       defined: 'The expression to call with the defined value if it exists',
     },
+    scopeComments: {
+      defined: 'The value that is defined',
+    },
   });
 
   registry.addOperation(AnyOps.coalesce, {
@@ -53,6 +56,11 @@ export default (registry: Registry) =>
       c: 'The first value to check',
       d: 'The first value to check',
       e: 'The first value to check',
+    },
+    defaults: {
+      c: 'none',
+      d: 'none',
+      e: 'none',
     },
   });
 

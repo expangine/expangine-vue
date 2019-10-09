@@ -8,7 +8,7 @@
       tooltip="Negates the following expression"
       :can-remove="false"
     ></ex-expression-menu>
-    <span key="open" class="expression-symbol">(</span>
+    <ex-symbol key="open" type="("></ex-symbol>
     <ex-expression
       key="expression"
       v-bind="$props"
@@ -19,7 +19,7 @@
       @input="updateExpression($event)"
       @remove="updateExpression()"
     ></ex-expression>
-    <span key="close" class="expression-symbol">)</span>
+    <ex-symbol key="close" type=")"></ex-symbol>
   </span>
 </template>
 

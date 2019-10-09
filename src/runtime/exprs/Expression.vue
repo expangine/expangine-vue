@@ -32,6 +32,39 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+
+        <ex-expression-clipboard :registry="registry" @pasted="input">
+          <template #default="{ copiedOptions, paste }">
+            <v-menu offset-x open-on-hover style="display: inline" v-if="copiedOptions.length">
+              <template #activator="{ on }">
+                <v-list-item v-on="on">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Paste...
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Copy an expression from the clipboard
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-avatar>
+                    <v-icon>mdi-menu-right</v-icon>
+                  </v-list-item-avatar>
+                </v-list-item>
+              </template>
+              <v-list>
+                <template v-for="(expr, index) in copiedOptions">
+                  <v-list-item :key="index" @click="paste(expr.value)">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-menu>
+          </template>
+        </ex-expression-clipboard>
+        
         <v-list-item key="remove" @click="requestRemove" v-if="canRemove">
           <v-list-item-content>
             <v-list-item-title>Remove</v-list-item-title>

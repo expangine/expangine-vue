@@ -164,11 +164,6 @@ export default ExpressionBase<DefineExpression>().extend({
     hasVar(name: string) {
       return !!this.value.define[name] || this.hasContextVar(name);
     },
-    hasContextVar(name: string) {
-      return this.context instanceof ObjectType
-        ? !!this.context.options.props[name]
-        : false;
-    },
     isVarInvalid(index: number): boolean {
       const [name, expr] = this.vars[index];
 

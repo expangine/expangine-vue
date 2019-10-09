@@ -17,6 +17,7 @@ export interface ExpressionVisuals<E extends Expression = any>
   description: string;
   viewer: VueConstructor;
   editor: VueConstructor;
+  complex: boolean;
   isMultiline: (registry: Registry, expr: E) => boolean;
   types: Record<ExpressionTypes, ExpressionTypeDefinition<E>>;
 }

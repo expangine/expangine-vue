@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
@@ -16,6 +16,7 @@ export default function<E extends Expression>()
       update(): void;
       requestRemove(): void;
       remove(): void;
+      hasContextVar(name: string): boolean;
     },
     {
       computedValue: E;
@@ -32,6 +33,7 @@ export default function<E extends Expression>()
       value: E;
       type: ExpressionTypes;
       context: Type;
+      contextDetails: Record<string, string>;
       readOnly: boolean;
       registry: Registry;
       settings: TypeSettings;
@@ -54,6 +56,10 @@ export default function<E extends Expression>()
       context: {
         type: Object as () => Type,
         required: true,
+      },
+      contextDetails: {
+        type: Object as () => Record<string, string>,
+        default: () => ({}),
       },
       readOnly: {
         type: Boolean,
@@ -139,6 +145,11 @@ export default function<E extends Expression>()
             this.remove();
           }
         }
+      },
+      hasContextVar(name: string) {
+        return this.context instanceof ObjectType
+          ? !!this.context.options.props[name]
+          : false;
       },
     },
   });

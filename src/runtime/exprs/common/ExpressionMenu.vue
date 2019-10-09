@@ -15,6 +15,21 @@
         </v-list-item-content>
       </v-list-item>
 
+      <ex-expression-clipboard :registry="registry">
+        <template #default="{ copy }">
+          <v-list-item @click="copy(value)">
+            <v-list-item-content>
+              <v-list-item-title>
+                Copy {{ visuals.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Add this expression to the clipboard
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </ex-expression-clipboard>
+
       <template v-for="expr in modifiers">
         <v-list-item :key="expr.text" @click="modify(expr.value)">
           <v-list-item-content>
@@ -52,6 +67,38 @@
         </v-list>
       </v-menu>
 
+      <ex-expression-clipboard :registry="registry" @pasted="input">
+        <template #default="{ copiedOptions, paste }">
+          <v-menu offset-x open-on-hover style="display: inline" v-if="copiedOptions.length">
+            <template #activator="{ on }">
+              <v-list-item v-on="on">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Paste...
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    The entire expression will be replaced with one from the clipboard
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-avatar>
+                  <v-icon>mdi-menu-right</v-icon>
+                </v-list-item-avatar>
+              </v-list-item>
+            </template>
+            <v-list>
+              <template v-for="(expr, index) in copiedOptions">
+                <v-list-item :key="index" @click="paste(expr.value)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
+        </template>
+      </ex-expression-clipboard>
+      
       <slot name="append"></slot>
 
     </v-list>

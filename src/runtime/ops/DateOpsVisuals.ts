@@ -55,7 +55,10 @@ export default (registry: Registry) =>
     singleline: 'parse {value} as date as UTC {parseAsUTC}',
     comments: {
       value: 'The value to parse',
-      parseAsUTC: 'The second value',
+      parseAsUTC: 'If a text value should be parsed as a UTC timestamp',
+    },
+    defaults: {
+      parseAsUTC: 'false',
     },
   });
 
@@ -65,7 +68,10 @@ export default (registry: Registry) =>
     singleline: 'parse text {value} as date as UTC {parseAsUTC}',
     comments: {
       value: 'The value to parse',
-      parseAsUTC: 'The second value',
+      parseAsUTC: 'If a text value should be parsed as a UTC timestamp',
+    },
+    defaults: {
+      parseAsUTC: 'false',
     },
   });
 
@@ -137,6 +143,9 @@ export default (registry: Registry) =>
       amount: 'The amount of units to add',
       unit: 'The unit of time to add',
     },
+    defaults: {
+      amount: '1',
+    },
   });
 
   registry.addOperation(DateOps.sub, {
@@ -147,6 +156,9 @@ export default (registry: Registry) =>
       value: 'The date value',
       amount: 'The amount of units to subtract',
       unit: 'The unit of time to subtract',
+    },
+    defaults: {
+      amount: '1',
     },
   });
 
@@ -168,6 +180,9 @@ export default (registry: Registry) =>
       value: 'The date value',
       unit: 'The unit of time',
       inclusive: 'If the result should be exactly on the date (true), or a millisecond before (false)',
+    },
+    defaults: {
+      inclusive: 'false',
     },
   });
 
@@ -205,7 +220,10 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
-      unit: 'A unit to compare against, otherwise to the millisecond',
+      unit: 'A unit to compare against',
+    },
+    defaults: {
+      unit: 'millisecond',
     },
   });
 
@@ -216,9 +234,14 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
-      unit: 'A unit to use for calculating a difference, defaults to millisecond',
+      unit: 'A unit to use for calculating a difference',
       absolute: 'If the difference should always positive',
       adjust: 'The function to use to adjust the final value',
+    },
+    defaults: {
+      unit: 'millisecond',
+      absolute: 'true',
+      adjust: 'down',
     },
   });
 
@@ -268,6 +291,9 @@ export default (registry: Registry) =>
       test: 'The test value to compare against',
       unit: 'The unit of time to use to compare the two dates',
     },
+    defaults: {
+      unit: 'milliseconds',
+    },
   });
 
   registry.addOperation(DateOps.isBefore, {
@@ -278,6 +304,9 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
       unit: 'The unit of time to use to compare the two dates',
+    },
+    defaults: {
+      unit: 'milliseconds',
     },
   });
 
@@ -290,6 +319,9 @@ export default (registry: Registry) =>
       test: 'The test value to compare against',
       unit: 'The unit of time to use to compare the two dates',
     },
+    defaults: {
+      unit: 'milliseconds',
+    },
   });
 
   registry.addOperation(DateOps.isAfter, {
@@ -301,6 +333,9 @@ export default (registry: Registry) =>
       test: 'The test value to compare against',
       unit: 'The unit of time to use to compare the two dates',
     },
+    defaults: {
+      unit: 'milliseconds',
+    },
   });
 
   registry.addOperation(DateOps.isAfterOrEqual, {
@@ -311,6 +346,9 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
       unit: 'The unit of time to use to compare the two dates',
+    },
+    defaults: {
+      unit: 'milliseconds',
     },
   });
 
@@ -325,6 +363,11 @@ export default (registry: Registry) =>
       unit: 'The unit of time to use to compare the dates',
       startInclusive: 'If the start date should be inclusive',
       endInclusive: 'If the end date should be inclusive',
+    },
+    defaults: {
+      unit: 'milliseconds',
+      startInclusive: 'true',
+      endInclusive: 'false',
     },
   });
 
@@ -346,6 +389,9 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       unit: 'The unit of time to use to compare the dates',
       inclusive: 'If the end of unit should be inclusive',
+    },
+    defaults: {
+      inclusive: 'false',
     },
   });
 

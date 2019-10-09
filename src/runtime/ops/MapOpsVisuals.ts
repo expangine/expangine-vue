@@ -149,6 +149,10 @@ export default (registry: Registry) =>
       key: 'The current key to copy',
       value: 'The current value to copy',
     },
+    defaults: {
+      deepCopy: 'same value',
+      deepCopyKey: 'same key',
+    },
   });
 
   registry.addOperation(MapOps.map, {
@@ -164,6 +168,10 @@ export default (registry: Registry) =>
       map: 'The map being transformed',
       key: 'The current key of the key/value pair being transformed',
       value: 'The current value of the key/value pair being transformed',
+    },
+    defaults: {
+      transform: 'no transform',
+      transformKey: 'no transform',
     },
   });
 
@@ -204,7 +212,7 @@ export default (registry: Registry) =>
   registry.addOperation(MapOps.isNotEqual, {
     name: 'Maps Not Equal?',
     description: 'Determines whether [value] is not equal to [test] using [isEqual] to compare values',
-    singleline: '{value} equals {test} where values are equal when {isEqual}',
+    singleline: '{value} not equal to {test} where values are equal when {isEqual}',
     comments: {
       value: 'The map to evaluate',
       test: 'The test map to compare against',

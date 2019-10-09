@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { OperationExpression } from 'expangine-runtime';
+import { OperationExpression, objectReduce } from 'expangine-runtime';
 
 import OperationEditor from './OperationEditor.vue';
 
@@ -14,7 +14,10 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   description: 'Perform an operation',
   viewer: OperationEditor,
   editor: OperationEditor,
-  isMultiline: () => true,
+  complex: true,
+  isMultiline: (registry, expr) => objectReduce(expr.params, 
+    (paramExpr, param, oneOf) => (oneOf || registry.getExpressionMultiline(paramExpr))
+  , false as boolean),
   types: {
     condition: {
       isStart: () => true,

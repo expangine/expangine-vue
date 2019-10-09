@@ -12,6 +12,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
   description: 'Multiple expressions, return the result of the last one',
   viewer: ChainEditor,
   editor: ChainEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

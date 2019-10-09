@@ -13,6 +13,7 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
   description: 'Define variables to use later',
   viewer: DefineEditor,
   editor: DefineEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

@@ -12,6 +12,7 @@ export const AndVisuals: ExpressionVisuals<AndExpression> =
   description: 'Returns true if all conditions are true',
   viewer: AndEditor,
   editor: AndEditor,
+  complex: true,
   isMultiline: (registry, expr) => 
     expr.expressions.some((e) => 
       registry.getExpressionMultiline(e),

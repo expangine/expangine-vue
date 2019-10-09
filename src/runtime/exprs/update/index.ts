@@ -13,6 +13,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
   description: 'Set a value based on the current value',
   viewer: UpdateViewer,
   editor: UpdateEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

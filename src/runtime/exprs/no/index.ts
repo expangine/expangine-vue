@@ -12,6 +12,7 @@ export const NoVisuals: ExpressionVisuals<NoExpression> =
   description: 'No expression',
   viewer: NoEditor,
   editor: NoEditor,
+  complex: false,
   isMultiline: () => false,
   types: {
     condition: {

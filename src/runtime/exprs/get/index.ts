@@ -13,6 +13,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   description: 'Get a value',
   viewer: GetViewer,
   editor: GetEditor,
+  complex: true,
   isMultiline: (registry, expr) => expr.path.some((e) => 
     registry.getExpressionMultiline(e),
   ),

@@ -12,6 +12,7 @@ export const WhileVisuals: ExpressionVisuals<WhileExpression> =
   description: 'While a condition is true, do an expression',
   viewer: WhileEditor,
   editor: WhileEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

@@ -12,6 +12,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   description: 'If (condition) then (this) else (that)',
   viewer: IfEditor,
   editor: IfEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

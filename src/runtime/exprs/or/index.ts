@@ -13,6 +13,7 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
   description: 'Returns true if any of the conditions are true',
   viewer: OrEditor,
   editor: OrEditor,
+  complex: true,
   isMultiline: (registry, expr) => 
     expr.expressions.some((e) => 
       registry.getExpressionMultiline(e),

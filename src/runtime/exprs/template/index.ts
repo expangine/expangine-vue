@@ -13,6 +13,7 @@ export const TemplateVisuals: ExpressionVisuals<TemplateExpression> =
   description: 'Text with variables injected into it',
   viewer: TemplateEditor,
   editor: TemplateEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {

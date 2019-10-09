@@ -13,6 +13,7 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
   description: 'Set a value',
   viewer: SetViewer,
   editor: SetEditor,
+  complex: true,
   isMultiline: () => true,
   types: {
     condition: {
