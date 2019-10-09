@@ -1,5 +1,6 @@
 <template>
-  <span>
+  <span class="ex-path-segment">
+
     <v-menu key="menu" offset-y>
       <template #activator="{ on }">
         <v-btn icon v-on="on">
@@ -22,7 +23,9 @@
         </template>
       </v-list>
     </v-menu>
-    <span key="start" v-if="hasBrackets" class="expression-symbol">[ </span>
+    
+    <ex-symbol key="start" v-if="hasBrackets" type="["></ex-symbol>
+
     <ex-expression
       key="value"
       v-bind="$props"
@@ -35,7 +38,9 @@
       @input="updateSegment"
       @remove="removeSegment"
     ></ex-expression>
-    <span key="end" v-if="hasBrackets" class="expression-symbol"> ]</span>
+
+    <ex-symbol key="end" v-if="hasBrackets" type="]"></ex-symbol>
+
     <path-segment 
       key="next"
       v-if="hasNext"
@@ -45,6 +50,7 @@
       :path="path"
       :sub-settings="segmentSettings"
     ></path-segment>
+
   </span>
 </template>
 
@@ -152,3 +158,12 @@ export default ExpressionBase().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.ex-path-segment {
+  position: relative;
+  // display: flex;
+  // align-items: center;
+  // flex-wrap: wrap;
+}
+</style>

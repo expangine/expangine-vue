@@ -37,7 +37,7 @@
   <table v-else class="expression-table">
     <tbody>
       <tr>
-        <td>
+        <td :class="inOperationClass">
           <ex-expression-menu
             v-if="!readOnly"
             v-bind="$props"
@@ -115,21 +115,26 @@
                   <span>{{ operationVisuals.comments[section] }}</span>
                 </v-tooltip>
 
-                <ex-symbol key="start" type="("></ex-symbol>
+                <span class="param-group">
 
-                <ex-expression
-                  key="value"
-                  v-bind="$props"
-                  type="value"
-                  :value="value.params[section]"
-                  :context="paramContext(section)"
-                  :context-details="paramContextDetails(section)"
-                  :required-type="paramTypes[section]"
-                  @input="setParam(section, $event)"
-                  @remove="setParam(section)"
-                ></ex-expression>
+                  <ex-symbol class="param-group-end" key="start" type="("></ex-symbol>
 
-                <ex-symbol key="end" type=")"></ex-symbol>
+                  <ex-expression
+                    key="value"
+                    class="param-group-middle"
+                    v-bind="$props"
+                    type="value"
+                    :value="value.params[section]"
+                    :context="paramContext(section)"
+                    :context-details="paramContextDetails(section)"
+                    :required-type="paramTypes[section]"
+                    @input="setParam(section, $event)"
+                    @remove="setParam(section)"
+                  ></ex-expression>
+
+                  <ex-symbol class="param-group-end" key="end" type=")"></ex-symbol>
+
+                </span>
 
               </span>
 
@@ -196,6 +201,8 @@ import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
 
+
+// TODO Change Operation: registry.defs.getOperationsWithMapping (this.operation.name, this.paramTypes)
 
 const STARTING_PARAM = '$wrapped';
 
@@ -421,6 +428,18 @@ export default ExpressionBase<OperationExpression>().extend({
   > .param-label {
     position: absolute;
     top: -15px;
+  }
+}
+
+.param-group {
+  display: flex;
+
+  > .param-group-end {
+    flex: 0 0 10px;
+  }
+
+  > .param-group-middle {
+    flex: 1 0;
   }
 }
 

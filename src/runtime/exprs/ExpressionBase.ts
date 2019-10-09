@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, EnumType, OperationExpression } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
@@ -21,11 +21,14 @@ export default function<E extends Expression>()
     {
       computedValue: E;
       computedType: Type | null;
+      computedTypeRaw: Type | null;
       computedTypeVisuals: TypeVisuals | null;
       conditionType: Type;
       invalid: boolean;
       hasValue: boolean;
       isRemovable: boolean;
+      inOperation: boolean;
+      inOperationClass: string;
       visuals: ExpressionVisuals<E>;
       multiline: boolean;
     },
@@ -100,8 +103,11 @@ export default function<E extends Expression>()
           this.input(newValue);
         },
       },
+      computedTypeRaw(): Type | null {
+        return this.value.getType(this.registry.defs, this.context);
+      },
       computedType(): Type | null {
-        return Type.simplify(this.value.getType(this.registry.defs, this.context));
+        return Type.simplify(this.computedTypeRaw);
       },
       computedTypeVisuals(): TypeVisuals | null {
         return this.computedType
@@ -113,14 +119,22 @@ export default function<E extends Expression>()
       },
       invalid(): boolean {
         return !!(this.requiredType 
-          && this.computedType
-          && !this.requiredType.acceptsType(this.computedType));
+          && this.computedTypeRaw
+          && !this.requiredType.acceptsType(this.computedTypeRaw));
       },
       hasValue(): boolean {
         return this.value && this.value !== NoExpression.instance;
       },
       isRemovable(): boolean {
         return !this.readOnly && this.canRemove;
+      },
+      inOperation(): boolean {
+        return this.value 
+          ? this.value.parent instanceof OperationExpression
+          : false;
+      },
+      inOperationClass(): string {
+        return this.inOperation ? 'pl-0' : 'pl-3';
       },
       visuals(): ExpressionVisuals<E> {
         return this.registry.getExpressionVisuals(this.value);

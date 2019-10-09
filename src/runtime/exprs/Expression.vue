@@ -1,5 +1,5 @@
 <template>
-  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline }">
+  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline, hasline }">
     <component
       v-if="readOnly"
       :is="visuals.viewer"
@@ -78,7 +78,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression } from 'expangine-runtime';
+import { Expression, OperationExpression } from 'expangine-runtime';
 import { ExpressionVisuals } from './ExpressionVisuals';
 import ExpressionBase from './ExpressionBase';
 
@@ -92,6 +92,9 @@ export default ExpressionBase().extend({
     statusColor(): string {
       return this.invalid ? 'error' : 'primary';
     },
+    hasline(): boolean {
+      return !(this.value.parent instanceof OperationExpression);
+    },
   },
   methods: {
     startWith(visuals: ExpressionVisuals) {
@@ -104,7 +107,10 @@ export default ExpressionBase().extend({
 <style lang="less" scoped>
 .ex-expression {
   display: inline-block;
-  border-left: 1px solid rgba(0,0,0,0.1);
+
+  &.hasline {
+    border-left: 1px solid rgba(0,0,0,0.1);
+  }
 
   &.multiline {
     display: block;

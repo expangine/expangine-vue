@@ -49,15 +49,50 @@ export default Vue.extend({
 
   .ex-symbol-image {
     background-position: center;
-    background-size: contain;
+    background-size: 10px 90%;
+    background-repeat: no-repeat;
     width: 100%;
     height: 100%;
     display: inline-block;
 
-    &.left-paren { background-image: url(../../../assets/left-paren.png); }
-    &.right-paren { background-image: url(../../../assets/right-paren.png); }
-    &.left-bracket { background-image: url(../../../assets/left-bracket.png); }
-    &.right-bracket { background-image: url(../../../assets/right-bracket.png); }
+    &.left-paren { 
+      // background-image: url(../../../assets/left-paren.png); 
+      border-radius: 13px;
+      border-left: 4px solid black;
+      width: 40px;
+    }
+    &.right-paren { 
+      // background-image: url(../../../assets/right-paren.png); 
+      border-radius: 13px;
+      border-right: 4px solid black;
+      width: 40px;
+      left: -30px;
+      position: relative;
+    }
+    &.left-bracket { 
+      // background-image: url(../../../assets/left-bracket.png); 
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+      border-left: 4px solid black;
+      border-top: 4px solid black;
+      border-bottom: 4px solid black;
+      width: 8px;
+      position: relative;
+      margin-top: -7px;
+      height: calc(100% + 20px);
+    }
+    &.right-bracket { 
+      // background-image: url(../../../assets/right-bracket.png); 
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+      border-right: 4px solid black;
+      border-top: 4px solid black;
+      border-bottom: 4px solid black;
+      width: 8px;
+      position: relative;
+      margin-top: -7px;
+      height: calc(100% + 20px);
+    }
   }
 }
 </style>

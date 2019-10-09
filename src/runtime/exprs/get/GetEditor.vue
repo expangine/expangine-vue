@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-3">
+  <div :class="inOperationClass">
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"

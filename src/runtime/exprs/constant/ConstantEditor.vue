@@ -1,6 +1,6 @@
 <template>
   <span v-if="readOnly">{{ readonlyValue }}</span>
-  <span v-else-if="inputType" class="pl-3">
+  <span v-else-if="inputType" :class="inOperationClass">
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
@@ -57,9 +57,14 @@ export default ExpressionBase<ConstantExpression>().extend({
   }),
   computed: {
     inputType(): Type | null {
-      return this.invalid && this.requiredType
+      return this.useRequiredType
         ? this.requiredType
         : this.computedType || this.requiredType;
+    },
+    useRequiredType(): boolean {
+      return !!(this.requiredType 
+        && this.computedType
+        && !this.requiredType.acceptsType(this.computedType));
     },
     readonlyValue(): string {
       if (!this.inputType) {
