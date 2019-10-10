@@ -9,7 +9,8 @@
       <template #prepend>
         <v-list-item @click="edit">
           <v-list-item-content>
-            Edit
+            <v-list-item-title>Edit</v-list-item-title>
+            <v-list-item-subtitle>Set the constant value</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>

@@ -1,38 +1,23 @@
 <template>
-  <span v-if="returnTypeMode">
-    <v-autocomplete
-      hide-details
-      outlined
-      append-icon="mdi-close"  
-      :label="returnTypeDescribed"
-      :items="returnTypeOperations"
-      @input="chooseOperation"
-      @click:append="cancel"
-    ></v-autocomplete>
-  </span>
-  <span v-else-if="forTypeMode">
+  <span v-if="isEmpty">
     <v-autocomplete
       hide-details
       outlined
       clearable
-      append-icon="mdi-close"  
-      :label="forTypeDescribed"
-      :items="forTypeOperations"
+      append-icon="mdi-close"
+      :menu-props="{maxWidth: 400}"
+      :label="searchLabel"
+      :items="searchItems"
+      :filter="filterOperation"
       @input="chooseOperation"
-      @click:append="cancel"
-    ></v-autocomplete>
-  </span>
-  <span v-else-if="isEmpty">
-    <v-autocomplete
-      hide-details
-      outlined
-      clearable
-      label="Operation"
-      append-icon="mdi-close"  
-      :items="allOperations"
-      @input="chooseOperation"
-      @click:append="cancel"
-    ></v-autocomplete>
+      @click:append="cancel">
+      <template #item="{ item }">
+        <v-list-item-content>
+          <v-list-item-title v-html="item.text"></v-list-item-title>
+          <v-list-item-subtitle v-html="item.description"></v-list-item-subtitle>
+        </v-list-item-content>
+      </template>
+    </v-autocomplete>
   </span>
   <table v-else class="expression-table">
     <tbody>
@@ -108,33 +93,32 @@
 
                 <v-tooltip top v-if="!readOnly">
                   <template #activator="{ on }">
-                    <v-chip x-small label outlined class="param-label" v-on="on">
+                    <v-chip x-small label outlined class="param-label" v-on="on" @click="toggleParameter(section)">
                       {{ section }}
                     </v-chip>
                   </template>
                   <span>{{ operationVisuals.comments[section] }}</span>
                 </v-tooltip>
 
-                <span class="param-group">
-
-                  <ex-symbol class="param-group-end" key="start" type="("></ex-symbol>
-
-                  <ex-expression
-                    key="value"
-                    class="param-group-middle"
-                    v-bind="$props"
-                    type="value"
-                    :value="value.params[section]"
-                    :context="paramContext(section)"
-                    :context-details="paramContextDetails(section)"
-                    :required-type="paramTypes[section]"
-                    @input="setParam(section, $event)"
-                    @remove="setParam(section)"
-                  ></ex-expression>
-
-                  <ex-symbol class="param-group-end" key="end" type=")"></ex-symbol>
-
+                <span v-if="hiddenParameter(section)"
+                  class="ex-expression parenthesis">
+                  <v-btn text @click="toggleParameter(section)">
+                    show
+                  </v-btn>
                 </span>
+                <ex-expression
+                  key="value"
+                  v-else
+                  v-bind="$props"
+                  class="parenthesis"
+                  type="value"
+                  :value="value.params[section]"
+                  :context="paramContext(section)"
+                  :context-details="paramContextDetails(section)"
+                  :required-type="paramTypes[section]"
+                  @input="setParam(section, $event)"
+                  @remove="setParam(section)"
+                ></ex-expression>
 
               </span>
 
@@ -194,21 +178,36 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression } from 'expangine-runtime';
-import ExpressionBase from '../ExpressionBase';
-import { ListOptions } from '@/common';
+import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression } from 'expangine-runtime';
+import { ListOptions, renameVariable } from '@/common';
 import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
+import ExpressionBase from '../ExpressionBase';
 
-
-// TODO Change Operation: registry.defs.getOperationsWithMapping (this.operation.name, this.paramTypes)
 
 const STARTING_PARAM = '$wrapped';
 
 export default ExpressionBase<OperationExpression>().extend({
   name: 'OperationEditor',
+  data: () => ({
+    hiddenParams: {} as Record<string, boolean>,
+  }),
   computed: {
+    searchLabel(): string {
+      return this.returnTypeMode
+        ? this.returnTypeDescribed
+        : this.forTypeMode
+          ? this.forTypeDescribed
+          : 'Operation';
+    },
+    searchItems(): ListOptions<OperationPair> {
+      return this.returnTypeMode
+        ? this.returnTypeOperations
+        : this.forTypeMode
+          ? this.forTypeOperations
+          : this.allOperations;
+    },
     isEmpty(): boolean {
       return !this.value.name;
     },
@@ -257,6 +256,7 @@ export default ExpressionBase<OperationExpression>().extend({
         ? this.registry.defs
           .getOperationsWithReturnType(this.requiredType)
           .map(this.getListOption)
+          .sort(this.sortListOption)
         : [];
     },
     forTypeMode(): boolean {
@@ -272,11 +272,14 @@ export default ExpressionBase<OperationExpression>().extend({
         ? this.registry.defs
           .getOperationsForType(this.startingValueType)
           .map(this.getListOption)
+          .sort(this.sortListOption)
         : [];
     },
     allOperations(): ListOptions<OperationPair> {
       return this.registry.defs.getOperations()
-        .map(this.getListOption);
+        .map(this.getListOption)
+        .sort(this.sortListOption)
+      ;
     },
     showSingleLine(): boolean {
       return !!(!this.multiline 
@@ -285,6 +288,31 @@ export default ExpressionBase<OperationExpression>().extend({
     },
   },
   methods: {
+    filterOperation(item: any, queryText: string, itemText: string) {
+      if (isArray(item.tokens)) { 
+        const queryTokens = this.tokens(queryText);
+
+        return queryTokens.some((queryToken) => item.tokens.some((token: string) => token.indexOf(queryToken) !== -1));
+      } else {
+        return itemText.toLowerCase().indexOf(queryText.toLowerCase()) > 1;
+      }
+    },
+    tokenize(text: string): string {
+      return text.toLowerCase().replace(/[^a-z0-9]/, '');
+    },
+    tokens(text: string): string[] { 
+      return text.split(/\s+/).map(this.tokenize).filter((token) => !!token);
+    },
+    toggleParameter(name: string) {
+      if (name in this.hiddenParams) {
+        this.$delete(this.hiddenParams, name);
+      } else {
+        this.$set(this.hiddenParams, name, true);
+      }
+    },
+    hiddenParameter(name: string) {
+      return !!this.hiddenParams[name];
+    },
     hasParameter(name: string): boolean {
       return !!this.value.params[name];
     },
@@ -296,13 +324,21 @@ export default ExpressionBase<OperationExpression>().extend({
       }
     },
     getListOption(value: OperationPair) {
-      const { name: text, description } = this.registry.getOperationVisuals(value.op.id);
+      const { name: text, description, keywords } = this.registry.getOperationVisuals(value.op.id);
+
+      const tokens = this.tokens(text)
+        .concat(this.tokens(description))
+        .concat(keywords ? keywords.map(this.tokenize) : []);
 
       return { 
         text,
         description,
         value,
+        tokens,
       };
+    },
+    sortListOption(a: {text: string}, b: {text: string}): number {
+      return a.text.localeCompare(b.text);
     },
     paramContextDetails(name: string): Record<string, string> {
       const defs = this.registry.defs;
@@ -398,16 +434,7 @@ export default ExpressionBase<OperationExpression>().extend({
         } else {
           this.$set(this.value.scopeAlias, scopeParam, alias);
 
-          this.value.traverse(new Traverser((expr) => {
-            if (expr instanceof GetExpression) { 
-              const first = expr.path[0];
-              if (first instanceof ConstantExpression) {
-                if (first.value === previous) {
-                  first.value = alias;
-                }
-              }
-            }
-          }));
+          renameVariable(this.value, previous, alias);
 
           this.update();
 

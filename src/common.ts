@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression } from 'expangine-runtime';
 import { TypeAndSettings, TypeSettings, TypeVisualInput } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { TypeBuildResult } from './runtime/types/TypeBuilder';
@@ -173,4 +173,23 @@ export function isSubArray(settings: any): settings is TypeSettings<any, number>
 export function isSubObject(settings: any): settings is TypeSettings<any, string>
 {
   return isObject(settings.sub);
+}
+
+export function renameVariable(startingAt: Expression, from: string, to: string)
+{
+  startingAt.traverse(new Traverser((expr) =>  
+  {
+    if (expr instanceof GetExpression || expr instanceof SetExpression || expr instanceof UpdateExpression) 
+    {
+      const first = expr.path[0];
+      
+      if (first instanceof ConstantExpression) 
+      {
+        if (first.value === from) 
+        {
+          first.value = to;
+        }
+      }
+    }
+  }));
 }

@@ -93,3 +93,79 @@
 .sorting-handle {
   cursor: move;
 }
+
+@symbol-color: #a0a0a0;
+@symbol-width: 3px;
+
+.ex-expression {
+
+  &.parenthesis {
+    position: relative;
+    margin-left: 16px;
+    margin-right: 16px;
+
+    &:before {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      left: -10px;
+      border-radius: 13px;
+      border-left: @symbol-width solid @symbol-color;
+      width: 40px;
+    }
+
+    &:after {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      right: -8px;
+      border-radius: 13px;
+      border-right: @symbol-width solid @symbol-color;
+      width: 40px;
+    }
+  }
+
+  &.brackets {
+    position: relative;
+    margin-left: 16px;
+    margin-right: 16px;
+
+    &:before {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      left: -12px;
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+      border-left: @symbol-width solid @symbol-color;
+      border-top: @symbol-width - 1px solid @symbol-color;
+      border-bottom: @symbol-width - 1px solid @symbol-color;
+      width: 8px;
+    }
+
+    &:after {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      right: -12px;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+      border-right: @symbol-width solid @symbol-color;
+      border-top: @symbol-width - 1px solid @symbol-color;
+      border-bottom: @symbol-width - 1px solid @symbol-color;
+      width: 8px;
+    }
+  }
+}

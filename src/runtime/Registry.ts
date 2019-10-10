@@ -86,7 +86,7 @@ export class Registry
   public getExpressionsModifiers(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null)
   {
     return this.exprs
-      .map((visual) => visual.types[type].getModifiers(requiredType, expr, exprType))
+      .map((visual) => visual.types[type].getModifiers(requiredType, expr, exprType, this))
       .reduce((prev, next) => next.concat(prev), [])
     ;
   }

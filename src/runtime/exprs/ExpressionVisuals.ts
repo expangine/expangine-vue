@@ -3,6 +3,7 @@ import { VueConstructor } from 'vue';
 import { Expression, Type, ExpressionClass } from 'expangine-runtime';
 import { ListOptions } from '@/common';
 import { Registry } from '../Registry';
+import { ConfirmOptions } from '@/app/Confirm';
 
 
 
@@ -36,7 +37,11 @@ export type ExpressionValidator<E extends Expression> =
   (requiredType: Type | null, expr: E, exprType: Type | null) => any;
 
 export type ExpressionModifier = 
-  (requiredType: Type | null, expr: Expression, exprType: Type | null) => ListOptions<ExpressionModifierCallback>;
+  (requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry) => ListOptions<ExpressionModifierCallback>;
 
 export type ExpressionModifierCallback = 
-  () => Expression;
+  (() => Expression | null) | 
+  ({
+    options: Partial<ConfirmOptions>;
+    handler: () => Expression | null;
+  });

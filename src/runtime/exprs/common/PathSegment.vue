@@ -24,13 +24,11 @@
       </v-list>
     </v-menu>
     
-    <ex-symbol key="start" v-if="hasBrackets" type="["></ex-symbol>
-
     <ex-expression
       key="value"
       v-bind="$props"
       type="value"
-      :class="{ 'expression-inside': hasBrackets }"
+      :class="{ 'expression-inside brackets': hasBrackets }"
       :read-only="segmentReadOnly"
       :required-type="expectedType"
       :value="segment"
@@ -38,8 +36,6 @@
       @input="updateSegment"
       @remove="removeSegment"
     ></ex-expression>
-
-    <ex-symbol key="end" v-if="hasBrackets" type="]"></ex-symbol>
 
     <path-segment 
       key="next"

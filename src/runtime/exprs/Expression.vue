@@ -23,7 +23,7 @@
           {{ type }}
         </v-btn>
       </template>
-      <v-list>
+      <v-list dense>
         <template v-for="expr in starters">
           <v-list-item :key="expr.expr.id" @click="startWith(expr)">
             <v-list-item-content>

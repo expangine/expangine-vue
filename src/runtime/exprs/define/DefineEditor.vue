@@ -39,9 +39,9 @@
             ghost-class="ghost"
             handle=".sorting-handle" 
             :class="{ three: sorting }"
-            v-model="vars" 
+            v-model="value.define" 
             @end="update">
-            <template v-for="(pair, index) in vars">
+            <template v-for="(pair, index) in value.define">
               <tbody :key="index">
                 <tr>
                   <td v-if="sorting">
@@ -51,8 +51,9 @@
                     <v-text-field
                       outlined
                       hide-details
-                      v-model="pair[0]"
-                      @blur.native="saveVars"
+                      :error="isVarInvalid(index)"
+                      :value="pair[0]"
+                      @change="changeVar(index, $event)"
                     ></v-text-field>
                   </td>
                   <td>
@@ -60,9 +61,10 @@
                       v-bind="$props"
                       type="value"
                       :context="getContextAt(index)"
-                      v-model="pair[1]"
-                      @input="saveVars"
-                      @remove="removeVar(pair[0])"
+                      :required-type="null"
+                      :value="pair[1]"
+                      @input="changeVarExpression(index, $event)"
+                      @remove="removeVar(index)"
                     ></ex-expression>
                   </td>
                 </tr>
@@ -95,8 +97,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType } from 'expangine-runtime';
-import { obj } from '@/common';
+import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression } from 'expangine-runtime';
+import { obj, renameVariable } from '@/common';
 import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
 
@@ -105,31 +107,22 @@ export default ExpressionBase<DefineExpression>().extend({
   name: 'DefineEditor',
   data: () => ({
     sorting: false,
-    vars: [] as Array<[string, Expression]>,
   }),
   computed: {
     bodyContext(): Type {
-      return this.getContextAt(this.vars.length);
-    },
-  },
-  watch: {
-    'value.define': {
-      immediate: true,
-      handler(defines: ExpressionMap) {
-        this.vars = objectValues(this.value.define, (value, key) => [key, value]);
-      },
+      return this.getContextAt(this.value.define.length);
     },
   },
   methods: {
-    sortStart() {
+    sortStart(): void {
       this.sorting = !this.sorting;
     },
-    updateBody(body?: Expression) {
+    updateBody(body?: Expression): void {
       this.value.body = body || NoExpression.instance;
       this.update();
     },
-    addVar() {
-      this.vars.push([this.getNextVarName(), NoExpression.instance]);
+    addVar(): void {
+      this.value.define.push([this.getNextVarName(), NoExpression.instance]);
     },
     getContextAt(index: number): Type {
       const defs = this.registry.defs;
@@ -137,7 +130,7 @@ export default ExpressionBase<DefineExpression>().extend({
       let context = this.context;
 
       for (let i = 0; i < index; i++) {
-        const [name, expr] = this.vars[i];
+        const [name, expr] = this.value.define[i];
         const exprType = expr.getType(defs, context);
 
         if (exprType) {
@@ -148,9 +141,9 @@ export default ExpressionBase<DefineExpression>().extend({
 
       return context;
     },
-    getNextVarName() {
+    getNextVarName(): string {
       const names = 'abcdefghijklmnopqrstuvwxyz'.split('');
-      let next = names.find((name) => !this.value.define[name] && !this.hasContextVar(name));
+      let next = names.find((name) => !this.hasVar(name));
       if (!next) {
         let index = 0;
         next = 'temp';
@@ -162,34 +155,45 @@ export default ExpressionBase<DefineExpression>().extend({
       return next;
     },
     hasVar(name: string) {
-      return !!this.value.define[name] || this.hasContextVar(name);
+      return this.value.define.some(([n]) => n === name) || this.hasContextVar(name);
     },
     isVarInvalid(index: number): boolean {
-      const [name, expr] = this.vars[index];
+      const [name, expr] = this.value.define[index];
 
       return expr === NoExpression.instance
         || !name
         || this.hasContextVar(name)
-        || !!this.vars.find(([other], otherIndex) => other === name && index !== otherIndex);
+        || this.value.define.some(([other], otherIndex) => other === name && index !== otherIndex);
     },
     isVarsValid(): boolean {
-      return !this.vars.find((pair, index) => this.isVarInvalid(index));
+      return !this.value.define.some((pair, index) => this.isVarInvalid(index));
     },
-    saveVars() {
-      if (!this.isVarsValid()) {
+    changeVarExpression(index: number, expr?: Expression): void {
+      this.$set(this.value.define[index], 1, expr || NoExpression.instance);
+      this.update();
+    },
+    changeVar(index: number, newName: string): void {
+      const oldName = this.value.define[index][0];
+      const skipRenaming = this.isVarInvalid(index);
+
+      this.$set(this.value.define[index], 0, newName);
+
+      if (skipRenaming) {
         return;
       }
 
-      const define = obj() as ExpressionMap;
-      for (const [name, expr] of this.vars) {
-        define[name] = expr;
+      if (oldName && oldName !== newName) {
+        renameVariable(this.value.body, oldName, newName);
+
+        for (let i = index + 1; i < this.value.define.length; i++) {
+          renameVariable(this.value.define[i][1], oldName, newName);
+        }
       }
 
-      this.value.define = define;
       this.update();
     },
-    async removeVar(name: string) {
-      this.$delete(this.value.define, name);
+    removeVar(index: number): void {
+      this.value.define.splice(index, 1);
       this.update();
     },
   },

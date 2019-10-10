@@ -3,16 +3,14 @@
     <template v-for="(condition, index) in value.expressions">
       <span :key="index">
         <span v-if="index > 0" class="expression-divider">AND</span>
-        <ex-symbol type="("></ex-symbol>
         <ex-expression
           v-bind="$props"
-          class="expression-inside"
+          class="parenthesis expression-inside"
           :value="condition"
           :required-type="conditionType"
           @input="updateExpression(index, $event)"
           @remove="updateExpression(index)"
         ></ex-expression>
-        <ex-symbol type=")"></ex-symbol>
       </span>
     </template>
     <v-menu>

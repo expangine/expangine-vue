@@ -652,7 +652,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.toMap, {
     name: 'Items to Map',
     description: 'Convert items in [list] into a map by [getKey] and transform items with [getValue]',
-    singleline: 'Convert items in {list} into a map by {getKey} and transform items with {getValue}',
+    singleline: 'convert items in {list} into a map by {getKey} and transform items with {getValue}',
     comments: {
       list: 'The list to convert',
       getKey: 'Takes the current item and returns a key to convert items by',
@@ -671,7 +671,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.min, {
     name: 'Items Min',
     description: 'Get minimum [value] in a [list]',
-    singleline: 'Get minimum {value} in {list}',
+    singleline: 'minimum {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -686,7 +686,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.max, {
     name: 'Items Max',
     description: 'Get maximum [value] in a [list]',
-    singleline: 'Get maximum {value} in {list}',
+    singleline: 'maximum {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -701,7 +701,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.sum, {
     name: 'Items Sum',
     description: 'Get sum of a [value] in a [list]',
-    singleline: 'Get sum of {value} in {list}',
+    singleline: 'sum of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -716,7 +716,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.avg, {
     name: 'Items Average',
     description: 'Get average [value] in a [list]',
-    singleline: 'Get average {value} in {list}',
+    singleline: 'average {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -731,7 +731,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.std, {
     name: 'Items Standard Deviation',
     description: 'Get standard deviation of a [value] in a [list]',
-    singleline: 'Get standard deviation of {value} in {list}',
+    singleline: 'standard deviation of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -746,7 +746,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.variance, {
     name: 'Items Variance',
     description: 'Get variance of a [value] in a [list]',
-    singleline: 'Get variance of {value} in {list}',
+    singleline: 'variance of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -761,7 +761,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.median, {
     name: 'Items Median',
     description: 'Get median of a [value] in a [list]',
-    singleline: 'Get median of {value} in {list}',
+    singleline: 'median of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -776,7 +776,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitand, {
     name: 'Items Bitwise AND',
     description: 'Get bitwise AND of a [value] in a [list]',
-    singleline: 'Get bitwise AND of {value} in {list}',
+    singleline: 'bitwise AND of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -791,7 +791,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitor, {
     name: 'Items Bitwise OR',
     description: 'Get bitwise OR of a [value] in a [list]',
-    singleline: 'Get bitwise OR of {value} in {list}',
+    singleline: 'bitwise OR of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -806,7 +806,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitxor, {
     name: 'Items Bitwise XOR',
     description: 'Get bitwise XOR of a [value] in a [list]',
-    singleline: 'Get bitwise XOR of {value} in {list}',
+    singleline: 'bitwise XOR of {value} in {list}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',

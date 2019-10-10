@@ -264,7 +264,7 @@ export default Vue.extend({
       }
 
       const cmd = LiveRuntime.getCommand(this.program);
-      const data = copy(this.type.toJson(this.data));
+      const data = this.type.fromJson(copy(this.type.toJson(this.data)));
       const result = cmd(data);
 
       window.console.log('ran', 'result', result, 'data', data);

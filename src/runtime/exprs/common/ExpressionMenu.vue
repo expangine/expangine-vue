@@ -1,6 +1,6 @@
 <template>
   <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
-    <v-list>
+    <v-list dense>
 
       <slot name="prepend"></slot>
 
@@ -55,7 +55,7 @@
             </v-list-item-avatar>
           </v-list-item>
         </template>
-        <v-list>
+        <v-list dense>
           <template v-for="expr in starters">
             <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
               <v-list-item-content>
@@ -85,7 +85,7 @@
                 </v-list-item-avatar>
               </v-list-item>
             </template>
-            <v-list>
+            <v-list dense>
               <template v-for="(expr, index) in copiedOptions">
                 <v-list-item :key="index" @click="paste(expr.value)">
                   <v-list-item-content>
@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression } from 'expangine-runtime';
+import { Expression, isFunction } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { getConfirmation } from '../../../app/Confirm';
@@ -159,9 +159,19 @@ export default ExpressionBase().extend({
         this.input(visuals.create(this.requiredType, this.context));
       }
     },
-    async modify(callback: ExpressionModifierCallback) {
-      if (await getConfirmation()) {
-        this.input(callback());
+    async modify(value: ExpressionModifierCallback) {
+      const options = isFunction(value)
+        ? undefined
+        : value.options;
+      const callback = isFunction(value)
+        ? value
+        : value.handler;
+
+      if (await getConfirmation(options)) {
+        const result = callback();
+        if (result) {
+          this.input(result);
+        }
       }
     },
   },
