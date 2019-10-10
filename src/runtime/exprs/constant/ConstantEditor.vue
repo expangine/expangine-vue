@@ -16,7 +16,7 @@
       </template>
     </ex-expression-menu>
     <span class="pa-2">{{ readonlyValue }}</span>
-    <v-dialog v-model="editing" persistent max-width="600px" style="display: inline">
+    <v-dialog v-model="editing" persistent max-width="600px" class="d-inline">
       <v-card>
         <v-card-title>
           <span class="headline">Enter Value</span>

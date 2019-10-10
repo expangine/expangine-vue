@@ -31,8 +31,19 @@
             text="Op"
             :tooltip="operationName">
             <template #prepend>
+              
+              <v-list-item @click="inspecting = true">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Inspect
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Look into the details of this operation
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
 
-              <v-menu offset-x open-on-hover style="display: inline" v-if="hasScope">
+              <v-menu offset-x open-on-hover class="d-inline" v-if="hasScope">
                 <template #activator="{ on }">
                   <v-list-item v-on="on">
                     <v-list-item-content>
@@ -59,37 +70,159 @@
                   </template>
                 </v-list>
               </v-menu>
-              
-              <v-dialog style="display: inline" width="500">
-                <template #activator="{ on }">
-                  <v-list-item v-on="on">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Inspect
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        Look into the details of this operation
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </template>
-                <v-card>
-                  <v-card-title class="headline grey lighten-2" primary-title>
-                    {{ operationName }}
-                  </v-card-title>
-                   <v-card-text>
-                     Hello World!
-                   </v-card-text>
-                </v-card>
-              </v-dialog>
 
             </template>
           </ex-expression-menu>
+
+          <v-dialog v-model="inspecting" width="1000">
+            <v-card>
+              <v-card-text>
+
+                <p class="display-1 text--primary pa-2 pt-4">
+                  {{ operationName }}  
+
+                  <v-chip class="float-right mt-2" :color="operationComplexityColor">
+                    Complexity: {{ operationComplexity }}
+                  </v-chip>
+                </p>
+                
+                <v-sheet class="text--primary pa-3 mb-3" elevation="2">
+                  {{ operationDescription }}
+                </v-sheet>
+
+                <v-simple-table class="fixed-table">
+                  <colgroup>
+                    <col style="width: 100px">
+                    <col style="width: 30%;">
+                    <col style="width: 30%;">
+                    <col style="width: 40%;">
+                    <col style="width: 80px">
+                    <col style="width: 100px">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Expected Type</th>
+                      <th>Current Type</th>
+                      <th>Comment</th>
+                      <th>Mutates</th>
+                      <th>Has Scope?</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template v-for="param in operation.params">
+                      <tr :key="param">
+                        <td class="nowrap" :title="param">
+                          {{ param }} 
+                          <span class="red--text text--darken-4">*</span>
+                        </td>
+                        <td>
+                          <code class="d-block pa-2" 
+                            v-html="describeType(paramTypes[param])"
+                          ></code>
+                        </td>
+                        <td class="scrollable">
+                          <code class="d-block pa-2" 
+                            v-if="value.params[param]"
+                            v-html="describeType(paramActual(param))"
+                          ></code>
+                        </td>
+                        <td class="scrollable">
+                          {{ operationVisuals.comments[param] }}
+                        </td>
+                        <td class="text-center">
+                          <div v-if="operation.mutates.indexOf(param) + 1">
+                            Yes
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div v-if="operation.hasScope.indexOf(param) + 1">
+                            Yes
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
+                    <template v-for="param in operation.optional">
+                      <tr :key="param">
+                        <td class="nowrap" :title="param">
+                          {{ param }}
+                        </td>
+                        <td class="scrollable">
+                          <code class="d-block pa-2" 
+                            v-html="describeType(paramTypes[param])"
+                          ></code>
+                        </td>
+                        <td class="scrollable">
+                          <code class="d-block pa-2" 
+                            v-if="value.params[param]"
+                            v-html="describeType(paramActual(param))"
+                          ></code>
+                        </td>
+                        <td>
+                          {{ operationVisuals.comments[param] }}
+                        </td>
+                        <td class="text-center">
+                          <div v-if="operation.mutates.indexOf(param) + 1">
+                            Yes
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div v-if="operation.hasScope.indexOf(param) + 1">
+                            Yes
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </v-simple-table>
+
+                <div v-if="operation.scope.length">
+                  <h2 class="mt-3">Scope</h2>
+
+                  <v-simple-table class="fixed-table">
+                    <colgroup>
+                      <col style="width: 100px">
+                      <col style="width: 50%;">
+                      <col style="width: 50%;">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>Var</th>
+                        <th>Type</th>
+                        <th>Comment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <template v-for="param in operation.scope">
+                        <tr :key="param">
+                          <td class="nowrap" :title="param">
+                            {{ param }}
+                          </td>
+                          <td class="scrollable">
+                            <code class="d-block pa-2" 
+                              v-html="describeType(scopeType(param))"
+                            ></code>
+                          </td>
+                          <td>
+                            {{ operationVisuals.scopeComments[param] }}
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </v-simple-table>
+                </div>
+
+              </v-card-text>
+            </v-card>
+          </v-dialog>
         </td>
         <td v-if="showSingleLine">
           <ex-templated :template="operationVisuals.singleline" :text-style="{marginTop: '15px'}" class="ex-operation">
             <template #section="{ section }">
-              <span v-if="hasParameter(section)" class="param-span">
+              <span 
+                v-if="hasParameter(section)" 
+                class="param-span"
+                :class="{ 'blue-grey lighten-4 mx-3': mutatesParameter(section) }">
 
                 <v-tooltip top v-if="!readOnly">
                   <template #activator="{ on }">
@@ -97,7 +230,12 @@
                       {{ section }}
                     </v-chip>
                   </template>
-                  <span>{{ operationVisuals.comments[section] }}</span>
+                  <span>
+                    {{ operationVisuals.comments[section] }}
+                    <span v-if="mutatesParameter(section)">
+                      <br><br>This operation changes this value
+                    </span>  
+                  </span>
                 </v-tooltip>
 
                 <span v-if="hiddenParameter(section)"
@@ -187,11 +325,27 @@ import ExpressionBase from '../ExpressionBase';
 
 
 const STARTING_PARAM = '$wrapped';
+const COMPLEXITY_LABELS = [
+  'Low',
+  'Medium',
+  'High',
+  'Very High',
+];
+const COMPLEXITY_LABEL_MAX = 'Too High';
+const COMPLEXITY_COLORS = [
+  'green',
+  'yellow',
+  'orange',
+  'red darken-4',
+];
+const COMPLEXITY_COLOR_MAX = 'black';
+
 
 export default ExpressionBase<OperationExpression>().extend({
   name: 'OperationEditor',
   data: () => ({
     hiddenParams: {} as Record<string, boolean>,
+    inspecting: false,
   }),
   computed: {
     searchLabel(): string {
@@ -225,6 +379,15 @@ export default ExpressionBase<OperationExpression>().extend({
     },
     operationDescription(): string {
       return this.operationVisuals.description;
+    },
+    complexity(): number {
+      return this.value.getComplexity(this.registry.defs);
+    },
+    operationComplexity(): string {
+      return COMPLEXITY_LABELS[Math.round(this.complexity)] || COMPLEXITY_LABEL_MAX;
+    },
+    operationComplexityColor(): string {
+      return COMPLEXITY_COLORS[Math.round(this.complexity)] || COMPLEXITY_COLOR_MAX;
     },
     hasScope(): boolean {
       return this.operation ? this.operation.scope.length > 0 : false;
@@ -288,6 +451,9 @@ export default ExpressionBase<OperationExpression>().extend({
     },
   },
   methods: {
+    describeType(type?: Type): string {
+      return type ? this.registry.getTypeDescribeLong(type, '&nbsp;&nbsp;', '<br>') : '';
+    },
     filterOperation(item: any, queryText: string, itemText: string) {
       if (isArray(item.tokens)) { 
         const queryTokens = this.tokens(queryText);
@@ -316,6 +482,11 @@ export default ExpressionBase<OperationExpression>().extend({
     hasParameter(name: string): boolean {
       return !!this.value.params[name];
     },
+    mutatesParameter(name: string) {
+      return this.operation 
+        ? this.operation.mutates.indexOf(name) !== -1
+        : false;
+    },
     cancel() {
       if (this.startingValue) {
         this.input(this.startingValue);
@@ -339,6 +510,24 @@ export default ExpressionBase<OperationExpression>().extend({
     },
     sortListOption(a: {text: string}, b: {text: string}): number {
       return a.text.localeCompare(b.text);
+    },
+    paramActual(name: string): Type | null {
+      const paramExpr = this.value.params[name];
+      if (!paramExpr) {
+        return null;
+      }
+
+      const paramType = paramExpr.getType(this.registry.defs, this.paramContext(name));
+      if (!paramType) {
+        return null;
+      }
+
+      return Type.simplify(paramType);
+    },
+    scopeType(name: string): Type | null {
+      return this.operationTypes
+        ? this.registry.defs.getOperationInputType(this.operationTypes.scope[name], this.paramTypes)
+        : null;
     },
     paramContextDetails(name: string): Record<string, string> {
       const defs = this.registry.defs;
@@ -368,24 +557,36 @@ export default ExpressionBase<OperationExpression>().extend({
 
       if (op && opTypes && op.hasScope.indexOf(name) !== -1) 
       {
-          const { context, scope } = defs.getContextWithScope(this.context);
-
-          for (const scopeParam of op.scope) 
-          {
-            const scopeType = defs.getOperationInputType(opTypes.scope[scopeParam], this.paramTypes);
-
-            if (scopeType) 
-            {
-              const alias = this.value.scopeAlias[scopeParam] || scopeParam;
-
-              scope[alias] = scopeType.getSimplifiedType();
-            }
-          }
-
-          return context;
+        return this.scopedContext();
       }
 
       return this.context;
+    },
+    scopedContext(): Type {
+      const defs = this.registry.defs;
+      const op = this.operation;
+      const opTypes = this.operationTypes;
+
+      if (!op || !opTypes)
+      {
+        return this.context;
+      }
+
+      const { context, scope } = defs.getContextWithScope(this.context);
+
+      for (const scopeParam of op.scope) 
+      {
+        const scopeType = defs.getOperationInputType(opTypes.scope[scopeParam], this.paramTypes);
+
+        if (scopeType) 
+        {
+          const alias = this.value.scopeAlias[scopeParam] || scopeParam;
+
+          scope[alias] = scopeType.getSimplifiedType();
+        }
+      }
+
+      return context;
     },
     chooseOperation(pair: OperationPair) {
       const startingValue = this.startingValue;
@@ -474,5 +675,20 @@ export default ExpressionBase<OperationExpression>().extend({
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.fixed-table /deep/ table {
+  table-layout: fixed;
+  
+  .scrollable {
+    white-space: nowrap;
+    overflow: scroll;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 </style>
