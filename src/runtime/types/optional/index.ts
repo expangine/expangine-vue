@@ -23,6 +23,9 @@ export const OptionalVisuals = createVisuals({
   name: 'Optional',
   description: 'An optional value',
   describe: (registry, type) => registry.getTypeDescribe(type.options) + ' (optional)',
+  describeLong: (registry, type, padding, tab, newline) => 
+    'Optional ' + registry.getTypeDescribeLong(type.options, tab, newline, padding)
+  ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
   subSettings: (registry, type, settings, sub) => {
     return settings.sub.innerType;

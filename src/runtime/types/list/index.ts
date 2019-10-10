@@ -1,5 +1,5 @@
 
-import { ListType, TextType, ListOps, ExpressionBuilder } from 'expangine-runtime';
+import { ListType, TextType, ListOps, ExpressionBuilder, isNumber } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -21,6 +21,9 @@ export const ListVisuals = createVisuals({
   name: 'List',
   description: 'A list of values.',
   describe: (registry, type) => 'List of ' + registry.getTypeDescribe(type.options.item),
+  describeLong: (registry, type, padding, tab, newline) => 
+    'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding + tab)
+  ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

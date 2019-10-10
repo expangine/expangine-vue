@@ -16,6 +16,7 @@ export const DateVisuals = createVisuals(
   name: 'Date',
   description: 'A date value',
   describe: () => 'Date',
+  describeLong: (registry, type, padding) => 'Date',
   subOptions: () => [],
   subSettings: () => null,
   exprs: {

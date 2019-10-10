@@ -13,6 +13,7 @@ export const AnyVisuals = createVisuals({
   name: 'Any',
   description: 'Any value',
   describe: (registry, type) => 'Any value',
+  describeLong: (registry, type, padding) => 'Any',
   subOptions: (registry, type) => [],
   subSettings: (registry, type, settings, sub) => null,
   exprs: {

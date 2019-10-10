@@ -17,6 +17,12 @@ export const EnumVisuals = createVisuals({
   name: 'Enum',
   description: 'A list of key value pairs.',
   describe: (registry, type) => 'Enum of ' + registry.getTypeDescribe(type.options.value),
+  describeLong: (registry, type, padding, tab, newline) => 
+    'Enum {' + newline +
+    padding + tab + 'label: ' + registry.getTypeDescribeLong(type.options.key, tab, newline, padding + tab) + newline +
+    padding + tab + 'value: ' + registry.getTypeDescribeLong(type.options.value, tab, newline, padding + tab) + newline +
+    padding + '}'
+  ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options.value),
   subSettings: (registry, type, settings, sub, forKey) => {
     return forKey

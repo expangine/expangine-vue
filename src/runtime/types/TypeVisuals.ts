@@ -30,6 +30,7 @@ export interface TypeVisuals<
   name: string;
   description: string;
   describe: (registry: Registry, type: T) => string;
+  describeLong: (registry: Registry, type: T, padding: string, tab: string, newline: string) => string;
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
   subSettings: (registry: Registry, type: T, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
   exprs: {

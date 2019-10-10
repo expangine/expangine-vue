@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
@@ -16,6 +16,13 @@ export const ObjectVisuals = createVisuals({
   name: 'Object',
   description: 'An object is a collection of named fields.',
   describe: () => 'Object',
+  describeLong: (registry, type, padding, tab, newline) => 
+    'Object {' + newline +
+    objectValues(type.options.props, (propType, prop) => 
+      padding + tab + prop + ': ' + registry.getTypeDescribeLong(propType, tab, newline, padding + tab) + newline,
+    ).join('') +
+    padding + '}'
+  ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = isString(key)
       ? key

@@ -245,6 +245,11 @@ export class Registry
     return this.getTypeVisuals(type).describe(this, type);
   }
 
+  public getTypeDescribeLong(type: Type, tab: string, newline: string, padding: string = ''): string
+  {
+    return this.getTypeVisuals(type).describeLong(this, type, padding, tab, newline);
+  }
+
   public getTypeDefaultSettings(type: Type): TypeSettings
   {
     const visuals = this.getTypeVisuals(type);

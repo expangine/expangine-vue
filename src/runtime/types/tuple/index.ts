@@ -17,6 +17,11 @@ export const TupleVisuals = createVisuals({
   name: 'Tuple',
   description: 'A fixed size array of types',
   describe: (registry, type) => 'Tuple [' + type.options.map((t) => registry.getTypeDescribe(t)).join(', ') + ']',
+  describeLong: (registry, type, padding, tab, newline) => 
+    'Tuple [' + newline +
+    type.options.map((element, index) => padding + tab + index + ': ' + registry.getTypeDescribeLong(element, tab, newline, padding + tab) + newline).join('') +
+    padding + ']'
+  ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

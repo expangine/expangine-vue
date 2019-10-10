@@ -1,5 +1,5 @@
 
-import { NumberType, NumberOps, ExpressionBuilder } from 'expangine-runtime';
+import { NumberType, NumberOps, ExpressionBuilder, isNumber } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
@@ -16,6 +16,12 @@ export const NumberVisuals = createVisuals({
   name: 'Number',
   description: 'A number value',
   describe: () => 'Number',
+  describeLong: (registry, type) =>  
+    (type.options.whole ? 'Whole ' : '') + 
+    'Number' +
+    (isNumber(type.options.min) ? ' min=' + type.options.min : '') +
+    (isNumber(type.options.max) ? ' max=' + type.options.max : '')
+  ,
   subOptions: () => [],
   subSettings: () => null,
   exprs: {
