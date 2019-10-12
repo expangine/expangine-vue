@@ -45,6 +45,16 @@ export const ManyVisuals = createVisuals({
   subSettings: (registry, type, settings, sub) => {
     return null; // TODO
   },
+  settingsFor: ({ registry, type, sub }) => {
+    const subs = type.options.map((t, index) => registry.getTypeSettings(t, index));
+
+    return {
+      input: 'many',
+      defaultValue: subs.map((s) => s.defaultValue),
+      options: { ...registry.settingsOverrides, label: sub },
+      sub: subs,
+    };
+  },
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options[0]),
     valid: (registry, type) => ex.or(

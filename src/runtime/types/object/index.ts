@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
@@ -37,6 +37,16 @@ export const ObjectVisuals = createVisuals({
     return isString(sub.key)
       ? settings.sub[sub.key]
       : null;
+  },
+  settingsFor: ({ registry, type, sub }) => {
+    const subs = objectMap(type.options.props, (t, prop) => registry.getTypeSettings(t, prop));
+  
+    return {
+      input: 'form',
+      defaultValue: objectMap(subs, (s) => s.defaultValue),
+      options: { ...ObjectFormInput.getDefaultOptions(), label: sub },
+      sub: subs,
+    };
   },
   exprs: {
     create: () => ex.op(ObjectOps.create, {}),

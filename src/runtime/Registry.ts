@@ -22,6 +22,7 @@ export class Registry
   public exprMap: Record<string, ExpressionVisuals>;
   public exprs: ExpressionVisuals[];
   public operationMap: Record<string, OperationVisuals>;
+  public settingsOverrides: Record<string, any> = {};
 
   public constructor(defs: Definitions)
   {
@@ -250,31 +251,21 @@ export class Registry
     return this.getTypeVisuals(type).describeLong(this, type, padding, tab, newline);
   }
 
-  public getTypeDefaultSettings(type: Type): TypeSettings
-  {
-    const visuals = this.getTypeVisuals(type);
-    const input = visuals.defaultInput as string;
-
-    return {
-      input,
-      defaultValue: null,
-      options: {
-        outlined: true,
-        ...visuals.inputs[input].getDefaultOptions(),
-      },
-    };
-  }
-
   public getTypeSubSettings(type: Type, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean): TypeSettings | null
   {
     return this.getTypeVisuals(type).subSettings(this, type, settings, sub, forKey) || 
       (forKey
         ? sub.key instanceof Type
-          ? this.getTypeDefaultSettings(sub.key)
+          ? this.getTypeSettings(sub.key)
           : null
-        : this.getTypeDefaultSettings(sub.value)
+        : this.getTypeSettings(sub.value)
       )
     ;
+  }
+
+  public getTypeSettings(type: Type, sub: string | number = ''): TypeSettings<any, any>
+  {
+    return this.getTypeVisuals(type).settingsFor({ registry: this, type, overrides: this.settingsOverrides, sub });
   }
 
 }

@@ -81,7 +81,7 @@ export default ExpressionBase<ConstantExpression>().extend({
       return this.pathSettings
         ? this.pathSettings
         : this.inputType 
-          ? this.registry.getTypeDefaultSettings(this.inputType)
+          ? this.registry.getTypeSettings(this.inputType)
           : null;
     },
   },

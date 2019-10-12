@@ -24,6 +24,11 @@ export const NumberVisuals = createVisuals({
   ,
   subOptions: () => [],
   subSettings: () => null,
+  settingsFor: ({ registry, sub }) => ({ 
+    input: 'textbox', 
+    defaultValue: 0, 
+    options: { ...NumberTextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+  }),
   exprs: {
     create: () => ex.op(NumberOps.create, {}),
     valid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),

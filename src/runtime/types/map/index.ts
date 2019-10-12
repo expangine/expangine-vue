@@ -35,6 +35,15 @@ export const MapVisuals = createVisuals({
       ? settings.sub.key
       : settings.sub.value;
   },
+  settingsFor: ({ registry, type, sub }) => ({ 
+    input: 'grid', 
+    defaultValue: [], 
+    options: { ...MapGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub }, 
+    sub: {
+      key: registry.getTypeSettings(type.options.key, 'Key'), 
+      value: registry.getTypeSettings(type.options.value, sub), 
+    },
+  }),
   exprs: {
     create: () => ex.op(MapOps.create, {}),
     valid: (registry, type) => ex.and(

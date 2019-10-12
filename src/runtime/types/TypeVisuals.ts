@@ -33,6 +33,7 @@ export interface TypeVisuals<
   describeLong: (registry: Registry, type: T, padding: string, tab: string, newline: string) => string;
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
   subSettings: (registry: Registry, type: T, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
+  settingsFor: (options: { registry: Registry, type: T, sub: string | number, overrides: Record<string, any> }) => TypeSettings<any, any>;
   exprs: {
     create: (registry: Registry, type: T) => Expression;
     valid: (registry: Registry, type: T) => Expression;

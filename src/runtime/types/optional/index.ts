@@ -30,6 +30,14 @@ export const OptionalVisuals = createVisuals({
   subSettings: (registry, type, settings, sub) => {
     return settings.sub.innerType;
   },
+  settingsFor: ({ registry, type, sub }) => ({ 
+    input: 'optional', 
+    defaultValue: undefined, 
+    options: { ...OptionalInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub }, 
+    sub: { 
+      innerType: registry.getTypeSettings(type.options, sub), 
+    },
+  }),
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options),
     valid: (registry, type) => ex.or(

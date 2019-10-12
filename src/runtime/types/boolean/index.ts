@@ -20,6 +20,11 @@ export const BooleanVisuals = createVisuals({
   describeLong: (registry, type, padding) => 'Boolean',
   subOptions: () => [],
   subSettings: () => null,
+  settingsFor: ({ registry, sub }) => ({ 
+    input: 'checkbox', 
+    defaultValue: false, 
+    options: { ...BooleanCheckboxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+  }),
   exprs: {
     create: () => ex.op(BooleanOps.create, {}),
     valid: () => ex.op(BooleanOps.isValid, {value: ex.get('value')}),

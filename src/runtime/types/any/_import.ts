@@ -1,9 +1,12 @@
 import { Registry } from '../../Registry';
 
-import { AnyVisuals } from '.';
+import { AnyVisuals, AnyBuilder } from '.';
 
 
 export default function(registry: Registry)
 {
-  registry.addType(AnyVisuals);
+  registry
+    .addType(AnyVisuals)
+    .addTypeBuilder(AnyBuilder)
+  ;
 }

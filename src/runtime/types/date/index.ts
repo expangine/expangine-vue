@@ -19,6 +19,11 @@ export const DateVisuals = createVisuals(
   describeLong: (registry, type, padding) => 'Date',
   subOptions: () => [],
   subSettings: () => null,
+  settingsFor: ({ registry, sub }) => ({ 
+    input: 'picker', 
+    defaultValue: new Date().toISOString(), 
+    options: { ...DatePickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+  }),
   exprs: {
     create: () => ex.op(DateOps.create, {}),
     valid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),

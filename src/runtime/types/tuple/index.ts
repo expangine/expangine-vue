@@ -8,6 +8,7 @@ import { TupleGridInput } from './TupleGridTypes';
 import { getBuildType } from '@/app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TupleEditor from './TupleEditor.vue';
+import { OptionalInput } from '../optional/OptionalTypes';
 
 
 const ex = new ExpressionBuilder();
@@ -39,9 +40,19 @@ export const TupleVisuals = createVisuals({
   subSettings: (registry, type, settings, sub, forKey) => {
     return isNumber(sub.key)
       ? forKey
-        ? registry.getTypeDefaultSettings(TupleType.indexType)
+        ? registry.getTypeSettings(TupleType.indexType)
         : settings.sub[sub.key]
       : null;
+  },
+  settingsFor: ({ registry, type, sub }) => {
+    const subs = type.options.map((t, index) => registry.getTypeSettings(t, index));
+
+    return {
+      input: 'grid',
+      defaultValue: subs.map((s) => s.defaultValue),
+      options: { ...TupleGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+      sub: subs,
+    };
   },
   exprs: {
     create: () => ex.op(TupleOps.create, {}),

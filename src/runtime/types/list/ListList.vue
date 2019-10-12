@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item v-if="hasHeader">
       <v-list-item-avatar class="mr-0">
-        <v-tooltip>
+        <v-tooltip bottom>
           <template #activator="{ on }">
             <v-btn icon v-if="canAdd" v-on="on" @click="addItem">
               <v-icon>mdi-plus</v-icon>

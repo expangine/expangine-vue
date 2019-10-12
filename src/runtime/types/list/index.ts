@@ -39,6 +39,14 @@ export const ListVisuals = createVisuals({
       ? settings.sub.item
       : null;
   },
+  settingsFor: ({ registry, type, sub }) => ({ 
+    input: 'list', 
+    defaultValue: [], 
+    options: { ...ListListInput.getDefaultOptions(), ...registry.settingsOverrides, title: sub }, 
+    sub: { 
+      item: registry.getTypeSettings(type.options.item, sub), 
+    },
+  }),
   exprs: {
     create: () => ex.op(ListOps.create, {}),
     valid: (registry, type) => ex.and(

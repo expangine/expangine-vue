@@ -29,6 +29,15 @@ export const EnumVisuals = createVisuals({
       ? settings.sub.key
       : settings.sub.value;
   },
+  settingsFor: ({ registry, type, sub }) => ({ 
+    input: 'dropdown', 
+    defaultValue: registry.getTypeSettings(type.options.value).defaultValue, 
+    options: { ...EnumSelectInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub }, 
+    sub: { 
+      key: registry.getTypeSettings(type.options.key, 'Key'), 
+      value: registry.getTypeSettings(type.options.value, 'Value'), 
+    },
+  }),
   exprs: {
     create: (registry, type) => registry.getTypeCreate(type.options.value),
     valid: (registry, type) => registry.getTypeValid(type.options.value),

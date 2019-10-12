@@ -29,6 +29,11 @@ export const TextVisuals = createVisuals({
     return { key, value, text, description };
   }),
   subSettings: () => null,
+  settingsFor: ({ registry, sub }) => ({ 
+    input: 'textbox', 
+    defaultValue: '', 
+    options: { ...TextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+  }),
   exprs: {
     create: () => ex.op(TextOps.create, {}),
     valid: () => ex.op(TextOps.isValid, {value: ex.get('value')}),
