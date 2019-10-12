@@ -50,6 +50,7 @@
                   <td class="var-name">
                     <v-text-field
                       outlined
+                      dense
                       hide-details
                       :error="isVarInvalid(index)"
                       :value="pair[0]"
