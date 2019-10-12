@@ -8,7 +8,7 @@ import ConstantViewer from './ConstantViewer.vue';
 export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
 {
   expr: ConstantExpression,
-  create: (forType) => new ConstantExpression(forType ? forType.create() : null),
+  create: (forType) => new ConstantExpression(forType ? forType.create() : ''),
   name: 'Constant',
   description: 'A constant value',
   viewer: ConstantViewer,
@@ -27,7 +27,7 @@ export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
       getModifiers: () => [],
     },
     value: {
-      isStart: (requiredType) => !!requiredType && !(requiredType instanceof AnyType),
+      isStart: (requiredType) => true,
       isValid: () => true,
       getModifiers: () => [],
     },

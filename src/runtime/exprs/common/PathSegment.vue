@@ -24,18 +24,25 @@
       </v-list>
     </v-menu>
     
-    <ex-expression
-      key="value"
-      v-bind="$props"
-      type="value"
-      :class="{ 'expression-inside brackets': hasBrackets }"
-      :read-only="segmentReadOnly"
-      :required-type="expectedType"
-      :value="segment"
-      :path-settings="segmentSettings"
-      @input="updateSegment"
-      @remove="removeSegment"
-    ></ex-expression>
+    <v-tooltip top :disabled="!segmentRisky">
+      <template #activator="{ on }">
+        <ex-expression
+          key="value"
+          v-bind="$props"
+          type="value"
+          :class="segmentClass"
+          :read-only="segmentReadOnly"
+          :required-type="expectedType"
+          :value="segment"
+          :path-settings="segmentSettings"
+          @input="updateSegment"
+          @remove="removeSegment"
+          @mouseenter.native="optionalListener(on.mouseenter, $event)"
+          @mouseleave.native="optionalListener(on.mouseleave, $event)"
+        ></ex-expression>
+      </template>
+      <span>This segment will most likely result in an undefined value.</span>
+    </v-tooltip>
 
     <path-segment 
       key="next"
@@ -52,7 +59,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, ExpressionBuilder, ConstantExpression } from 'expangine-runtime';
+import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { TypeSubOption, TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
@@ -76,6 +83,7 @@ export default ExpressionBase().extend({
     },
   },
   computed: {
+    noop: () => (() => undefined),
     hasNext(): boolean {
       return this.index + 1 < this.path.length;
     },
@@ -107,6 +115,15 @@ export default ExpressionBase().extend({
       return this.segmentType && this.subSettings && this.segmentOption
         ? this.registry.getTypeSubSettings(this.segmentType, this.subSettings, this.segmentOption, true)
         : null;
+    },
+    segmentRisky(): boolean {
+      return !this.segmentOption || (this.segmentOption.key instanceof TextType && this.segment instanceof ConstantExpression);
+    },
+    segmentClass(): any {
+      return { 
+        'expression-inside brackets': this.hasBrackets,
+        'risky': this.segmentRisky,
+      };
     },
     hasBrackets(): boolean {
       return !this.segmentOption || !!this.expectedType;
@@ -150,6 +167,11 @@ export default ExpressionBase().extend({
     removeSegment() {
       this.path.splice(this.index, this.path.length - this.index);
       this.update();
+    },
+    optionalListener(callback: any, $event: any) {
+      if (isFunction(callback)) {
+        callback($event);
+      }
     },
   },
 });

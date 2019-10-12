@@ -1,6 +1,9 @@
 <template>
-  <span v-if="readOnly">{{ readonlyValue }}</span>
-  <span v-else-if="inputType" :class="inOperationClass">
+  <span v-if="readOnly">
+    {{ readonlyValue }}
+  </span>
+  <span v-else :class="inOperationClass">
+
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
@@ -15,7 +18,9 @@
         </v-list-item>
       </template>
     </ex-expression-menu>
+
     <span class="pa-2">{{ readonlyValue }}</span>
+
     <v-dialog v-model="editing" persistent max-width="600px" class="d-inline">
       <v-card>
         <v-card-title>
@@ -37,15 +42,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </span>
-  <span v-else>
-    {{ readonlyValue }}
+
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ConstantExpression, isArray, isObject } from 'expangine-runtime';
+import { Type, AnyType, ConstantExpression, isArray, isObject } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
@@ -58,14 +61,7 @@ export default ExpressionBase<ConstantExpression>().extend({
   }),
   computed: {
     inputType(): Type | null {
-      return this.useRequiredType
-        ? this.requiredType
-        : this.computedType || this.requiredType;
-    },
-    useRequiredType(): boolean {
-      return !!(this.requiredType 
-        && this.computedType
-        && !this.requiredType.acceptsType(this.computedType));
+      return this.requiredType || AnyType.baseType;
     },
     readonlyValue(): string {
       if (!this.inputType) {

@@ -14,4 +14,7 @@ export default new Registry(defs)
   .import(HookImports)
   .import(ExpressionImports)
   .import(OperationImports)
+  .import((registry) => registry.settingsOverrides = {
+    outlined: true,
+  })
 ;

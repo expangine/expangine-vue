@@ -12,6 +12,7 @@
               type="body"
               :key="index"
               :value="expr"
+              :required-type="getRequiredType(index)"
               @input="updateExpression(index, $event)"
               @remove="updateExpression(index)"
             ></ex-expression>
@@ -36,7 +37,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, ChainExpression, NoExpression } from 'expangine-runtime';
+import { Type, Expression, ChainExpression, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -67,6 +68,11 @@ export default ExpressionBase<ChainExpression>().extend({
       } else {
         this.update();
       }
+    },
+    getRequiredType(index: number): Type | null {
+      return index === this.value.chain.length - 1
+        ? this.requiredType
+        : null;
     },
   },
 });

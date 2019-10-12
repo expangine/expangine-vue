@@ -116,6 +116,14 @@ export default ExpressionBase().extend({
     display: block;
   }
 
+  &.risky {
+    background-color: #FFE0B2;
+    
+    &:hover {
+      background-color: #FFB74D;
+    }
+  }
+
   &:hover {
     background-color: rgba(0,0,0,0.02);
   }

@@ -148,9 +148,16 @@ export class Registry
     return this;
   }
 
-  public getTypeVisuals<T extends Type>(type: T): TypeVisuals<T, any, any>
+  public getTypeVisuals<T extends Type>(type: T, throwError: boolean = true): TypeVisuals<T, any, any>
   {
-    return this.typeMap[type.getId()] as unknown as TypeVisuals<T, any, any>;
+    const visuals = this.typeMap[type.getId()] as unknown as TypeVisuals<T, any, any>;
+
+    if (!visuals && throwError)
+    {
+      throw new Error('There are no visuals for ' + type ? JSON.stringify(type.encode()) : 'an undefined type');
+    }
+
+    return visuals;
   }
 
   public getTypeBuildersFor(input: TypeBuildInput): TypeBuildOption[]
