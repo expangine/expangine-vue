@@ -93,6 +93,7 @@ import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import Registry from '../runtime';
 import { getConfirmation } from '../app/Confirm';
 import { sendNotification } from '../app/Notify';
+import { getRunProgram } from '../app/RunProgram';
 
 
 
@@ -263,12 +264,9 @@ export default Vue.extend({
         return;
       }
 
-      const programCopy = this.registry.defs.cloneExpression(this.program);
-      const cmd = LiveRuntime.getCommand(programCopy);
-      const data = this.type.fromJson(copy(this.type.toJson(this.data)));
-      const result = cmd(data);
+      const { type, registry, program, data } = this;
 
-      window.console.log('ran', 'result', result, 'data', data);
+      getRunProgram({ registry, type, program, data });
     },
     async loadType() {
       const defaults = await this.getDefaultTypes();

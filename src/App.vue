@@ -15,6 +15,7 @@
       <input-dialog></input-dialog>
       <notify-dialog></notify-dialog>
       <build-type-dialog></build-type-dialog>
+      <run-program-dialog></run-program-dialog>
     </v-content>
   </v-app>
 </template>
@@ -25,6 +26,7 @@ import ConfirmDialog from './app/ConfirmDialog.vue';
 import InputDialog from './app/InputDialog.vue';
 import BuildTypeDialog from './app/BuildTypeDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
+import RunProgramDialog from './app/RunProgramDialog.vue';
 
 
 export default Vue.extend({
@@ -34,6 +36,7 @@ export default Vue.extend({
     BuildTypeDialog,
     InputDialog,
     NotifyDialog,
+    RunProgramDialog,
   },
 });
 </script>

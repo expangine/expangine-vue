@@ -29,7 +29,7 @@ export const TupleVisuals = createVisuals({
     'Tuple [' + newline + 
     value.map((item: any, index: number) => type.options[index]
       ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab) + newline
-      : '') + 
+      : '').join('') + 
     padding + ']'
   ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {

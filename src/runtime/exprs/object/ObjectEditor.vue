@@ -70,7 +70,7 @@ export default ExpressionBase<ObjectExpression>().extend({
   name: 'ObjectEditor',
   methods: {
     addProperty(): void {
-      this.$set(this.value.props, this.getNextPropertyName(), new ConstantExpression(''));
+      this.$set(this.value.props, this.getNextPropertyName(), NoExpression.instance);
     },
     getNextPropertyName(): string {
       const names = 'abcdefghijklmnopqrstuvwxyz'.split('');
