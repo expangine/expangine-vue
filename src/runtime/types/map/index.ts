@@ -26,7 +26,7 @@ export const MapVisuals = createVisuals({
   ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = '[ key ]';
-    const description = 'A ' + registry.getTypeDescribe(type.options.value) + ' with a given ' + registry.getTypeDescribe(type.options.key) + ' key';
+    const description = 'A ' + registry.getTypeDescribeLong(type.options.value, '', '  ') + ' with a given ' + registry.getTypeDescribeLong(type.options.key, '', '  ') + ' key';
 
     return { key, value, text, description };
   }),

@@ -15,6 +15,24 @@
           {{ operationDescription }}
         </v-sheet>
 
+        <h2 class="mt-5">Returns</h2>
+
+        <p 
+          v-if="operationVisuals.returnComments"
+          v-html="operationVisuals.returnComments"
+          class="pa-2 mt-2"
+        ></p>
+
+        <code class="d-block pa-2 mt-2 scrollable" 
+          v-if="returnType"
+          v-html="describeType(returnType)"
+        ></code>
+        <div v-else>
+          Unknown Type
+        </div>
+
+        <h2 class="mt-5">Parameters</h2>
+
         <ul class="ma-5">
           <li><strong>Parameter</strong>: The name of the operation value, required values are denoted with a <span class="red--text text--darken-4">*</span>.</li>
           <li><strong>Expected Type</strong>: The type that is needed for this expression. If the expected type is exactly same as the current type that means the operation types are dynamic.</li>
@@ -32,6 +50,7 @@
             <col style="width: 40%;">
             <col style="width: 80px">
             <col style="width: 100px">
+            <col style="width: 100px">
           </colgroup>
           <thead>
             <tr>
@@ -41,6 +60,7 @@
               <th>Comment</th>
               <th>Mutates</th>
               <th>Has Scope?</th>
+              <th>Default</th>
             </tr>
           </thead>
           <tbody>
@@ -51,12 +71,12 @@
                   <span class="red--text text--darken-4">*</span>
                 </td>
                 <td>
-                  <code class="d-block pa-2" 
+                  <code class="d-block pa-2 ma-1 scrollable" 
                     v-html="describeType(paramTypes[param])"
                   ></code>
                 </td>
                 <td class="scrollable">
-                  <code class="d-block pa-2" 
+                  <code class="d-block pa-2 ma-1 scrollable" 
                     v-if="value.params[param]"
                     v-html="describeType(paramActual(param))"
                   ></code>
@@ -73,6 +93,8 @@
                   <div v-if="operation.hasScope.indexOf(param) + 1">
                     Yes
                   </div>
+                </td>
+                <td class="text-center">
                 </td>
               </tr>
             </template>
@@ -82,12 +104,12 @@
                   {{ param }}
                 </td>
                 <td class="scrollable">
-                  <code class="d-block pa-2" 
+                  <code class="d-block pa-2 ma-1 scrollable" 
                     v-html="describeType(paramTypes[param])"
                   ></code>
                 </td>
                 <td class="scrollable">
-                  <code class="d-block pa-2" 
+                  <code class="d-block pa-2 ma-1 scrollable" 
                     v-if="value.params[param]"
                     v-html="describeType(paramActual(param))"
                   ></code>
@@ -103,6 +125,11 @@
                 <td class="text-center">
                   <div v-if="operation.hasScope.indexOf(param) + 1">
                     Yes
+                  </div>
+                </td>
+                <td class="text-center">
+                  <div v-if="operationVisuals.defaults">
+                    {{ operationVisuals.defaults[param] }}
                   </div>
                 </td>
               </tr>
@@ -140,7 +167,7 @@
                     {{ param }}
                   </td>
                   <td class="scrollable">
-                    <code class="d-block pa-2" 
+                    <code class="d-block pa-2 ma-1 scrollable" 
                       v-html="describeType(scopeType(param))"
                     ></code>
                   </td>
@@ -234,6 +261,11 @@ export default ExpressionBase<OperationExpression>().extend({
     },
     paramTypes(): TypeMap {
       return this.registry.defs.getOperationExpectedTypes(this.value.name, this.value.params, this.value.scopeAlias, this.context);
+    },
+    returnType(): Type | null {
+      return this.operationTypes 
+        ? this.registry.defs.getOperationInputType(this.operationTypes.returnType, this.paramTypes)
+        : null;
     },
   },
   methods: {

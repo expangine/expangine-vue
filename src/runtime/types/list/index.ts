@@ -30,7 +30,7 @@ export const ListVisuals = createVisuals({
       : '[ index ]';
     const description = key === 'length'
       ? 'The number of items in the list'
-      : registry.getTypeDescribe(type.options.item) + ' at a given index';
+      : registry.getTypeDescribeLong(type.options.item, '', '  ') + ' at a given index';
 
     return { key, value, text, description };
   }),

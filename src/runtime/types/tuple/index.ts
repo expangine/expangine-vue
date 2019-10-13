@@ -32,7 +32,7 @@ export const TupleVisuals = createVisuals({
     const description = key === 'length'
       ? 'The number of elements in the tuple (~' + type.options.length + ')'
       : isNumber(key)
-        ? registry.getTypeDescribe(type.options[key])
+        ? registry.getTypeDescribeLong(type.options[key], '', '  ')
         : 'A value for a given dynamic element';
 
     return { key, value, text, description };

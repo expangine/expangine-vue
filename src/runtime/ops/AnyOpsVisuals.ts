@@ -7,12 +7,13 @@ export default (registry: Registry) =>
 
   registry.addOperation(AnyOps.cmp, {
     name: 'Compare (any)',
-    description: 'Compare [value] and [test] and return 0 when equal, +n when [value] < [test] and -n when [value] > [test]',
+    description: 'Compare [value] and [test] and return a number result',
     singleline: 'compare any {value} and {test}',
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(AnyOps.copy, {
@@ -22,6 +23,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to copy',
     },
+    returnComments: 'A deep copy of [value]',
   });
 
   registry.addOperation(AnyOps.isDefined, {
@@ -31,6 +33,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to check for a non-null/non-undefined value',
     },
+    returnComments: 'True if [value] is a non-null or non-undefined value, otherwise false.',
   });
 
   registry.addOperation(AnyOps.getDefined, {
@@ -44,6 +47,7 @@ export default (registry: Registry) =>
     scopeComments: {
       defined: 'The value that is defined',
     },
+    returnComments: 'True if [value] is a non-null or non-undefined value, otherwise false.',
   });
 
   registry.addOperation(AnyOps.coalesce, {
@@ -62,6 +66,7 @@ export default (registry: Registry) =>
       d: 'none',
       e: 'none',
     },
+    returnComments: 'The first non-null non-undefined argument',
   });
 
   registry.addOperation(AnyOps.isValid, {
@@ -71,6 +76,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True',
   });
 
   registry.addOperation(AnyOps.isEqual, {
@@ -81,6 +87,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] equals [test], otherwise false',
   });
 
   registry.addOperation(AnyOps.isNotEqual, {
@@ -91,6 +98,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] is not equal to [test], otherwise false',
   });
 
   registry.addOperation(AnyOps.isLess, {
@@ -101,6 +109,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(AnyOps.isLessOrEqual, {
@@ -111,6 +120,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(AnyOps.isGreater, {
@@ -121,6 +131,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(AnyOps.isGreaterOrEqual, {
@@ -131,6 +142,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       test: 'The test value to compare against',
     },
+    returnComments: 'True if [value] is greater than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(AnyOps.asAny, {
@@ -140,6 +152,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(AnyOps.asBoolean, {
@@ -149,6 +162,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a true or false. Most values are true, but false values are: null, undefined, zero, false, NaN, and ""',
   });
 
   registry.addOperation(AnyOps.asDate, {
@@ -158,6 +172,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] convert to a Date if possible, otherwise the current date & time.',
   });
 
   registry.addOperation(AnyOps.asList, {
@@ -167,6 +182,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(AnyOps.asMap, {
@@ -176,6 +192,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map with a single key-value pair of "value" and [value]',
   });
 
   registry.addOperation(AnyOps.asNumber, {
@@ -185,6 +202,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] convert to a number if possible, otherwise 0.',
   });
 
   registry.addOperation(AnyOps.asObject, {
@@ -194,6 +212,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(AnyOps.asText, {
@@ -203,6 +222,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] convert to a string.',
   });
 
   registry.addOperation(AnyOps.asTuple, {
@@ -212,6 +232,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

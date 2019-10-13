@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Map value (empty)',
     singleline: 'create map',
     comments: {},
+    returnComments: 'A new empty Map',
   });
 
   registry.addOperation(MapOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to map or undefined',
     },
+    returnComments: 'map or undefined',
   });
 
   registry.addOperation(MapOps.get, {
@@ -29,6 +31,7 @@ export default (registry: Registry) =>
       map: 'The map to get an item from',
       key: 'The key of the value in the map',
     },
+    returnComments: 'The value with the [key], undefined if none exists.',
   });
 
   registry.addOperation(MapOps.set, {
@@ -43,6 +46,7 @@ export default (registry: Registry) =>
     scopeComments: {
       existingValue: 'The existing value in the map',
     },
+    returnComments: 'The existing value with the [key], otherwise undefined.',
   });
 
   registry.addOperation(MapOps.has, {
@@ -53,6 +57,7 @@ export default (registry: Registry) =>
       map: 'The map to check for a key',
       key: 'The key to look for',
     },
+    returnComments: 'True if the [map] has the [key], otherwise false.',
   });
 
   registry.addOperation(MapOps.delete, {
@@ -63,6 +68,7 @@ export default (registry: Registry) =>
       map: 'The map to remove a key/value from',
       key: 'The key of the key/value pair to remove',
     },
+    returnComments: 'True if the [key] was removed, otherwise false.',
   });
 
   registry.addOperation(MapOps.keys, {
@@ -72,6 +78,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to get the keys of',
     },
+    returnComments: 'A list of all the keys in the map.',
   });
 
   registry.addOperation(MapOps.values, {
@@ -81,6 +88,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to get the values of',
     },
+    returnComments: 'A list of all the values in the map.',
   });
 
   registry.addOperation(MapOps.entries, {
@@ -90,6 +98,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to get the entries of',
     },
+    returnComments: 'An object with "keys" and "values" lists.',
   });
 
   registry.addOperation(MapOps.pairs, {
@@ -99,6 +108,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to get the key/value pairs of',
     },
+    returnComments: 'An array with [key, value] tuples.',
   });
 
   registry.addOperation(MapOps.clear, {
@@ -108,6 +118,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to remove all keys/values from',
     },
+    returnComments: '[map]',
   });
 
   registry.addOperation(MapOps.count, {
@@ -117,6 +128,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to count the key/values of',
     },
+    returnComments: 'The number of key-value pairs in the map.',
   });
 
   registry.addOperation(MapOps.cmp, {
@@ -133,6 +145,7 @@ export default (registry: Registry) =>
       value: 'The first value to compare',
       test: 'The second value to compare',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(MapOps.copy, {
@@ -153,6 +166,7 @@ export default (registry: Registry) =>
       deepCopy: 'same value',
       deepCopyKey: 'same key',
     },
+    returnComments: 'A new map with all key value copies.',
   });
 
   registry.addOperation(MapOps.map, {
@@ -173,6 +187,7 @@ export default (registry: Registry) =>
       transform: 'no transform',
       transformKey: 'no transform',
     },
+    returnComments: 'A new map with transformed values and optionally keys.',
   });
 
   registry.addOperation(MapOps.toPlainObject, {
@@ -182,6 +197,7 @@ export default (registry: Registry) =>
     comments: {
       map: 'The map to convert to an object',
     },
+    returnComments: 'An object with a property for each key in the map.',
   });
 
   registry.addOperation(MapOps.isValid, {
@@ -191,6 +207,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is a map, otherwise false.',
   });
 
   registry.addOperation(MapOps.isEqual, {
@@ -207,6 +224,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] equals [test], otherwise false',
   });
 
   registry.addOperation(MapOps.isNotEqual, {
@@ -223,6 +241,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] is not equal to [test], otherwise false',
   });
 
   registry.addOperation(MapOps.isLess, {
@@ -239,6 +258,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(MapOps.isLessOrEqual, {
@@ -255,6 +275,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(MapOps.isGreater, {
@@ -271,6 +292,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(MapOps.isGreaterOrEqual, {
@@ -287,6 +309,7 @@ export default (registry: Registry) =>
       value: 'The first value being compared',
       test: 'The second value being compared',
     },
+    returnComments: 'True if [value] is greater than or equal to [test], otherwise false.',
   });
 
 
@@ -297,6 +320,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(MapOps.asBoolean, {
@@ -306,6 +330,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains a boolean value with key "value" it is returned, otherwise true is returned if the map is not empty and false if the map is empty.',
   });
 
   registry.addOperation(MapOps.asList, {
@@ -315,6 +340,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The list of values from the map.',
   });
 
   registry.addOperation(MapOps.asDate, {
@@ -324,6 +350,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains a date value with key "value" it is returned, otherwise the current date & time.',
   });
 
   registry.addOperation(MapOps.asMap, {
@@ -333,6 +360,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(MapOps.asNumber, {
@@ -342,6 +370,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains a number value with key "value" it is returned, otherwise the size of the map.',
   });
 
   registry.addOperation(MapOps.asObject, {
@@ -351,6 +380,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains an object value with key "value" it is returned, otherwise an object with a single property "value" and [value].',
   });
 
   registry.addOperation(MapOps.asText, {
@@ -360,6 +390,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains a text value with key "value" it is returned, otherwise an empty text.',
   });
 
   registry.addOperation(MapOps.asTuple, {
@@ -369,6 +400,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the map contains a tuple value with key "value" it is returned, otherwise a tuple with a single [value] element.',
   });
 
 };

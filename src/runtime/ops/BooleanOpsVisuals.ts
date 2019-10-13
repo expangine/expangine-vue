@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Boolean value (false)',
     singleline: 'false',
     comments: {},
+    returnComments: 'false',
   });
 
   registry.addOperation(BooleanOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to boolean or undefined',
     },
+    returnComments: 'Boolean or undefined',
   });
 
   registry.addOperation(BooleanOps.and, {
@@ -29,6 +31,7 @@ export default (registry: Registry) =>
       a: 'The first value',
       b: 'The second value',
     },
+    returnComments: 'True if [a] and [b] are true, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.or, {
@@ -39,6 +42,7 @@ export default (registry: Registry) =>
       a: 'The first value',
       b: 'The second value',
     },
+    returnComments: 'True if [a] or [b] are true, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.xor, {
@@ -49,6 +53,7 @@ export default (registry: Registry) =>
       a: 'The first value',
       b: 'The second value',
     },
+    returnComments: 'True if [a] or [b] are true but not both, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.not, {
@@ -58,16 +63,18 @@ export default (registry: Registry) =>
     comments: {
       a: 'The value to negate',
     },
+    returnComments: 'True if [a] is false, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.cmp, {
     name: 'Compare Boolean',
-    description: 'Compare [value] and [test] and return 0 when equal, +n when [value] < [test] and -n when [value] > [test]',
+    description: 'Compare [value] and [test] and return a number result',
     singleline: 'compare {value} and {test}',
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(BooleanOps.isValid, {
@@ -77,6 +84,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is a boolean value, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.isTrue, {
@@ -86,6 +94,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is true, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.isFalse, {
@@ -95,6 +104,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is false, otherwise false.',
   });
 
   registry.addOperation(BooleanOps.asAny, {
@@ -104,6 +114,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(BooleanOps.asBoolean, {
@@ -113,6 +124,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(BooleanOps.asDate, {
@@ -122,6 +134,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The current date & time.',
   });
 
   registry.addOperation(BooleanOps.asList, {
@@ -131,6 +144,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(BooleanOps.asMap, {
@@ -140,6 +154,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map with a single key-value pair of "value" and [value]',
   });
 
   registry.addOperation(BooleanOps.asNumber, {
@@ -149,6 +164,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] is true return 1, otherwise 0.',
   });
 
   registry.addOperation(BooleanOps.asObject, {
@@ -158,6 +174,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(BooleanOps.asText, {
@@ -167,6 +184,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '"true" or "false"',
   });
 
   registry.addOperation(BooleanOps.asTuple, {
@@ -176,6 +194,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

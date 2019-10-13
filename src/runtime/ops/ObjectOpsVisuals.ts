@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Object value (empty)',
     singleline: 'create object',
     comments: {},
+    returnComments: '{}',
   });
 
   registry.addOperation(ObjectOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to object or undefined',
     },
+    returnComments: 'object or undefine',
   });
 
   registry.addOperation(ObjectOps.has, {
@@ -29,6 +31,7 @@ export default (registry: Registry) =>
       object: 'The object to check for a property',
       key: 'The property to look for',
     },
+    returnComments: 'True if [object] has the property [key], otherwise false.',
   });
 
   registry.addOperation(ObjectOps.get, {
@@ -39,6 +42,7 @@ export default (registry: Registry) =>
       object: 'The object to get a value from',
       key: 'The property of the value on the object',
     },
+    returnComments: 'The value of the property [key], or undefined if none exists.',
   });
 
   registry.addOperation(ObjectOps.set, {
@@ -53,6 +57,7 @@ export default (registry: Registry) =>
     scopeComments: {
       existingValue: 'The existing value of the property',
     },
+    returnComments: '[object]',
   });
 
   registry.addOperation(ObjectOps.delete, {
@@ -63,6 +68,7 @@ export default (registry: Registry) =>
       object: 'The object to remove a property from',
       key: 'The key of the key/value pair to remove',
     },
+    returnComments: 'The value deleted, or undefined if it did not exist.',
   });
 
   registry.addOperation(ObjectOps.cmp, {
@@ -73,6 +79,7 @@ export default (registry: Registry) =>
       value: 'The first object to compare',
       test: 'The second object to compare',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] has properties [test] does not and a positive number when [value] is missing properties that [test] has.',
   });
 
   registry.addOperation(ObjectOps.isValid, {
@@ -82,6 +89,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is an object, otherwise false.',
   });
 
   registry.addOperation(ObjectOps.isEqual, {
@@ -92,6 +100,7 @@ export default (registry: Registry) =>
       value: 'The object to evaluate',
       test: 'The test object to compare against',
     },
+    returnComments: 'True if [value] equals [test], otherwise false',
   });
 
   registry.addOperation(ObjectOps.isNotEqual, {
@@ -102,6 +111,7 @@ export default (registry: Registry) =>
       value: 'The map to evaluate',
       test: 'The test map to compare against',
     },
+    returnComments: 'True if [value] is not equal to [test], otherwise false',
   });
 
   registry.addOperation(ObjectOps.isLess, {
@@ -112,6 +122,7 @@ export default (registry: Registry) =>
       value: 'The object to evaluate',
       test: 'The test object to compare against',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(ObjectOps.isLessOrEqual, {
@@ -122,6 +133,7 @@ export default (registry: Registry) =>
       value: 'The object to evaluate',
       test: 'The test object to compare against',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(ObjectOps.isGreater, {
@@ -132,6 +144,7 @@ export default (registry: Registry) =>
       value: 'The object to evaluate',
       test: 'The test object to compare against',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(ObjectOps.isGreaterOrEqual, {
@@ -142,8 +155,8 @@ export default (registry: Registry) =>
       value: 'The object to evaluate',
       test: 'The test object to compare against',
     },
+    returnComments: 'True if [value] is greater than or equal to [test], otherwise false.',
   });
-
 
   registry.addOperation(ObjectOps.asAny, {
     name: 'Cast Object to Any',
@@ -152,6 +165,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(ObjectOps.asBoolean, {
@@ -161,6 +175,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a boolean property "value" it is returned, otherwise true.',
   });
 
   registry.addOperation(ObjectOps.asList, {
@@ -170,6 +185,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a list property "value" it is returned, otherwise [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(ObjectOps.asDate, {
@@ -179,6 +195,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a date property "value" it is returned, otherwise the current date & time.',
   });
 
   registry.addOperation(ObjectOps.asMap, {
@@ -188,6 +205,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a map property "value" it is returned, otherwise a map with a single key-value pair of "value" and [value].',
   });
 
   registry.addOperation(ObjectOps.asNumber, {
@@ -197,6 +215,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a number property "value" it is returned, otherwise 0.',
   });
 
   registry.addOperation(ObjectOps.asObject, {
@@ -206,6 +225,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(ObjectOps.asText, {
@@ -215,6 +235,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a text property "value" it is returned, otherwise [value] in text form.',
   });
 
   registry.addOperation(ObjectOps.asTuple, {
@@ -224,6 +245,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If [value] has a date property "value" it is returned, otherwise a tuple with a single [value] element.',
   });
 
 };

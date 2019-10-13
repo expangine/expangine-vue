@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Date value (now)',
     singleline: 'now',
     comments: {},
+    returnComments: 'now',
   });
 
   registry.addOperation(DateOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to date or undefined',
     },
+    returnComments: 'Date or undefined',
   });
 
   registry.addOperation(DateOps.now, {
@@ -26,6 +28,7 @@ export default (registry: Registry) =>
     description: 'Date value of now',
     singleline: 'now',
     comments: {},
+    returnComments: 'A date with the current day and time',
   });
 
   registry.addOperation(DateOps.today, {
@@ -33,6 +36,7 @@ export default (registry: Registry) =>
     description: 'Date value of today (start of day)',
     singleline: 'today',
     comments: {},
+    returnComments: 'A date with the current day at the start of the day',
   });
 
   registry.addOperation(DateOps.tomorrow, {
@@ -40,6 +44,7 @@ export default (registry: Registry) =>
     description: 'Date value of tomorrow (start of day)',
     singleline: 'tomorrow',
     comments: {},
+    returnComments: 'A date with the next day at the start of the day',
   });
 
   registry.addOperation(DateOps.yesterday, {
@@ -47,6 +52,7 @@ export default (registry: Registry) =>
     description: 'Date value of yesterday (start of day)',
     singleline: 'yesterday',
     comments: {},
+    returnComments: 'A date with the previous day at the start of the day',
   });
 
   registry.addOperation(DateOps.parse, {
@@ -60,6 +66,7 @@ export default (registry: Registry) =>
     defaults: {
       parseAsUTC: 'false',
     },
+    returnComments: 'The date parsed if any, otherwise the current date & time.',
   });
 
   registry.addOperation(DateOps.fromText, {
@@ -73,6 +80,7 @@ export default (registry: Registry) =>
     defaults: {
       parseAsUTC: 'false',
     },
+    returnComments: 'The date parsed if any, otherwise the current date & time.',
   });
 
   registry.addOperation(DateOps.fromTimestamp, {
@@ -82,6 +90,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to parse',
     },
+    returnComments: 'The date with the given millisecond timestamp.',
   });
 
   registry.addOperation(DateOps.fromTimestampSeconds, {
@@ -91,6 +100,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to parse',
     },
+    returnComments: 'The date with the given seconds timestamp.',
   });
 
   registry.addOperation(DateOps.min, {
@@ -101,6 +111,7 @@ export default (registry: Registry) =>
       value: 'The first date',
       test: 'The second date',
     },
+    returnComments: 'The lesser of the two dates',
   });
 
   registry.addOperation(DateOps.max, {
@@ -111,6 +122,7 @@ export default (registry: Registry) =>
       value: 'The first date',
       test: 'The second date',
     },
+    returnComments: 'The greater of the two dates',
   });
 
   registry.addOperation(DateOps.get, {
@@ -121,6 +133,7 @@ export default (registry: Registry) =>
       value: 'The date value',
       property: 'The property to get',
     },
+    returnComments: 'A number value for the given [property].',
   });
 
   registry.addOperation(DateOps.set, {
@@ -132,6 +145,7 @@ export default (registry: Registry) =>
       property: 'The property to set',
       set: 'The new value for the property',
     },
+    returnComments: 'Nothing',
   });
 
   registry.addOperation(DateOps.add, {
@@ -146,6 +160,7 @@ export default (registry: Registry) =>
     defaults: {
       amount: '1',
     },
+    returnComments: 'The [value] with [amount] [unit] added to it.',
   });
 
   registry.addOperation(DateOps.sub, {
@@ -160,6 +175,7 @@ export default (registry: Registry) =>
     defaults: {
       amount: '1',
     },
+    returnComments: 'The [value] with [amount] [unit] subtracted from it.',
   });
 
   registry.addOperation(DateOps.startOf, {
@@ -170,6 +186,7 @@ export default (registry: Registry) =>
       value: 'The date value',
       unit: 'The unit of time',
     },
+    returnComments: 'The [value] moved to the start of [unit].',
   });
 
   registry.addOperation(DateOps.endOf, {
@@ -184,6 +201,7 @@ export default (registry: Registry) =>
     defaults: {
       inclusive: 'false',
     },
+    returnComments: 'The [value] moved to the end of [unit].',
   });
 
   registry.addOperation(DateOps.daysInMonth, {
@@ -193,6 +211,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'The number of days in the month with the date [value].',
   });
 
   registry.addOperation(DateOps.daysInYear, {
@@ -202,6 +221,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'The number of days in the year with the date [value].',
   });
 
   registry.addOperation(DateOps.weeksInYear, {
@@ -211,11 +231,12 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'The number of weeks in the year with the date [value].',
   });
 
   registry.addOperation(DateOps.cmp, {
     name: 'Compare Date',
-    description: 'Compare [value] and [test] to the [unit] and return 0 when equal, +n when [value] < [test] and -n when [value] > [test]',
+    description: 'Compare [value] and [test] to the [unit] and return a number result',
     singleline: 'compare {value} and {test} to the {unit}',
     comments: {
       value: 'The value to compare',
@@ -225,6 +246,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'millisecond',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(DateOps.diff, {
@@ -243,6 +265,7 @@ export default (registry: Registry) =>
       absolute: 'true',
       adjust: 'down',
     },
+    returnComments: 'The difference in [unit] between the two dates [value] and [test].',
   });
 
   registry.addOperation(DateOps.timezoneOffset, {
@@ -252,6 +275,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'The timezone offset of [value] in minutes.',
   });
 
   registry.addOperation(DateOps.toText, {
@@ -262,6 +286,7 @@ export default (registry: Registry) =>
       value: 'The date value',
       format: 'The format of the text',
     },
+    returnComments: 'Text with the formatted [value].',
   });
 
   registry.addOperation(DateOps.toISOText, {
@@ -271,6 +296,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'Text with [value] in the ISO format "YYYY-MM-DDTHH:mm:ss.SSSZ".',
   });
 
   registry.addOperation(DateOps.isValid, {
@@ -280,6 +306,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is a date, otherwise false.',
   });
 
   registry.addOperation(DateOps.isEqual, {
@@ -294,6 +321,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'milliseconds',
     },
+    returnComments: 'True if [value] and [test] exist in the same [unit], otherwise false',
   });
 
   registry.addOperation(DateOps.isBefore, {
@@ -308,6 +336,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'milliseconds',
     },
+    returnComments: 'True if [value] is before [test], otherwise false',
   });
 
   registry.addOperation(DateOps.isBeforeOrEqual, {
@@ -322,6 +351,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'milliseconds',
     },
+    returnComments: 'True if [value] is before or equal to [test], otherwise false.',
   });
 
   registry.addOperation(DateOps.isAfter, {
@@ -336,6 +366,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'milliseconds',
     },
+    returnComments: 'True if [value] is after [test], otherwise false.',
   });
 
   registry.addOperation(DateOps.isAfterOrEqual, {
@@ -350,6 +381,7 @@ export default (registry: Registry) =>
     defaults: {
       unit: 'milliseconds',
     },
+    returnComments: 'True if [value] is after or equal to [test], otherwise false.',
   });
 
   registry.addOperation(DateOps.isBetween, {
@@ -369,6 +401,7 @@ export default (registry: Registry) =>
       startInclusive: 'true',
       endInclusive: 'false',
     },
+    returnComments: 'True if [value] is between [start] and [end], otherwise false',
   });
 
   registry.addOperation(DateOps.isStartOf, {
@@ -379,6 +412,7 @@ export default (registry: Registry) =>
       value: 'The value to evaluate',
       unit: 'The unit of time to use to compare the dates',
     },
+    returnComments: 'True if [value] is at the start of the [unit], otherwise false.',
   });
 
   registry.addOperation(DateOps.isEndOf, {
@@ -393,6 +427,7 @@ export default (registry: Registry) =>
     defaults: {
       inclusive: 'false',
     },
+    returnComments: 'True if [value] is at the end of the [unit], otherwise false.',
   });
 
   registry.addOperation(DateOps.isDST, {
@@ -402,6 +437,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'True if [value] is in Daylights Saving Time, otherwise false.',
   });
 
   registry.addOperation(DateOps.isLeapYear, {
@@ -411,6 +447,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The date value',
     },
+    returnComments: 'True if [value] is in a leap year, otherwise false.',
   });
 
   registry.addOperation(DateOps.asAny, {
@@ -420,6 +457,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(DateOps.asBoolean, {
@@ -429,6 +467,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'true',
   });
 
   registry.addOperation(DateOps.asDate, {
@@ -438,6 +477,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(DateOps.asList, {
@@ -447,6 +487,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(DateOps.asMap, {
@@ -456,6 +497,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map with a single key-value pair of "value" and [value]',
   });
 
   registry.addOperation(DateOps.asNumber, {
@@ -465,6 +507,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The millisecond timestamp of [value]',
   });
 
   registry.addOperation(DateOps.asObject, {
@@ -474,6 +517,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(DateOps.asText, {
@@ -483,6 +527,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to text using the ISO format.',
   });
 
   registry.addOperation(DateOps.asTuple, {
@@ -492,6 +537,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

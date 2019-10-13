@@ -28,7 +28,7 @@ export const ObjectVisuals = createVisuals({
       ? key
       : '[ property ]';
     const description = isString(key)
-      ? registry.getTypeDescribe(value)
+      ? registry.getTypeDescribeLong(value, '', '  ')
       : 'A value for a given property';
 
     return { key, value, text, description };

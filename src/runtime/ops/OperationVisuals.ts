@@ -9,7 +9,7 @@ export type OperationVisuals<
   description: string;
   singleline: string;
   comments: Record<P | O, string>;
-  returnComments?: string;
+  returnComments: string;
   keywords?: string[];
 } & (
   [O] extends [never] ? {} : { defaults: Record<O, string> }

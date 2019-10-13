@@ -7,16 +7,18 @@
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>
-      <v-list two-line>
+      <v-list two-line dense>
         <template v-for="(alt, index) in alternativeSegments">
           <v-list-item :key="index" @click="changeSegment(alt)">
             <v-list-item-content>
-              <v-list-item-title>{{ alt.text }}</v-list-item-title>
+              <v-list-item-title>
+                {{ alt.text }}
+              </v-list-item-title>
               <v-list-item-subtitle>
                 {{ alt.description }}
-                <span v-if="contextDetails[alt.text]">
-                  : {{ contextDetails[alt.text] }}
-                </span>
+              </v-list-item-subtitle>
+              <v-list-item-subtitle v-if="contextDetails[alt.text]">
+                {{ contextDetails[alt.text] }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>

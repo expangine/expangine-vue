@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Text value (empty)',
     singleline: 'empty text',
     comments: {},
+    returnComments: 'An empty text.',
   });
 
   registry.addOperation(TextOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to text or undefined',
     },
+    returnComments: 'text or undefined.',
   });
 
   registry.addOperation(TextOps.append, {
@@ -29,6 +31,7 @@ export default (registry: Registry) =>
       value: 'The text to append to',
       append: 'The text to add after [value]',
     },
+    returnComments: '[value] + [append]',
   });
 
   registry.addOperation(TextOps.prepend, {
@@ -39,6 +42,7 @@ export default (registry: Registry) =>
       value: 'The text to prepend to',
       prepend: 'The text to add before [value]',
     },
+    returnComments: '[prepend] + [value]',
   });
 
   registry.addOperation(TextOps.lower, {
@@ -48,6 +52,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to lowercase',
     },
+    returnComments: '[value] in lowercase',
   });
 
   registry.addOperation(TextOps.upper, {
@@ -57,6 +62,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to uppercase',
     },
+    returnComments: '[value] in uppercase',
   });
 
   registry.addOperation(TextOps.char, {
@@ -71,6 +77,7 @@ export default (registry: Registry) =>
     defaults: {
       outside: 'empty text',
     },
+    returnComments: 'The character from [value] at [index], otherwise [otherwise].',
   });
 
   registry.addOperation(TextOps.replace, {
@@ -82,6 +89,7 @@ export default (registry: Registry) =>
       find: 'The text to find and replace',
       replace: 'The replacement text',
     },
+    returnComments: 'A new text value with [find] replaced with [replace].',
   });
 
   registry.addOperation(TextOps.repeat, {
@@ -92,6 +100,7 @@ export default (registry: Registry) =>
       value: 'The text to repeat',
       times: 'The number of times to repeat [value]',
     },
+    returnComments: 'A text value with [value] repeated [times] times.',
   });
 
   registry.addOperation(TextOps.split, {
@@ -106,6 +115,7 @@ export default (registry: Registry) =>
     defaults: {
       limit: 'no max',
     },
+    returnComments: 'A list of text built by splitting [value] by [by] [limit] number of times.',
   });
 
   registry.addOperation(TextOps.chars, {
@@ -115,6 +125,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to a character list',
     },
+    returnComments: 'A list of the characters in [value].',
   });
 
   registry.addOperation(TextOps.sub, {
@@ -131,6 +142,7 @@ export default (registry: Registry) =>
       end: 'end of [value]',
     },
     keywords: ['substring', 'sub'],
+    returnComments: 'The section of text in [value] from [start] to [end] (exclusive).',
   });
 
   registry.addOperation(TextOps.indexOf, {
@@ -145,6 +157,7 @@ export default (registry: Registry) =>
     defaults: {
       start: 'start of [value]',
     },
+    returnComments: 'The index of [search] in [text] starting at [start], otherwise -1.',
   });
 
   registry.addOperation(TextOps.lastIndexOf, {
@@ -159,6 +172,7 @@ export default (registry: Registry) =>
     defaults: {
       start: 'end of [value]',
     },
+    returnComments: 'The last index of [search] in [text] starting at [start], otherwise -1.',
   });
 
   registry.addOperation(TextOps.trim, {
@@ -174,6 +188,7 @@ export default (registry: Registry) =>
       start: 'true',
       end: 'true',
     },
+    returnComments: 'A new text value with whitespace removed.',
   });
 
   registry.addOperation(TextOps.startsWith, {
@@ -184,6 +199,7 @@ export default (registry: Registry) =>
       value: 'The text to look at',
       test: 'The text to look for at the start',
     },
+    returnComments: 'True if [value] starts with [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.endsWith, {
@@ -194,6 +210,7 @@ export default (registry: Registry) =>
       value: 'The text to look at',
       test: 'The text to look for at the end',
     },
+    returnComments: 'True if [value] ends with [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.soundex, {
@@ -209,6 +226,7 @@ export default (registry: Registry) =>
       max: 'no maximum',
       min: '4',
     },
+    returnComments: 'The phonetic code of [value].',
   });
 
   registry.addOperation(TextOps.distance, {
@@ -220,6 +238,7 @@ export default (registry: Registry) =>
       test: 'The second text to compare',
     },
     keywords: ['levenshtein'],
+    returnComments: 'The number of changes (add/remove) needed to change [value] to [test].',
   });
 
   registry.addOperation(TextOps.length, {
@@ -229,6 +248,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The text to return the length of',
     },
+    returnComments: 'The number of characters in [value].',
   });
 
   registry.addOperation(TextOps.compare, {
@@ -240,10 +260,10 @@ export default (registry: Registry) =>
       test: 'The second text to compare',
       ignoreCase: 'Whether case should be ignored when comparing',
     },
-    returnComments: 'Return 0 if they are equal, -1 if [value] is after [test], otherwise +1',
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(TextOps.like, {
@@ -258,6 +278,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [value] matches the [pattern].',
   });
 
   registry.addOperation(TextOps.pad, {
@@ -275,6 +296,7 @@ export default (registry: Registry) =>
       max: 'no max',
       append: 'false',
     },
+    returnComments: 'The [value] text padded.',
   });
 
   registry.addOperation(TextOps.toNumber, {
@@ -288,6 +310,7 @@ export default (registry: Registry) =>
     defaults: {
       invalidValue: '0',
     },
+    returnComments: 'The number parsed from the text [value], otherwise [invalidValue].',
   });
 
   registry.addOperation(TextOps.isValid, {
@@ -297,6 +320,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is text, otherwise false.',
   });
 
   registry.addOperation(TextOps.isEmpty, {
@@ -306,6 +330,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is empty text, otherwise false.',
   });
 
   registry.addOperation(TextOps.isNotEmpty, {
@@ -315,6 +340,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is not empty text, otherwise false.',
   });
 
   registry.addOperation(TextOps.isEqual, {
@@ -329,6 +355,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [a] equals [b], otherwise false',
   });
 
   registry.addOperation(TextOps.isNotEqual, {
@@ -343,6 +370,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [a] is not equal to [b], otherwise false',
   });
 
   registry.addOperation(TextOps.isLess, {
@@ -357,6 +385,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.isLessOrEqual, {
@@ -371,6 +400,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.isGreater, {
@@ -385,6 +415,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.isGreaterOrEqual, {
@@ -399,6 +430,7 @@ export default (registry: Registry) =>
     defaults: {
       ignoreCase: 'false',
     },
+    returnComments: 'True if [value] is greater than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(TextOps.isLower, {
@@ -408,6 +440,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The text to evaluate for lowercase',
     },
+    returnComments: 'True if [value] is in all lowercase, otherwise false.',
   });
 
   registry.addOperation(TextOps.isUpper, {
@@ -417,6 +450,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The text to evaluate for uppercase',
     },
+    returnComments: 'True if [value] is in all uppercase, otherwise false.',
   });
 
   registry.addOperation(TextOps.asAny, {
@@ -426,6 +460,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(TextOps.asBoolean, {
@@ -435,6 +470,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'True if text looks like true, t, 1, y, or x, otherwise false.',
   });
 
   registry.addOperation(TextOps.asDate, {
@@ -444,6 +480,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A date parsed from the text, otherwise the current date & time.',
   });
 
   registry.addOperation(TextOps.asList, {
@@ -453,6 +490,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(TextOps.asMap, {
@@ -462,6 +500,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map with a single key-value pair of "value" and [value]',
   });
 
   registry.addOperation(TextOps.asNumber, {
@@ -471,6 +510,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A number parsed from text, if none could be 0.',
   });
 
   registry.addOperation(TextOps.asObject, {
@@ -480,6 +520,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(TextOps.asText, {
@@ -489,6 +530,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(TextOps.asTuple, {
@@ -498,6 +540,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

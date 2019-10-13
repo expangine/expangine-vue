@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a List value (empty)',
     singleline: 'create list',
     comments: {},
+    returnComments: '[]',
   });
 
   registry.addOperation(ListOps.maybe, {
@@ -19,6 +20,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to list or undefined',
     },
+    returnComments: 'list or undefined',
   });
 
   registry.addOperation(ListOps.build, {
@@ -39,6 +41,7 @@ export default (registry: Registry) =>
     defaults: {
       sameItem: 'true',
     },
+    returnComments: 'A list with [count] items in it with value [item].',
   });
 
   registry.addOperation(ListOps.get, {
@@ -49,6 +52,7 @@ export default (registry: Registry) =>
       list: 'The list to get an item from',
       index: 'The index of the item in the list',
     },
+    returnComments: 'Gets the item at the given index, or undefined if none existed.',
   });
 
   registry.addOperation(ListOps.set, {
@@ -60,6 +64,7 @@ export default (registry: Registry) =>
       index: 'The index in the list',
       value: 'The item to set in the list at the given index',
     },
+    returnComments: 'The previous item in [list] at [index]',
   });
 
   registry.addOperation(ListOps.add, {
@@ -70,6 +75,7 @@ export default (registry: Registry) =>
       list: 'The list to add to',
       item: 'The item to add',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.addFirst, {
@@ -80,6 +86,7 @@ export default (registry: Registry) =>
       list: 'The list to add to',
       item: 'The item to add',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.addLast, {
@@ -90,6 +97,7 @@ export default (registry: Registry) =>
       list: 'The list to add to',
       item: 'The item to add',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.insert, {
@@ -101,6 +109,7 @@ export default (registry: Registry) =>
       item: 'The item to add',
       index: 'The index to insert at',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.remove, {
@@ -117,6 +126,7 @@ export default (registry: Registry) =>
       value: 'The item to remove',
       test: 'The current item in the list being compared',
     },
+    returnComments: 'The index of the item removed, otherwise -1.',
   });
 
   registry.addOperation(ListOps.removeFirst, {
@@ -126,6 +136,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to remove from',
     },
+    returnComments: 'The item removed from the list, otherwise undefined.',
   });
 
   registry.addOperation(ListOps.removeLast, {
@@ -135,6 +146,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to remove from',
     },
+    returnComments: 'The item removed from the list, otherwise undefined.',
   });
 
   registry.addOperation(ListOps.removeAt, {
@@ -145,6 +157,7 @@ export default (registry: Registry) =>
       list: 'The list to remove from',
       index: 'The index of the item to remove',
     },
+    returnComments: 'The item removed from the list, otherwise undefined.',
   });
 
   registry.addOperation(ListOps.removeWhere, {
@@ -160,6 +173,7 @@ export default (registry: Registry) =>
       item: 'The current item being compared to',
       index: 'The index of the current item',
     },
+    returnComments: 'The list of items removed from the list.',
   });
 
   registry.addOperation(ListOps.contains, {
@@ -176,6 +190,7 @@ export default (registry: Registry) =>
       value: 'The item being looked for',
       test: 'The current item in the list being compared',
     },
+    returnComments: 'True if the [list] contains an [item] that passes the [isEqual] test, otherwise false.',
   });
 
   registry.addOperation(ListOps.find, {
@@ -197,6 +212,7 @@ export default (registry: Registry) =>
       reverse: 'false',
       start: '0 for forward, length - 1 for reverse',
     },
+    returnComments: 'The first item found in the [list] which results in [where] being true, otherwise undefined.',
   });
 
   registry.addOperation(ListOps.copy, {
@@ -213,6 +229,7 @@ export default (registry: Registry) =>
     defaults: {
       deepCopy: 'none',
     },
+    returnComments: 'A copy of the [list].',
   });
 
   registry.addOperation(ListOps.reverse, {
@@ -222,6 +239,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to reverse',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.exclude, {
@@ -238,6 +256,7 @@ export default (registry: Registry) =>
       value: 'The first item to compare',
       test: 'The second item to compare',
     },
+    returnComments: '[list] without the items in [exclude].',
   });
 
   registry.addOperation(ListOps.overlap, {
@@ -254,6 +273,7 @@ export default (registry: Registry) =>
       value: 'The first item to compare',
       test: 'The second item to compare',
     },
+    returnComments: 'A new list with all items both lists share.',
   });
 
   registry.addOperation(ListOps.sort, {
@@ -269,6 +289,7 @@ export default (registry: Registry) =>
       value: 'The first item to compare',
       test: 'The second item to compare',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.shuffle, {
@@ -282,6 +303,7 @@ export default (registry: Registry) =>
     defaults: {
       times: '1',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.unique, {
@@ -297,6 +319,7 @@ export default (registry: Registry) =>
       value: 'The first item to compare',
       test: 'The second item to compare',
     },
+    returnComments: 'A new list with all unique items in [list].',
   });
 
   registry.addOperation(ListOps.duplicates, {
@@ -316,6 +339,7 @@ export default (registry: Registry) =>
     defaults: {
       once: 'false',
     },
+    returnComments: 'A new list with all duplicate items in [list].',
   });
 
   registry.addOperation(ListOps.take, {
@@ -326,6 +350,7 @@ export default (registry: Registry) =>
       list: 'The list to get items from',
       count: 'The maximum number of items to take',
     },
+    returnComments: 'A new list with the first [count] items from [list].',
   });
 
   registry.addOperation(ListOps.skip, {
@@ -336,6 +361,7 @@ export default (registry: Registry) =>
       list: 'The list to get items from starting at [count]',
       count: 'The number of items to skip',
     },
+    returnComments: 'A new list with items from [list] starting at [count].',
   });
 
   registry.addOperation(ListOps.drop, {
@@ -346,6 +372,7 @@ export default (registry: Registry) =>
       list: 'The list to get a items from without the last [count]',
       count: 'The number of items to drop from the end',
     },
+    returnComments: 'A new list with items from [list] excluding the last [count].',
   });
 
   registry.addOperation(ListOps.append, {
@@ -356,6 +383,7 @@ export default (registry: Registry) =>
       list: 'The first list of items',
       append: 'The second list of items',
     },
+    returnComments: 'A new list with the items from [list] and [append].',
   });
 
   registry.addOperation(ListOps.prepend, {
@@ -366,6 +394,7 @@ export default (registry: Registry) =>
       list: 'The first list of items',
       prepend: 'The second list of items to add to the start',
     },
+    returnComments: 'A new list with the items from [prepend] and [list].',
   });
 
   registry.addOperation(ListOps.indexOf, {
@@ -386,6 +415,7 @@ export default (registry: Registry) =>
     defaults: {
       start: '0',
     },
+    returnComments: 'The index of the [item] in the [list], or -1 if it was not found.',
   });
 
   registry.addOperation(ListOps.lastIndexOf, {
@@ -406,6 +436,7 @@ export default (registry: Registry) =>
     defaults: {
       start: '0',
     },
+    returnComments: 'The index of the [item] in the [list] searching from the end first, or -1 if it was not found.',
   });
 
   registry.addOperation(ListOps.findIndex, {
@@ -427,6 +458,7 @@ export default (registry: Registry) =>
       reverse: 'false',
       start: '0 for forward, length - 1 for reverse',
     },
+    returnComments: 'The index in the [list] where [where] first returned true, otherwise -1.',
   });
 
   registry.addOperation(ListOps.last, {
@@ -436,6 +468,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to get the last item from',
     },
+    returnComments: 'The last item in the list, or undefined if the list is empty.',
   });
 
   registry.addOperation(ListOps.first, {
@@ -445,6 +478,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to get the first item from',
     },
+    returnComments: 'The first item in the list, or undefined if the list is empty.',
   });
 
   registry.addOperation(ListOps.count, {
@@ -454,6 +488,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to count',
     },
+    returnComments: 'The number of items in the list.',
   });
 
   registry.addOperation(ListOps.randomList, {
@@ -464,6 +499,7 @@ export default (registry: Registry) =>
       list: 'The list to get items from',
       count: 'The number of items to randomly get',
     },
+    returnComments: 'A new list with [count] items randomly selected from [list].',
   });
 
   registry.addOperation(ListOps.random, {
@@ -473,6 +509,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to get an item from',
     },
+    returnComments: 'A random item from the list, or undefined if the list is empty.',
   });
 
   registry.addOperation(ListOps.join, {
@@ -497,6 +534,7 @@ export default (registry: Registry) =>
       suffix: 'none',
       toText: 'system method',
     },
+    returnComments: 'The [list] in text form, joined by [delimiter].',
   });
 
   registry.addOperation(ListOps.each, {
@@ -516,6 +554,7 @@ export default (registry: Registry) =>
     defaults: {
       reverse: 'false',
     },
+    returnComments: '[list]',
   });
 
   registry.addOperation(ListOps.filter, {
@@ -531,6 +570,7 @@ export default (registry: Registry) =>
       item: 'The current item being evaluated',
       index: 'The index of the current item',
     },
+    returnComments: 'A new list of all items that passed the [filter] †est.',
   });
 
   registry.addOperation(ListOps.not, {
@@ -546,6 +586,7 @@ export default (registry: Registry) =>
       item: 'The current item being evaluated',
       index: 'The index of the current item',
     },
+    returnComments: 'A new list of all items that did not pass the [not] test.',
   });
 
   registry.addOperation(ListOps.map, {
@@ -561,6 +602,7 @@ export default (registry: Registry) =>
       item: 'The current item being transformed',
       index: 'The index of the current item',
     },
+    returnComments: 'A new list where each item in [list] has been changed into a new item.',
   });
 
   registry.addOperation(ListOps.split, {
@@ -576,6 +618,7 @@ export default (registry: Registry) =>
       item: 'The current item being evaluated',
       index: 'The index of the current item',
     },
+    returnComments: 'An object with pass/fail lists to organize the items that [pass] or fail.',
   });
 
   registry.addOperation(ListOps.reduce, {
@@ -593,6 +636,7 @@ export default (registry: Registry) =>
       item: 'The current item being evaluated',
       index: 'The index of the current item',
     },
+    returnComments: 'A single value that is an accumulative result of a repeated operation on all items in the [list].',
   });
 
   registry.addOperation(ListOps.cmp, {
@@ -609,6 +653,7 @@ export default (registry: Registry) =>
       value: 'The first item to compare',
       test: 'The second item to compare',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(ListOps.group, {
@@ -628,6 +673,7 @@ export default (registry: Registry) =>
     defaults: {
       getValue: 'no transform',
     },
+    returnComments: 'A new list of objects with a "by" property and a "group" list for all the items that share the same [by].',
   });
 
   registry.addOperation(ListOps.toListMap, {
@@ -647,6 +693,7 @@ export default (registry: Registry) =>
     defaults: {
       getValue: 'no transform',
     },
+    returnComments: 'A map where the key is "getKey" and the value is a list of items with the same "getKey" optionally passed through "getValue".',
   });
 
   registry.addOperation(ListOps.toMap, {
@@ -666,6 +713,7 @@ export default (registry: Registry) =>
     defaults: {
       getValue: 'no transform',
     },
+    returnComments: 'A map where the key is "getKey" and the value is the item optionally passed through "getValue".',
   });
 
   registry.addOperation(ListOps.min, {
@@ -681,6 +729,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the minimum [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.max, {
@@ -696,6 +745,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the maximum [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.sum, {
@@ -711,6 +761,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the sum of [value]s from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.avg, {
@@ -726,6 +777,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the average [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.std, {
@@ -741,6 +793,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the standard deviation of [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.variance, {
@@ -756,6 +809,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns variance of [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.median, {
@@ -771,6 +825,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns median [value] from the [list], or null if the list is empty.',
   });
 
   registry.addOperation(ListOps.bitand, {
@@ -786,6 +841,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the bitwise AND of all [value]s from the [list], or 0xffffffff if the list is empty.',
   });
 
   registry.addOperation(ListOps.bitor, {
@@ -801,6 +857,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the bitwise OR of all [value]s from the [list], or 0 if the list is empty.',
   });
 
   registry.addOperation(ListOps.bitxor, {
@@ -816,6 +873,7 @@ export default (registry: Registry) =>
       item: 'The current item to get a value from',
       index: 'The index of the current item',
     },
+    returnComments: 'Returns the bitwise XOR of all [value]s from the [list], or 0 if the list is empty.',
   });
 
   registry.addOperation(ListOps.isValid, {
@@ -825,6 +883,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is a list, otherwise false.',
   });
 
   registry.addOperation(ListOps.isEmpty, {
@@ -834,6 +893,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to check',
     },
+    returnComments: 'True if [list] is empty, otherwise false.',
   });
 
   registry.addOperation(ListOps.isNotEmpty, {
@@ -843,6 +903,7 @@ export default (registry: Registry) =>
     comments: {
       list: 'The list to check',
     },
+    returnComments: 'True if [list] is not empty, otherwise false.',
   });
 
   registry.addOperation(ListOps.isEqual, {
@@ -859,6 +920,7 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [list] equals [test], otherwise false',
   });
 
   registry.addOperation(ListOps.isNotEqual, {
@@ -875,6 +937,7 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [list] is not equal to [test], otherwise false',
   });
 
   registry.addOperation(ListOps.isLess, {
@@ -891,6 +954,7 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(ListOps.isLessOrEqual, {
@@ -907,6 +971,7 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(ListOps.isGreater, {
@@ -923,6 +988,7 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(ListOps.isGreaterOrEqual, {
@@ -939,8 +1005,8 @@ export default (registry: Registry) =>
       value: 'The first item being compared',
       test: 'The second item being compared',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
-
 
   registry.addOperation(ListOps.asAny, {
     name: 'Cast List to Any',
@@ -949,6 +1015,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(ListOps.asBoolean, {
@@ -958,6 +1025,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the first item is a boolean it is returned, otherwise true if the [value] is not empty and false if it is.',
   });
 
   registry.addOperation(ListOps.asList, {
@@ -967,6 +1035,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(ListOps.asDate, {
@@ -976,6 +1045,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the first item is a date it is returned, otherwise the current date & time.',
   });
 
   registry.addOperation(ListOps.asMap, {
@@ -985,6 +1055,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map of key-value pairs entries where the "key" is the index of the item and "value" is the item.',
   });
 
   registry.addOperation(ListOps.asNumber, {
@@ -994,6 +1065,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the first item is a number it is returned, otherwise the length of the list.',
   });
 
   registry.addOperation(ListOps.asObject, {
@@ -1003,6 +1075,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(ListOps.asText, {
@@ -1012,6 +1085,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'If the first item is a text it is returned, otherwise an empty text.',
   });
 
   registry.addOperation(ListOps.asTuple, {
@@ -1021,6 +1095,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

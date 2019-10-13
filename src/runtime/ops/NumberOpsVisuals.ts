@@ -10,6 +10,7 @@ export default (registry: Registry) =>
     description: 'Create a Number value (0)',
     singleline: '0',
     comments: {},
+    returnComments: '0',
   });
 
   registry.addOperation(NumberOps.pi, {
@@ -17,6 +18,7 @@ export default (registry: Registry) =>
     description: '3.14159265359',
     singleline: 'pi',
     comments: {},
+    returnComments: '3.14159265359',
   });
 
   registry.addOperation(NumberOps.pi2, {
@@ -24,6 +26,7 @@ export default (registry: Registry) =>
     description: '6.28318530718',
     singleline: '2pi',
     comments: {},
+    returnComments: '6.28318530718',
   });
 
   registry.addOperation(NumberOps.piHalf, {
@@ -31,13 +34,7 @@ export default (registry: Registry) =>
     description: 'PI / 2',
     singleline: 'pi / 2',
     comments: {},
-  });
-
-  registry.addOperation(NumberOps.piHalf, {
-    name: 'PI / 2',
-    description: '1.57079632679',
-    singleline: 'pi / 2',
-    comments: {},
+    returnComments: '1.57079632679',
   });
 
   registry.addOperation(NumberOps.e, {
@@ -45,6 +42,7 @@ export default (registry: Registry) =>
     description: '2.71828',
     singleline: 'e',
     comments: {},
+    returnComments: '2.71828',
   });
 
   registry.addOperation(NumberOps.sqrt2, {
@@ -52,6 +50,7 @@ export default (registry: Registry) =>
     description: '1.41421356237',
     singleline: 'sqrt(2)',
     comments: {},
+    returnComments: '1.41421356237',
   });
 
   registry.addOperation(NumberOps.sqrt12, {
@@ -59,6 +58,7 @@ export default (registry: Registry) =>
     description: '0.70710678118',
     singleline: 'sqrt(1/2)',
     comments: {},
+    returnComments: '0.70710678118',
   });
 
   registry.addOperation(NumberOps.ln2, {
@@ -66,6 +66,7 @@ export default (registry: Registry) =>
     description: '0.69314718056',
     singleline: 'ln(2)',
     comments: {},
+    returnComments: '0.69314718056',
   });
 
   registry.addOperation(NumberOps.ln10, {
@@ -73,6 +74,7 @@ export default (registry: Registry) =>
     description: '2.30258509299',
     singleline: 'ln(10)',
     comments: {},
+    returnComments: '2.30258509299',
   });
 
   registry.addOperation(NumberOps.log2e, {
@@ -80,6 +82,7 @@ export default (registry: Registry) =>
     description: '0.30102999566',
     singleline: 'log(2)',
     comments: {},
+    returnComments: '0.30102999566',
   });
 
   registry.addOperation(NumberOps.log10e, {
@@ -87,6 +90,7 @@ export default (registry: Registry) =>
     description: '1',
     singleline: 'log(10)',
     comments: {},
+    returnComments: '1',
   });
 
   registry.addOperation(NumberOps.add, {
@@ -97,6 +101,7 @@ export default (registry: Registry) =>
       value: 'The first number',
       addend: 'The second number',
     },
+    returnComments: 'The sum of [value] and [addend].',
   });
 
   registry.addOperation(NumberOps.sub, {
@@ -107,6 +112,7 @@ export default (registry: Registry) =>
       value: 'The first number',
       subtrahend: 'The second number',
     },
+    returnComments: 'The difference of [value] and [subtrahend].',
   });
 
   registry.addOperation(NumberOps.mul, {
@@ -117,6 +123,7 @@ export default (registry: Registry) =>
       value: 'The first number',
       multiplier: 'The second number',
     },
+    returnComments: 'The product of [value] and [multiplier].',
   });
 
   registry.addOperation(NumberOps.div, {
@@ -127,6 +134,7 @@ export default (registry: Registry) =>
       value: 'The first number',
       divisor: 'The second number',
     },
+    returnComments: 'The quotient of [value] and [divisor].',
   });
 
   registry.addOperation(NumberOps.mod, {
@@ -137,6 +145,7 @@ export default (registry: Registry) =>
       value: 'The first number',
       divisor: 'The second number',
     },
+    returnComments: 'The remainder of [value] divided by [divisor].',
   });
 
   registry.addOperation(NumberOps.min, {
@@ -147,6 +156,7 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The smaller number between [a] and [b].',
   });
 
   registry.addOperation(NumberOps.max, {
@@ -157,6 +167,7 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The larger number between [a] and [b].',
   });
 
   registry.addOperation(NumberOps.pow, {
@@ -167,6 +178,7 @@ export default (registry: Registry) =>
       value: 'The number',
       exponent: 'The exponent',
     },
+    returnComments: 'The result of the exponential equation.',
   });
 
   registry.addOperation(NumberOps.atan2, {
@@ -177,6 +189,7 @@ export default (registry: Registry) =>
       x: 'The x magnitude of the vector',
       y: 'The y magnitude of the vector',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.hypot, {
@@ -187,6 +200,7 @@ export default (registry: Registry) =>
       a: 'The length of side 1 that shares the right angle',
       b: 'The length of side 2 that shares the right angle',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.choose, {
@@ -197,6 +211,7 @@ export default (registry: Registry) =>
       n: 'The total number of things to choose from',
       k: 'The size of the sets being chosen and counted',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.gcd, {
@@ -207,6 +222,7 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.bitAnd, {
@@ -217,6 +233,7 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.bitOr, {
@@ -227,6 +244,7 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.bitXor, {
@@ -237,16 +255,18 @@ export default (registry: Registry) =>
       a: 'The first number',
       b: 'The second number',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.cmp, {
     name: 'Compare Number',
-    description: 'Compare [value] and [test] and return 0 when equal, +n when [value] < [test] and -n when [value] > [test]',
+    description: 'Compare [value] and [test] and return a number result',
     singleline: 'compare {value} and {test}',
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
     },
+    returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] < [test] and a positive number when [value] > [test].',
   });
 
   registry.addOperation(NumberOps.maybe, {
@@ -256,6 +276,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to convert to number or undefined',
     },
+    returnComments: 'A number or undefined.',
   });
 
   registry.addOperation(NumberOps.sqrt, {
@@ -265,6 +286,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the square root of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.sqrt, {
@@ -274,6 +296,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the square of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.cbrt, {
@@ -283,6 +306,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the cube root of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.floor, {
@@ -292,6 +316,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the floor of',
     },
+    returnComments: '[value] to the smallest integer value.',
   });
 
   registry.addOperation(NumberOps.ceil, {
@@ -301,6 +326,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the ceil of',
     },
+    returnComments: '[value] to largest integer value.',
   });
 
   registry.addOperation(NumberOps.up, {
@@ -310,6 +336,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the rounded up value of',
     },
+    returnComments: '[value] always rounded to the next largest value.',
   });
 
   registry.addOperation(NumberOps.down, {
@@ -319,6 +346,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the rounded down value of',
     },
+    returnComments: '[value] with the decimal truncated.',
   });
 
   registry.addOperation(NumberOps.round, {
@@ -328,6 +356,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the rounded value of',
     },
+    returnComments: '[value] to the nearest integer.',
   });
 
   registry.addOperation(NumberOps.abs, {
@@ -337,15 +366,17 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the absolute value of',
     },
+    returnComments: '| [value] |',
   });
 
-  registry.addOperation(NumberOps.abs, {
+  registry.addOperation(NumberOps.neg, {
     name: 'Negate Value',
     description: 'Negate value of [value]',
     singleline: '- {value}',
     comments: {
       value: 'The value to find the negative value of',
     },
+    returnComments: '-[value]',
   });
 
   registry.addOperation(NumberOps.sign, {
@@ -355,6 +386,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the sign of',
     },
+    returnComments: 'Return 0 if [value] is zero, +1 is [value] is positive, and -1 if [value] is negative.',
   });
 
   registry.addOperation(NumberOps.log, {
@@ -364,6 +396,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the log of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.sin, {
@@ -373,6 +406,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The radians to find the sine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.cos, {
@@ -382,6 +416,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The radians to find the cosine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.tan, {
@@ -391,6 +426,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The radians to find the tangent of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.sinh, {
@@ -400,6 +436,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the hyperbolic sine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.cosh, {
@@ -409,6 +446,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the hyperbolic cosine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.asin, {
@@ -418,6 +456,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the arcsine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.acos, {
@@ -427,6 +466,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the arccosine of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.atan, {
@@ -436,6 +476,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the arctangent of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.factorial, {
@@ -445,6 +486,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the factorial of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.bitFlip, {
@@ -454,6 +496,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to find the bitwise FLIP of',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.clamp, {
@@ -465,6 +508,7 @@ export default (registry: Registry) =>
       min: 'The minimum value allowed',
       max: 'The maximum value allowed',
     },
+    returnComments: '[min] if [value] is less, [max] if [value] is greater, otherwise [value].',
   });
 
   registry.addOperation(NumberOps.triangleHeight, {
@@ -476,6 +520,7 @@ export default (registry: Registry) =>
       side1: 'The length of the left or right side of the triangle',
       side2: 'The length of the other side of the triangle',
     },
+    returnComments: 'The result of the operation.',
   });
 
   registry.addOperation(NumberOps.lerp, {
@@ -487,6 +532,7 @@ export default (registry: Registry) =>
       end: 'The end of the lineary interpolation range. The result will return this value when delta is 1',
       delta: 'A value typically between 0 and 1 that determines the value returned between [start] and [end]',
     },
+    returnComments: 'The linear interpolation [delta] between [start] and [end].',
   });
 
   registry.addOperation(NumberOps.rnd, {
@@ -505,6 +551,7 @@ export default (registry: Registry) =>
       whole: 'false',
       includeMax: 'false',
     },
+    returnComments: 'The random number.',
   });
 
   registry.addOperation(NumberOps.toBaseText, {
@@ -520,6 +567,7 @@ export default (registry: Registry) =>
       base: '10',
       minDigits: 'none',
     },
+    returnComments: 'The [value] converted to the given [base].',
   });
 
   registry.addOperation(NumberOps.toText, {
@@ -543,6 +591,7 @@ export default (registry: Registry) =>
       useExponent: 'false',
       thousandSeparator: 'no',
     },
+    returnComments: 'Formats [value] as text.',
   });
 
   registry.addOperation(NumberOps.isValid, {
@@ -552,6 +601,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to evaluate',
     },
+    returnComments: 'True if [value] is text, otherwise false.',
   });
 
   registry.addOperation(NumberOps.isZero, {
@@ -565,6 +615,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] is within [epsilon] of zero.',
   });
 
   registry.addOperation(NumberOps.isEqual, {
@@ -579,6 +630,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] equals [test] within [epsilon], otherwise false',
   });
 
   registry.addOperation(NumberOps.isNotEqual, {
@@ -593,6 +645,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] is not equal to [test] within epsilon, otherwise false',
   });
 
   registry.addOperation(NumberOps.isLess, {
@@ -603,6 +656,7 @@ export default (registry: Registry) =>
       value: 'The first value to compare',
       test: 'The second value to compare',
     },
+    returnComments: 'True if [value] is less than [test], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isLessOrEqual, {
@@ -613,6 +667,7 @@ export default (registry: Registry) =>
       value: 'The first value to compare',
       test: 'The second value to compare',
     },
+    returnComments: 'True if [value] is less than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isGreater, {
@@ -623,6 +678,7 @@ export default (registry: Registry) =>
       value: 'The first value to compare',
       test: 'The second value to compare',
     },
+    returnComments: 'True if [value] is greater than [test], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isGreaterOrEqual, {
@@ -633,6 +689,7 @@ export default (registry: Registry) =>
       value: 'The first value to compare',
       test: 'The second value to compare',
     },
+    returnComments: 'True if [value] is greater than or equal to [test], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isBetween, {
@@ -650,6 +707,7 @@ export default (registry: Registry) =>
       minInclusive: 'true',
       maxInclusive: 'true',
     },
+    returnComments: 'True if [value] is between [min] and [max], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isWhole, {
@@ -663,6 +721,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] is a whole number within [epsilon], otherwise false.',
   });
 
   registry.addOperation(NumberOps.isDecimal, {
@@ -676,6 +735,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] is a number with a fractional part, otherwise false.',
   });
 
   registry.addOperation(NumberOps.isPositive, {
@@ -685,6 +745,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to check',
     },
+    returnComments: 'True if [value] > 0, otherwise false.',
   });
 
   registry.addOperation(NumberOps.isNegative, {
@@ -694,6 +755,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to check',
     },
+    returnComments: 'True if [value] < 0, otherwise false.',
   });
 
   registry.addOperation(NumberOps.isDivisible, {
@@ -708,6 +770,7 @@ export default (registry: Registry) =>
     defaults: {
       epsilon: '0.000001',
     },
+    returnComments: 'True if [value] / [by] results in no remainder, otherwise false.',
   });
 
 
@@ -718,6 +781,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(NumberOps.asBoolean, {
@@ -727,6 +791,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'True if [value] is not zero, otherwise false.',
   });
 
   registry.addOperation(NumberOps.asDate, {
@@ -736,6 +801,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A date using the number as the millisecond timestamp.',
   });
 
   registry.addOperation(NumberOps.asList, {
@@ -745,6 +811,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
   });
 
   registry.addOperation(NumberOps.asMap, {
@@ -754,6 +821,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A map with a single key-value pair of "value" and [value]',
   });
 
   registry.addOperation(NumberOps.asNumber, {
@@ -763,6 +831,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: '[value]',
   });
 
   registry.addOperation(NumberOps.asObject, {
@@ -772,6 +841,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'An object with a single property "value" and [value]',
   });
 
   registry.addOperation(NumberOps.asText, {
@@ -781,6 +851,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'The [number] formatted as plain text.',
   });
 
   registry.addOperation(NumberOps.asTuple, {
@@ -790,6 +861,7 @@ export default (registry: Registry) =>
     comments: {
       value: 'The value to cast',
     },
+    returnComments: 'A tuple with a single [value] element.',
   });
 
 };

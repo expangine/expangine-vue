@@ -17,6 +17,7 @@ import { AndVisuals } from './and';
 import { NoVisuals } from './no';
 import { OrVisuals } from './or';
 import { OperationVisuals } from './operation';
+import { TupleVisuals } from './tuple';
 
 
 export default function(registry: Registry)
@@ -38,5 +39,6 @@ export default function(registry: Registry)
     .addExpression(OrVisuals)
     .addExpression(AndVisuals)
     .addExpression(OperationVisuals)
+    .addExpression(TupleVisuals)
   ;
 }

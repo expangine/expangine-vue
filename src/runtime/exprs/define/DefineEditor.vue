@@ -20,7 +20,7 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item @click="sortStart">
+              <v-list-item @click="toggleSort">
                 <v-list-item-content>
                   <v-list-item-title>
                     Toggle Sort
@@ -115,7 +115,7 @@ export default ExpressionBase<DefineExpression>().extend({
     },
   },
   methods: {
-    sortStart(): void {
+    toggleSort(): void {
       this.sorting = !this.sorting;
     },
     updateBody(body?: Expression): void {
