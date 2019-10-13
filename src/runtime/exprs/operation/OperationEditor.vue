@@ -69,7 +69,7 @@
                     </v-list-item-avatar>
                   </v-list-item>
                 </template>
-                <v-list>
+                <v-list dense>
                   <template v-for="scopeParam in operation.scope">
                     <v-list-item :key="scopeParam" @click="changeScope(scopeParam)">
                       <v-list-item-content>

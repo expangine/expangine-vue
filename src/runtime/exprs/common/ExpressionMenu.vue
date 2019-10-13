@@ -18,7 +18,7 @@
         <slot name="prepend"></slot>
 
         <v-list-item v-if="canRemove" @click="requestRemove">
-          <v-list-item-content>
+          <v-list-item-content class="red--text darken-4">
             <v-list-item-title>
               Remove {{ visuals.name }}
             </v-list-item-title>
@@ -55,7 +55,7 @@
         <v-menu offset-x open-on-hover class="d-inline">
           <template #activator="{ on }">
             <v-list-item v-on="on">
-              <v-list-item-content>
+              <v-list-item-content class="red--text darken-4">
                 <v-list-item-title>
                   Replace with...
                 </v-list-item-title>
@@ -85,7 +85,7 @@
             <v-menu v-if="copiedOptions.length" offset-x open-on-hover class="d-inline">
               <template #activator="{ on }">
                 <v-list-item v-on="on">
-                  <v-list-item-content>
+                  <v-list-item-content class="red--text darken-4">
                     <v-list-item-title>
                       Paste...
                     </v-list-item-title>

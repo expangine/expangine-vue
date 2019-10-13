@@ -263,7 +263,8 @@ export default Vue.extend({
         return;
       }
 
-      const cmd = LiveRuntime.getCommand(this.program);
+      const programCopy = this.registry.defs.cloneExpression(this.program);
+      const cmd = LiveRuntime.getCommand(programCopy);
       const data = this.type.fromJson(copy(this.type.toJson(this.data)));
       const result = cmd(data);
 
