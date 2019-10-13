@@ -22,6 +22,7 @@ export const NumberVisuals = createVisuals({
     (isNumber(type.options.min) ? ' min=' + type.options.min : '') +
     (isNumber(type.options.max) ? ' max=' + type.options.max : '')
   ,
+  toString: ({ value }) => value + '',
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 

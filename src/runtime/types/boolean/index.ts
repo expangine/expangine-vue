@@ -18,6 +18,7 @@ export const BooleanVisuals = createVisuals({
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   describe: () => 'Boolean',
   describeLong: (registry, type, padding) => 'Boolean',
+  toString: ({ value }) => value ? 'true' : 'false',
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 

@@ -15,12 +15,21 @@ export const ManyVisuals = createVisuals({
   type: ManyType,
   name: 'Many',
   description: 'A type that represents any number of possible types.',
-  describe: (registry, type) => friendlyList(type.options.map((t) => registry.getTypeDescribe(t)), ' or '),
+  describe: ({registry, type}) => friendlyList(type.options.map((t) => registry.getTypeDescribe(t)), ' or '),
   describeLong: (registry, type, padding, tab, newline) => 
     'One of [' + newline +
-    type.options.map((t) => padding + tab + registry.getTypeDescribeLong(t, tab, newline, padding + tab) + newline) +
+    type.options.map((t) => t
+      ? padding + tab + registry.getTypeDescribeLong(t, tab, newline, padding + tab) + newline
+      : '' ).join('') +
     padding + ']'
   ,
+  toString: ({ registry, value, type, tab, newline, padding }) => {
+    const found = type.options.find((t) => t.isValid(value));
+    
+    return found 
+      ? registry.getTypeToString(value, found, tab, newline, padding)
+      : value + '';
+  },
   subOptions: (registry, type) => {
     const options: TypeSubOption[] = [];
 

@@ -19,7 +19,7 @@
       </template>
     </ex-expression-menu>
 
-    <span class="pa-2">{{ readonlyValue }}</span>
+    <span class="pa-2" v-html="readonlyValue"></span>
 
     <v-dialog v-model="editing" persistent max-width="600px" class="d-inline">
       <v-card>
@@ -64,14 +64,9 @@ export default ExpressionBase<ConstantExpression>().extend({
       return this.requiredType || AnyType.baseType;
     },
     readonlyValue(): string {
-      if (!this.inputType) {
-        return this.value.value + '';
-      }
-      const value = this.inputType.toJson(this.value.value);
-
-      return isArray(value) || isObject(value)
-        ? JSON.stringify(value)
-        : value;
+      return this.computedType
+        ? this.registry.getTypeToString(this.value.value, this.computedType, '', '&nbsp;&nbsp;')
+        : this.value.value + '';
     },
     inputSettings(): TypeSettings | null {
       return this.pathSettings

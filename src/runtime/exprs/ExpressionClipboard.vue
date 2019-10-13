@@ -54,7 +54,7 @@ export default Vue.extend({
       }
     },
     clone(expr: Expression): Expression {
-      return this.registry.defs.getExpression(expr.encode());
+      return this.registry.defs.cloneExpression(expr);
     },
   },
 });

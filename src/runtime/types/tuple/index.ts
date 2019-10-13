@@ -17,10 +17,19 @@ export const TupleVisuals = createVisuals({
   type: TupleType,
   name: 'Tuple',
   description: 'A fixed size array of types',
-  describe: (registry, type) => 'Tuple [' + type.options.map((t) => registry.getTypeDescribe(t)).join(', ') + ']',
+  describe: ({registry, type}) => 'Tuple [' + type.options.map((t) => registry.getTypeDescribe(t)).join(', ') + ']',
   describeLong: (registry, type, padding, tab, newline) => 
     'Tuple [' + newline +
-    type.options.map((element, index) => padding + tab + index + ': ' + registry.getTypeDescribeLong(element, tab, newline, padding + tab) + newline).join('') +
+    type.options.map((element, index) => element
+      ? padding + tab + index + ': ' + registry.getTypeDescribeLong(element, tab, newline, padding + tab) + newline
+      : '').join('') +
+    padding + ']'
+  ,
+  toString: ({ registry, value, type, tab, newline, padding }) => 
+    'Tuple [' + newline + 
+    value.map((item: any, index: number) => type.options[index]
+      ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab) + newline
+      : '') + 
     padding + ']'
   ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {

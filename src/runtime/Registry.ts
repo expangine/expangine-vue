@@ -250,7 +250,7 @@ export class Registry
 
   public getTypeDescribe(type: Type): string
   {
-    return this.getTypeVisuals(type).describe(this, type);
+    return this.getTypeVisuals(type).describe({ registry: this, type });
   }
 
   public getTypeDescribeLong(type: Type, tab: string, newline: string, padding: string = ''): string
@@ -273,6 +273,11 @@ export class Registry
   public getTypeSettings(type: Type, sub: string | number = ''): TypeSettings<any, any>
   {
     return this.getTypeVisuals(type).settingsFor({ registry: this, type, overrides: this.settingsOverrides, sub });
+  }
+
+  public getTypeToString(value: any, type: Type, tab: string, newline: string, padding: string = ''): string
+  {
+    return this.getTypeVisuals(type).toString({ registry: this, value, type, tab, newline, padding });
   }
 
 }

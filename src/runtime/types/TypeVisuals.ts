@@ -29,8 +29,9 @@ export interface TypeVisuals<
   type: TypeClass<T>;
   name: string;
   description: string;
-  describe: (registry: Registry, type: T) => string;
+  describe: (options: { registry: Registry, type: T }) => string;
   describeLong: (registry: Registry, type: T, padding: string, tab: string, newline: string) => string;
+  toString: (options: { value: any, registry: Registry, type: T, padding: string, tab: string, newline: string }) => string;
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
   subSettings: (registry: Registry, type: T, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
   settingsFor: (options: { registry: Registry, type: T, sub: string | number, overrides: Record<string, any> }) => TypeSettings<any, any>;

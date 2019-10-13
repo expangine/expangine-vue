@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap, AnyType } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
@@ -19,10 +19,41 @@ export const ObjectVisuals = createVisuals({
   describeLong: (registry, type, padding, tab, newline) => 
     'Object {' + newline +
     objectValues(type.options.props, (propType, prop) => 
-      padding + tab + prop + ': ' + registry.getTypeDescribeLong(propType, tab, newline, padding + tab) + newline,
+      propType
+        ? padding + tab + prop + ': ' + registry.getTypeDescribeLong(propType, tab, newline, padding + tab) + newline
+        : '',
     ).join('') +
     padding + '}'
   ,
+  toString: ({ registry, value, type, tab, newline, padding }) => {
+    let out = '{' + newline;
+
+    for (const prop in value)
+    {
+      const propValue = value[prop];
+
+      if (propValue === undefined) {
+        continue;
+      }
+
+      const propValueType = type.options.props[prop] || AnyType.baseType;
+      const propValueString = registry.getTypeToString(propValue, propValueType, tab, newline, padding + tab);
+
+      if (propValueString === 'undefined') {
+        continue;
+      }
+
+      out += padding + tab;
+      out += prop;
+      out += ': ';
+      out += propValueString;
+      out += newline;
+    }
+
+    out += padding + '}';
+
+    return out;
+  },
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = isString(key)
       ? key

@@ -1,17 +1,17 @@
+import { ObjectExpression } from 'expangine-runtime';
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { TupleExpression } from 'expangine-runtime';
 
-import TupleEditor from './TupleEditor.vue';
+import ObjectEditor from './ObjectEditor.vue';
 
 
-export const TupleVisuals: ExpressionVisuals<TupleExpression> =
+export const ObjectVisuals: ExpressionVisuals<ObjectExpression> =
 {
-  expr: TupleExpression,
-  create: (forType) => new TupleExpression([]),
-  name: 'Tuple',
-  description: 'Create a dynamic Tuple',
-  viewer: TupleEditor,
-  editor: TupleEditor,
+  expr: ObjectExpression,
+  create: (forType) => new ObjectExpression({}),
+  name: 'Object',
+  description: 'Create a dynamic Object',
+  viewer: ObjectEditor,
+  editor: ObjectEditor,
   complex: true,
   isMultiline: () => true,
   types: {

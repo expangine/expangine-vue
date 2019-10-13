@@ -15,14 +15,9 @@ export default ExpressionBase<ConstantExpression>().extend({
       return this.computedType || this.requiredType;
     },
     readonlyValue(): string {
-      if (!this.inputType) {
-        return this.value.value + '';
-      }
-      const value = this.inputType.toJson(this.value.value);
-
-      return isArray(value) || isObject(value)
-        ? JSON.stringify(value)
-        : value;
+      return this.computedType
+        ? this.registry.getTypeToString(this.value.value, this.computedType, '', '&nbsp;&nbsp;')
+        : this.value.value + '';
     },
   },
 });

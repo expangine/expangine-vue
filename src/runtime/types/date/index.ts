@@ -17,6 +17,11 @@ export const DateVisuals = createVisuals(
   description: 'A date value',
   describe: () => 'Date',
   describeLong: (registry, type, padding) => 'Date',
+  toString: ({ value, type }) => 
+    type.options.withTime
+      ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
+      : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear()
+  ,
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 

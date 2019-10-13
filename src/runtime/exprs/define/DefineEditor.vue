@@ -47,7 +47,7 @@
                   <td v-if="sorting">
                     <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
                   </td>
-                  <td class="var-name">
+                  <td class="var-name py-2">
                     <v-text-field
                       outlined
                       dense

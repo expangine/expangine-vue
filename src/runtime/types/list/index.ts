@@ -20,9 +20,14 @@ export const ListVisuals = createVisuals({
   type: ListType,
   name: 'List',
   description: 'A list of values.',
-  describe: (registry, type) => 'List of ' + registry.getTypeDescribe(type.options.item),
+  describe: ({registry, type}) => 'List of ' + registry.getTypeDescribe(type.options.item),
   describeLong: (registry, type, padding, tab, newline) => 
     'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding + tab)
+  ,
+  toString: ({ registry, value, type, tab, newline, padding }) => 
+    '[' + newline + 
+    value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab) + newline).join('') + 
+    padding + ']'
   ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
