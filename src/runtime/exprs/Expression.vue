@@ -33,7 +33,11 @@
           </v-list-item>
         </template>
 
-        <ex-expression-clipboard :registry="registry" @pasted="input">
+        <ex-expression-clipboard 
+          :registry="registry" 
+          :context="context" 
+          :required-type="requiredType" 
+          @pasted="input">
           <template #default="{ copiedOptions, paste }">
             <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
               <template #activator="{ on }">

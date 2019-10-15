@@ -20,6 +20,7 @@ import { OperationVisuals } from './operation';
 import { TupleVisuals } from './tuple';
 import { ObjectVisuals } from './object';
 import { SwitchVisuals } from './switch';
+import { ReturnVisuals } from './return';
 
 
 export default function(registry: Registry)
@@ -44,5 +45,6 @@ export default function(registry: Registry)
     .addExpression(NoVisuals)
     .addExpression(OrVisuals)
     .addExpression(ChainVisuals)
+    .addExpression(ReturnVisuals)
   ;
 }
