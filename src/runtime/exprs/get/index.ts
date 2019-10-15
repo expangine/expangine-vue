@@ -10,7 +10,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   expr: GetExpression,
   create: () => new GetExpression([]),
   name: 'Get',
-  description: 'Get a value',
+  description: 'Get a data value',
   viewer: GetViewer,
   editor: GetEditor,
   complex: true,

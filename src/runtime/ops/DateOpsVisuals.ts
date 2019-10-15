@@ -234,6 +234,16 @@ export default (registry: Registry) =>
     returnComments: 'The number of weeks in the year with the date [value].',
   });
 
+  registry.addOperation(DateOps.copy, {
+    name: 'Copy Date',
+    description: 'Copy [value]',
+    singleline: 'copy {value}',
+    comments: {
+      value: 'The date to copy',
+    },
+    returnComments: 'Return a new date at the same date & time as [value]',
+  });
+
   registry.addOperation(DateOps.cmp, {
     name: 'Compare Date',
     description: 'Compare [value] and [test] to the [unit] and return a number result',

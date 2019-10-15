@@ -16,14 +16,14 @@
     No expression visuals exist for {{ value.getId() }}.
   </span>
   <span v-else>
-    <v-menu>
+    <v-menu max-height="400">
       <template #activator="{ on }">
         <v-btn text v-on="on" :color="statusColor">
           <v-icon>mdi-plus</v-icon>
           {{ type }}
         </v-btn>
       </template>
-      <v-list dense>
+      <v-list>
         <template v-for="expr in starters">
           <v-list-item :key="expr.expr.id" @click="startWith(expr)">
             <v-list-item-content>
@@ -35,7 +35,7 @@
 
         <ex-expression-clipboard :registry="registry" @pasted="input">
           <template #default="{ copiedOptions, paste }">
-            <v-menu v-if="copiedOptions.length" offset-x open-on-hover class="d-inline">
+            <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
               <template #activator="{ on }">
                 <v-list-item v-on="on">
                   <v-list-item-content>

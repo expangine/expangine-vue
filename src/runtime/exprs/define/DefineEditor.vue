@@ -52,6 +52,7 @@
                       outlined
                       dense
                       hide-details
+                      append-outer-icon="mdi-equal"
                       :error="isVarInvalid(index)"
                       :value="pair[0]"
                       @change="changeVar(index, $event)"

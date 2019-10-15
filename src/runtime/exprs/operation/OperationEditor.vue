@@ -53,7 +53,7 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-menu offset-x open-on-hover class="d-inline" v-if="hasScope">
+              <v-menu offset-x open-on-hover class="d-inline" max-height="400" v-if="hasScope">
                 <template #activator="{ on }">
                   <v-list-item v-on="on">
                     <v-list-item-content>
@@ -69,7 +69,7 @@
                     </v-list-item-avatar>
                   </v-list-item>
                 </template>
-                <v-list dense>
+                <v-list>
                   <template v-for="scopeParam in operation.scope">
                     <v-list-item :key="scopeParam" @click="changeScope(scopeParam)">
                       <v-list-item-content>
@@ -271,7 +271,7 @@ export default ExpressionBase<OperationExpression>().extend({
         && this.operationVisuals.singleline);
     },
     innerStyle(): any {
-      return this.readOnly 
+      return this.readOnly || (!this.multiline && this.operationVisuals.singleline.indexOf('{') === -1)
         ? {}
         : { marginTop: '15px' };
     },

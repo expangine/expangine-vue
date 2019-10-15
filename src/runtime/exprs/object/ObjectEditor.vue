@@ -33,6 +33,7 @@
                       outlined
                       dense
                       hide-details
+                      append-outer-icon="mdi-equal"
                       :error="isPropertyInvalid(prop)"
                       :value="prop"
                       @change="changeProperty(prop, $event)"

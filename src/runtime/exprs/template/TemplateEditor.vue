@@ -33,6 +33,7 @@
             ></v-text-field>
           </td>
           <td>
+            <v-icon class="ma-2">mdi-equal</v-icon>
             <ex-expression
               v-bind="$props"
               type="value"
@@ -152,11 +153,3 @@ export default ExpressionBase<TemplateExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.var-name {
-  min-width: 200px;
-  padding: 0px !important;
-  padding-right: 12px !important;
-}
-</style>

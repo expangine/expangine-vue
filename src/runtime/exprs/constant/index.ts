@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { ConstantExpression, AnyType } from 'expangine-runtime';
+import { ConstantExpression, AnyType, SwitchExpression, IfExpression } from 'expangine-runtime';
 
 import ConstantEditor from './ConstantEditor.vue';
 import ConstantViewer from './ConstantViewer.vue';
@@ -22,12 +22,12 @@ export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
       getModifiers: () => [],
     },
     body: {
-      isStart: () => false,
-      isValid: () => false,
+      isStart: (requiredType) => true,
+      isValid: (requiredType, expr) => !!requiredType || expr.parent instanceof SwitchExpression || expr.parent instanceof IfExpression,
       getModifiers: () => [],
     },
     value: {
-      isStart: (requiredType) => true,
+      isStart: () => true,
       isValid: () => true,
       getModifiers: () => [],
     },

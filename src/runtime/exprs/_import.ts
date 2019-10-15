@@ -19,28 +19,30 @@ import { OrVisuals } from './or';
 import { OperationVisuals } from './operation';
 import { TupleVisuals } from './tuple';
 import { ObjectVisuals } from './object';
+import { SwitchVisuals } from './switch';
 
 
 export default function(registry: Registry)
 {
   registry
-    .addExpression(GetVisuals)
     .addExpression(ConstantVisuals)
+    .addExpression(GetVisuals)
+    .addExpression(OperationVisuals)
     .addExpression(SetVisuals)
-    .addExpression(IfVisuals)
-    .addExpression(ChainVisuals)
     .addExpression(UpdateVisuals)
+    .addExpression(IfVisuals)
+    .addExpression(SwitchVisuals)
     .addExpression(DoVisuals)
     .addExpression(WhileVisuals)
     .addExpression(ForVisuals)
-    .addExpression(NotVisuals)
     .addExpression(DefineVisuals)
     .addExpression(TemplateVisuals)
-    .addExpression(NoVisuals)
-    .addExpression(OrVisuals)
-    .addExpression(AndVisuals)
-    .addExpression(OperationVisuals)
     .addExpression(TupleVisuals)
     .addExpression(ObjectVisuals)
+    .addExpression(NotVisuals)
+    .addExpression(AndVisuals)
+    .addExpression(NoVisuals)
+    .addExpression(OrVisuals)
+    .addExpression(ChainVisuals)
   ;
 }

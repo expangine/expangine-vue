@@ -2,7 +2,7 @@
   <span class="d-inline-block">
     
     <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
-      <v-list dense>
+      <v-list>
 
         <v-list-item v-if="hasTypeInformation" @click="showTypeInformation = true">
           <v-list-item-content>
@@ -52,7 +52,7 @@
           </v-list-item>
         </template>
 
-        <v-menu offset-x open-on-hover class="d-inline">
+        <v-menu max-height="400" offset-x open-on-hover class="d-inline">
           <template #activator="{ on }">
             <v-list-item v-on="on">
               <v-list-item-content class="red--text darken-4">
@@ -68,7 +68,7 @@
               </v-list-item-avatar>
             </v-list-item>
           </template>
-          <v-list dense>
+          <v-list>
             <template v-for="expr in starters">
               <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
                 <v-list-item-content>
@@ -82,7 +82,7 @@
 
         <ex-expression-clipboard :registry="registry" @pasted="input">
           <template #default="{ copiedOptions, paste }">
-            <v-menu v-if="copiedOptions.length" offset-x open-on-hover class="d-inline">
+            <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
               <template #activator="{ on }">
                 <v-list-item v-on="on">
                   <v-list-item-content class="red--text darken-4">
@@ -98,7 +98,7 @@
                   </v-list-item-avatar>
                 </v-list-item>
               </template>
-              <v-list dense>
+              <v-list>
                 <template v-for="(expr, index) in copiedOptions">
                   <v-list-item :key="index" @click="paste(expr.value)">
                     <v-list-item-content>

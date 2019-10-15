@@ -8,13 +8,13 @@
       @input="update"
       @remove="remove"
     ></path-segment>
-    <v-menu offset-y v-if="nextSegments.length > 0">
+    <v-menu max-height="400" offset-y v-if="nextSegments.length > 0">
       <template #activator="{ on }">
         <v-btn icon v-on="on">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>
-      <v-list two-line dense>
+      <v-list two-line>
         <template v-for="(sub, index) in nextSegments">
           <v-list-item :key="index" @click="addSegment(sub)">
             <v-list-item-content>

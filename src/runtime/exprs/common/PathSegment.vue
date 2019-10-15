@@ -1,13 +1,13 @@
 <template>
   <span class="ex-path-segment">
 
-    <v-menu key="menu" offset-y>
+    <v-menu key="menu" max-height="400" offset-y>
       <template #activator="{ on }">
         <v-btn icon v-on="on">
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>
-      <v-list two-line dense>
+      <v-list two-line>
         <template v-for="(alt, index) in alternativeSegments">
           <v-list-item :key="index" @click="changeSegment(alt)">
             <v-list-item-content>

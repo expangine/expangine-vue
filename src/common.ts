@@ -9,14 +9,21 @@ import { TypeModifyResult } from './runtime/types/TypeModifier';
 export type ListOptions<T = string> = Array<{ 
   text: string; 
   description?: string; 
-  value: T 
+  value: T;
 }>;
 
 export type ListOptionsPriority<T = string> = Array<{ 
   text: string; 
   description?: string; 
-  value: T, 
-  priority: number 
+  value: T;
+  priority: number;
+}>;
+
+export type ListOptionsTokenized<T = string> = Array<{ 
+  text: string; 
+  description?: string; 
+  value: T;
+  tokens: string[];
 }>;
 
 export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol, Map];

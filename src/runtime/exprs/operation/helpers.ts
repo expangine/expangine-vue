@@ -19,7 +19,7 @@ export function filterOperation(item: any, queryText: string, itemText: string)
 
 export function getToken(text: string): string 
 {
-  return text.toLowerCase().replace(/[^a-z0-9]/, '');
+  return text.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
 export function getTokens(text: string): string[] 
@@ -62,4 +62,36 @@ export function sortMappingListOption(a: {text: string, value: OperationMapping}
 export function sortListOption(a: {text: string}, b: {text: string}): number 
 {
   return a.text.localeCompare(b.text);
+}
+
+export function sortListOptionByCount(query: string)
+{
+  const tokens = getTokens(query);
+  const countCache: Record<string, number> = {};
+  const getCount = (otherTokens: string[]): number => 
+  {
+    const key = otherTokens.join(',');
+    if (countCache[key]) 
+    {
+      return countCache[key];
+    }
+
+    let count = 0;
+    for (const currentToken of tokens) 
+    {
+      if (otherTokens.indexOf(currentToken) !== -1) 
+      {
+        count++;
+      }
+    }
+
+    return countCache[key] = count;
+  };
+
+  return (a: {text: string, tokens: string[]}, b: {text: string, tokens: string[]}) => 
+  {
+    const d = getCount(b.tokens) - getCount(a.tokens);
+
+    return d === 0 ? sortListOption(a, b) : d;
+  };
 }

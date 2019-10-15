@@ -10,7 +10,7 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
   expr: SetExpression,
   create: () => new SetExpression([], NoExpression.instance),
   name: 'Set',
-  description: 'Set a value',
+  description: 'Set a data value',
   viewer: SetViewer,
   editor: SetEditor,
   complex: true,

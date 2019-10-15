@@ -184,6 +184,7 @@ export default Vue.extend({
         type: this.type.encode(),
         settings: this.settings,
         data: this.type.toJson(this.data),
+        program: this.program.encode(),
       }, undefined, 2);
 
       this.downloadFile('export-' + Date.now() + '.json', exported, 'text/json');
@@ -218,6 +219,7 @@ export default Vue.extend({
       this.type = this.registry.defs.getType(imported.type);
       this.settings = imported.settings;
       this.data = this.type.fromJson(imported.data);
+      this.program = this.registry.defs.getExpression(imported.program);
     },
     downloadFile(name: string, contents: any, type?: string) {
       const blob = new Blob([contents], {type: type || 'text/plain'});

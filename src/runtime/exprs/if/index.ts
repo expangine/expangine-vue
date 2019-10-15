@@ -9,7 +9,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   expr: IfExpression,
   create: (forType) => new IfExpression([[NoExpression.instance, NoExpression.instance]], NoExpression.instance),
   name: 'If',
-  description: 'If (condition) then (this) else (that)',
+  description: 'If (condition A) then (B) else if (condition C) then (D) else (E)',
   viewer: IfEditor,
   editor: IfEditor,
   complex: true,

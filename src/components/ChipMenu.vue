@@ -1,5 +1,5 @@
 <template>
-  <v-menu :nudge-top="4">
+  <v-menu max-height="400" :nudge-top="4">
     <template #activator="ma">
       <v-tooltip top open-delay="1000">
         <template #activator="ta">
