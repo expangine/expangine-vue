@@ -36,6 +36,24 @@
               <v-icon>mdi-play</v-icon>
               Run
             </v-btn>
+            <v-tooltip bottom>
+              <template #activator="{ on }">
+                <v-btn text v-on="on" @click="historyUndo" :disabled="undos.length === 0">
+                  <v-icon>mdi-undo</v-icon>
+                  Undo
+                </v-btn>
+              </template>
+              <span v-html="undoSummary"></span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on }">
+                <v-btn text v-on="on" @click="historyRedo" :disabled="redos.length === 0">
+                  Redo
+                  <v-icon>mdi-redo</v-icon>
+                </v-btn>
+              </template>
+              <span v-html="redoSummary"></span>
+            </v-tooltip>
           </v-toolbar-items>
         </v-toolbar>
       </v-col>
@@ -48,9 +66,7 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            @input:type="saveType"
-            @input:settings="saveType"
-            @transform="transform"
+            @change="handleChange"
           ></ex-type-editor>
         </v-list>
         <v-list v-if="isPopulate">
@@ -84,22 +100,30 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import * as ex from 'expangine-runtime';
 import { Type, defs, Expression, isString, NoExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import * as ex from 'expangine-runtime';
-import { TypeVisuals, TypeSettings } from '../runtime/types/TypeVisuals';
-import { TypeBuildResult } from '../runtime/types/TypeBuilder';
-import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import Registry from '../runtime';
+import { TypeVisuals, TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
+import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import { getConfirmation } from '../app/Confirm';
 import { sendNotification } from '../app/Notify';
 import { getRunProgram } from '../app/RunProgram';
+import { friendlyList } from '@/common';
 
 
 
 function copy(a: any): any {
   return JSON.parse(JSON.stringify(a));
 }
+
+interface HistoryState {
+  data?: any;
+  type?: any;
+  settings?: any;
+  program?: any;
+}
+type HistoryStateProps = Array<keyof HistoryState>;
 
 export default Vue.extend({
   name: 'home',
@@ -112,6 +136,8 @@ export default Vue.extend({
     await this.loadType();
     this.loadData();
     this.loadProgram();
+    this.loadHistory();
+    this.pushLast(['type', 'settings', 'data', 'program']);
   },
   data: () => ({
     mode: 0,
@@ -122,6 +148,10 @@ export default Vue.extend({
     data: null as null | any,
     program: NoExpression.instance as Expression,
     showComplexity: false,
+    undos: [] as HistoryState[],
+    redos: [] as HistoryState[],
+    last: {} as HistoryState,
+    pushing: false,
   }),
   computed: {
     isReady(): boolean {
@@ -136,9 +166,34 @@ export default Vue.extend({
     isProgram(): boolean {
       return this.mode === 2;
     },
+    undoSummary(): string {
+      return this.changeSummary(this.undos);
+    },
+    redoSummary(): string {
+      return this.changeSummary(this.redos);
+    },
   },
   methods: {
-    async getDefaultTypes(): Promise<TypeBuildResult | false> {
+    changeSummary(state: HistoryState[], count: number = 15) {
+      let i = state.length;
+      const summary = [];
+      while (--count >= 0 && --i >= 0) {
+        const keys = Object.keys(state[i]);
+        summary.push(friendlyList(keys) + ' change');
+      }
+      return '<ol><li>' + summary.join('</li><li>') + '</li></ol>';
+    },
+    pushLast(push: HistoryStateProps) {
+      push.forEach((prop) => {
+        switch (prop) {
+          case 'type': this.last.type = this.type ? this.type.encode() : undefined; break;
+          case 'settings': this.last.settings = copy(this.settings); break;
+          case 'data': this.last.data = this.type ? this.type.toJson(this.data) : undefined; break;
+          case 'program': this.last.program = this.program.encode(); break;
+        }
+      });
+    },
+    async getDefaultTypes(): Promise<TypeUpdateEvent | false> {
       const builtOption = await DefaultBuilder.getOption({
         registry: this.registry,
       });
@@ -156,24 +211,15 @@ export default Vue.extend({
         return;
       }
 
-      this.type = built.type;
-      this.settings = built.settings;
-      this.data = built.type.fromJson(built.settings.defaultValue);
+      this.historyPush(['type', 'settings', 'data', 'program'], () => {
+        this.type = built.type;
+        this.settings = built.settings;
+        this.data = built.type.fromJson(built.settings.defaultValue);
 
-      this.saveType();
-      this.saveData();
-      this.saveProgram(NoExpression.instance);
-    },
-    transform(expr: Expression) {
-      if (expr instanceof Expression) {
-        const cmd = LiveRuntime.getCommand(expr);
-
-        cmd({ value: this.data });
-
+        this.saveType();
         this.saveData();
-
-        window.console.log(expr);
-      }
+        this.saveProgram(NoExpression.instance);
+      });
     },
     exportJson() {
       if (!this.type) {
@@ -231,32 +277,142 @@ export default Vue.extend({
       dlink.click();
       dlink.remove();
     },
+    handleChange(event: TypeUpdateEvent) {
+      window.console.log('change', event);
+
+      const states: HistoryStateProps = event.transform
+        ? ['type', 'settings', 'data']
+        : ['type', 'settings'];
+
+      this.historyPush(states, () => {
+        this.type = event.type;
+        this.settings = event.settings;
+
+        if (event.transform) { 
+          this.transform(event.transform);
+        }
+
+        this.saveType();
+      });
+    },
+    historyUndo() {
+      const undo = this.undos.pop();
+      if (undo) {
+        this.historyApply(undo);
+        this.redos.push(undo);
+
+        localStorage.setItem('redos', JSON.stringify(this.redos));
+      }
+    },
+    historyRedo() {
+      const redo = this.redos.pop();
+      if (redo) {
+        this.historyApply(redo);
+        this.undos.push(redo);
+
+        localStorage.setItem('undos', JSON.stringify(this.undos));
+      }
+    },
+    historyApply(state: HistoryState) {
+      const push: HistoryStateProps = [];
+
+      if (state.type) {
+        this.type = this.registry.defs.getType(state.type);
+        push.push('type');
+      }
+      if (state.settings) {
+        this.settings = copy(state.settings);
+        push.push('settings');
+      }
+      if (state.data && this.type) {
+        this.data = this.type.fromJson(state.data);
+        push.push('data');
+      }
+      if (state.program) {
+        this.program = this.registry.defs.getExpression(state.program);
+        push.push('program');
+      }
+      this.pushLast(push);
+
+      sendNotification({ message: 'Restored ' + friendlyList(push) });
+    },
+    historyPush(push: HistoryStateProps, callback: () => any) {
+      if (this.pushing) {
+        callback();
+        return;
+      }
+
+      this.pushing = true;
+      const state: HistoryState = {};
+      push.forEach((prop) => {
+        state[prop] = this.last[prop];
+      });
+
+      if (this.redos.length) {
+        this.redos = [];
+
+        localStorage.setItem('redos', JSON.stringify(this.redos));
+      }
+      this.undos.push(state);
+
+      localStorage.setItem('undos', JSON.stringify(this.undos));
+      
+      callback();
+      this.pushLast(push);
+
+      this.pushing = false;
+    },
+    loadHistory() {
+      const undos = localStorage.getItem('undos');
+      if (undos) {
+        this.undos = JSON.parse(undos);
+      }
+      const redos = localStorage.getItem('redos');
+      if (redos) {
+        this.redos = JSON.parse(redos);
+      }
+    },
     saveType() {
       if (this.type === null || this.settings === null) {
         return;
       }
 
-      window.console.log('saving type & settings');
-
       localStorage.setItem('type', JSON.stringify(this.type.encode()));
       localStorage.setItem('settings', JSON.stringify(this.settings));
+    },
+    transform(expr: Expression) {
+      if (expr instanceof Expression) {
+        const cmd = LiveRuntime.getCommand(expr);
+
+        this.data = cmd({ value: this.data });
+
+        this.saveData();
+      }
     },
     saveData() {
       if (this.data === null || this.type === null) {
         return;
       }
 
-      window.console.log('saving data');
+      this.historyPush(['data'], () => {
+        if (this.data === null || this.type === null) {
+          return;
+        }
 
-      localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
+        window.console.log('saving data');
+
+        localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
+      });
     },
     saveProgram(program: Expression) {
-      this.program = program;
-      this.program.setParent();
+      this.historyPush(['program'], () => {
+        this.program = program;
+        this.program.setParent();
 
-      window.console.log('saving program');
+        window.console.log('saving program');
 
-      localStorage.setItem('program', JSON.stringify(this.program.encode()));
+        localStorage.setItem('program', JSON.stringify(this.program.encode()));
+      });
     },
     resetProgram() {
       this.saveProgram(NoExpression.instance);

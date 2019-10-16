@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { ListType } from 'expangine-runtime';
+import { ListType, ObjectType } from 'expangine-runtime';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
 import { SimpleFieldSettings, ListOptions } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
@@ -99,6 +99,14 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
     optionFields: () => fields,
     alignments: () => alignments,
   },
+  watch: {
+    'value.columns': {
+      immediate: true,
+      handler() {
+        this.addMissingColumns();
+      },
+    },
+  },
   methods: {
     move(index: number, dir: number) {
       const columns = this.value.columns;
@@ -110,6 +118,29 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
       this.$set(columns, index, columns[next]);
       this.$set(columns, next, temp);
       this.input();
+    },
+    addMissingColumns() {
+      let changed = false;
+      const { columns } = this.value;
+      const type = this.type.options.item as ObjectType;
+
+      for (const prop in type.options.props) {
+        const columnIndex = columns.findIndex((c) => c.prop === prop);
+        if (columnIndex === -1) {
+          columns.push({ prop, label: prop });
+          changed = true;
+        }
+      }
+
+      for (let i = columns.length - 1; i >= 0; i--) {
+        if (!(columns[i].prop in type.options.props)) {
+          columns.splice(i, 1);
+        }
+      }
+
+      if (changed) {
+        this.input();
+      }
     },
   },
 });

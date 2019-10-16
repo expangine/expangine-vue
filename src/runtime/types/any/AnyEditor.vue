@@ -8,10 +8,7 @@
         :parent="parent"
         :read-only="readOnly"
         :disable-sub-settings="disableSubSettings"
-        @input:type="updateType"
-        @input:settings="updateSettings"
-        @change:type="changeType"
-        @transform="transform"
+        @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content>
@@ -28,7 +25,6 @@
 
 <script lang="ts">
 import { AnyType } from 'expangine-runtime';
-import { TypeAndSettings } from '../TypeVisuals';
 import { AnyOptions } from './AnyTypes';
 import TypeEditorBase from '../TypeEditorBase';
 

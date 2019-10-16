@@ -23,11 +23,11 @@ export const ManyVisuals = createVisuals({
       : '' ).join('') +
     padding + ']'
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => {
+  toString: ({ registry, value, type, tab, newline, padding, process }) => {
     const found = type.options.find((t) => t.isValid(value));
     
     return found 
-      ? registry.getTypeToString(value, found, tab, newline, padding)
+      ? registry.getTypeToString(value, found, tab, newline, padding, process)
       : value + '';
   },
   subOptions: (registry, type) => {
@@ -127,6 +127,7 @@ export const ManyBuilderWrapper: TypeBuilderWrapper =
     priority: 5,
     multiple: true,
     value: async (results) => (initializeSubs(registry, {
+      kind: 'build',
       type: new ManyType(results.map((r) => r.type)),
       settings: {
         input: 'many',

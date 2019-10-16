@@ -3,7 +3,7 @@
     :value="type.options"
     :fields="optionFields"
     :read-only="readOnly"
-    @input="updateType"
+    @input="update()"
   ></ex-simple-fields>
 </template>
 

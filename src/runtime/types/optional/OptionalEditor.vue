@@ -9,10 +9,7 @@
         :parent="parent"
         :read-only="readOnly"
         :disable-sub-settings="disableSubSettings"
-        @input:type="updateType"
-        @input:settings="updateSettings"
-        @change:type="changeType"
-        @transform="transform"
+        @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">
@@ -22,9 +19,7 @@
         :settings="settings.sub.innerType"
         :registry="registry"
         :read-only="readOnly"
-        @input:type="updateType"
-        @input:settings="updateSettings"
-        @change:type="onChangeType"
+        @change="onChange"
       ></ex-type-editor>
     </v-list-item-content>
   </v-list-item>
@@ -32,7 +27,7 @@
 
 <script lang="ts">
 import { OptionalType } from 'expangine-runtime';
-import { TypeAndSettings } from '../TypeVisuals';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import { OptionalSubs, OptionalOptions } from './OptionalTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
@@ -40,11 +35,13 @@ import TypeEditorBase from '../TypeEditorBase';
 export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().extend({
   name: 'OptionalEditor',
   methods: {
-    onChangeType({ type: innerType, settings }: TypeAndSettings) {
-      this.type.options = innerType;
-      this.settings.sub.innerType = settings;
+    onChange(event: TypeUpdateEvent) {
+      this.type.options = event.type;
+      this.settings.sub.innerType = event.settings;
+      
+      // TODO transform
 
-      this.updateTypeAndSettings();
+      this.update();
     },
   },
 });

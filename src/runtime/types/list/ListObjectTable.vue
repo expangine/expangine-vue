@@ -89,14 +89,18 @@
             <template v-for="col in columns">
               <td :key="col.prop" class="pl-1 pr-1">
                 <object-form-field
+                  v-if="hasProp(col.prop)"
                   :prop="col.prop"
                   :value="row"
                   :type="itemType"
                   :read-only="readOnly"
                   :registry="registry"
                   :settings="itemSettings"
-                  @input="update"
+                  @input="update()"
                 ></object-form-field>
+                <div v-else>
+                  {{ col.prop }} is missing settings.
+                </div>
               </td>
             </template>
           </tr>
@@ -258,6 +262,9 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       this.value.splice(index, 1);
       this.update();
       this.$forceUpdate();
+    },
+    hasProp(prop: string): boolean {
+      return prop in this.itemType.options.props;
     },
     canMove(pageIndex: number, dir: number) {
       const index = pageIndex + this.pageStart;

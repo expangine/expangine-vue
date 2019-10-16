@@ -24,14 +24,14 @@ export const MapVisuals = createVisuals({
     padding + tab + 'value:' + registry.getTypeDescribeLong(type.options.value, tab, newline, padding + tab) + newline +
     padding + '}'
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => {
+  toString: ({ registry, value, type, tab, newline, padding, process }) => {
     let out = 'Map {' + newline;
 
     for (const [mapKey, mapValue] of value.entries()) {
       out += padding + tab;
-      out += registry.getTypeToString(mapKey, type.options.key, tab, newline, padding + tab);
+      out += registry.getTypeToString(mapKey, type.options.key, tab, newline, padding + tab, process);
       out += ' => ';
-      out += registry.getTypeToString(mapValue, type.options.value, tab, newline, padding + tab);
+      out += registry.getTypeToString(mapValue, type.options.value, tab, newline, padding + tab, process);
       out += newline;
     }
 
@@ -96,13 +96,14 @@ export const MapVisuals = createVisuals({
   },
 });
 
-export const MapBuilder: TypeBuilder<MapType> = 
+export const MapBuilder: TypeBuilder = 
 {
   getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Map',
     description: 'A dictionary of key-value pairs',
     priority: 8,
     value: async () => (initializeSubs(registry, {
+      kind: 'build',
       type: MapType.forItem(existingType || new TextType({}), new TextType({})),
       settings: {
         input: 'grid',
@@ -211,6 +212,7 @@ export const MapBuilderWrapper: TypeBuilderWrapper =
     text: 'Map of...',
     priority: 3,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
+      kind: 'build',
       type: MapType.forItem(type, new TextType({})),
       settings: {
         input: 'grid',

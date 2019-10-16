@@ -1,9 +1,7 @@
 import { PropType } from 'vue';
 import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression } from 'expangine-runtime';
-import { TypeAndSettings, TypeSettings, TypeVisualInput } from './runtime/types/TypeVisuals';
+import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
-import { TypeBuildResult } from './runtime/types/TypeBuilder';
-import { TypeModifyResult } from './runtime/types/TypeModifier';
 
 
 export type ListOptions<T = string> = Array<{ 
@@ -139,9 +137,7 @@ export function asArray<T>(value: T[] | T | null | undefined): T[]
       : [value];
 }
 
-export function initializeSubs<
-  T extends TypeAndSettings | TypeBuildResult | TypeModifyResult
->(registry: Registry, value: T): T
+export function initializeSubs(registry: Registry, value: TypeUpdateEvent<any, any, any>): TypeUpdateEvent<any, any, any>
 {
   const { type, settings } = value;
 

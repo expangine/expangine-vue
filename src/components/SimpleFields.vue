@@ -12,7 +12,7 @@
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
-          @input="setField(field, $event)"
+          @change="setField(field, $event)"
           @click:clear="setField(field)"
         ></v-text-field>
         <v-combobox
@@ -30,7 +30,7 @@
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
-          @input="setField(field, $event)"
+          @change="setField(field, $event)"
           @click:clear="setField(field)"
         ></v-combobox>
         <v-select
@@ -58,7 +58,7 @@
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
-          @input="setField(field, toNumber($event))"
+          @change="setField(field, toNumber($event))"
           @click:clear="setField(field)"
         ></v-text-field>
         <ex-date-picker
@@ -171,7 +171,7 @@
                           type="text"
                           :readonly="readOnly"
                           :value="item.text"
-                          @input="setItemText(field, itemIndex, $event)"
+                          @change="setItemText(field, itemIndex, $event)"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -182,7 +182,7 @@
                           :type="field.valueType || 'text'"
                           :readonly="readOnly"
                           :value="item.value"
-                          @input="setItemValue(field, itemIndex, $event)"
+                          @change="setItemValue(field, itemIndex, $event)"
                         ></v-text-field>
                       </v-col>
                     </v-row>

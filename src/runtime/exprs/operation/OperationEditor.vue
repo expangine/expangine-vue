@@ -292,6 +292,7 @@ export default ExpressionBase<OperationExpression>().extend({
       );
 
       this.changing = false;
+      this.update();
     },
     toggleParameter(name: string) {
       if (name in this.hiddenParams) {

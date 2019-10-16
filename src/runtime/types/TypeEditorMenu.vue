@@ -124,7 +124,7 @@
               :type="type"
               :read-only="readOnly"
               v-model="settings.options"
-              @input="updateSettings"
+              @input="update()"
             ></component>
           </v-sheet>
           <v-card-actions>
@@ -208,7 +208,7 @@ export default TypeEditorBase<Type, any, any>().extend({
       },
       set(value: any) {
         this.settings.defaultValue = this.type.toJson(value);
-        this.updateSettings();
+        this.update();
       },
     },
   },
@@ -226,22 +226,15 @@ export default TypeEditorBase<Type, any, any>().extend({
 
       this.settings.input = inputId;
       this.settings.options = next;
-      this.updateSettings();
+      this.update();
     },
     async onModify(modifier: TypeModifyOption) {
       const result = await modifier.value();
 
       if (result) {
-        if (result.kind === 'change') {
-          this.changeType(result);
-        }
-        if (result.kind === 'update') {
-          this.updateTypeAndSettings();
-        }
-        if (result.transform) {
-          this.transform(result.transform);
-        }
+        this.triggerChange(result);
       }
+
       this.done();
     },
     done() {

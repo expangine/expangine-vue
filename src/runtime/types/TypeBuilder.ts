@@ -1,6 +1,6 @@
 
 import { Type } from 'expangine-runtime';
-import { TypeSettings } from './TypeVisuals';
+import { TypeSettings, TypeUpdateEvent } from './TypeVisuals';
 import { Registry } from '../Registry';
 
 
@@ -13,28 +13,22 @@ export interface TypeBuildInput
   existingSettings?: TypeSettings;
 }
 
-export type TypeBuildHandler<T extends Type = Type> = () => Promise<TypeBuildResult<T> | false>;
+export type TypeBuildHandler = () => Promise<TypeUpdateEvent<any, any, any> | false>;
 
-export interface TypeBuildOption<T extends Type = Type>
+export interface TypeBuildOption
 {
   text: string;
   description?: string;
-  value: TypeBuildHandler<T>;
+  value: TypeBuildHandler;
   priority: number;
 }
 
-export interface TypeBuilder<T extends Type = Type>
+export interface TypeBuilder
 {
-  getOption: (input: TypeBuildInput) => TypeBuildOption<T> | false;
+  getOption: (input: TypeBuildInput) => TypeBuildOption | false;
 }
 
-export interface TypeBuildResult<T extends Type = Type>
-{
-  type: T;
-  settings: TypeSettings;
-}
-
-export type TypeBuilderWrapHandler = (results: Array<TypeBuildResult<any>>) => Promise<TypeBuildResult<any> | false>;
+export type TypeBuilderWrapHandler = (results: TypeUpdateEvent[]) => Promise<TypeUpdateEvent | false>;
 
 export interface TypeBuilderWrapOption
 {

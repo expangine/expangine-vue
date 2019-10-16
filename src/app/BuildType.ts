@@ -1,6 +1,7 @@
 
 import { asArray } from '@/common';
-import { TypeBuildResult, TypeBuildInput, TypeBuildOption, TypeBuilderWrapOption } from '@/runtime/types/TypeBuilder';
+import { TypeBuildInput, TypeBuildOption, TypeBuilderWrapOption } from '@/runtime/types/TypeBuilder';
+import { TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
 import { OptionalModifierTransform } from '@/runtime/types/optional';
 import { getPromiser } from './Promiser';
 
@@ -39,9 +40,9 @@ export function getBuildTypeDefaults(): BuildTypeOptions
 
 export const buildTypeDialog = getBuildTypeDefaults();
 
-export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Promise<TypeBuildResult | false>
+export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Promise<TypeUpdateEvent | false>
 {
-  const { resolve, promise } = getPromiser<TypeBuildResult | false>();
+  const { resolve, promise } = getPromiser<TypeUpdateEvent | false>();
 
   Object.assign(buildTypeDialog, getBuildTypeDefaults());
   Object.assign(buildTypeDialog, options);
@@ -61,7 +62,7 @@ export async function getBuildType(options: Partial<BuildTypeOptions> = {}): Pro
       return resolve(false);
     }
 
-    const chosens: TypeBuildResult[] = [];
+    const chosens: TypeUpdateEvent[] = [];
 
     for (const type of types) {
       const chosen = await type.value();

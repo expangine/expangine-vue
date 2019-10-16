@@ -8,10 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="changeType"
-          @transform="transform"
+          @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -48,10 +45,7 @@
           :parent="type"
           :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="onChangeKey"
-          @transform="transformKey"
+          @change="onChangeKey"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -79,10 +73,7 @@
           :parent="type"
           :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="onChangeValue"
-          @transform="transformValue"
+          @change="onChangeValue"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -92,7 +83,7 @@
 <script lang="ts">
 import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
-import { TypeAndSettings } from '../TypeVisuals';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import { MapSubs } from './MapTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
@@ -100,40 +91,40 @@ import TypeEditorBase from '../TypeEditorBase';
 export default TypeEditorBase<MapType, any, MapSubs>().extend({
   name: 'MapEditor',
   methods: {
-    onChangeKey({ type: keyType, settings: keySettings }: TypeAndSettings) {
-      this.type.options.key = keyType;
-      this.$set(this.settings.sub, 'key', keySettings);
+    onChangeKey(event: TypeUpdateEvent) {
+      this.type.options.key = event.type;
+      this.$set(this.settings.sub, 'key', event.settings);
 
-      this.updateTypeAndSettings();
-    },
-    onChangeValue({ type: valueType, settings: valueSettings }: TypeAndSettings) {
-      this.type.options.value = valueType;
-      this.$set(this.settings.sub, 'value', valueSettings);
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
 
-      this.updateTypeAndSettings();
-    },
-    transformKey(transform: Expression) {
-      const ex = new ExpressionBuilder();
-
-      this.transform(
-        ex.op(MapOps.map, {
+        transform = ex.op(MapOps.map, {
           map: ex.get('value'),
-          transformKey: transform,
+          transformKey: event.transform,
         }, {
           key: 'value',
           value: 'actualValue',
-        }),
-      );
-    },
-    transformValue(transform: Expression) {
-      const ex = new ExpressionBuilder();
+        });
+      }
 
-      this.transform(
-        ex.op(MapOps.map, {
+      this.update({ transform });
+    },
+    onChangeValue(event: TypeUpdateEvent) {
+      this.type.options.value = event.type;
+      this.$set(this.settings.sub, 'value', event.settings);
+
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
+
+        transform = ex.op(MapOps.map, {
           map: ex.get('value'),
-          transform,
-        }),
-      );
+          transform: event.transform,
+        });
+      }
+
+      this.update({ transform });
     },
   },
 });

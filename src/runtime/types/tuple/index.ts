@@ -25,10 +25,10 @@ export const TupleVisuals = createVisuals({
       : '').join('') +
     padding + ']'
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => 
+  toString: ({ registry, value, type, tab, newline, padding, process }) => 
     'Tuple [' + newline + 
     value.map((item: any, index: number) => type.options[index]
-      ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab) + newline
+      ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab, process) + newline
       : '').join('') + 
     padding + ']'
   ,
@@ -96,7 +96,7 @@ export const TupleVisuals = createVisuals({
   },
 });
 
-export const TupleBuilder: TypeBuilder<TupleType> = 
+export const TupleBuilder: TypeBuilder = 
 {
   getOption: ({ registry, parent, parentSettings, existingType, existingSettings }) => ({
     text: 'Tuple',
@@ -132,6 +132,7 @@ export const TupleBuilder: TypeBuilder<TupleType> =
       }
 
       return initializeSubs(registry, {
+        kind: 'build',
         type: new TupleType(types),
         settings: {
           input: 'grid',
@@ -232,6 +233,7 @@ export const TupleBuilderWrapper: TypeBuilderWrapper =
     priority: 6,
     multiple: true,
     value: async (results) => (initializeSubs(input.registry, {
+      kind: 'build',
       type: new TupleType(results.map((r) => r.type)),
       settings: {
         input: 'grid',

@@ -24,9 +24,9 @@ export const ListVisuals = createVisuals({
   describeLong: (registry, type, padding, tab, newline) => 
     'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding + tab)
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => 
+  toString: ({ registry, value, type, tab, newline, padding, process }) => 
     '[' + newline + 
-    value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab) + newline).join('') + 
+    value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab, process) + newline).join('') + 
     padding + ']'
   ,
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
@@ -87,13 +87,14 @@ export const ListVisuals = createVisuals({
   },
 });
 
-export const ListBuilder: TypeBuilder<ListType> = 
+export const ListBuilder: TypeBuilder = 
 {
   getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'List',
     description: 'An collection/list/array of values',
     priority: 4,
     value: async () => (initializeSubs(registry, {
+      kind: 'build',
       type: ListType.forItem(existingType || new TextType({ })),
       settings: {
         input: 'list',
@@ -117,6 +118,7 @@ export const ListBuilderWrapper: TypeBuilderWrapper =
     text: 'List of...',
     priority: 2,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
+      kind: 'build',
       type: ListType.forItem(type),
       settings: {
         input: 'list',

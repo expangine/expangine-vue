@@ -18,7 +18,7 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            @input="update"
+            @input="update()"
           ></object-form-field>
         </v-col>
       </template>
@@ -33,7 +33,7 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            @input="update"
+            @input="update()"
           ></object-form-field>
         </v-col>
       </template>

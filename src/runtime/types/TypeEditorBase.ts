@@ -1,8 +1,8 @@
 
 import Vue, { VueConstructor } from 'vue';
-import { Type, OptionalType, ManyType, Expression } from 'expangine-runtime';
+import { Type, OptionalType, ManyType } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import { TypeVisuals, TypeVisualInput, TypeSettings, TypeAndSettings, SubsType } from './TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, TypeUpdateEvent, SubsType } from './TypeVisuals';
 import { Registry } from '../Registry';
 
 
@@ -11,11 +11,9 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
   return Vue.extend<
     unknown,
     {
-      updateSettings(): void;
-      updateType(): void;
-      updateTypeAndSettings(): void;
-      changeType(result: TypeAndSettings): void;
-      transform(transform: Expression): void;
+      update(event?: Partial<TypeUpdateEvent>): void;
+      change(event?: Partial<TypeUpdateEvent>): void;
+      triggerChange(event: TypeUpdateEvent): void;
     },
     {
       isRequired: boolean;
@@ -120,21 +118,24 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
     },
     methods: {
-      updateType() {
-        this.$emit('input:type', this.type);
+      update(event: Partial<TypeUpdateEvent> = {}) {
+        this.triggerChange({
+          type: this.type,
+          settings: this.settings,
+          ...event,
+          kind: 'update',
+        });
       },
-      updateSettings() {
-        this.$emit('input:settings', this.settings);
+      change(event: Partial<TypeUpdateEvent> = {}): void {
+        this.triggerChange({
+          type: this.type,
+          settings: this.settings,
+          ...event,
+          kind: 'change',
+        });
       },
-      updateTypeAndSettings() {
-        this.updateType();
-        this.updateSettings();
-      },
-      changeType(result: TypeAndSettings) {
-        this.$emit('change:type', result);
-      },
-      transform(transform: Expression) {
-        this.$emit('transform', transform);
+      triggerChange(event: TypeUpdateEvent) {
+        this.$emit('change', event);
       },
     },
   });

@@ -14,10 +14,7 @@
             :registry="registry"
             :parent="type"
             :read-only="readOnly"
-            @input:type="updateType"
-            @input:settings="updateSettings"
-            @change:type="onChangeKey"
-            @transform="transformKey"
+            @change="onChangeKey"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -33,10 +30,7 @@
             :registry="registry"
             :parent="type"
             :read-only="readOnly"
-            @input:type="updateType"
-            @input:settings="updateSettings"
-            @change:type="onChangeValue"
-            @transform="transformValue"
+            @change="onChangeValue"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -93,7 +87,7 @@
 import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExpression, MapOps, ConstantExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
-import { TypeAndSettings, TypeSettings } from '../TypeVisuals';
+import { TypeUpdateEvent, TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
@@ -113,44 +107,47 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
     },
   },
   methods: {
-    onChangeKey({ type: keyType, settings: keySettings }: TypeAndSettings) {
-      this.type.options.key = keyType;
-      this.$set(this.settings.sub, 'key', keySettings);
+    onChangeKey(event: TypeUpdateEvent) {
+      this.type.options.key = event.type;
+      this.$set(this.settings.sub, 'key', event.settings);
+
+      if (event.transform) {
+        const map = new ConstantExpression(this.type.options.constants);
+        const updateKeys = LiveRuntime.getCommand(
+          OperationExpression.create(MapOps.map, {
+            map,
+            transformKey: event.transform,
+          }, {
+            key: 'value',
+            value: 'actualValue',
+          }),
+        );
+
+        this.type.options.constants = updateKeys({});
+      }
       
-      this.updateTypeAndSettings();
+      this.update();
     },
-    onChangeValue({ type: valueType, settings: valueSettings }: TypeAndSettings) {
-      this.type.options.value = valueType;
-      this.$set(this.settings.sub, 'value', valueSettings);
+    onChangeValue(event: TypeUpdateEvent) {
+      this.type.options.value = event.type;
+      this.$set(this.settings.sub, 'value', event.settings);
 
-      this.updateTypeAndSettings();
-    },
-    transformKey(transformKey: Expression) {
-      const map = new ConstantExpression(this.type.options.constants);
-      const updateKeys = LiveRuntime.getCommand(
-        OperationExpression.create(MapOps.map, {
-          map,
-          transformKey,
-        }, {
-          key: 'value',
-          value: 'actualValue',
-        }),
-      );
+      let transform;
+      if (event.transform) {
+        const map = new ConstantExpression(this.type.options.constants);
+        const updateValues = LiveRuntime.getCommand(
+          OperationExpression.create(MapOps.map, {
+            map,
+            transform: event.transform,
+          }),
+        );
 
-      this.type.options.constants = updateKeys({});
-    },
-    transformValue(transform: Expression) {
-      const map = new ConstantExpression(this.type.options.constants);
-      const updateValues = LiveRuntime.getCommand(
-        OperationExpression.create(MapOps.map, {
-          map,
-          transform,
-        }),
-      );
+        this.type.options.constants = updateValues({});
 
-      this.type.options.constants = updateValues({});
+        transform = event.transform;
+      }
 
-      this.transform(transform);
+      this.update({ transform });
     },
     async removeConstant(index: number) {
       if (!await getConfirmation()) {
@@ -180,7 +177,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
     },
     saveConstants() {
       this.type.options.constants = new Map(this.constants);
-      this.updateType();
+      this.update();
     },
   },
 });

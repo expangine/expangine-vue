@@ -22,7 +22,7 @@ export const NumberVisuals = createVisuals({
     (isNumber(type.options.min) ? ' min=' + type.options.min : '') +
     (isNumber(type.options.max) ? ' max=' + type.options.max : '')
   ,
-  toString: ({ value }) => value + '',
+  toString: ({ value, type, process }) => process(value, type) + '',
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 
@@ -46,13 +46,14 @@ export const NumberVisuals = createVisuals({
   },
 });
 
-export const NumberBuilder: TypeBuilder<NumberType> = 
+export const NumberBuilder: TypeBuilder = 
 {
   getOption: () => ({
     text: 'Number',
     description: 'A decimal or whole number',
     priority: 2,
     value: async () => ({
+      kind: 'build',
       type: new NumberType({ }), 
       settings: { 
         input: 'textbox', 

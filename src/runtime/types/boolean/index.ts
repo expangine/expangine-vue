@@ -1,5 +1,5 @@
 
-import { BooleanType, OperationExpression, BooleanOps, GetExpression, ExpressionBuilder } from 'expangine-runtime';
+import { BooleanType, BooleanOps, ExpressionBuilder, isString } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { BooleanCheckboxInput } from './BooleanCheckboxTypes';
@@ -18,7 +18,11 @@ export const BooleanVisuals = createVisuals({
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   describe: () => 'Boolean',
   describeLong: (registry, type, padding) => 'Boolean',
-  toString: ({ value }) => value ? 'true' : 'false',
+  toString: ({ value, type, process }) => {
+    const processed = process(value, type);
+    
+    return isString(processed) ? processed : value ? 'true' : 'false';
+  },
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 
@@ -43,13 +47,14 @@ export const BooleanVisuals = createVisuals({
   },
 });
 
-export const BooleanBuilder: TypeBuilder<BooleanType> =
+export const BooleanBuilder: TypeBuilder =
 {
   getOption: () => ({
     text: 'Boolean',
     description: 'A true/false value',
     priority: 5,
     value: async () => ({
+      kind: 'build',
       type: new BooleanType({ }), 
       settings: { 
         input: 'checkbox', 

@@ -12,6 +12,7 @@ export interface TypeHookInput
   typeSettings?: TypeSettings;
   readOnly?: boolean;
 }
+
 export type TypeHookHandler = () => Promise<void>;
 
 export interface TypeHookOption

@@ -23,8 +23,8 @@ export const EnumVisuals = createVisuals({
     padding + tab + 'value: ' + registry.getTypeDescribeLong(type.options.value, tab, newline, padding + tab) + newline +
     padding + '}'
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => 
-    registry.getTypeToString(value, type.options.value, tab, newline, padding)
+  toString: ({ registry, value, type, tab, newline, padding, process }) => 
+    registry.getTypeToString(value, type.options.value, tab, newline, padding, process)
   ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options.value),
   subSettings: (registry, type, settings, sub, forKey) => {
@@ -58,31 +58,32 @@ export const EnumVisuals = createVisuals({
   },
 });
 
-export const EnumBuilder: TypeBuilder<EnumType> = 
+export const EnumBuilder: TypeBuilder = 
 {
   getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Enum',
     description: 'A value which is taken from a list of key-value pairs',
     priority: 7,
     value: async () => (initializeSubs(registry, {
+      kind: 'build',
       type: new EnumType({ key: new TextType({}), value: existingType || new TextType({}), constants: new Map() }),
       settings: {
-      input: 'dropdown',
-      defaultValue: '',
-      options: EnumSelectInput.getDefaultOptions(),
-      sub: { 
-        key: { 
-          input: 'textbox', 
-          defaultValue: '',
-          options: TextBoxInput.getDefaultOptions(), 
-        },
-        value: existingSettings || { 
-          input: 'textbox', 
-          defaultValue: '',
-          options: TextBoxInput.getDefaultOptions(), 
+        input: 'dropdown',
+        defaultValue: '',
+        options: EnumSelectInput.getDefaultOptions(),
+        sub: { 
+          key: { 
+            input: 'textbox', 
+            defaultValue: '',
+            options: TextBoxInput.getDefaultOptions(), 
+          },
+          value: existingSettings || { 
+            input: 'textbox', 
+            defaultValue: '',
+            options: TextBoxInput.getDefaultOptions(), 
+          },
         },
       },
-    },
     })),
   }),
 };
@@ -93,6 +94,7 @@ export const EnumBuilderWrapper: TypeBuilderWrapper =
     text: 'Enum of...',
     priority: 4,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
+      kind: 'build',
       type: new EnumType({ key: new TextType({}), value: type, constants: new Map() }),
       settings: {
         input: 'dropdown',

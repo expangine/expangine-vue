@@ -18,7 +18,7 @@ export const TextVisuals = createVisuals({
   description: 'A text value',
   describe: () => 'Text',
   describeLong: () => 'Text',
-  toString: ({ value }) => value,
+  toString: ({ value, type, process }) => process(value, type),
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'
@@ -52,12 +52,13 @@ export const TextVisuals = createVisuals({
   },
 });
 
-export const TextBuilder: TypeBuilder<TextType> = 
+export const TextBuilder: TypeBuilder = 
 {
   getOption: () => ({
     text: 'Text',
     priority: 1,
     value: async () => ({
+      kind: 'build',
       type: new TextType({ }), 
       settings: { 
         input: 'textbox', 

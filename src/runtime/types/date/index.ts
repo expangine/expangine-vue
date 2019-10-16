@@ -1,5 +1,5 @@
 
-import { DateType, ExpressionBuilder, DateOps } from 'expangine-runtime';
+import { DateType, ExpressionBuilder, DateOps, isString } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
@@ -17,11 +17,15 @@ export const DateVisuals = createVisuals(
   description: 'A date value',
   describe: () => 'Date',
   describeLong: (registry, type, padding) => 'Date',
-  toString: ({ value, type }) => 
-    type.options.withTime
-      ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
-      : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear()
-  ,
+  toString: ({ value, type, process }) => {
+    const processed = process(value, type);
+
+    return isString(processed) 
+      ? processed
+      : type.options.withTime
+        ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
+        : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
+  },
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 
@@ -44,13 +48,14 @@ export const DateVisuals = createVisuals(
   },
 });
 
-export const DateBuilder: TypeBuilder<DateType> =
+export const DateBuilder: TypeBuilder =
 {
   getOption: () => ({
     text: 'Date',
     description: 'A date value, optionally includes time',
     priority: 6,
     value: async () => ({
+      kind: 'build',
       type: new DateType({ }), 
       settings: { 
         input: 'picker', 

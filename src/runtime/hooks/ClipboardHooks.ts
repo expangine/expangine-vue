@@ -44,7 +44,7 @@ export const PasteBuilder: TypeBuilder =
       description: summary,
       priority: 15,
       value: async () => (copyType && copySettings 
-        ? { type: copyType.clone(), settings: copy(copySettings) } 
+        ? { kind: 'build', type: copyType.clone(), settings: copy(copySettings) } 
         : false
       ),
     };

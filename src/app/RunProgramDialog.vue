@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { diffLines } from 'diff';
-import { Type, AnyType } from 'expangine-runtime';
+import { Type, AnyType, TextType } from 'expangine-runtime';
 import { runProgramDialog } from './RunProgram';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
@@ -56,6 +56,10 @@ const getText = (part: Part): string => part.value
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
+const getProcess = (data: any, type: Type) => 
+  type instanceof TextType
+    ? '"' + data + '"'
+    : data;
 
 export default Vue.extend({
   data: () => runProgramDialog,
@@ -68,13 +72,13 @@ export default Vue.extend({
       return described || AnyType.baseType;
     },
     resultString(): string {
-      return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE);
+      return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE, '', getProcess);
     },
     dataString(): string {
-      return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE);
+      return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE, '', getProcess);
     },
     dataAfterString(): string {
-      return this.registry.getTypeToString(this.dataAfter, this.type, TAB, NEWLINE);
+      return this.registry.getTypeToString(this.dataAfter, this.type, TAB, NEWLINE, '', getProcess);
     },
     diffString(): string {
       return diffLines(this.dataString, this.dataAfterString)
@@ -106,7 +110,7 @@ export default Vue.extend({
   color: black;
   border: 1px solid rgba(0,0,0,0.2);
   line-height: 1em;
-    font-weight: bold;
+  font-weight: bold;
 
   /deep/ .removed {
     color: #e02618;

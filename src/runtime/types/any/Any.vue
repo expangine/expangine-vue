@@ -20,10 +20,7 @@
               :read-only="readOnly"
               :registry="registry"
               :settings="anySettings"
-              @input:type="setType"
-              @change:type="changeType"
-              @input:settings="setSettings"
-              @transform="transform"
+              @change="onChange"
             ></ex-type-editor>
           </v-card-text>
           <v-card-actions>
@@ -52,8 +49,7 @@ import { Type, AnyType, Expression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { AnyOptions } from './AnyTypes';
 import { PropTypeAny } from '../../../common';
-import { TypeSettings } from '../TypeVisuals';
-import { TypeModifyResult } from '../TypeModifier';
+import { TypeSettings, TypeUpdateEvent } from '../TypeVisuals';
 import { getBuildType } from '../../../app/BuildType';
 import TypeInputBase from '../TypeInputBase';
 
@@ -96,19 +92,12 @@ export default TypeInputBase<AnyType, AnyOptions, any>(PropTypeAny).extend({
         this.designing = true;
       }
     },
-    setType(type: Type) {
-      this.anyType = type;
-    },
-    changeType(change: TypeModifyResult) {
-      this.anyType = change.type;
-      this.anySettings = change.settings;
-    },
-    setSettings(settings: TypeSettings) {
-      this.anySettings = settings;
-    },
-    transform(expr?: Expression) {
-      if (expr instanceof Expression) {
-        const cmd = LiveRuntime.getCommand(expr);
+    onChange(event: TypeUpdateEvent) {
+      this.anyType = event.type;
+      this.anySettings = event.settings;
+
+      if (event.transform instanceof Expression) {
+        const cmd = LiveRuntime.getCommand(event.transform);
 
         this.computedValue = cmd({ value: this.value });
       }

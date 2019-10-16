@@ -8,10 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="changeType"
-          @transform="transform"
+          @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -41,10 +38,7 @@
           :parent="type"
           :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="onChangeType"
-          @transform="transformItem"
+          @change="onChange"
         ></ex-type-editor>
       </v-list-item-content>
     </v-list-item>
@@ -54,7 +48,7 @@
 <script lang="ts">
 import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
-import { TypeAndSettings } from '../TypeVisuals';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import TypeEditorBase from '../TypeEditorBase';
 
@@ -84,23 +78,23 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
     },
   },
   methods: {
-    transformItem(transform: Expression) {
-      const ex = new ExpressionBuilder();
+    onChange(event: TypeUpdateEvent) {
+      this.type.options.item = event.type;
+      this.settings.sub.item = event.settings;
 
-      this.transform(
-        ex.op(ListOps.map, {
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
+
+        transform = ex.op(ListOps.map, {
           list: ex.get('value'),
-          transform,
+          transform: event.transform,
         }, {
           item: 'value',
-        }),
-      );
-    },
-    onChangeType({ type: innerType, settings }: TypeAndSettings) {
-      this.type.options.item = innerType;
-      this.settings.sub.item = settings;
+        });
+      }
 
-      this.updateTypeAndSettings();
+      this.update({ transform });
     },
   },
 });

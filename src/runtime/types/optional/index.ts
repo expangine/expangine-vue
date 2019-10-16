@@ -26,9 +26,9 @@ export const OptionalVisuals = createVisuals({
   describeLong: (registry, type, padding, tab, newline) => 
     'Optional ' + registry.getTypeDescribeLong(type.options, tab, newline, padding)
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => 
+  toString: ({ registry, value, type, tab, newline, padding, process }) => 
     value
-      ? registry.getTypeToString(value, type.options, tab, newline, padding)
+      ? registry.getTypeToString(value, type.options, tab, newline, padding, process)
       : 'undefined'
   ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
@@ -129,6 +129,7 @@ export const OptionalModifierRequire: TypeModifier =
 export function OptionalModifierTransform(registry: Registry, type: Type, typeSettings: TypeSettings)
 {
   return initializeSubs(registry, {
+    kind: 'build',
     type: new OptionalType(type),
     settings: { 
       input: 'optional',

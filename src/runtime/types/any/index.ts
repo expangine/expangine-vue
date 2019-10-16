@@ -15,7 +15,7 @@ export const AnyVisuals = createVisuals({
   description: 'Any value',
   describe: ({registry, type}) => 'Any value',
   describeLong: (registry, type, padding) => 'Any',
-  toString: ({ value }) => value + '',
+  toString: ({ value, type, process }) => process(value, type) + '',
   subOptions: (registry, type) => [],
   subSettings: (registry, type, settings, sub) => null,
   settingsFor: ({ registry, sub }) => ({ 
@@ -40,13 +40,14 @@ export const AnyVisuals = createVisuals({
 });
 
 
-export const AnyBuilder: TypeBuilder<AnyType> =
+export const AnyBuilder: TypeBuilder =
 {
   getOption: () => ({
     text: 'Any',
     description: 'A value that can be anything, defined by the user',
     priority: 15,
     value: async () => ({
+      kind: 'build',
       type: new AnyType({ }), 
       settings: { 
         input: 'any', 

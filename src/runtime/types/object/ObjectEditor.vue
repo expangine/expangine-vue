@@ -8,10 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="changeType"
-          @transform="transform"
+          @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -72,10 +69,7 @@
                 :registry="registry"
                 :settings="settings.sub[prop]"
                 :read-only="readOnly"
-                @input:type="updateType"
-                @input:settings="updateSettings"
-                @change:type="onChangeType(prop, $event)"
-                @transform="transformProp(prop, $event)"
+                @change="onChange(prop, $event)"
               ></ex-type-editor>
             </td>
           </tr>
@@ -109,9 +103,7 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
-import { TypeAndSettings } from '../TypeVisuals';
-import { TypeBuildResult } from '../TypeBuilder';
-import { TypeModifyResult } from '../TypeModifier';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
 
 
@@ -152,17 +144,15 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
-      this.updateTypeAndSettings();
-
       const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.op(ObjectOps.set, {
+      this.update({
+        transform: ex.op(ObjectOps.set, {
           object: ex.get('value'),
           key: propName,
           value: this.registry.getTypeCreate(chosen.type),
         }),
-      );
+      });
     },
     async remove(prop: string) {
       if (!await getConfirmation({ message: `Remove ${prop}?`})) {
@@ -174,19 +164,17 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$delete(this.type.options.props, prop);
       this.$delete(this.settings.sub, prop);
 
-      this.updateTypeAndSettings();
-
       const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.body(
+      this.update({
+        transform: ex.body(
           ex.op(ObjectOps.delete, {
             object: ex.get('value'),
             key: prop,
           }),
           ex.get('value'),
         ),
-      );
+      });
     },
     async rename(prop: string) {
       const newProp = await getInput({ 
@@ -217,14 +205,12 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$set(this.type.options.props, newProp, propType);
       this.$set(this.settings.sub, newProp, propSettings);
 
-      this.updateTypeAndSettings();
-
       sendNotification({ message: `${prop} renamed to ${newProp}` });
 
       const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.body(
+      this.update({
+        transform: ex.body(
           ex.op(ObjectOps.set, {
             object: ex.get('value'),
             key: newProp,
@@ -236,24 +222,24 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
           }),
           ex.get('value'),
         ),
-      );
+      });
     },
-    transformProp(prop: string, transform: Expression) {
-      const ex = new ExpressionBuilder();
+    onChange(prop: string, event: TypeUpdateEvent) {
+      this.type.options.props[prop] = event.type;
+      this.settings.sub[prop] = event.settings;
 
-      this.transform(
-        ex.body(
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
+
+        transform = ex.body(
           ex.update('value', prop)
-            .to(transform, 'value'),
+            .to(event.transform, 'value'),
           ex.get('value'),
-        ),
-      );
-    },
-    onChangeType(prop: string, result: TypeModifyResult) {
-      this.type.options.props[prop] = result.type;
-      this.settings.sub[prop] = result.settings;
+        );
+      }
 
-      this.updateTypeAndSettings();
+      this.update({ transform });
     },
   },
 });

@@ -8,10 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
-          @input:type="updateType"
-          @input:settings="updateSettings"
-          @change:type="changeType"
-          @transform="transform"
+          @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
       <v-list-item-content>
@@ -59,10 +56,7 @@
             :settings="settings.sub[index]"
             :registry="registry"
             :read-only="readOnly"
-            @input:type="updateType"
-            @input:settings="updateSettings"
-            @change:type="onChangeType(index, innerType, $event)"
-            @transform="transformType(index, innerType, $event)"
+            @change="onChange(index, innerType, $event)"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -73,7 +67,7 @@
 <script lang="ts">
 import { Type, TupleType, Expression, ExpressionBuilder, ListOps } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
-import { TypeAndSettings } from '../TypeVisuals';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';
@@ -93,19 +87,17 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubRemove(index, this.type, this.settings);
 
-      this.updateTypeAndSettings();
-
       const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.body(
+      this.update({
+        transform: ex.body(
           ex.op(ListOps.removeAt, {
             list: ex.get('value'),
             index,
           }),
           ex.get('value'),
         ),
-      );
+      });
     },
     async addType(index: number, afterType: Type) {
       const chosen = await getBuildType({
@@ -125,34 +117,32 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubAdd(index + 1, this.type, this.settings);
 
-      this.updateTypeAndSettings();
-
       const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.op(ListOps.insert, {
+      this.update({
+        transform: ex.op(ListOps.insert, {
           list: ex.get('value'),
           index: index + 1,
           item: this.registry.getTypeCreate(chosen.type),
         }),
-      );
+      });
     },
-    onChangeType(index: number, innerType: Type, { type: newType, settings: newSettings }: TypeAndSettings) {
-      this.$set(this.type.options, index, newType);
-      this.$set(this.settings.sub, index, newSettings);
+    onChange(index: number, innerType: Type, event: TypeUpdateEvent) {
+      this.$set(this.type.options, index, event.type);
+      this.$set(this.settings.sub, index, event.settings);
       
-      this.updateTypeAndSettings();
-    },
-    transformType(index: number, innerType: Type, transform: Expression) {
-      const ex = new ExpressionBuilder();
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
 
-      this.transform(
-        ex.body(
+        transform = ex.body(
           ex.update('value', index)
-            .to(transform, 'value'),
+            .to(event.transform, 'value'),
           ex.get('value'),
-        ),
-      );
+        );
+      }
+
+      this.update({ transform });
     },
   },
 });

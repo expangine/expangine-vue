@@ -34,10 +34,7 @@
             :settings="settings.sub[index]"
             :registry="registry"
             :read-only="readOnly"
-            @input:type="updateType"
-            @input:settings="updateSettings"
-            @change:type="onChangeType(index, innerType, $event)"
-            @transform="transformType(index, innerType, $event)"
+            @change="onChange(index, innerType, $event)"
           ></ex-type-editor>
         </v-list-item-content>
       </v-list-item>
@@ -47,7 +44,7 @@
 
 <script lang="ts">
 import { Type, ManyType, Expression, ExpressionBuilder } from 'expangine-runtime';
-import { TypeAndSettings } from '../TypeVisuals';
+import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
@@ -65,37 +62,30 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       this.type.options.splice(index, 1);
       this.settings.sub.splice(index, 1);
 
-      const destType = this.type.options[0];
-
-      if (this.type.options.length === 1) 
-      {
-        const onlyType = this.type.options[0];
-        const onlySettings = this.settings.sub[0];
-
-        this.changeType({ 
-          type: onlyType,
-          settings: onlySettings,
-        });
-      }
-      else
-      {
-        this.updateTypeAndSettings();
-      }
+      const { type, settings } = this;
 
       const ex = new ExpressionBuilder();
+      const destType = this.type.options[0];
       const destVisual = this.registry.getTypeVisuals(destType);
       const cast = `${innerType.getId()}:~${destType.getId()}`;
       const castOperation = innerType.getOperations()[cast];
-      const transform = castOperation
+      const castTransform = castOperation
         ? ex.op(castOperation, { value: ex.get('value') })
         : destVisual.exprs.create(this.registry, destType);
+      const transform = ex
+        .if(destVisual.exprs.valid(this.registry, destType))
+        .then(ex.get('value'))
+        .else(castTransform)
+      ;
 
-      this.transform(
-        ex
-          .if(destVisual.exprs.valid(this.registry, destType))
-          .then(ex.get('value'))
-          .else(transform),
-      );
+      const simplify = this.type.options.length === 1;
+
+      this.triggerChange({
+        kind: simplify ? 'change' : 'update',
+        type: simplify ? type.options[0] : type,
+        settings: simplify ? settings.sub[0] : settings,
+        transform,
+      });
     },
     async addType(index: number, afterType: Type) {
       const chosen = await getBuildType({
@@ -113,23 +103,25 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       this.type.options.splice(index + 1, 0, chosen.type);
       this.settings.sub.splice(index + 1, 0, chosen.settings);
 
-      this.updateTypeAndSettings();
+      this.update();
     },
-    onChangeType(index: number, innerType: Type, { type: newType, settings: newSettings }: TypeAndSettings) {
-      this.$set(this.type.options, index, newType);
-      this.$set(this.settings.sub, index, newSettings);
-      
-      this.updateTypeAndSettings();
-    },
-    transformType(index: number, innerType: Type, transform: Expression) {
-      const ex = new ExpressionBuilder();
-      const isValid = this.visuals.exprs.valid(this.registry, this.type);
+    onChange(index: number, innerType: Type, event: TypeUpdateEvent) {
+      this.$set(this.type.options, index, event.type);
+      this.$set(this.settings.sub, index, event.settings);
 
-      this.transform(ex
-        .if(ex.not(isValid))
-        .then(transform)
-        .else(ex.get('value')),
-      );
+      let transform;
+      if (event.transform) {
+        const ex = new ExpressionBuilder();
+        const isValid = this.visuals.exprs.valid(this.registry, this.type);
+
+        transform = ex
+          .if(ex.not(isValid))
+          .then(event.transform)
+          .else(ex.get('value'))
+        ;
+      }
+
+      this.update({ transform });
     },
   },
 });

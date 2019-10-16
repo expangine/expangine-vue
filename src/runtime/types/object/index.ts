@@ -25,7 +25,7 @@ export const ObjectVisuals = createVisuals({
     ).join('') +
     padding + '}'
   ,
-  toString: ({ registry, value, type, tab, newline, padding }) => {
+  toString: ({ registry, value, type, tab, newline, padding, process }) => {
     let out = '{' + newline;
 
     for (const prop in value)
@@ -37,7 +37,7 @@ export const ObjectVisuals = createVisuals({
       }
 
       const propValueType = type.options.props[prop] || AnyType.baseType;
-      const propValueString = registry.getTypeToString(propValue, propValueType, tab, newline, padding + tab);
+      const propValueString = registry.getTypeToString(propValue, propValueType, tab, newline, padding + tab, process);
 
       if (propValueString === 'undefined') {
         continue;
@@ -93,13 +93,14 @@ export const ObjectVisuals = createVisuals({
   },
 });
 
-export const ObjectBuilder: TypeBuilder<ObjectType> = 
+export const ObjectBuilder: TypeBuilder = 
 {
   getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'Object',
     description: 'An entity with defined property names and types',
     priority: 3,
     value: async () => (initializeSubs(registry, {
+      kind: 'build',
       type: new ObjectType({ props: existingType ? obj({ value: existingType }) : obj() }),
       settings: { 
         input: 'form', 
