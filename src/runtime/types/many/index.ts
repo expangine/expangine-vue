@@ -103,7 +103,6 @@ export const ManyModifier: TypeModifier<ManyType> =
         }
         
         return initializeSubs(registry, {
-          kind: 'change',
           type: new ManyType([type, chosen.type]),
           settings: {
             input: 'many',
@@ -127,7 +126,6 @@ export const ManyBuilderWrapper: TypeBuilderWrapper =
     priority: 5,
     multiple: true,
     value: async (results) => (initializeSubs(registry, {
-      kind: 'build',
       type: new ManyType(results.map((r) => r.type)),
       settings: {
         input: 'many',

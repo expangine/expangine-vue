@@ -34,7 +34,6 @@ export const ChangeTypeModifier: TypeModifier =
         : visual.exprs.create(registry, type);
 
       return {
-        kind: 'change',
         ...chosen,
         transform,
       };

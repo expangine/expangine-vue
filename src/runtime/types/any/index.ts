@@ -47,7 +47,6 @@ export const AnyBuilder: TypeBuilder =
     description: 'A value that can be anything, defined by the user',
     priority: 15,
     value: async () => ({
-      kind: 'build',
       type: new AnyType({ }), 
       settings: { 
         input: 'any', 

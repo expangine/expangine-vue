@@ -89,7 +89,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       const ex = new ExpressionBuilder();
 
-      this.update({
+      this.change({
         transform: ex.body(
           ex.op(ListOps.removeAt, {
             list: ex.get('value'),
@@ -119,7 +119,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       const ex = new ExpressionBuilder();
 
-      this.update({
+      this.change({
         transform: ex.op(ListOps.insert, {
           list: ex.get('value'),
           index: index + 1,
@@ -142,7 +142,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
         );
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
   },
 });

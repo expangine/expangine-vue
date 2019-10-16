@@ -147,7 +147,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
         transform = event.transform;
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
     async removeConstant(index: number) {
       if (!await getConfirmation()) {

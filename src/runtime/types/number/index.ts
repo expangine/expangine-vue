@@ -53,7 +53,6 @@ export const NumberBuilder: TypeBuilder =
     description: 'A decimal or whole number',
     priority: 2,
     value: async () => ({
-      kind: 'build',
       type: new NumberType({ }), 
       settings: { 
         input: 'textbox', 

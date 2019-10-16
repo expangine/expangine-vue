@@ -81,7 +81,6 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       const simplify = this.type.options.length === 1;
 
       this.triggerChange({
-        kind: simplify ? 'change' : 'update',
         type: simplify ? type.options[0] : type,
         settings: simplify ? settings.sub[0] : settings,
         transform,
@@ -121,7 +120,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
         ;
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
   },
 });

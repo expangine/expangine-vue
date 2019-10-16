@@ -103,7 +103,6 @@ export const MapBuilder: TypeBuilder =
     description: 'A dictionary of key-value pairs',
     priority: 8,
     value: async () => (initializeSubs(registry, {
-      kind: 'build',
       type: MapType.forItem(existingType || new TextType({}), new TextType({})),
       settings: {
         input: 'grid',
@@ -181,7 +180,6 @@ export const MapModifierFromObject: TypeModifier<MapType> =
         }
 
         return initializeSubs(registry, {
-          kind: 'change',
           type: MapType.forItem(valueType, new TextType({})),
           settings: {
             input: 'grid',
@@ -212,7 +210,6 @@ export const MapBuilderWrapper: TypeBuilderWrapper =
     text: 'Map of...',
     priority: 3,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
-      kind: 'build',
       type: MapType.forItem(type, new TextType({})),
       settings: {
         input: 'grid',

@@ -18,7 +18,7 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            @input="update()"
+            @input="update"
           ></tuple-grid-field>
         </v-col>
       </template>

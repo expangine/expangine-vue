@@ -55,7 +55,6 @@ export const DateBuilder: TypeBuilder =
     description: 'A date value, optionally includes time',
     priority: 6,
     value: async () => ({
-      kind: 'build',
       type: new DateType({ }), 
       settings: { 
         input: 'picker', 

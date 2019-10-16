@@ -146,7 +146,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       const ex = new ExpressionBuilder();
 
-      this.update({
+      this.change({
         transform: ex.op(ObjectOps.set, {
           object: ex.get('value'),
           key: propName,
@@ -166,7 +166,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       const ex = new ExpressionBuilder();
 
-      this.update({
+      this.change({
         transform: ex.body(
           ex.op(ObjectOps.delete, {
             object: ex.get('value'),
@@ -209,7 +209,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       const ex = new ExpressionBuilder();
 
-      this.update({
+      this.change({
         transform: ex.body(
           ex.op(ObjectOps.set, {
             object: ex.get('value'),
@@ -239,7 +239,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         );
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
   },
 });

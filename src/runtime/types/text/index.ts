@@ -58,7 +58,6 @@ export const TextBuilder: TypeBuilder =
     text: 'Text',
     priority: 1,
     value: async () => ({
-      kind: 'build',
       type: new TextType({ }), 
       settings: { 
         input: 'textbox', 

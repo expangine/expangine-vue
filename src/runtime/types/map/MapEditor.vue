@@ -108,7 +108,7 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
         });
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
     onChangeValue(event: TypeUpdateEvent) {
       this.type.options.value = event.type;
@@ -124,7 +124,7 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
         });
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
   },
 });

@@ -65,7 +65,6 @@ export const EnumBuilder: TypeBuilder =
     description: 'A value which is taken from a list of key-value pairs',
     priority: 7,
     value: async () => (initializeSubs(registry, {
-      kind: 'build',
       type: new EnumType({ key: new TextType({}), value: existingType || new TextType({}), constants: new Map() }),
       settings: {
         input: 'dropdown',
@@ -94,7 +93,6 @@ export const EnumBuilderWrapper: TypeBuilderWrapper =
     text: 'Enum of...',
     priority: 4,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
-      kind: 'build',
       type: new EnumType({ key: new TextType({}), value: type, constants: new Map() }),
       settings: {
         input: 'dropdown',

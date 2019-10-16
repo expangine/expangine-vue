@@ -90,10 +90,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
           return false;
         }
     
-        return {
-          kind: 'change',
-          ...OptionalModifierTransform(registry, type, typeSettings),
-        };
+        return OptionalModifierTransform(registry, type, typeSettings);
       },
     };
   },
@@ -117,7 +114,6 @@ export const OptionalModifierRequire: TypeModifier =
         }
 
         return initializeSubs(registry, {
-          kind: 'change',
           type: type.options,
           settings: (typeSettings as TypeSettings<any, OptionalSubs>).sub.innerType,
         });
@@ -129,7 +125,6 @@ export const OptionalModifierRequire: TypeModifier =
 export function OptionalModifierTransform(registry: Registry, type: Type, typeSettings: TypeSettings)
 {
   return initializeSubs(registry, {
-    kind: 'build',
     type: new OptionalType(type),
     settings: { 
       input: 'optional',

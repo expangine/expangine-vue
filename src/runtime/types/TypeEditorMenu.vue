@@ -124,7 +124,7 @@
               :type="type"
               :read-only="readOnly"
               v-model="settings.options"
-              @input="update()"
+              @input="update"
             ></component>
           </v-sheet>
           <v-card-actions>

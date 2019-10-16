@@ -96,7 +96,7 @@
                   :read-only="readOnly"
                   :registry="registry"
                   :settings="itemSettings"
-                  @input="update()"
+                  @input="update"
                 ></object-form-field>
                 <div v-else>
                   {{ col.prop }} is missing settings.

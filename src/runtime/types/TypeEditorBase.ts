@@ -11,7 +11,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
   return Vue.extend<
     unknown,
     {
-      update(event?: Partial<TypeUpdateEvent>): void;
+      update(): void;
       change(event?: Partial<TypeUpdateEvent>): void;
       triggerChange(event: TypeUpdateEvent): void;
     },
@@ -118,12 +118,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
     },
     methods: {
-      update(event: Partial<TypeUpdateEvent> = {}) {
+      update() {
         this.triggerChange({
           type: this.type,
           settings: this.settings,
-          ...event,
-          kind: 'update',
         });
       },
       change(event: Partial<TypeUpdateEvent> = {}): void {
@@ -131,7 +129,6 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
           type: this.type,
           settings: this.settings,
           ...event,
-          kind: 'change',
         });
       },
       triggerChange(event: TypeUpdateEvent) {

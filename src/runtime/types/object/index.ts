@@ -104,7 +104,6 @@ export const ObjectBuilder: TypeBuilder =
     description: 'An entity with defined property names and types',
     priority: 3,
     value: async () => (initializeSubs(registry, {
-      kind: 'build',
       type: new ObjectType({ props: existingType ? obj({ value: existingType }) : obj() }),
       settings: { 
         input: 'form', 
@@ -165,7 +164,6 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
         }
 
         return initializeSubs(registry, {
-          kind: 'change',
           type: new ObjectType({ props: propMap }),
           settings: { 
             input: 'form', 

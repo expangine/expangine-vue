@@ -94,7 +94,6 @@ export const ListBuilder: TypeBuilder =
     description: 'An collection/list/array of values',
     priority: 4,
     value: async () => (initializeSubs(registry, {
-      kind: 'build',
       type: ListType.forItem(existingType || new TextType({ })),
       settings: {
         input: 'list',
@@ -118,7 +117,6 @@ export const ListBuilderWrapper: TypeBuilderWrapper =
     text: 'List of...',
     priority: 2,
     value: async ([{ type, settings }]) => (initializeSubs(registry, {
-      kind: 'build',
       type: ListType.forItem(type),
       settings: {
         input: 'list',

@@ -94,7 +94,7 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
         });
       }
 
-      this.update({ transform });
+      this.change({ transform });
     },
   },
 });

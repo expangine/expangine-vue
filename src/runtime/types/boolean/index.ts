@@ -54,7 +54,6 @@ export const BooleanBuilder: TypeBuilder =
     description: 'A true/false value',
     priority: 5,
     value: async () => ({
-      kind: 'build',
       type: new BooleanType({ }), 
       settings: { 
         input: 'checkbox', 

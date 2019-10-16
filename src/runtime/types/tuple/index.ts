@@ -136,7 +136,6 @@ export const TupleBuilder: TypeBuilder =
       }
 
       return initializeSubs(registry, {
-        kind: 'build',
         type: new TupleType(types),
         settings: {
           input: 'grid',
@@ -185,7 +184,6 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
         inputSelected.onSubAdd(type.options.length, type, typeSettings);
 
         return initializeSubs(registry, {
-          kind: 'update',
           type,
           settings: typeSettings,
         });
@@ -217,7 +215,6 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
       description: friendlyList(names),
       priority: 14,
       value: async () => (initializeSubs(registry, {
-        kind: 'change',
         type: new TupleType(values),
         settings: {
           input: 'grid',
@@ -255,7 +252,6 @@ export const TupleModifierFromList: TypeModifier<TupleType> =
       description: size + ' ' + registry.getTypeDescribeLong(item, '', ' '),
       priority: 15,
       value: async () => (initializeSubs(registry, {
-        kind: 'change',
         type: new TupleType(values),
         settings: {
           input: 'grid',
@@ -275,7 +271,6 @@ export const TupleBuilderWrapper: TypeBuilderWrapper =
     priority: 6,
     multiple: true,
     value: async (results) => (initializeSubs(input.registry, {
-      kind: 'build',
       type: new TupleType(results.map((r) => r.type)),
       settings: {
         input: 'grid',

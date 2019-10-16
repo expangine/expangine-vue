@@ -82,7 +82,6 @@ export type TypeSettings<Options = any, Subs extends SubsType = unknown> =
 
 export interface TypeUpdateEvent<T extends Type = any, Options = any, Subs extends SubsType = unknown>
 {
-  kind: 'update' | 'change' | 'build';
   type: T;
   settings: TypeSettings<Options, Subs>;
   transform?: Expression;
