@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, TupleOps, ExpressionBuilder, NumberOps, isNumber} from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -8,7 +8,6 @@ import { TupleGridInput } from './TupleGridTypes';
 import { getBuildType } from '@/app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TupleEditor from './TupleEditor.vue';
-import { OptionalInput } from '../optional/OptionalTypes';
 
 
 const ex = new ExpressionBuilder();
@@ -59,7 +58,12 @@ export const TupleVisuals = createVisuals({
     return {
       input: 'grid',
       defaultValue: subs.map((s) => s.defaultValue),
-      options: { ...TupleGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+      options: { 
+        ...TupleGridInput.getDefaultOptions(), 
+        ...registry.settingsOverrides, 
+        label: sub,
+        columns: subs.map(() => ({ cols: 12 })),
+      },
       sub: subs,
     };
   },
@@ -212,6 +216,44 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
       text: 'Convert to Tuple',
       description: friendlyList(names),
       priority: 14,
+      value: async () => (initializeSubs(registry, {
+        kind: 'change',
+        type: new TupleType(values),
+        settings: {
+          input: 'grid',
+          options: TupleGridInput.getDefaultOptions(),
+          defaultValue: [],
+          sub: settings,
+        },
+      })),
+    };
+  },
+};
+
+export const TupleModifierFromList: TypeModifier<TupleType> = 
+{
+  getOption: (input) => {
+    const { type, typeSettings, registry } = input;
+    if (!(type instanceof ListType) 
+      || !isNumber(type.options.min) 
+      || !isNumber(type.options.max) 
+      || type.options.min !== type.options.max) {
+      return false;
+    }
+
+    const { min: size, item } = type.options;
+    const values: Type[] = [];
+    const settings: TypeSettings[] = [];
+
+    for (let i = 0; i < size; i++) {
+      values.push(registry.defs.cloneType(item));
+      settings.push(copy((typeSettings as TypeSettings<any, string>).sub.item));
+    }
+
+    return {
+      text: 'Convert to Tuple',
+      description: size + ' ' + registry.getTypeDescribeLong(item, '', ' '),
+      priority: 15,
       value: async () => (initializeSubs(registry, {
         kind: 'change',
         type: new TupleType(values),

@@ -32,6 +32,9 @@
             <v-btn text @click="importJson">
               Import
             </v-btn>
+            <v-btn text @click="describe">
+              Detect
+            </v-btn>
             <v-btn text @click="runProgram">
               <v-icon>mdi-play</v-icon>
               Run
@@ -109,6 +112,7 @@ import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import { getConfirmation } from '../app/Confirm';
 import { sendNotification } from '../app/Notify';
 import { getRunProgram } from '../app/RunProgram';
+import { getDescribeData } from '../app/DescribeData';
 import { friendlyList } from '@/common';
 
 
@@ -192,6 +196,19 @@ export default Vue.extend({
           case 'program': this.last.program = this.program.encode(); break;
         }
       });
+    },
+    async describe() {
+      const result = await getDescribeData({ registry: this.registry });
+      if (result) {
+        this.historyPush(['data', 'type', 'settings'], () => {
+          this.type = result.type;
+          this.settings = result.settings;
+          this.data = result.data;
+
+          this.saveType();
+          this.saveData();
+        });
+      }
     },
     async getDefaultTypes(): Promise<TypeUpdateEvent | false> {
       const builtOption = await DefaultBuilder.getOption({

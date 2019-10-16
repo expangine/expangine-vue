@@ -16,6 +16,7 @@
       <notify-dialog></notify-dialog>
       <build-type-dialog></build-type-dialog>
       <run-program-dialog></run-program-dialog>
+      <describe-data-dialog></describe-data-dialog>
     </v-content>
   </v-app>
 </template>
@@ -27,6 +28,7 @@ import InputDialog from './app/InputDialog.vue';
 import BuildTypeDialog from './app/BuildTypeDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import RunProgramDialog from './app/RunProgramDialog.vue';
+import DescribeDataDialog from './app/DescribeDataDialog.vue';
 
 
 export default Vue.extend({
@@ -37,6 +39,7 @@ export default Vue.extend({
     InputDialog,
     NotifyDialog,
     RunProgramDialog,
+    DescribeDataDialog,
   },
 });
 </script>
