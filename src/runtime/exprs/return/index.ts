@@ -24,7 +24,17 @@ export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
     body: {
       isStart: () => true,
       isValid: () => true,
-      getModifiers: () => [],
+      getModifiers: (requiredType, expr) => expr instanceof ReturnExpression
+        ? [{
+            text: 'Remove Return',
+            description: 'Remove the return expression',
+            value: () => expr.value,
+          }]
+        : [{
+            text: 'Return',
+            description: 'Return this expression as the function result',
+            value: () => new ReturnExpression(expr),
+          }],
     },
     value: {
       isStart: () => false,

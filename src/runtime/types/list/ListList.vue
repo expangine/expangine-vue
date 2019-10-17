@@ -4,7 +4,7 @@
       <v-list-item-avatar class="mr-0">
         <v-tooltip bottom>
           <template #activator="{ on }">
-            <v-btn icon v-if="canAdd" v-on="on" @click="addItem">
+            <v-btn icon :disabled="!canAdd" v-on="on" @click="addItem">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -18,7 +18,7 @@
     <template v-for="(item, itemIndex) in page">
       <v-list-item :key="itemIndex">
         <v-list-item-avatar class="cell-top pt-1 mr-0">
-          <v-menu>
+          <v-menu :disabled="readOnly">
             <template #activator="{ on }">
               <v-btn icon v-on="on">
                 <v-icon>mdi-dots-horizontal</v-icon>
@@ -130,6 +130,9 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       return this.canAdd;
     },
     canAdd(): boolean {
+      if (this.readOnly) {
+        return false;
+      }
       if (isNumber(this.type.options.max)) {
         return this.rowCount < this.type.options.max;
       }

@@ -21,6 +21,7 @@ import { TupleVisuals } from './tuple';
 import { ObjectVisuals } from './object';
 import { SwitchVisuals } from './switch';
 import { ReturnVisuals } from './return';
+import { InvokeVisuals } from './invoke';
 
 
 export default function(registry: Registry)
@@ -40,6 +41,7 @@ export default function(registry: Registry)
     .addExpression(TemplateVisuals)
     .addExpression(TupleVisuals)
     .addExpression(ObjectVisuals)
+    .addExpression(InvokeVisuals) 
     .addExpression(NotVisuals)
     .addExpression(AndVisuals)
     .addExpression(NoVisuals)

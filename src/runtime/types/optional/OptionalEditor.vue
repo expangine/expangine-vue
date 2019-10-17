@@ -9,6 +9,7 @@
         :parent="parent"
         :read-only="readOnly"
         :disable-sub-settings="disableSubSettings"
+        :hide-settings="hideSettings"
         @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>
@@ -19,6 +20,7 @@
         :settings="settings.sub.innerType"
         :registry="registry"
         :read-only="readOnly"
+        :hide-settings="hideSettings"
         @change="onChange"
       ></ex-type-editor>
     </v-list-item-content>

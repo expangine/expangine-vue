@@ -8,6 +8,7 @@
         :parent="parent"
         :read-only="readOnly"
         :disable-sub-settings="disableSubSettings"
+        :hide-settings="hideSettings"
         @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>

@@ -8,6 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
+          :hide-settings="hideSettings"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>

@@ -30,35 +30,37 @@
             </v-list-item-content>
           </v-list-item>
           <v-list>
-            <v-list-item>
-              <v-list-item-content>
-                <v-select
-                  filled
-                  hide-details
-                  label="Display As"
-                  :disabled="readOnly"
-                  :value="settings.input"
-                  :items="inputs"
-                  @input="setInput"
-                ></v-select>
-              </v-list-item-content>
-            </v-list-item>
-            <v-sheet 
-              v-if="hasDefault && settings.options"
-              class="mx-4 my-2 pa-3" 
-              elevation="2"
-              :dark="settings.options.dark"
-            >
-              <div class="pb-2">Default</div>
-              <component
-                :is="inputSelected.input"
-                :type="type"
-                :settings="settings"
-                :registry="registry"
-                :read-only="readOnly"
-                v-model="defaultValue"
-              ></component>
-            </v-sheet>
+            <template v-if="!hideSettings">
+              <v-list-item>
+                <v-list-item-content>
+                  <v-select
+                    filled
+                    hide-details
+                    label="Display As"
+                    :disabled="readOnly"
+                    :value="settings.input"
+                    :items="inputs"
+                    @input="setInput"
+                  ></v-select>
+                </v-list-item-content>
+              </v-list-item>
+              <v-sheet 
+                v-if="hasDefault && settings.options"
+                class="mx-4 my-2 pa-3" 
+                elevation="2"
+                :dark="settings.options.dark"
+              >
+                <div class="pb-2">Default</div>
+                <component
+                  :is="inputSelected.input"
+                  :type="type"
+                  :settings="settings"
+                  :registry="registry"
+                  :read-only="readOnly"
+                  v-model="defaultValue"
+                ></component>
+              </v-sheet>
+            </template>
             <v-sheet 
               v-if="hasConfigure"
               tile 
@@ -88,7 +90,7 @@
       </v-menu>
 
       <v-menu 
-        v-if="settings.input && !disableSubSettings"
+        v-if="hasInput"
         offset-x
         min-width="400"
         :close-on-content-click="false"
@@ -185,6 +187,9 @@ export default TypeEditorBase<Type, any, any>().extend({
   computed: {
     hasConfigure(): boolean {
       return !!this.visuals.options;
+    },
+    hasInput(): boolean {
+      return !!this.settings.input && !this.disableSubSettings && !this.hideSettings;
     },
     modifiableOptions(): ListOptions<TypeModifyHandler> {
       return this.registry.getTypeModifiersFor({

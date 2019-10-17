@@ -4,6 +4,175 @@
       <v-col>
         <v-toolbar height="64">
           <v-toolbar-items>
+            <v-menu offset-y>
+              <template #activator="{ on }">
+                <v-btn text v-on="on">
+                  File
+                  <v-icon>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="exportJson">
+                  <v-list-item-icon>
+                    <v-icon>mdi-export</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Export</v-list-item-title>
+                    <v-list-item-subtitle>Download the type, data, and program as a JSON file.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="importJson">
+                  <v-list-item-icon>
+                    <v-icon>mdi-import</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Import</v-list-item-title>
+                    <v-list-item-subtitle>Upload a JSON file with a type, data, and program.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="describe">
+                  <v-list-item-icon>
+                    <v-icon>mdi-database-search</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Detect</v-list-item-title>
+                    <v-list-item-subtitle>Set the type &amp; data based on JSON or JS code.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="reset">
+                  <v-list-item-icon>
+                    <v-icon>mdi-refresh</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Reset</v-list-item-title>
+                    <v-list-item-subtitle>Clears the designed type, data, and program.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-menu offset-y>
+              <template #activator="{ on }">
+                <v-btn text v-on="on">
+                  Edit
+                  <v-icon>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="historyUndo" :disabled="undos.length === 0">
+                  <v-list-item-icon>
+                    <v-icon>mdi-undo</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Undo</v-list-item-title>
+                    <v-list-item-subtitle>Undo the last change.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="historyRedo" :disabled="redos.length === 0">
+                  <v-list-item-icon>
+                    <v-icon>mdi-redo</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Redo</v-list-item-title>
+                    <v-list-item-subtitle>Redo the last undone change.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <!--
+            <v-menu offset-y>
+              <template #activator="{ on }">
+                <v-btn text v-on="on">
+                  Mode
+                  <v-icon>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item-group v-model="mode" color="primary">
+                  <v-list-item :key="0">
+                    <v-list-item-icon>
+                      <v-icon>mdi-file-tree</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>Design</v-list-item-title>
+                      <v-list-item-subtitle>The structure of the data.</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item :key="1">
+                    <v-list-item-icon>
+                      <v-icon>mdi-database-edit</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>Data</v-list-item-title>
+                      <v-list-item-subtitle>The data.</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item :key="2">
+                    <v-list-item-icon>
+                      <v-icon>mdi-code-braces</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>Program</v-list-item-title>
+                      <v-list-item-subtitle>A program to process the data and produce a result.</v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-menu>
+            -->
+            <v-menu offset-y>
+              <template #activator="{ on }">
+                <v-btn text v-on="on">
+                  Functions
+                  <v-icon>mdi-menu-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item key="new" @click="addFunction">
+                  <v-list-item-content>
+                    <v-list-item-title>Add</v-list-item-title>
+                    <v-list-item-subtitle>Create a new re-usable function.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-divider></v-divider>
+                <template v-for="(func, name) in registry.defs.functions">
+                  <v-list-item :key="name" @click="editFunction(name)">
+                    <v-list-item-content>
+                      <v-list-item-title>{{ name }}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+              </v-list>
+            </v-menu>
+            <v-btn-toggle
+              mandatory
+              class="mt-2 mr-4 ml-2"
+              v-model="mode">
+              <v-tooltip top>
+                <template #activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>mdi-file-tree</v-icon>
+                  </v-btn>
+                </template>
+                <span>The structure of the data.</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template #activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>mdi-database-edit</v-icon>
+                  </v-btn>
+                </template>
+                <span>The data.</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template #activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>mdi-code-braces</v-icon>
+                  </v-btn>
+                </template>
+                <span>A program to process the data and produce a result.</span>
+              </v-tooltip>
+            </v-btn-toggle>
+            <v-spacer></v-spacer>
             <v-switch
               inset
               hide-details
@@ -12,51 +181,10 @@
               color="primary"
               v-model="readOnly"
             ></v-switch>
-            <v-btn-toggle v-model="mode" class="ma-2">
-              <v-btn text>
-                Design
-              </v-btn>
-              <v-btn text>
-                Data
-              </v-btn>
-              <v-btn text>
-                Program
-              </v-btn>
-            </v-btn-toggle>
-            <v-btn text @click="reset">
-              Reset
-            </v-btn>
-            <v-btn text @click="exportJson">
-              Export
-            </v-btn>
-            <v-btn text @click="importJson">
-              Import
-            </v-btn>
-            <v-btn text @click="describe">
-              Detect
-            </v-btn>
             <v-btn text @click="runProgram">
               <v-icon>mdi-play</v-icon>
               Run
             </v-btn>
-            <v-tooltip bottom>
-              <template #activator="{ on }">
-                <v-btn text v-on="on" @click="historyUndo" :disabled="undos.length === 0">
-                  <v-icon>mdi-undo</v-icon>
-                  Undo
-                </v-btn>
-              </template>
-              <span v-html="undoSummary"></span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template #activator="{ on }">
-                <v-btn text v-on="on" @click="historyRedo" :disabled="redos.length === 0">
-                  Redo
-                  <v-icon>mdi-redo</v-icon>
-                </v-btn>
-              </template>
-              <span v-html="redoSummary"></span>
-            </v-tooltip>
           </v-toolbar-items>
         </v-toolbar>
       </v-col>
@@ -104,7 +232,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, Expression, isString, NoExpression } from 'expangine-runtime';
+import { Type, defs, Expression, isString, NoExpression, objectMap } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import Registry from '../runtime';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
@@ -113,6 +241,7 @@ import { getConfirmation } from '../app/Confirm';
 import { sendNotification } from '../app/Notify';
 import { getRunProgram } from '../app/RunProgram';
 import { getDescribeData } from '../app/DescribeData';
+import { getEditFunction } from '../app/EditFunction';
 import { friendlyList } from '@/common';
 
 
@@ -141,6 +270,7 @@ export default Vue.extend({
     this.loadData();
     this.loadProgram();
     this.loadHistory();
+    this.loadFunctions();
     this.pushLast(['type', 'settings', 'data', 'program']);
   },
   data: () => ({
@@ -170,14 +300,32 @@ export default Vue.extend({
     isProgram(): boolean {
       return this.mode === 2;
     },
-    undoSummary(): string {
-      return this.changeSummary(this.undos);
-    },
-    redoSummary(): string {
-      return this.changeSummary(this.redos);
-    },
   },
   methods: {
+    async addFunction() {
+      const { registry } = this;
+      const result = await getEditFunction({ registry });
+
+      if (result) {
+        this.saveFunctions();
+      }
+    },
+    async editFunction(name: string) {
+      const { registry } = this;
+      const result = getEditFunction({ registry, name });
+
+      if (result) {
+        this.saveFunctions();
+      }
+    },
+    saveFunctions() {
+      localStorage.setItem('functions', JSON.stringify(objectMap(this.registry.defs.functions, (func: Type) => func.encode())));
+    },
+    loadFunctions() {
+      this.registry.defs.functions = this.loadVar('functions', {}, 
+        (v) => objectMap(v, (f) => this.registry.defs.getType(f)),
+      );
+    },
     changeSummary(state: HistoryState[], count: number = 15) {
       let i = state.length;
       const summary = [];

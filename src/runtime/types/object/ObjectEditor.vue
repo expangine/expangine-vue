@@ -8,6 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
+          :hide-settings="hideSettings"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -69,6 +70,7 @@
                 :registry="registry"
                 :settings="settings.sub[prop]"
                 :read-only="readOnly"
+                :hide-settings="hideSettings"
                 @change="onChange(prop, $event)"
               ></ex-type-editor>
             </td>

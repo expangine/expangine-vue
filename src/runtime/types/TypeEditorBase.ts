@@ -35,6 +35,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       readOnly: boolean;
       registry: Registry;
       settings: TypeSettings<O, S>;
+      hideSettings: boolean;
       disableSubSettings: boolean;
     }
   >({
@@ -57,6 +58,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       settings: {
         type: Object as () => TypeSettings<O, S>,
         required: true,
+      },
+      hideSettings: {
+        type: Boolean,
+        default: false,
       },
       disableSubSettings: {
         type: Boolean,

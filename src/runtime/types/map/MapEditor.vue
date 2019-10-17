@@ -8,6 +8,7 @@
           :registry="registry"
           :parent="parent"
           :read-only="readOnly"
+          :hide-settings="hideSettings"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -45,6 +46,7 @@
           :parent="type"
           :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
+          :hide-settings="hideSettings"
           @change="onChangeKey"
         ></ex-type-editor>
       </v-list-item-content>
@@ -73,6 +75,7 @@
           :parent="type"
           :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
+          :hide-settings="hideSettings"
           @change="onChangeValue"
         ></ex-type-editor>
       </v-list-item-content>

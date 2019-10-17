@@ -11,12 +11,14 @@
     </v-app-bar>
     <v-content>
       <router-view></router-view>
+
       <confirm-dialog></confirm-dialog>
       <input-dialog></input-dialog>
       <notify-dialog></notify-dialog>
       <build-type-dialog></build-type-dialog>
       <run-program-dialog></run-program-dialog>
       <describe-data-dialog></describe-data-dialog>
+      <edit-function-dialog></edit-function-dialog>
     </v-content>
   </v-app>
 </template>
@@ -29,6 +31,7 @@ import BuildTypeDialog from './app/BuildTypeDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import RunProgramDialog from './app/RunProgramDialog.vue';
 import DescribeDataDialog from './app/DescribeDataDialog.vue';
+import EditFunctionDialog from './app/EditFunctionDialog.vue';
 
 
 export default Vue.extend({
@@ -40,6 +43,7 @@ export default Vue.extend({
     NotifyDialog,
     RunProgramDialog,
     DescribeDataDialog,
+    EditFunctionDialog,
   },
 });
 </script>
