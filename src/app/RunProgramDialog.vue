@@ -7,19 +7,19 @@
       <v-card-text>
         <v-tabs>
           <v-tab>Output</v-tab>
-          <v-tab>Data After Execution</v-tab>
-          <v-tab>Data Before Execution</v-tab>
-          <v-tab>Data Changes</v-tab>
+          <v-tab v-if="showData">Data After Execution</v-tab>
+          <v-tab v-if="showData">Data Before Execution</v-tab>
+          <v-tab v-if="showData">Data Changes</v-tab>
           <v-tab-item class="data-container">
             <pre class="data-box" v-html="resultString"></pre>
           </v-tab-item>
-          <v-tab-item class="data-container">
+          <v-tab-item v-if="showData" class="data-container">
             <pre class="data-box" v-html="dataAfterString"></pre>
           </v-tab-item>
-          <v-tab-item class="data-container">
+          <v-tab-item v-if="showData" class="data-container">
             <pre class="data-box" v-html="dataString"></pre>
           </v-tab-item>
-          <v-tab-item class="data-container">
+          <v-tab-item v-if="showData" class="data-container">
             <pre class="data-box" v-html="diffString"></pre>
           </v-tab-item>
         </v-tabs>
@@ -73,6 +73,9 @@ export default Vue.extend({
     },
     resultString(): string {
       return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE, '', getProcess);
+    },
+    showData(): boolean {
+      return this.dataString !== this.dataAfterString;
     },
     dataString(): string {
       return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE, '', getProcess);
