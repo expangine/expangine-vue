@@ -51,6 +51,40 @@
 
         </span>
       </template>
+      <template v-for="(argExpr, arg) in value.args">
+        <span :key="arg" v-if="isExtraArgument(arg)" class="param-span">
+
+          <v-chip 
+            x-small 
+            label 
+            outlined 
+            class="param-label" 
+            color="red"
+            @click="toggleParameter(arg)"
+          >
+            {{ arg }} (extra)
+          </v-chip>
+
+          <span v-if="hiddenParameter(arg)"
+            class="ex-expression parenthesis">
+            <v-btn text @click="toggleParameter(arg)">
+              show
+            </v-btn>
+          </span>
+
+          <ex-expression
+            v-else
+            v-bind="$props"
+            class="parenthesis"
+            type="value"
+            :value="argExpr"
+            :required-type="null"
+            @input="setParam(arg, $event)"
+            @remove="setParam(arg)"
+          ></ex-expression>
+
+        </span>
+      </template>
     </template>
   </span>
 </template>
@@ -94,6 +128,9 @@ export default ExpressionBase<InvokeExpression>().extend({
     },
     hiddenParameter(name: string) {
       return !!this.hiddenParams[name];
+    },
+    isExtraArgument(name: string) {
+      return !this.paramTypes[name];
     },
     getParam(param: string) {
       return this.value.args[param] || NoExpression.instance;
