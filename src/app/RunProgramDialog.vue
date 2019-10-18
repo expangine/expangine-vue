@@ -47,6 +47,13 @@ import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderW
 
 const TAB = '  ';
 const NEWLINE = '\n';
+const PROCESS = (data: any, type: Type) => 
+  type instanceof TextType
+    ? '"' + data + '"'
+    : undefined;
+const PROCESS_INVALID = (data: any) =>
+  '<span class="invalid">' + JSON.stringify(data) + '</span>';
+
 
 interface Part { value: string; added: boolean; removed: boolean; }
 const getColor = (part: Part): string => part.added ? 'added' : part.removed ? 'removed' : '';
@@ -56,10 +63,6 @@ const getText = (part: Part): string => part.value
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
-const getProcess = (data: any, type: Type) => 
-  type instanceof TextType
-    ? '"' + data + '"'
-    : data;
 
 export default Vue.extend({
   data: () => runProgramDialog,
@@ -72,20 +75,20 @@ export default Vue.extend({
       return described || AnyType.baseType;
     },
     resultString(): string {
-      return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE, '', getProcess);
+      return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
+    },
+    dataString(): string {
+      return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
+    },
+    dataAfterString(): string {
+      return this.registry.getTypeToString(this.dataAfter, this.type, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
     },
     showData(): boolean {
       return this.dataString !== this.dataAfterString;
     },
-    dataString(): string {
-      return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE, '', getProcess);
-    },
-    dataAfterString(): string {
-      return this.registry.getTypeToString(this.dataAfter, this.type, TAB, NEWLINE, '', getProcess);
-    },
     diffString(): string {
       return diffLines(this.dataString, this.dataAfterString)
-        .map((part: Part) => `<span class="${getColor(part)}">${getText(part)}</span>`)
+        .map((part: Part) => `<span class="${getColor(part)}">${part.value}</span>`)
         .join('')
       ;
     },
@@ -123,6 +126,11 @@ export default Vue.extend({
   /deep/ .added {
     color: #02a024;
     background-color: #daf7da;
+  }
+  
+  /deep/ .invalid {
+    color: #e02618;
+    border-bottom: 1px solid #e02618;
   }
 }
 </style>

@@ -50,7 +50,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-menu offset-y :close-on-click="false">
+            <v-menu offset-y :close-on-content-click="false">
               <template #activator="{ on }">
                 <v-btn text v-on="on">
                   Edit
@@ -78,47 +78,6 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <!--
-            <v-menu offset-y>
-              <template #activator="{ on }">
-                <v-btn text v-on="on">
-                  Mode
-                  <v-icon>mdi-menu-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item-group v-model="mode" color="primary">
-                  <v-list-item :key="0">
-                    <v-list-item-icon>
-                      <v-icon>mdi-file-tree</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title>Design</v-list-item-title>
-                      <v-list-item-subtitle>The structure of the data.</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item :key="1">
-                    <v-list-item-icon>
-                      <v-icon>mdi-database-edit</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title>Data</v-list-item-title>
-                      <v-list-item-subtitle>The data.</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item :key="2">
-                    <v-list-item-icon>
-                      <v-icon>mdi-code-braces</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title>Program</v-list-item-title>
-                      <v-list-item-subtitle>A program to process the data and produce a result.</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-menu>
-            -->
             <v-menu offset-y>
               <template #activator="{ on }">
                 <v-btn text v-on="on">
@@ -141,12 +100,20 @@
                     </v-list-item-content>
                   </v-list-item>
                 </template>
+                <v-divider></v-divider>
+                <v-list-item key="clear" @click="clearFunctions">
+                  <v-list-item-content>
+                    <v-list-item-title>Clear</v-list-item-title>
+                    <v-list-item-subtitle>Remove all user-defined functions.</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
               </v-list>
             </v-menu>
             <v-btn-toggle
               mandatory
               class="mt-2 mr-4 ml-2"
-              v-model="mode">
+              v-model="mode"
+              @change="saveDataPending">
               <v-tooltip top>
                 <template #activator="{ on }">
                   <v-btn icon v-on="on">
@@ -207,7 +174,7 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            @input="saveData"
+            @input="saveDataDebounce"
           ></ex-type-input>
         </v-list>
         <v-list v-if="isProgram">
@@ -232,7 +199,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, Expression, isString, NoExpression, objectMap } from 'expangine-runtime';
+import { Type, defs, Expression, isString, isObject, NoExpression, objectMap, FunctionType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import Registry from '../runtime';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
@@ -250,12 +217,7 @@ function copy(a: any): any {
   return JSON.parse(JSON.stringify(a));
 }
 
-interface HistoryState {
-  data?: any;
-  type?: any;
-  settings?: any;
-  program?: any;
-}
+type HistoryState = Partial<Record<'data' | 'type' | 'settings' | 'program' | 'functions', any>>;
 type HistoryStateProps = Array<keyof HistoryState>;
 
 export default Vue.extend({
@@ -271,7 +233,7 @@ export default Vue.extend({
     this.loadProgram();
     this.loadHistory();
     this.loadFunctions();
-    this.pushLast(['type', 'settings', 'data', 'program']);
+    this.pushLast(['type', 'settings', 'data', 'program', 'functions']);
   },
   data: () => ({
     mode: 0,
@@ -280,6 +242,8 @@ export default Vue.extend({
     registry: Registry,
     readOnly: false,
     data: null as null | any,
+    dataDebounce: 60 * 1000,
+    dataTimeout: -1,
     program: NoExpression.instance as Expression,
     showComplexity: false,
     undos: [] as HistoryState[],
@@ -318,13 +282,24 @@ export default Vue.extend({
         this.saveFunctions();
       }
     },
+    async clearFunctions() {
+      if (await getConfirmation()) {
+        this.registry.defs.functions = {};
+        this.saveFunctions();
+      }
+    },
     saveFunctions() {
-      localStorage.setItem('functions', JSON.stringify(objectMap(this.registry.defs.functions, (func: Type) => func.encode())));
+      this.historyPush(['functions'], () => {
+        window.console.log('saving functions');
+
+        this.saveVar('functions', this.getFunctionsData);
+      });
     },
     loadFunctions() {
-      this.registry.defs.functions = this.loadVar('functions', {}, 
-        (v) => objectMap(v, (f) => this.registry.defs.getType(f)),
-      );
+      const parsed = this.loadVar('functions', {}, this.parseFunctionsData);
+      if (parsed) {
+        this.registry.defs.functions = parsed;
+      }
     },
     changeSummary(state: HistoryState[], count: number = 15) {
       let i = state.length;
@@ -335,13 +310,74 @@ export default Vue.extend({
       }
       return '<ol><li>' + summary.join('</li><li>') + '</li></ol>';
     },
+    getFunctionsData() {
+      return objectMap(this.registry.defs.functions, (func: Type) => func.encode());
+    },
+    parseFunctionsData(data: any): Record<string, FunctionType> | undefined {
+      return isObject(data) ? objectMap(data, (f) => this.registry.defs.getType(f) as FunctionType) : undefined;
+    },
+    setFunctionsData(data: any) {
+      const parsed = this.parseFunctionsData(data);
+      if (parsed) {
+        this.registry.defs.functions = parsed;
+      }
+    },
+    getProgramData() {
+      return this.program.encode();
+    },
+    parseProgramData(data: any): Expression | undefined {
+      return data ? this.registry.defs.getExpression(data) : undefined;
+    },
+    setProgramData(data: any) {
+      const parsed = this.parseProgramData(data);
+      if (parsed) {
+        this.program = parsed;
+      }
+    },
+    getDataData() {
+      return this.type ? this.type.toJson(this.data) : undefined;
+    },
+    parseDataData(data: any) {
+      return this.type && data !== undefined ? this.type.fromJson(data) : undefined;
+    },
+    setDataData(data: any) {
+      const parsed = this.parseDataData(data);
+      if (parsed !== undefined) {
+        this.data = parsed;
+      }
+    },
+    getSettingsData() {
+      return copy(this.settings);
+    },
+    parseSettingsData(data: any): TypeSettings | null {
+      return data ? copy(data) : null;
+    },
+    setSettingsData(data: any) {
+      const parsed = this.parseSettingsData(data);
+      if (parsed) {
+        this.settings = parsed;
+      }
+    },
+    getTypeData() {
+      return this.type ? this.type.encode() : undefined;
+    },
+    parseTypeData(data: any): Type | null {
+      return data ? this.registry.defs.getType(data) : null;
+    },
+    setTypeData(data: any) {
+      const parsed = this.parseTypeData(data);
+      if (parsed) {
+        this.type = parsed;
+      }
+    },
     pushLast(push: HistoryStateProps) {
       push.forEach((prop) => {
         switch (prop) {
-          case 'type': this.last.type = this.type ? this.type.encode() : undefined; break;
-          case 'settings': this.last.settings = copy(this.settings); break;
-          case 'data': this.last.data = this.type ? this.type.toJson(this.data) : undefined; break;
-          case 'program': this.last.program = this.program.encode(); break;
+          case 'type': this.last.type = this.getTypeData(); break;
+          case 'settings': this.last.settings = this.getSettingsData(); break;
+          case 'data': this.last.data = this.getDataData(); break;
+          case 'program': this.last.program = this.getProgramData(); break;
+          case 'functions': this.last.functions = this.getFunctionsData(); break;
         }
       });
     },
@@ -392,10 +428,11 @@ export default Vue.extend({
       }
 
       const exported = JSON.stringify({
-        type: this.type.encode(),
-        settings: this.settings,
-        data: this.type.toJson(this.data),
-        program: this.program.encode(),
+        type: this.getTypeData(),
+        settings: this.getSettingsData(),
+        data: this.getDataData(),
+        program: this.getProgramData(),
+        functions: this.getFunctionsData(),
       }, undefined, 2);
 
       this.downloadFile('export-' + Date.now() + '.json', exported, 'text/json');
@@ -427,10 +464,18 @@ export default Vue.extend({
       reader.readAsText(file);
     },
     importData(imported: any) {
-      this.type = this.registry.defs.getType(imported.type);
-      this.settings = imported.settings;
-      this.data = this.type.fromJson(imported.data);
-      this.program = this.registry.defs.getExpression(imported.program);
+      this.historyPush(['type', 'settings', 'data', 'program', 'functions'], () => {
+        this.setTypeData(imported.type);
+        this.setSettingsData(imported.settings);
+        this.setDataData(imported.data);
+        this.setProgramData(imported.program);
+        this.setFunctionsData(imported.functions);
+
+        this.saveType();
+        this.saveData();
+        this.saveProgram();
+        this.saveFunctions();
+      });
     },
     downloadFile(name: string, contents: any, type?: string) {
       const blob = new Blob([contents], {type: type || 'text/plain'});
@@ -460,48 +505,69 @@ export default Vue.extend({
         this.saveType();
       });
     },
+    copyFromLast(state: HistoryState): HistoryState {
+      const copied: HistoryState = {};
+      for (const prop in state) {
+        const key = prop as keyof HistoryState;
+        copied[key] = copy(this.last[key]);
+      }
+      return copied;
+    },
     historyUndo() {
+      this.saveDataPending();
+
       const undo = this.undos.pop();
       if (undo) {
+        this.redos.push(this.copyFromLast(undo));
         this.historyApply(undo);
-        this.redos.push(undo);
 
-        localStorage.setItem('redos', JSON.stringify(this.redos));
+        this.saveVar('redos', () => this.redos);
+        this.saveVar('undos', () => this.undos); 
       }
     },
     historyRedo() {
+      this.saveDataPending();
+
       const redo = this.redos.pop();
       if (redo) {
+        this.undos.push(this.copyFromLast(redo));
         this.historyApply(redo);
-        this.undos.push(redo);
 
-        localStorage.setItem('undos', JSON.stringify(this.undos));
+        this.saveVar('redos', () => this.redos);
+        this.saveVar('undos', () => this.undos);
       }
     },
     historyApply(state: HistoryState) {
       const push: HistoryStateProps = [];
 
       if (state.type) {
-        this.type = this.registry.defs.getType(state.type);
+        this.setTypeData(state.type);
         push.push('type');
       }
       if (state.settings) {
-        this.settings = copy(state.settings);
+        this.setSettingsData(state.settings);
         push.push('settings');
       }
-      if (state.data && this.type) {
-        this.data = this.type.fromJson(state.data);
+      if (state.data !== undefined) {
+        this.setDataData(state.data);
         push.push('data');
       }
       if (state.program) {
-        this.program = this.registry.defs.getExpression(state.program);
+        this.setProgramData(state.program);
         push.push('program');
+      }
+      if (state.functions) {
+        this.setFunctionsData(state.functions);
+        push.push('functions');
       }
       this.pushLast(push);
 
       sendNotification({ message: 'Restored ' + friendlyList(push) });
     },
     historyPush(push: HistoryStateProps, callback: () => any) {
+
+      this.saveDataPending();
+
       if (this.pushing) {
         callback();
         return;
@@ -510,17 +576,16 @@ export default Vue.extend({
       this.pushing = true;
       const state: HistoryState = {};
       push.forEach((prop) => {
-        state[prop] = this.last[prop];
+        state[prop] = copy(this.last[prop]);
       });
 
       if (this.redos.length) {
         this.redos = [];
-
-        localStorage.setItem('redos', JSON.stringify(this.redos));
+        this.saveVar('redos', () => this.redos);
       }
-      this.undos.push(state);
 
-      localStorage.setItem('undos', JSON.stringify(this.undos));
+      this.undos.push(state);
+      this.saveVar('undos', () => this.undos);
       
       callback();
       this.pushLast(push);
@@ -542,8 +607,8 @@ export default Vue.extend({
         return;
       }
 
-      localStorage.setItem('type', JSON.stringify(this.type.encode()));
-      localStorage.setItem('settings', JSON.stringify(this.settings));
+      this.saveVar('type', this.getTypeData);
+      this.saveVar('settings', this.getSettingsData);
     },
     transform(expr: Expression) {
       if (expr instanceof Expression) {
@@ -551,6 +616,20 @@ export default Vue.extend({
 
         this.data = cmd({ value: this.data });
 
+        this.saveData();
+      }
+    },
+    saveDataDebounce() {
+      window.clearTimeout(this.dataTimeout);
+      this.dataTimeout = window.setTimeout(() => {
+        this.dataTimeout = -1;
+        this.saveData();
+      }, this.dataDebounce);
+    },
+    saveDataPending() {
+      if (this.dataTimeout !== -1) {
+        window.clearTimeout(this.dataTimeout);
+        this.dataTimeout = -1;
         this.saveData();
       }
     },
@@ -566,30 +645,36 @@ export default Vue.extend({
 
         window.console.log('saving data');
 
-        localStorage.setItem('data', JSON.stringify(this.type.toJson(this.data)));
+        this.saveVar('data', this.getDataData);
       });
     },
-    saveProgram(program: Expression) {
+    saveProgram(program?: Expression) {
       this.historyPush(['program'], () => {
-        this.program = program;
-        this.program.setParent();
+        if (program) {
+          this.program = program;
+          this.program.setParent();
+        }
 
         window.console.log('saving program');
 
-        localStorage.setItem('program', JSON.stringify(this.program.encode()));
+        this.saveVar('program', this.getProgramData);
       });
     },
     resetProgram() {
       this.saveProgram(NoExpression.instance);
     },
-    runProgram() {
+    async runProgram() {
       if (!this.type) {
         return;
       }
 
       const { type, registry, program, data } = this;
 
-      getRunProgram({ registry, type, program, data });
+      try {
+        await getRunProgram({ registry, type, program, data });
+      } catch (e) {
+        sendNotification({ message: 'There was an error in your program' });
+      }
     },
     async loadType() {
       const defaults = await this.getDefaultTypes();
@@ -598,27 +683,38 @@ export default Vue.extend({
         return;
       }
 
-      this.type = this.loadVar('type', defaults.type, (t) => defs.getType(t));
-      this.settings = this.loadVar('settings', defaults.settings);
+      this.type = this.loadVar('type', defaults.type, this.parseTypeData);
+      this.settings = this.loadVar('settings', defaults.settings, this.parseSettingsData);
     },
     loadData() {
       if (this.settings === null || this.type === null) {
         return;
       }
 
-      this.data = this.type.fromJson(this.loadVar('data', copy(this.settings.defaultValue)));
+      this.data = this.loadVar('data', copy(this.settings.defaultValue), this.parseDataData);
     },
     loadProgram() {
-      this.program = this.loadVar('program', NoExpression.instance, (v) => this.registry.defs.getExpression(v));
+      this.program = this.loadVar<Expression>('program', NoExpression.instance, this.parseProgramData);
       this.program.setParent();
     },
-    loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V): V {
+    loadVar<V>(varName: string, defaultValue: V, mapper?: (value: any) => V | undefined | null): V {
       const stored = localStorage.getItem(varName);
       if (stored) {
-        const parsed = JSON.parse(stored);  
-        return mapper ? mapper(parsed) : parsed;
+        let parsed = JSON.parse(stored);  
+        if (mapper) {
+          parsed = mapper(parsed);
+        }
+        if (parsed !== undefined && parsed !== null) {
+          return parsed;
+        }
       }
       return defaultValue;
+    },
+    saveVar(varName: string, getter: () => any) {
+      const value = getter();
+      if (value !== undefined) {
+        localStorage.setItem(varName, JSON.stringify(value));
+      }
     },
   },
 });

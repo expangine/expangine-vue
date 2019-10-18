@@ -1,5 +1,5 @@
 
-import { Type, MapType, TextType, ObjectType, ManyType, MapOps, ExpressionBuilder, ListOps} from 'expangine-runtime';
+import { Type, MapType, TextType, ObjectType, ManyType, MapOps, ExpressionBuilder, ListOps, isString, isMap} from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
@@ -24,14 +24,22 @@ export const MapVisuals = createVisuals({
     padding + tab + 'value:' + registry.getTypeDescribeLong(type.options.value, tab, newline, padding + tab) + newline +
     padding + '}'
   ,
-  toString: ({ registry, value, type, tab, newline, padding, process }) => {
+  toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
+    if (!isMap(value)) {
+      return processInvalid(value, type);
+    }
+    const processed = process(value, type);
+    if (isString(processed)) {
+      return processed;
+    }
+
     let out = 'Map {' + newline;
 
     for (const [mapKey, mapValue] of value.entries()) {
       out += padding + tab;
-      out += registry.getTypeToString(mapKey, type.options.key, tab, newline, padding + tab, process);
+      out += registry.getTypeToString(mapKey, type.options.key, tab, newline, padding + tab, process, processInvalid);
       out += ' => ';
-      out += registry.getTypeToString(mapValue, type.options.value, tab, newline, padding + tab, process);
+      out += registry.getTypeToString(mapValue, type.options.value, tab, newline, padding + tab, process, processInvalid);
       out += newline;
     }
 

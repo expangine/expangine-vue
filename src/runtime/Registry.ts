@@ -275,9 +275,14 @@ export class Registry
     return this.getTypeVisuals(type).settingsFor({ registry: this, type, overrides: this.settingsOverrides, sub });
   }
 
-  public getTypeToString(value: any, type: Type, tab: string, newline: string, padding: string = '', process: (data: any, type: Type) => any = ((x) => x)): string
+  public getTypeToString(
+    value: any, type: Type, tab: string, newline: string, 
+    padding: string = '', 
+    process: (data: any, type: Type) => any = ((x) => undefined), 
+    processInvalid: (data: any, type: Type) => any = ((x) => 'invalid(' + JSON.stringify(x) + ')'),
+  ): string
   {
-    return this.getTypeVisuals(type).toString({ registry: this, value, type, tab, newline, padding, process });
+    return this.getTypeVisuals(type).toString({ registry: this, value, type, tab, newline, padding, process, processInvalid });
   }
 
 }

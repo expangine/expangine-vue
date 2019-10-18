@@ -1,5 +1,5 @@
 
-import { TextType, TextOps, ExpressionBuilder } from 'expangine-runtime';
+import { TextType, TextOps, ExpressionBuilder, isString } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
@@ -18,7 +18,17 @@ export const TextVisuals = createVisuals({
   description: 'A text value',
   describe: () => 'Text',
   describeLong: () => 'Text',
-  toString: ({ value, type, process }) => process(value, type),
+  toString: ({ value, type, process, processInvalid }) => {
+    if (!isString(value)) {
+      return processInvalid(value, type);
+    }
+    const processed = process(value, type);
+    if (isString(processed)) {
+      return processed;
+    }
+
+    return value;
+  },
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

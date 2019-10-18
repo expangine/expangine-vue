@@ -26,11 +26,13 @@ export const OptionalVisuals = createVisuals({
   describeLong: (registry, type, padding, tab, newline) => 
     'Optional ' + registry.getTypeDescribeLong(type.options, tab, newline, padding)
   ,
-  toString: ({ registry, value, type, tab, newline, padding, process }) => 
-    value
-      ? registry.getTypeToString(value, type.options, tab, newline, padding, process)
-      : 'undefined'
-  ,
+  toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
+    if (value === undefined || value === null) {
+      return 'undefined';
+    }
+
+    return registry.getTypeToString(value, type.options, tab, newline, padding, process, processInvalid);
+  },
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
   subSettings: (registry, type, settings, sub) => {
     return settings.sub.innerType;

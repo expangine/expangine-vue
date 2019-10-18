@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy, NumberType } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -24,13 +24,21 @@ export const TupleVisuals = createVisuals({
       : '').join('') +
     padding + ']'
   ,
-  toString: ({ registry, value, type, tab, newline, padding, process }) => 
-    'Tuple [' + newline + 
-    value.map((item: any, index: number) => type.options[index]
-      ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab, process) + newline
-      : '').join('') + 
-    padding + ']'
-  ,
+  toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
+    if (!isArray(value)) {
+      return processInvalid(value, type);
+    }
+    const processed = process(value, type);
+    if (isString(processed)) {
+      return processed;
+    }
+
+    return 'Tuple [' + newline + 
+      value.map((item: any, index: number) => type.options[index]
+        ? padding + tab + registry.getTypeToString(item, type.options[index], tab, newline, padding + tab, process, processInvalid) + newline
+        : '').join('') + 
+      padding + ']';
+  },
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

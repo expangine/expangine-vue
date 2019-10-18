@@ -56,12 +56,12 @@ import ExpressionBase from '../ExpressionBase';
 
 const TAB = '';
 const NEWLINE = '&nbsp;&nbsp;';
-const PROCESS = (value: any, type: Type) => {
-  if (type instanceof TextType) {
-    value = '"' + value + '"';
-  }
-  return value;
-};
+const PROCESS = (value: any, type: Type) =>
+  type instanceof TextType
+    ? '"' + value + '"'
+    : value;
+const PROCESS_INVALID = (value: any) =>
+  '<code>' + JSON.stringify(value) + '</code>';
 
 export default ExpressionBase<ConstantExpression>().extend({
   name: 'ConstantEditor',
@@ -79,7 +79,7 @@ export default ExpressionBase<ConstantExpression>().extend({
     readonlyValue(): string {
       return this.invalid || !this.computedType
         ? JSON.stringify(this.value.value)
-        : this.registry.getTypeToString(this.value.value, this.computedType, TAB, NEWLINE, '', PROCESS);
+        : this.registry.getTypeToString(this.value.value, this.computedType, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
     },
     inputSettings(): TypeSettings | null {
       return this.pathSettings

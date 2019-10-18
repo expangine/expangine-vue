@@ -1,5 +1,5 @@
 
-import { ListType, TextType, ListOps, ExpressionBuilder, isNumber } from 'expangine-runtime';
+import { ListType, TextType, ListOps, ExpressionBuilder, isString, isArray } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -24,11 +24,19 @@ export const ListVisuals = createVisuals({
   describeLong: (registry, type, padding, tab, newline) => 
     'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding + tab)
   ,
-  toString: ({ registry, value, type, tab, newline, padding, process }) => 
-    '[' + newline + 
-    value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab, process) + newline).join('') + 
-    padding + ']'
-  ,
+  toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
+    if (!isArray(value)) {
+      return processInvalid(value, type);
+    }
+    const processed = process(value, type);
+    if (isString(processed)) {
+      return processed;
+    }
+
+    return '[' + newline + 
+      value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab, process, processInvalid) + newline).join('') + 
+      padding + ']';
+  },
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

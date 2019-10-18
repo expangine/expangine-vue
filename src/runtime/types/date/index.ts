@@ -1,5 +1,5 @@
 
-import { DateType, ExpressionBuilder, DateOps, isString } from 'expangine-runtime';
+import { DateType, ExpressionBuilder, DateOps, isString, isDate } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { DatePickerInput } from './DatePickerTypes';
@@ -17,14 +17,18 @@ export const DateVisuals = createVisuals(
   description: 'A date value',
   describe: () => 'Date',
   describeLong: (registry, type, padding) => 'Date',
-  toString: ({ value, type, process }) => {
+  toString: ({ value, type, process, processInvalid }) => {
+    if (!isDate(value)) {
+      return processInvalid(value, type);
+    }
     const processed = process(value, type);
-
-    return isString(processed) 
-      ? processed
-      : type.options.withTime
-        ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
-        : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
+    if (isString(processed)) {
+      return processed;
+    }
+    
+    return type.options.withTime
+      ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
+      : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
   },
   subOptions: () => [],
   subSettings: () => null,

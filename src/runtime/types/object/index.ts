@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap, AnyType } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap, AnyType, isObject } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
@@ -25,7 +25,15 @@ export const ObjectVisuals = createVisuals({
     ).join('') +
     padding + '}'
   ,
-  toString: ({ registry, value, type, tab, newline, padding, process }) => {
+  toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
+    if (!isObject(value)) {
+      return processInvalid(value, type);
+    }
+    const processed = process(value, type);
+    if (isString(processed)) {
+      return processed;
+    }
+
     let out = '{' + newline;
 
     for (const prop in value)
@@ -37,7 +45,7 @@ export const ObjectVisuals = createVisuals({
       }
 
       const propValueType = type.options.props[prop] || AnyType.baseType;
-      const propValueString = registry.getTypeToString(propValue, propValueType, tab, newline, padding + tab, process);
+      const propValueString = registry.getTypeToString(propValue, propValueType, tab, newline, padding + tab, process, processInvalid);
 
       if (propValueString === 'undefined') {
         continue;
