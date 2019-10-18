@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy, NumberType } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -41,7 +41,9 @@ export const TupleVisuals = createVisuals({
       ? 'The number of elements in the tuple (~' + type.options.length + ')'
       : isNumber(key)
         ? registry.getTypeDescribeLong(type.options[key], '', '  ')
-        : 'A value for a given dynamic element';
+        : key instanceof NumberType
+          ? 'A number value for a given dynamic element'
+          : 'An enum value for a given dynamic element';
 
     return { key, value, text, description };
   }),

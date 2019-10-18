@@ -60,12 +60,14 @@ export const ObjectVisuals = createVisuals({
       : '[ property ]';
     const description = isString(key)
       ? registry.getTypeDescribeLong(value, '', '  ')
-      : 'A value for a given property';
+      : key instanceof TextType
+        ? 'A text value for a given property'
+        : 'An enum value for a given property';
 
     return { key, value, text, description };
   }),
   subSettings: (registry, type, settings, sub, forKey) => {
-    return isString(sub.key)
+    return isString(sub.key) && settings.sub
       ? settings.sub[sub.key]
       : null;
   },

@@ -23,6 +23,12 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+        <v-list-item key="remove" @click="removeSegment">
+          <v-list-item-content>
+            <v-list-item-title>Remove</v-list-item-title>
+            <v-list-item-subtitle>Remove this segment and everything after it</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-menu>
     
@@ -36,7 +42,7 @@
           :read-only="segmentReadOnly"
           :required-type="expectedType"
           :value="segment"
-          :path-settings="segmentSettings"
+          :path-settings="subSettings"
           @input="updateSegment"
           @remove="removeSegment"
           @mouseenter.native="optionalListener(on.mouseenter, $event)"
@@ -53,7 +59,8 @@
       v-on="$listeners"
       :index="index + 1"
       :path="path"
-      :sub-settings="segmentSettings"
+      :sub-settings="segmentValueSettings"
+      @settings="onSettings"
     ></path-segment>
 
   </span>
@@ -114,9 +121,10 @@ export default ExpressionBase().extend({
       }) || this.dynamicOption;
     },
     segmentSettings(): TypeSettings | null {
-      return this.segmentType && this.subSettings && this.segmentOption
-        ? this.registry.getTypeSubSettings(this.segmentType, this.subSettings, this.segmentOption, true)
-        : null;
+      return this.getSettings(true);
+    },
+    segmentValueSettings(): TypeSettings | null {
+      return this.getSettings(false);
     },
     segmentRisky(): boolean {
       return !this.segmentOption || (this.segmentOption.key instanceof TextType && this.segment instanceof ConstantExpression);
@@ -149,7 +157,25 @@ export default ExpressionBase().extend({
           : [];
     },
   },
+  watch: {
+    segmentValueSettings: {
+      immediate: true,
+      handler(settings: TypeSettings | null) {
+        if (!this.hasNext) {
+          this.onSettings(settings);
+        }
+      },
+    },
+  },
   methods: {
+    getSettings(forKey: boolean): TypeSettings | null {
+      return this.previousType && this.subSettings && this.segmentOption
+        ? this.registry.getTypeSubSettings(this.previousType, this.subSettings, this.segmentOption, forKey)
+        : null;
+    },
+    onSettings(settings: TypeSettings | null) {
+      this.$emit('settings', settings);
+    },
     updateSegment(segment: Expression) {
       this.$set(this.path, this.index, segment);
       this.update();

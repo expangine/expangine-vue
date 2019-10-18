@@ -7,6 +7,7 @@
       :sub-settings="settings"
       @input="update"
       @remove="remove"
+      @settings="onSettings"
     ></path-segment>
     <v-menu max-height="400" offset-y v-if="nextSegments.length > 0">
       <template #activator="{ on }">
@@ -38,7 +39,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Expression, Type, NoExpression, ExpressionBuilder } from 'expangine-runtime';
-import { TypeSubOption } from '../../types/TypeVisuals';
+import { TypeSubOption, TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import PathSegment from './PathSegment.vue';
 
@@ -68,6 +69,9 @@ export default ExpressionBase().extend({
     },
   },
   methods: {
+    onSettings(settings: TypeSettings | null) {
+      this.$emit('settings', settings);
+    },
     addSegment(sub: TypeSubOption) {
       if (sub.key instanceof Type) {
         const visual = this.registry.getTypeVisuals(sub.key);

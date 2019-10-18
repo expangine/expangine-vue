@@ -50,7 +50,7 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-            <v-menu offset-y>
+            <v-menu offset-y :close-on-click="false">
               <template #activator="{ on }">
                 <v-btn text v-on="on">
                   Edit
@@ -312,7 +312,7 @@ export default Vue.extend({
     },
     async editFunction(name: string) {
       const { registry } = this;
-      const result = getEditFunction({ registry, name });
+      const result = await getEditFunction({ registry, name });
 
       if (result) {
         this.saveFunctions();

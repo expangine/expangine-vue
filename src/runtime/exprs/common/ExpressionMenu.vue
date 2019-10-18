@@ -171,23 +171,29 @@ export default ExpressionBase().extend({
       type: String,
       default: 'primary',
     },
+    invalidOverride: {
+      type: Boolean,
+    },
   },
   data: () => ({
     showTypeInformation: false,
   }),
   computed: {
+    isInvalid(): boolean {
+      return this.invalidOverride !== undefined ? this.invalidOverride : this.invalid;
+    },
     hasTypeInformation(): boolean {
       return !!(this.requiredType && !(this.requiredType instanceof AnyType))
           || !!(this.computedType && !(this.computedType instanceof AnyType));
     },
     statusColor(): string {
-      return this.invalid ? 'error' : this.color;
+      return this.isInvalid ? 'error' : this.color;
     },
     statusDark(): boolean {
-      return this.invalid;
+      return this.isInvalid;
     },
     statusTooltip(): string {
-      if (!this.invalid || !this.requiredType || !this.computedType) {
+      if (!this.isInvalid || !this.requiredType || !this.computedType) {
         return this.tooltip;
       }
       const actual = this.registry.getTypeDescribe(this.computedType);

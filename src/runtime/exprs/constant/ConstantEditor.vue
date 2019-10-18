@@ -7,6 +7,7 @@
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
+      :invalid-override="invalid"
       text="Const"
       tooltip="A constant value">
       <template #prepend>
@@ -21,7 +22,7 @@
 
     <span class="pa-2" v-html="readonlyValue"></span>
 
-    <v-dialog v-model="editing" persistent max-width="600px" class="d-inline">
+    <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline">
       <v-card>
         <v-card-title>
           <span class="headline">Enter Value</span>
@@ -48,10 +49,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, ConstantExpression, isArray, isObject } from 'expangine-runtime';
+import { Type, AnyType, TextType, ObjectType, ConstantExpression, isArray, isObject } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
+
+const TAB = '';
+const NEWLINE = '&nbsp;&nbsp;';
+const PROCESS = (value: any, type: Type) => {
+  if (type instanceof TextType) {
+    value = '"' + value + '"';
+  }
+  return value;
+};
 
 export default ExpressionBase<ConstantExpression>().extend({
   name: 'ConstantEditor',
@@ -60,13 +70,16 @@ export default ExpressionBase<ConstantExpression>().extend({
     editValue: null,
   }),
   computed: {
+    invalid(): boolean {
+      return this.isInvalid(this.value.value);
+    },
     inputType(): Type | null {
       return this.requiredType || AnyType.baseType;
     },
     readonlyValue(): string {
-      return this.computedType
-        ? this.registry.getTypeToString(this.value.value, this.computedType, '', '&nbsp;&nbsp;')
-        : this.value.value + '';
+      return this.invalid || !this.computedType
+        ? JSON.stringify(this.value.value)
+        : this.registry.getTypeToString(this.value.value, this.computedType, TAB, NEWLINE, '', PROCESS);
     },
     inputSettings(): TypeSettings | null {
       return this.pathSettings
@@ -77,8 +90,14 @@ export default ExpressionBase<ConstantExpression>().extend({
     },
   },
   methods: {
+    isInvalid(value: any) {
+      return !!(this.requiredType && !this.requiredType.isValid(value));
+    },
     edit() {
       this.editValue = this.value.value;
+      if (this.isInvalid(this.editValue) && this.requiredType && this.inputSettings) {
+        this.editValue = this.requiredType.fromJson(this.inputSettings.defaultValue);
+      }
       this.editing = true;
     },
     editSave() {
