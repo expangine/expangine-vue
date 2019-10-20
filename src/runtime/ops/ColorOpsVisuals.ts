@@ -340,7 +340,7 @@ export default (registry: Registry) =>
   registry.addOperation(ColorOps.named, {
     name: 'Named Color',
     description: 'Get color with [name]',
-    singleline: '{name}',
+    singleline: 'color named {name}',
     comments: {
       name: 'The name of the color',
     },

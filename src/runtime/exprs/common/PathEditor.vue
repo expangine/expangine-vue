@@ -56,16 +56,23 @@ export default ExpressionBase().extend({
       type: Array as () => Expression[],
       required: true,
     },
+    root: {
+      type: Object as () => Type | null,
+      default: null,
+    },
   },
   computed: {
     hasSegment(): boolean {
       return this.path.length > 0;
     },
+    rootType(): Type {
+      return this.root || this.context;
+    },
     pathType(): Type | null {
-      return this.registry.defs.getPathType(this.path, this.context);
+      return this.registry.defs.getPathType(this.path, this.rootType);
     },
     nextSegments(): TypeSubOption[] {
-      return this.registry.getTypeSubOptions(this.pathType || this.context);
+      return this.registry.getTypeSubOptions(this.pathType || this.rootType);
     },
   },
   methods: {

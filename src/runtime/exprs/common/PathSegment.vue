@@ -83,6 +83,10 @@ export default ExpressionBase().extend({
       type: Array as () => Expression[],
       required: true,
     },
+    root: {
+      type: Object as () => Type | null,
+      default: null,
+    },
     index: {
       type: Number,
       required: true,
@@ -93,6 +97,9 @@ export default ExpressionBase().extend({
   },
   computed: {
     noop: () => (() => undefined),
+    rootType(): Type {
+      return this.root || this.context;
+    },
     hasNext(): boolean {
       return this.index + 1 < this.path.length;
     },
@@ -100,7 +107,7 @@ export default ExpressionBase().extend({
       return this.path[this.index];
     },
     segmentType(): Type | null {
-      return Type.simplify(this.segment.getType(this.registry.defs, this.context));
+      return Type.simplify(this.segment.getType(this.registry.defs, this.rootType));
     },
     dynamicOption(): TypeSubOption | null {
       return this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;
@@ -147,11 +154,11 @@ export default ExpressionBase().extend({
       return this.readOnly || !this.expectedType;
     },
     previousType(): Type | null {
-      return this.registry.defs.getPathType(this.path, this.context, this.index);
+      return this.registry.defs.getPathType(this.path, this.rootType, this.index);
     },
     alternativeSegments(): TypeSubOption[] {
       return this.index === 0
-        ? this.registry.getTypeSubOptions(this.context)
+        ? this.registry.getTypeSubOptions(this.rootType)
         : this.previousType
           ? this.registry.getTypeSubOptions(this.previousType)
           : [];
