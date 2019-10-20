@@ -157,11 +157,22 @@ export default ExpressionBase().extend({
       return this.registry.defs.getPathType(this.path, this.rootType, this.index);
     },
     alternativeSegments(): TypeSubOption[] {
-      return this.index === 0
+      const segments = this.index === 0
         ? this.registry.getTypeSubOptions(this.rootType)
         : this.previousType
           ? this.registry.getTypeSubOptions(this.previousType)
           : [];
+      
+      const sorted = segments.slice();
+
+      sorted.sort((a, b) => {
+        const ad = a.key instanceof Type ? 1 : 0;
+        const bd = b.key instanceof Type ? 1 : 0;
+
+        return ad - bd;
+      });
+
+      return sorted;
     },
   },
   watch: {

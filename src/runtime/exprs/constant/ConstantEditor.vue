@@ -20,7 +20,19 @@
       </template>
     </ex-expression-menu>
 
-    <span class="pa-2" v-html="readonlyValue"></span>
+    <span class="pa-2" v-if="enumeratedLabel">
+      <v-tooltip top>
+        <template #activator="{ on }">
+          <v-chip 
+            v-on="on" 
+            v-html="enumeratedLabel"
+          ></v-chip>
+        </template>
+        <span class="pa-2" v-html="readonlyValue"></span>
+      </v-tooltip>
+    </span>
+
+    <span class="pa-2" v-else v-html="readonlyValue"></span>
 
     <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline">
       <v-card>
@@ -49,7 +61,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType, ObjectType, ColorType, ColorSpaceRGB, ConstantExpression, isArray, isObject } from 'expangine-runtime';
+import { Type, AnyType, TextType, ObjectType, EnumType, ColorType, ColorSpaceRGB, ConstantExpression, isArray, isObject, compare } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
@@ -77,6 +89,27 @@ export default ExpressionBase<ConstantExpression>().extend({
     },
     inputType(): Type | null {
       return this.requiredType || AnyType.baseType;
+    },
+    enumeratedType(): EnumType | null {
+      return this.computedType instanceof EnumType
+        ? this.computedType
+        : this.requiredType instanceof EnumType
+          ? this.requiredType
+          : null;
+    },
+    enumeratedLabel(): string | null {
+      const type = this.enumeratedType;
+      if (!type) {
+        return null;
+      }
+
+      for (const [label, value] of type.options.constants.entries()) {
+        if (compare(value, this.value.value) === 0) {
+          return label;
+        }
+      }
+
+      return null;
     },
     readonlyValue(): string {
       return this.invalid || !this.computedType
@@ -117,10 +150,11 @@ export default ExpressionBase<ConstantExpression>().extend({
 <style lang="less" scoped>
 /deep/ .color-square {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 11px;
+  height: 11px;
   top: 2px;
   position: relative;
   margin-right: 3px;
+  margin-top: -2px;
 }
 </style>

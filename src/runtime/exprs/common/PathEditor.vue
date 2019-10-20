@@ -72,7 +72,18 @@ export default ExpressionBase().extend({
       return this.registry.defs.getPathType(this.path, this.rootType);
     },
     nextSegments(): TypeSubOption[] {
-      return this.registry.getTypeSubOptions(this.pathType || this.rootType);
+      const segments = this.registry.getTypeSubOptions(this.pathType || this.rootType);
+
+      const sorted = segments.slice();
+
+      sorted.sort((a, b) => {
+        const ad = a.key instanceof Type ? 1 : 0;
+        const bd = b.key instanceof Type ? 1 : 0;
+
+        return ad - bd;
+      });
+
+      return sorted;
     },
   },
   methods: {
