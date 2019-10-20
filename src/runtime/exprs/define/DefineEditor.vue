@@ -38,7 +38,7 @@
             tag="table" 
             ghost-class="ghost"
             handle=".sorting-handle" 
-            :class="{ three: sorting }"
+            :class="{ three: sorting, readOnly }"
             v-model="value.define" 
             @end="update">
             <template v-for="(pair, index) in value.define">
@@ -48,7 +48,12 @@
                     <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
                   </td>
                   <td class="var-name py-2">
+                    <span v-if="readOnly">
+                      {{ pair[0] }}
+                      <v-icon>mdi-equal</v-icon>
+                    </span>
                     <v-text-field
+                      v-else
                       outlined
                       dense
                       hide-details

@@ -24,12 +24,17 @@
           </ex-expression-menu>
         </td>
         <td>
-          <table class="expression-table">
+          <table class="expression-table" :class="{ readOnly }">
             <template v-for="(value, prop) in value.props">
               <tbody :key="prop">
                 <tr>
                   <td class="var-name py-2">
+                    <span v-if="readOnly">
+                      {{ prop }}
+                      <v-icon>mdi-equal</v-icon>
+                    </span>
                     <v-text-field
+                      v-else
                       outlined
                       dense
                       hide-details

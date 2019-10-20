@@ -40,6 +40,13 @@
     }
   }
 
+  &.readOnly {
+    > tbody > tr > td:nth-child(1) {
+      width: auto;
+      min-width: auto;
+    }
+  }
+
   &.nopadding {
 
     > tbody > tr > td {
@@ -72,15 +79,6 @@
   
     }
   }
-}
-
-.expression-symbol {
-  font-size: 30px;
-  display: inline-block;
-  position: relative;
-  top: 6px;
-  margin-top: -14px;
-  padding: 2px;
 }
 
 .ex-expression.expression-inside {
