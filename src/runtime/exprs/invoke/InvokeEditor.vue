@@ -1,5 +1,5 @@
 <template>
-  <span class="pl-3">
+  <span class="invoke-editor pl-3">
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -152,5 +152,11 @@ export default ExpressionBase<InvokeExpression>().extend({
     position: absolute;
     top: -15px;
   }
+}
+
+.invoke-editor {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

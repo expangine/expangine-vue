@@ -1,5 +1,5 @@
 <template>
-  <span class="pl-3">
+  <span class="return-editor pl-3">
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -37,3 +37,11 @@ export default ExpressionBase<ReturnExpression>().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.return-editor {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+</style>
