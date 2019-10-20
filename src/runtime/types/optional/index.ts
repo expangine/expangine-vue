@@ -45,28 +45,6 @@ export const OptionalVisuals = createVisuals({
       innerType: registry.getTypeSettings(type.options, sub), 
     },
   }),
-  exprs: {
-    create: (registry, type) => registry.getTypeCreate(type.options),
-    valid: (registry, type) => ex.or(
-      ex.op(AnyOps.isEqual, {
-        value: ex.get('value'),
-        test: ex.const(undefined),
-      }),
-      registry.getTypeValid(type.options),
-    ),
-    compare: (registry, type) => ex.define({
-      valueMissing: isUndefined('value'),
-      testMissing: isUndefined('test'),
-    }, ex
-      .if(ex.and(ex.get('valueMissing'), ex.get('testMissing')))
-      .then(ex.const(0))
-      .if(ex.get('valueMissing'))
-      .then(ex.const(1))
-      .if(ex.get('testMissing'))
-      .then(ex.const(-1))
-      .else(registry.getTypeCompare(type.options)),
-    ),
-  },
   editor: OptionalEditor,
   defaultInput: 'optional',
   inputsOrder: ['optional'],

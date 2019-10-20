@@ -480,6 +480,16 @@ export default (registry: Registry) =>
     returnComments: 'true',
   });
 
+  registry.addOperation(DateOps.asColor, {
+    name: 'Cast Date to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'White',
+  });
+
   registry.addOperation(DateOps.asDate, {
     name: 'Cast Date to Date',
     description: 'Cast [value] to Date',

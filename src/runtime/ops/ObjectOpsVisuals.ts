@@ -108,8 +108,8 @@ export default (registry: Registry) =>
     description: 'Determines whether [value] is not equal to [test]',
     singleline: '{value} not equal to {test}',
     comments: {
-      value: 'The map to evaluate',
-      test: 'The test map to compare against',
+      value: 'The object to evaluate',
+      test: 'The test object to compare against',
     },
     returnComments: 'True if [value] is not equal to [test], otherwise false',
   });
@@ -176,6 +176,16 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a boolean property "value" it is returned, otherwise true.',
+  });
+
+  registry.addOperation(ObjectOps.asColor, {
+    name: 'Cast Object to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'If [value] is a color it is returned. If [value] has a boolean property "value" it is returned, otherwise white.',
   });
 
   registry.addOperation(ObjectOps.asList, {

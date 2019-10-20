@@ -4,6 +4,7 @@ import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListObjectTable from './ListObjectTable.vue';
 import ListObjectTableSettings from './ListObjectTableSettings.vue';
+import { isExactType } from '@/common';
 
 
 export interface ListObjectTableOptions
@@ -41,7 +42,7 @@ export const ListObjectTableInput: TypeVisualInput<ListType, ListObjectTableOpti
   hideSubSettings: true,
   input: ListObjectTable,
   settings: ListObjectTableSettings,
-  isVisible: (type) => type.options.item instanceof ObjectType,
+  isVisible: (type) => isExactType(type.options.item, ObjectType),
   getDefaultOptions: () => ({
     columns: [],
     pageSize: 10,

@@ -9,7 +9,7 @@
         v-bind="textProps"
         v-on="on"
         :value="valueAsString"
-        @click:clear="$emit('click:clear')"
+        @click:clear="clear"
       ></v-text-field>
     </template>
     <v-date-picker
@@ -146,6 +146,9 @@ export default Vue.extend({
       this.showDate = true;
       this.$emit('input', new Date(this.dateValue + ' ' + this.timeValue));
       this.menu = false;
+    },
+    clear() {
+      this.$emit('click:clear');
     },
   },
 });

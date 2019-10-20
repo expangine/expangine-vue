@@ -41,11 +41,6 @@ export const EnumVisuals = createVisuals({
       value: registry.getTypeSettings(type.options.value, 'Value'), 
     },
   }),
-  exprs: {
-    create: (registry, type) => registry.getTypeCreate(type.options.value),
-    valid: (registry, type) => registry.getTypeValid(type.options.value),
-    compare: (registry, type) => registry.getTypeCompare(type.options.value),
-  },
   editor: EnumEditor,
   options: EnumOptions,
   defaultInput: 'dropdown',

@@ -8,7 +8,7 @@ import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';
 import MapEditor from './MapEditor.vue';
-import { initializeSubs } from '@/common';
+import { initializeSubs, isExactType } from '@/common';
 
 
 const ex = new ExpressionBuilder();
@@ -67,35 +67,6 @@ export const MapVisuals = createVisuals({
       value: registry.getTypeSettings(type.options.value, sub), 
     },
   }),
-  exprs: {
-    create: () => ex.op(MapOps.create, {}),
-    valid: (registry, type) => ex.and(
-      ex.op(MapOps.isValid, {
-        value: ex.get('value'),
-      }),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.op(MapOps.values, { map: ex.get('value') }),
-        item: ex.const(null),
-        isEqual: ex.not(registry.getTypeValid(type.options.value)),
-      }, {
-        value: 'ignore',
-        test: 'value',
-      })),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.op(MapOps.keys, { map: ex.get('value') }),
-        item: ex.const(null),
-        isEqual: ex.not(registry.getTypeValid(type.options.key)),
-      }, {
-        value: 'ignore',
-        test: 'value',
-      })),
-    ),
-    compare: (registry, type) => ex.op(MapOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-      compare: registry.getTypeCompare(type.options.value),
-    }),
-  },
   editor: MapEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],
@@ -144,7 +115,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
   getOption:  (input) => {
     const { registry, type, typeSettings } = input;
 
-    if (!(type instanceof ObjectType)) {
+    if (!isExactType(type, ObjectType)) {
       return false;
     }
 

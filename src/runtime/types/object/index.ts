@@ -1,6 +1,6 @@
 
 import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap, AnyType, isObject } from 'expangine-runtime';
-import { friendlyList, initializeSubs, obj } from '@/common';
+import { friendlyList, initializeSubs, obj, isExactType } from '@/common';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -93,11 +93,6 @@ export const ObjectVisuals = createVisuals({
       sub: subs,
     };
   },
-  exprs: {
-    create: () => ex.op(ObjectOps.create, {}),
-    valid: () => ex.op(ObjectOps.isValid, {value: ex.get('value')}),
-    compare: () => ex.op(ObjectOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
-  },
   editor: ObjectEditor,
   allowsDefault: false,
   defaultInput: 'form',
@@ -131,7 +126,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
     const { registry } = input;
     let { type, typeSettings } = input;
 
-    if (type instanceof ObjectType)
+    if (isExactType(type, ObjectType))
     {
       return false;
     }

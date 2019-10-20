@@ -37,11 +37,6 @@ export const DateVisuals = createVisuals(
     defaultValue: new Date().toISOString(), 
     options: { ...DatePickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
   }),
-  exprs: {
-    create: () => ex.op(DateOps.create, {}),
-    valid: () => ex.op(DateOps.isValid, {value: ex.get('value')}),
-    compare: () => ex.op(DateOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
-  },
   editor: DateEditor,
   options: DateOptions,
   defaultInput: 'picker',

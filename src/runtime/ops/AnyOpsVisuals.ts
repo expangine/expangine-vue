@@ -165,6 +165,16 @@ export default (registry: Registry) =>
     returnComments: 'The [value] converted to a true or false. Most values are true, but false values are: null, undefined, zero, false, NaN, and ""',
   });
 
+  registry.addOperation(AnyOps.asColor, {
+    name: 'Cast Any to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'The [value] convert to a Color if possible, otherwise white.',
+  });
+
   registry.addOperation(AnyOps.asDate, {
     name: 'Cast Any to Date',
     description: 'Cast [value] to Date',

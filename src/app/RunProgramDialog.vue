@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { diffLines } from 'diff';
-import { Type, AnyType, TextType } from 'expangine-runtime';
+import { Type, AnyType, TextType, ColorType, ColorSpaceRGB } from 'expangine-runtime';
 import { runProgramDialog } from './RunProgram';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
@@ -47,10 +47,12 @@ import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderW
 
 const TAB = '  ';
 const NEWLINE = '\n';
-const PROCESS = (data: any, type: Type) => 
-  type instanceof TextType
+const PROCESS = (data: any, t: Type) => 
+  t instanceof TextType
     ? '"' + data + '"'
-    : undefined;
+    : t instanceof ColorType
+      ? '<span class="color-square" style="background-color: ' + ColorSpaceRGB.formatMap.bestfit.formatter(data) + '"></span>' +  ColorSpaceRGB.formatMap.bestfit.formatter(data)
+      : undefined;
 const PROCESS_INVALID = (data: any) =>
   '<span class="invalid">' + JSON.stringify(data) + '</span>';
 
@@ -131,6 +133,15 @@ export default Vue.extend({
   /deep/ .invalid {
     color: #e02618;
     border-bottom: 1px solid #e02618;
+  }
+
+  /deep/ .color-square {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    position: relative;
+    margin-right: 3px;
   }
 }
 </style>

@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts">
-import { DateType } from 'expangine-runtime';
-import { DatePickerOptions } from './DatePickerTypes';
+import { ColorType } from 'expangine-runtime';
+import { ColorPickerOptions } from './ColorPickerTypes';
 import { SimpleFieldSettings } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
 
 
-const fields: SimpleFieldSettings<DatePickerOptions> = [
+
+const fields: SimpleFieldSettings<ColorPickerOptions> = [
   { name: 'label', type: 'text', label: 'Label', defaultValue: '' },
   { name: 'hint', type: 'text', label: 'Hint', defaultValue: '' },
   { name: 'prependIcon', type: 'icon', label: 'Prepend Icon' },
@@ -29,10 +30,19 @@ const fields: SimpleFieldSettings<DatePickerOptions> = [
   { name: 'outlined', type: 'boolean', label: 'Outlined', defaultValue: false },
   { name: 'dense', type: 'boolean', label: 'Dense', defaultValue: false },
   { name: 'flat', type: 'boolean', label: 'Flat', defaultValue: false },
+  { name: 'showSwatches', type: 'boolean', label: 'Show Swatches', defaultValue: false },
+  { name: 'mode', type: 'select', label: 'Mode', defaultValue: 'rgba', items: [
+    { text: 'RGBA', value: 'rgba' },
+    { text: 'HSLA', value: 'hsla' },
+    { text: 'HEXA', value: 'hexa' },
+  ]},
+  { name: 'hideCanvas', type: 'boolean', label: 'Hide Canvas', defaultValue: false },
+  { name: 'hideModeSwitch', type: 'boolean', label: 'Hide Mode Switch', defaultValue: false },
+  { name: 'hideInputs', type: 'boolean', label: 'Hide Inputs', defaultValue: false },
 ];
 
-export default TypeSettingsBase<DateType, DatePickerOptions>().extend({
-  name: 'DatePickerSettings',
+export default TypeSettingsBase<ColorType, ColorPickerOptions>().extend({
+  name: 'ColorPickerSettings',
   computed: {
     optionFields: () => fields,
   },

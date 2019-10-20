@@ -40,11 +40,6 @@ export const NumberVisuals = createVisuals({
     defaultValue: 0, 
     options: { ...NumberTextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
   }),
-  exprs: {
-    create: () => ex.op(NumberOps.create, {}),
-    valid: () => ex.op(NumberOps.isValid, {value: ex.get('value')}),
-    compare: () => ex.op(NumberOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
-  },
   editor: NumberEditor,
   options: NumberOptions,
   defaultInput: 'textbox',

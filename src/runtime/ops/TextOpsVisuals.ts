@@ -473,6 +473,16 @@ export default (registry: Registry) =>
     returnComments: 'True if text looks like true, t, 1, y, or x, otherwise false.',
   });
 
+  registry.addOperation(TextOps.asColor, {
+    name: 'Cast Text to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'A color parsed from the text, otherwise white.',
+  });
+
   registry.addOperation(TextOps.asDate, {
     name: 'Cast Text to Date',
     description: 'Cast [value] to Date',

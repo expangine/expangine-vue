@@ -1,5 +1,5 @@
 
-import { Type, Definitions, Expression, TypeSub, Operation } from 'expangine-runtime';
+import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder } from 'expangine-runtime';
 import { TypeVisuals, TypeSubOption, TypeSettings } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
@@ -230,17 +230,17 @@ export class Registry
 
   public getTypeCreate(type: Type): Expression
   {
-    return this.getTypeVisuals(type).exprs.create(this, type);
+    return type.getCreateExpression(new ExpressionBuilder());
   }
 
   public getTypeValid(type: Type): Expression
   {
-    return this.getTypeVisuals(type).exprs.valid(this, type);
+    return type.getValidateExpression(new ExpressionBuilder());
   }
 
   public getTypeCompare(type: Type): Expression
   {
-    return this.getTypeVisuals(type).exprs.compare(this, type);
+    return type.getCompareExpression(new ExpressionBuilder());
   }
 
   public getTypeSubOptions(type: Type): TypeSubOption[]

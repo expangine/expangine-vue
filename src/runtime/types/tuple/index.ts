@@ -1,9 +1,9 @@
 
-import { Type, TupleType, ObjectType, ListType, TupleOps, ExpressionBuilder, NumberOps, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, ExpressionBuilder, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
-import { friendlyList, initializeSubs } from '@/common';
+import { friendlyList, initializeSubs, isExactType } from '@/common';
 import { TupleGridInput } from './TupleGridTypes';
 import { getBuildType } from '@/app/BuildType';
 import { TupleSubs } from './TupleTypes';
@@ -76,31 +76,6 @@ export const TupleVisuals = createVisuals({
       },
       sub: subs,
     };
-  },
-  exprs: {
-    create: () => ex.op(TupleOps.create, {}),
-    valid: (registry, type) => ex
-      .op(TupleOps.isValid, {
-        value: ex.get('value'),
-      })
-      .and(type.options.map((t, i) => ex
-        .define({ value: ex.get('value', i) })
-        .run(registry.getTypeValid(t)),
-      ),
-    ),
-    compare: (registry, type) => ex.or(
-      ex.op(NumberOps.cmp, {
-        value: ex.get('value', 'length'),
-        test: ex.get('test', 'length'),
-      }),
-      ...type.options.map((t, i) => ex
-        .define({
-          value: ex.get('value', i),
-          test: ex.get('test', i),
-        })
-        .run(registry.getTypeCompare(t)),
-      ),
-    ),
   },
   editor: TupleEditor,
   defaultInput: 'grid',
@@ -206,7 +181,7 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
 {
   getOption: (input) => {
     const { type, typeSettings, registry } = input;
-    if (!(type instanceof ObjectType)) {
+    if (!isExactType(type, ObjectType)) {
       return false;
     }
 

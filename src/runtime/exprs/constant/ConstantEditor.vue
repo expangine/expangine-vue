@@ -49,17 +49,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType, ObjectType, ConstantExpression, isArray, isObject } from 'expangine-runtime';
+import { Type, AnyType, TextType, ObjectType, ColorType, ColorSpaceRGB, ConstantExpression, isArray, isObject } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
 
 const TAB = '';
 const NEWLINE = '&nbsp;&nbsp;';
-const PROCESS = (value: any, type: Type) =>
-  type instanceof TextType
+const PROCESS = (value: any, t: Type) =>
+  t instanceof TextType
     ? '"' + value + '"'
-    : value;
+    : t instanceof ColorType
+      ? '<span class="color-square" style="background-color: ' + ColorSpaceRGB.formatMap.bestfit.formatter(value) + '"></span>' +  ColorSpaceRGB.formatMap.bestfit.formatter(value)
+      : undefined;
 const PROCESS_INVALID = (value: any) =>
   '<code>' + JSON.stringify(value) + '</code>';
 
@@ -111,3 +113,14 @@ export default ExpressionBase<ConstantExpression>().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+/deep/ .color-square {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  top: 2px;
+  position: relative;
+  margin-right: 3px;
+}
+</style>

@@ -794,6 +794,16 @@ export default (registry: Registry) =>
     returnComments: 'True if [value] is not zero, otherwise false.',
   });
 
+  registry.addOperation(NumberOps.asColor, {
+    name: 'Cast Number to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'A color taken from the bytes of [value].',
+  });
+
   registry.addOperation(NumberOps.asDate, {
     name: 'Cast Number to Date',
     description: 'Cast [value] to Date',

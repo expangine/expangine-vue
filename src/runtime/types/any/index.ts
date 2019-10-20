@@ -25,14 +25,6 @@ export const AnyVisuals = createVisuals({
     defaultValue: '', 
     options: { ...AnyInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
   }),
-  exprs: {
-    create: (registry, type) => ex.op(TextOps.create, {}),
-    valid: (registry, type) => ex.op(AnyOps.isValid, { value: ex.get('value') }),
-    compare: (registry, type) => ex.op(AnyOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-    }),
-  },
   editor: AnyEditor,
   defaultInput: 'any',
   inputsOrder: ['any'],

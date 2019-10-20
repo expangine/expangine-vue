@@ -79,14 +79,17 @@
         ></ex-date-picker>
         <ex-color-picker
           v-else-if="field.type === 'color'"
-          filled
-          show-swatches
+          :picker-props="{ showSwatches: true }"
           :read-only="readOnly"
-          :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
-          :clearable="!field.required && !readOnly"
-          :label="field.label"
+          :text-props="{ 
+            filled: true, 
+            clearable: !field.required && !readOnly,
+            label: field.label,
+            appendIcon: 'mdi-format-color-fill',
+            hideDetails: hideDetails(field, fieldIndex),
+            hint: field.details,
+            persistentHint: !!field.details,
+          }"
           :value="value[field.name]"
           @input="setField(field, $event)"
           @click:clear="setField(field)"

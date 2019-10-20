@@ -163,6 +163,16 @@ export default (registry: Registry) =>
     returnComments: 'The first boolean value found in the tuple, otherwise false.',
   });
 
+  registry.addOperation(TupleOps.asColor, {
+    name: 'Cast Tuple to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'The first color value found in the tuple, otherwise white.',
+  });
+
   registry.addOperation(TupleOps.asList, {
     name: 'Cast Tuple to List',
     description: 'Cast [value] to List',

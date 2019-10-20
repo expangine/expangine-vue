@@ -333,6 +333,16 @@ export default (registry: Registry) =>
     returnComments: 'If the map contains a boolean value with key "value" it is returned, otherwise true is returned if the map is not empty and false if the map is empty.',
   });
 
+  registry.addOperation(MapOps.asColor, {
+    name: 'Cast Map to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'If the map contains a color value with key "value" it is returned, otherwise white.',
+  });
+
   registry.addOperation(MapOps.asList, {
     name: 'Cast Map to List',
     description: 'Cast [value] to List',

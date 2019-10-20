@@ -127,6 +127,16 @@ export default (registry: Registry) =>
     returnComments: '[value]',
   });
 
+  registry.addOperation(BooleanOps.asColor, {
+    name: 'Cast Boolean to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'White',
+  });
+
   registry.addOperation(BooleanOps.asDate, {
     name: 'Cast Boolean to Date',
     description: 'Cast [value] to Date',

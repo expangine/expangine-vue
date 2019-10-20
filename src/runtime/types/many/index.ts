@@ -69,13 +69,6 @@ export const ManyVisuals = createVisuals({
       sub: subs,
     };
   },
-  exprs: {
-    create: (registry, type) => registry.getTypeCreate(type.options[0]),
-    valid: (registry, type) => ex.or(
-      ...type.options.map((t) => registry.getTypeValid(t)),
-    ),
-    compare: (registry, type) => ex.op(AnyOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
-  },
   editor: ManyEditor,
   defaultInput: 'many',
   inputsOrder: ['many'],

@@ -22,7 +22,7 @@ export const ListVisuals = createVisuals({
   description: 'A list of values.',
   describe: ({registry, type}) => 'List of ' + registry.getTypeDescribe(type.options.item),
   describeLong: (registry, type, padding, tab, newline) => 
-    'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding + tab)
+    'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding)
   ,
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     if (!isArray(value)) {
@@ -60,27 +60,6 @@ export const ListVisuals = createVisuals({
       item: registry.getTypeSettings(type.options.item, sub), 
     },
   }),
-  exprs: {
-    create: () => ex.op(ListOps.create, {}),
-    valid: (registry, type) => ex.and(
-      ex.op(ListOps.isValid, {
-        value: ex.get('value'),
-      }),
-      ex.not(ex.op(ListOps.contains, {
-        list: ex.get('value'),
-        item: ex.const(null),
-        isEqual: ex.not(registry.getTypeValid(type.options.item)),
-      }, {
-        value: 'ignore',
-        test: 'value',
-      })),
-    ),
-    compare: (registry, type) => ex.op(ListOps.cmp, {
-      value: ex.get('value'),
-      test: ex.get('test'),
-      compare: registry.getTypeCompare(type),
-    }),
-  },
   editor: ListEditor,
   options: ListOptions,
   defaultInput: 'list',

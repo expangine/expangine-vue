@@ -1028,6 +1028,16 @@ export default (registry: Registry) =>
     returnComments: 'If the first item is a boolean it is returned, otherwise true if the [value] is not empty and false if it is.',
   });
 
+  registry.addOperation(ListOps.asColor, {
+    name: 'Cast List to Color',
+    description: 'Cast [value] to Color',
+    singleline: '{value} as color',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'If the first item is a color it is returned, otherwise white.',
+  });
+
   registry.addOperation(ListOps.asList, {
     name: 'Cast List to List',
     description: 'Cast [value] to List',

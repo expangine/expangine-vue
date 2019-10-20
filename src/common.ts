@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 
@@ -176,6 +176,11 @@ export function isSubArray(settings: any): settings is TypeSettings<any, number>
 export function isSubObject(settings: any): settings is TypeSettings<any, string>
 {
   return isObject(settings.sub);
+}
+
+export function isExactType<T extends Type<O>, O = any>(x: Type, y: TypeClass<T, O>): x is T
+{
+  return x.constructor === y;
 }
 
 export function renameVariable(startingAt: Expression, from: string, to: string)

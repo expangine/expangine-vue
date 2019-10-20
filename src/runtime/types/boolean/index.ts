@@ -36,11 +36,6 @@ export const BooleanVisuals = createVisuals({
     defaultValue: false, 
     options: { ...BooleanCheckboxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
   }),
-  exprs: {
-    create: () => ex.op(BooleanOps.create, {}),
-    valid: () => ex.op(BooleanOps.isValid, {value: ex.get('value')}),
-    compare: () => ex.op(BooleanOps.cmp, {value: ex.get('value'), test: ex.get('test')}),
-  },
   editor: BooleanEditor,
   options: BooleanOptions,
   defaultInput: 'checkbox',
