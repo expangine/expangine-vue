@@ -82,6 +82,35 @@ export default (registry: Registry) =>
     returnComments: 'Return 0 when [value] and [test] are equal, a negative number when [value] has properties [test] does not and a positive number when [value] is missing properties that [test] has.',
   });
 
+  registry.addOperation(ObjectOps.copy, {
+    name: 'Copy Object',
+    description: 'Copy object [object]',
+    singleline: 'copy {object}',
+    comments: {
+      object: 'The object to copy',
+    },
+    returnComments: 'Return a copy of [object].',
+  });
+
+  registry.addOperation(ObjectOps.merge, {
+    name: 'Merge Objects',
+    description: 'Merge object [a] and [b] and optionally [c], [d], and [e]',
+    singleline: 'merge {a} {b} {c} {d} {e}',
+    comments: {
+      a: 'The 1st object to copy. Properties in this object could be overriden by the following objects.',
+      b: 'The 2nd object to copy. Properties in this object could be overriden by the following objects.',
+      c: 'The 3rd object to copy. Properties in this object could be overriden by the following objects.',
+      d: 'The 4th object to copy. Properties in this object could be overriden by the following objects.',
+      e: 'The 5th object to copy.',
+    },
+    defaults: {
+      c: 'none',
+      d: 'none',
+      e: 'none',
+    },
+    returnComments: 'Return a merged copy of [a], [b], [c], [d], and [e] where properties in each subsequent object overrides the properties of the objects before.',
+  });
+
   registry.addOperation(ObjectOps.isValid, {
     name: 'Is Object?',
     description: 'Determines whether [value] is a valid value for Object',

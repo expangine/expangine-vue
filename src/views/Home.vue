@@ -688,6 +688,8 @@ export default Vue.extend({
         await getRunProgram({ registry, type, program, data });
       } catch (e) {
         sendNotification({ message: 'There was an error in your program' });
+        
+        window.console.log(e);
       }
     },
     async loadType() {

@@ -44,6 +44,25 @@ export default (registry: Registry) =>
     returnComments: 'A copy of the tuple.',
   });
 
+  registry.addOperation(TupleOps.build, {
+    name: 'Build Tuple',
+    description: 'Build a tuple by concatenating tuples/values together into tuple.',
+    singleline: 'tuple of {a} {b} {c} {d} {e}',
+    comments: {
+      a: 'The 1st tuple or value to add to the tuple result',
+      b: 'The 2nd tuple or value to add to the tuple result',
+      c: 'The 3rd tuple or value to add to the tuple result',
+      d: 'The 4th tuple or value to add to the tuple result',
+      e: 'The 5th tuple or value to add to the tuple result',
+    },
+    defaults: {
+      c: 'none',
+      d: 'none',
+      e: 'none',
+    },
+    returnComments: 'Return a built tuple of [a], [b], [c], [d], and [e] where a tuple has each element in the final tuple and non-tuple types are added as a single element. If any of the parameters are a list the result of the operation will be a list of unknown length and varying types.',
+  });
+
   registry.addOperation(TupleOps.get, {
     name: 'Get Element',
     description: 'Get an element from tuple [value] at [index]',
