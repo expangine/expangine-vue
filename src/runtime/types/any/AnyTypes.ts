@@ -16,6 +16,7 @@ export const AnyInput: TypeVisualInput<AnyType, AnyOptions> =
   description: 'Any type and value.',
   input: Any,
   settings: AnySettings,
+  getComplexity: () => 2,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: () => '',

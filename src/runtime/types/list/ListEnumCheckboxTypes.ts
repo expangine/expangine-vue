@@ -27,6 +27,7 @@ export const ListEnumCheckboxInput: TypeVisualInput<ListType, ListEnumCheckboxOp
   description: 'A group of checkboxes where the labels are the enum keys and the values are the enum values.',
   input: ListEnumCheckbox,
   settings: ListEnumCheckboxSettings,
+  getComplexity: () => 1,
   isVisible: (type) => type.options.item instanceof EnumType,
   getDefaultOptions: () => ({
     minWidth: 1000,

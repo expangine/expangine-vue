@@ -4,16 +4,16 @@ import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
+import { initializeSubs, isExactType } from '@/common';
 import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';
+import { MapSubs } from './MapTypes';
 import MapEditor from './MapEditor.vue';
-import { initializeSubs, isExactType } from '@/common';
 
 
-const ex = new ExpressionBuilder();
 
-export const MapVisuals = createVisuals({
+export const MapVisuals = createVisuals<MapSubs>()({
   type: MapType,
   name: 'Map',
   description: 'A collection of key-value pairs.',

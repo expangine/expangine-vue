@@ -23,6 +23,7 @@ export const BooleanSwitchInput: TypeVisualInput<BooleanType, BooleanSwitchOptio
   description: 'A switch can be on (true) or off (false)',
   input: BooleanSwitch,
   settings: BooleanSwitchSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,

@@ -1,15 +1,13 @@
 
-import { AnyType, AnyOps, ExpressionBuilder, TextOps} from 'expangine-runtime';
+import { AnyType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { AnyInput } from './AnyTypes';
 import AnyEditor from './AnyEditor.vue';
 import { TypeBuilder } from '../TypeBuilder';
 
 
-const ex = new ExpressionBuilder();
 
-
-export const AnyVisuals = createVisuals({
+export const AnyVisuals = createVisuals()({
   type: AnyType,
   name: 'Any',
   description: 'Any value',
@@ -23,7 +21,11 @@ export const AnyVisuals = createVisuals({
   settingsFor: ({ registry, sub }) => ({ 
     input: 'any', 
     defaultValue: '', 
-    options: { ...AnyInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+    options: { 
+      ...AnyInput.getDefaultOptions(), 
+      ...registry.settingsOverrides, 
+      label: sub,
+    },
   }),
   editor: AnyEditor,
   defaultInput: 'any',

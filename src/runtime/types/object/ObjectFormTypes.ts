@@ -29,6 +29,7 @@ export const ObjectFormInput: TypeVisualInput<ObjectType, ObjectFormOptions, str
   description: 'A form gives you control on the order of the fields and how much space they take up.',
   input: ObjectForm,
   settings: ObjectFormSettings,
+  getComplexity: () => 1,
   isVisible: () => true,
   getDefaultOptions: () => ({
     columns: [],

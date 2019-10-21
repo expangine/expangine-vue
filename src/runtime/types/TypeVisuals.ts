@@ -6,13 +6,9 @@ import { Registry } from '../Registry';
 
 export type SubsType = string | number | unknown;
 
-export function createVisuals<
-  T extends Type, 
-  Subs extends SubsType,
-  OptionMap
->(visuals: TypeVisuals<T, Subs, OptionMap>): TypeVisuals<T, Subs, OptionMap> 
+export function createVisuals<Subs extends SubsType>()
 {
-  return visuals;
+  return <T extends Type, OptionMap>(visuals: TypeVisuals<T, Subs, OptionMap>): TypeVisuals<T, Subs, OptionMap> => visuals;
 }
 
 export interface TypeSubOption extends TypeSub
@@ -42,8 +38,8 @@ export interface TypeVisuals<
     processInvalid: (data: any, type: Type) => any,
   }) => string;
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
-  subSettings: (registry: Registry, type: T, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
-  settingsFor: (options: { registry: Registry, type: T, sub: string | number, overrides: Record<string, any> }) => TypeSettings<any, any>;
+  subSettings: (registry: Registry, type: T, settings: TypeSettings<any, Subs>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
+  settingsFor: (options: { registry: Registry, type: T, sub: Subs, overrides: Record<string, any> }) => TypeSettings<any, Subs>;
   editor: VueConstructor;
   options?: VueConstructor;
   allowsDefault?: boolean;
@@ -54,39 +50,66 @@ export interface TypeVisuals<
   };
 }
 
-export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unknown> =
+export interface TypeVisualInputBase<T extends Type, Options, Subs extends SubsType = unknown>
 {
   name: string;
   description: string;
   hideSubSettings?: boolean;
   settings: VueConstructor;
   input: VueConstructor;
+  getComplexity: (options: {type: T, settings: TypeSettings<Options, Subs>, registry: Registry}) => number; // 0 = single line, 1 = multiline, fixed number of lines, 2 = multiple lines depending on input
   isVisible: (type: T) => boolean;
   getName: (options: Options) => string | undefined;
   getSummary: (options: Options) => string;
   getDefaultOptions: () => Options;
-} & (
+}
+
+export interface TypeVisualInputSubs<T extends Type, Options, Subs extends SubsType = unknown> extends TypeVisualInputBase<T, Options, Subs>
+{
+  onSubAdd: (sub: Subs, type: T, settings: TypeSettings<Options, Subs>) => void;
+  onSubRemove: (sub: Subs, type: T, settings: TypeSettings<Options, Subs>) => void;
+  onSubMove: (from: Subs, to: Subs, type: T, settings: TypeSettings<Options, Subs>) => void;
+}
+
+export type TypeVisualInput<T extends Type, Options, Subs extends SubsType = unknown> =
   Subs extends (string | number)
-    ? {
-        onSubAdd: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
-        onSubRemove: (sub: Subs, type: T, settings: TypeSettings<Options, any>) => void;
-        onSubMove: (from: Subs, to: Subs, type: T, settings: TypeSettings<Options, any>) => void;
-      }
-    : { }
-);
+  ? TypeVisualInputSubs<T, Options, Subs>
+  : TypeVisualInputBase<T, Options, Subs>;
+
+export interface TypeSettingsBase<Options>
+{
+  input: string; 
+  options: Options; 
+  defaultValue: any;
+}
+
+export interface TypeSettingsRecord<Options, Subs extends string> extends TypeSettingsBase<Options>
+{
+  sub: Record<Subs, TypeSettings<any, any>>;
+}
+
+export interface TypeSettingsArray<Options> extends TypeSettingsBase<Options>
+{
+  sub: Array<TypeSettings<any, any>>;
+}
+
+export interface TypeSettingsAny<Options = any> extends TypeSettingsBase<Options>
+{
+  sub?: Record<any, TypeSettings<any, any>> | Array<TypeSettings<any, any>>;
+}
 
 export type TypeSettings<Options = any, Subs extends SubsType = unknown> =
-  { input: string; options: Options; defaultValue: any; } 
-  & (Subs extends string
-      ? { sub: Record<Subs, TypeSettings<any, any>> }
-      : Subs extends number
-        ? { sub: Array<TypeSettings<any, any>> }
-        : { }
-    );
+  string[] extends Subs // since we only care about string | number, using another type fishes out any
+  ? TypeSettingsAny<Options>
+  : [Subs] extends [string]
+    ? TypeSettingsRecord<Options, Subs>
+    : [Subs] extends [number]
+      ? TypeSettingsArray<Options>
+      : TypeSettingsBase<Options>;
 
-export interface TypeUpdateEvent<T extends Type = any, Options = any, Subs extends SubsType = unknown>
+export interface TypeUpdateEvent
 {
-  type: T;
-  settings: TypeSettings<Options, Subs>;
+  type: Type;
+  settings: TypeSettingsAny;
   transform?: Expression;
 }

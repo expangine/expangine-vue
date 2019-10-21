@@ -137,7 +137,7 @@ export function asArray<T>(value: T[] | T | null | undefined): T[]
       : [value];
 }
 
-export function initializeSubs(registry: Registry, value: TypeUpdateEvent<any, any, any>): TypeUpdateEvent<any, any, any>
+export function initializeSubs(registry: Registry, value: TypeUpdateEvent): TypeUpdateEvent
 {
   const { type, settings } = value;
 

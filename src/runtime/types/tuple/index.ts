@@ -10,9 +10,7 @@ import { TupleSubs } from './TupleTypes';
 import TupleEditor from './TupleEditor.vue';
 
 
-const ex = new ExpressionBuilder();
-
-export const TupleVisuals = createVisuals({
+export const TupleVisuals = createVisuals<TupleSubs>()({
   type: TupleType,
   name: 'Tuple',
   description: 'A fixed size array of types',
@@ -162,11 +160,12 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
 
         const visuals = registry.getTypeVisuals(type);
         const inputSelected = visuals.inputs[typeSettings.input] as TypeVisualInput<TupleType, any, TupleSubs>;
+        const tupleSettings = typeSettings as TypeSettings<any, TupleSubs>;
 
         type.options.push(chosen.type);
-        (typeSettings as TypeSettings<any, number>).sub.push(chosen.settings);
+        tupleSettings.sub.push(chosen.settings);
 
-        inputSelected.onSubAdd(type.options.length, type, typeSettings);
+        inputSelected.onSubAdd(type.options.length, type, tupleSettings);
 
         return initializeSubs(registry, {
           type,

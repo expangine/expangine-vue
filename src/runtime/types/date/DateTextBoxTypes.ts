@@ -33,6 +33,7 @@ export const DateTextBoxInput: TypeVisualInput<DateType, DateTextBoxOptions> =
   description: 'A textbox allows single-line date input',
   input: DateTextBox,
   settings: DateTextBoxSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     prependInnerIcon: 'mdi-calendar',

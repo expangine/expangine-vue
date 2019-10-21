@@ -18,7 +18,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
       computedValue: V;
       invalid: boolean;
       visuals: TypeVisuals<T, S>;
-      inputSelected: TypeVisualInput<T, O>
+      inputSelected: TypeVisualInput<T, O, S>
     },
     {
       value: V;

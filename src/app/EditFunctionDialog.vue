@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { NoExpression, Expression, Traverser, ReturnExpression } from 'expangine-runtime';
+import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { editFunctionDialog } from './EditFunction';
 
@@ -95,7 +95,7 @@ export default Vue.extend({
       this.close(true);
     },
     onChange(event: TypeUpdateEvent) {
-      this.func.options.params = event.type;
+      this.func.options.params = event.type as ObjectType;
     },
     onProgramChange(program: Expression) {
       this.func.options.expression = program;

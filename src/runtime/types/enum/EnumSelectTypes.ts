@@ -34,6 +34,7 @@ export const EnumSelectInput: TypeVisualInput<EnumType, EnumSelectOptions, EnumS
   description: 'A dropdown where the option text is the enum key and the value is the enum value.',
   input: EnumSelect,
   settings: EnumSelectSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint || options.placeholder,

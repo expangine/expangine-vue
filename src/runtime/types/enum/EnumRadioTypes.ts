@@ -26,6 +26,7 @@ export const EnumRadioInput: TypeVisualInput<EnumType, EnumRadioOptions, EnumSub
   description: 'A group of radio where the labels are the enum keys and the values are the enum values.',
   input: EnumRadio,
   settings: EnumRadioSettings,
+  getComplexity: () => 1,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',

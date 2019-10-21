@@ -9,9 +9,8 @@ import NumberEditor from './NumberEditor.vue';
 import NumberOptions from './NumberOptions.vue';
 
 
-const ex = new ExpressionBuilder();
 
-export const NumberVisuals = createVisuals({
+export const NumberVisuals = createVisuals()({
   type: NumberType,
   name: 'Number',
   description: 'A number value',

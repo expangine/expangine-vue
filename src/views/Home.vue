@@ -209,6 +209,7 @@ import { sendNotification } from '../app/Notify';
 import { getRunProgram } from '../app/RunProgram';
 import { getDescribeData } from '../app/DescribeData';
 import { getEditFunction } from '../app/EditFunction';
+import { getInput } from '../app/Input';
 import { friendlyList } from '@/common';
 
 
@@ -349,7 +350,7 @@ export default Vue.extend({
     getSettingsData() {
       return copy(this.settings);
     },
-    parseSettingsData(data: any): TypeSettings | null {
+    parseSettingsData(data: any): TypeSettings<any, any> | null {
       return data ? copy(data) : null;
     },
     setSettingsData(data: any) {
@@ -422,8 +423,21 @@ export default Vue.extend({
         this.saveProgram(NoExpression.instance);
       });
     },
-    exportJson() {
+    async exportJson() {
       if (!this.type) {
+        return;
+      }
+
+      const name = await getInput({ 
+        title: 'Export',
+        message: 'The name of the JSON file',
+        label: 'Filename',
+        value: 'export-' + Date.now(),
+        confirm: 'Export',
+        unconfirm: 'Cancel',
+      });
+
+      if (!name) {
         return;
       }
 
@@ -435,7 +449,7 @@ export default Vue.extend({
         functions: this.getFunctionsData(),
       }, undefined, 2);
 
-      this.downloadFile('export-' + Date.now() + '.json', exported, 'text/json');
+      this.downloadFile(name + '.json', exported, 'text/json');
     },
     importJson() {
       const finput = document.createElement('input');

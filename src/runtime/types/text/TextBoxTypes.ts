@@ -38,6 +38,7 @@ export const TextBoxInput: TypeVisualInput<TextType, TextBoxOptions> =
   description: 'A textbox allows single-line plain textual input',
   input: TextBox,
   settings: TextBoxSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     autocomplete: 'new-password',

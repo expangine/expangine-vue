@@ -27,6 +27,7 @@ export const NumberSliderInput: TypeVisualInput<NumberType, NumberSliderOptions>
   description: 'A slider specifies a number value.',
   input: NumberSlider,
   settings: NumberSliderSettings,
+  getComplexity: () => 0,
   isVisible: (type) => isNumber(type.options.min) && isNumber(type.options.max),
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,

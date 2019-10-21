@@ -7,7 +7,7 @@ import ColorEditor from './ColorEditor.vue';
 import ColorOptions from './ColorOptions.vue';
 
 
-export const ColorVisuals = createVisuals(
+export const ColorVisuals = createVisuals()(
 {
   type: ColorType,
   name: 'Color',

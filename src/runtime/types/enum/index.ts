@@ -10,9 +10,10 @@ import { EnumRadioInput } from './EnumRadioTypes';
 import EnumEditor from './EnumEditor.vue';
 import EnumOptions from './EnumOptions.vue';
 import { initializeSubs } from '@/common';
+import { EnumSubs } from './EnumTypes';
 
 
-export const EnumVisuals = createVisuals({
+export const EnumVisuals = createVisuals<EnumSubs>()({
   type: EnumType,
   name: 'Enum',
   description: 'A list of key value pairs.',

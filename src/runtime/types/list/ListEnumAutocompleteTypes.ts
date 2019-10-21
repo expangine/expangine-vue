@@ -41,6 +41,7 @@ export const ListEnumAutocompleteInput: TypeVisualInput<ListType, ListEnumAutoco
   hideSubSettings: true,
   input: ListEnumAutocomplete,
   settings: ListEnumAutocompleteSettings,
+  getComplexity: () => 0,
   isVisible: (type) => type.options.item instanceof EnumType,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,

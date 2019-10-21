@@ -30,6 +30,7 @@ export const DatePickerInput: TypeVisualInput<DateType, DatePickerOptions> =
   description: 'A picker allows the user to select a date.',
   input: Picker,
   settings: PickerSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     prependInnerIcon: 'mdi-calendar',

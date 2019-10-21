@@ -29,6 +29,11 @@ export const TupleGridInput: TypeVisualInput<TupleType, TupleGridOptions, TupleS
   description: 'A grid allows you to determine how much space each type has for each resolution.',
   input: TupleGrid,
   settings: TupleGridSettings,
+  getComplexity: ({ type, settings, registry }) => 
+    type.options.reduce((max, element, index) => 
+      registry.getTypeVisualInputComplexity(element, settings.sub[index]), 0) + 
+    (settings.options.columns.reduce((sum, col) => sum + (col.cols as number), 0) > 12 ? 1 : 0)
+  ,
   isVisible: () => true,
   getDefaultOptions: () => ({
     columns: [],

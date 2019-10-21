@@ -35,6 +35,7 @@ export const TextRadioInput: TypeVisualInput<TextType, TextRadioOptions> =
   description: 'A radio offers a list of options and an "Other" option.',
   input: TextRadio,
   settings: TextRadioSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     items: [],

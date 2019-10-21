@@ -26,6 +26,7 @@ export const BooleanRadioInput: TypeVisualInput<BooleanType, BooleanRadioOptions
   description: 'A radio has a true and false option',
   input: BooleanRadio,
   settings: BooleanRadioSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     labelTrue: 'True',

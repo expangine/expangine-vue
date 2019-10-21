@@ -10,9 +10,7 @@ import TextEditor from './TextEditor.vue';
 import TextOptions from './TextOptions.vue';
 
 
-const ex = new ExpressionBuilder();
-
-export const TextVisuals = createVisuals({
+export const TextVisuals = createVisuals()({
   type: TextType,
   name: 'Text',
   description: 'A text value',

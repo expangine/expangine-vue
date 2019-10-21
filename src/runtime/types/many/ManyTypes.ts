@@ -15,6 +15,10 @@ export const ManyInput: TypeVisualInput<ManyType, ManyOptions, ManySubs> =
   description: 'A many type allows a value to be one of many types.',
   input: Many,
   settings: ManySettings,
+  getComplexity: ({ type, registry, settings }) => 
+    type.options.reduce((max, oneOf, index) => 
+      Math.max(max, registry.getTypeVisualInputComplexity(oneOf, settings.sub[index])), 0)
+  ,
   isVisible: () => true,
   getDefaultOptions: () => { /**/ },
   getName: () => '',

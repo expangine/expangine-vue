@@ -31,7 +31,7 @@
           <v-tab-item class="data-container" v-if="data">
             <ex-type-input
               v-model="data"
-              :type="type"
+              :type="dataType"
               :registry="registry"
               :settings="settings"
             ></ex-type-input>
@@ -86,6 +86,14 @@ export default Vue.extend({
     },
     canLoad(): boolean {
       return !!(this.input && this.type);
+    },
+    dataType(): Type | null {
+      if (!this.type || !this.removeDescribedRestrictions) {
+        return this.type;
+      }
+      const removed = this.registry.defs.cloneType(this.type);
+      removed.removeDescribedRestrictions();
+      return removed;
     },
   }, 
   methods: {

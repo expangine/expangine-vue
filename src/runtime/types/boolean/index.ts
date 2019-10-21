@@ -1,5 +1,5 @@
 
-import { BooleanType, BooleanOps, ExpressionBuilder, isString, isBoolean } from 'expangine-runtime';
+import { BooleanType, isString, isBoolean } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { BooleanCheckboxInput } from './BooleanCheckboxTypes';
@@ -10,9 +10,8 @@ import BooleanEditor from './BooleanEditor.vue';
 import BooleanOptions from './BooleanOptions.vue';
 
 
-const ex = new ExpressionBuilder();
 
-export const BooleanVisuals = createVisuals({
+export const BooleanVisuals = createVisuals()({
   type: BooleanType,
   name: 'Boolean',
   description: 'A boolean value is true/false, on/off, yes/no, etc.',

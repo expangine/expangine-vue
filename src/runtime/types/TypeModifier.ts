@@ -12,7 +12,7 @@ export interface TypeModifyInput
   typeSettings: TypeSettings;
 }
 
-export type TypeModifyHandler<T extends Type = Type> = () => Promise<TypeUpdateEvent<T> | false>;
+export type TypeModifyHandler<T extends Type = Type> = () => Promise<TypeUpdateEvent | false>;
 
 export interface TypeModifyOption<T extends Type = Type>
 {

@@ -39,6 +39,7 @@ export const TextAreaInput: TypeVisualInput<TextType, TextAreaOptions> =
   description: 'A textarea allows multi-line plain textual input',
   input: TextArea,
   settings: TextAreaSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     autocomplete: 'new-password',

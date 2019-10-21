@@ -38,6 +38,7 @@ export const NumberComboInput: TypeVisualInput<NumberType, NumberComboOptions> =
   description: 'A combobox allows the user to enter a number, optionally from a predefined list.',
   input: NumberCombo,
   settings: NumberComboSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     items: [],

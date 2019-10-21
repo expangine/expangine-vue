@@ -33,6 +33,7 @@ export const NumberTextBoxInput: TypeVisualInput<NumberType, NumberTextBoxOption
   description: 'A textbox allows single-line number input',
   input: NumberTextBox,
   settings: NumberTextBoxSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,

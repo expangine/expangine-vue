@@ -35,6 +35,7 @@ export const ColorPickerInput: TypeVisualInput<ColorType, ColorPickerOptions> =
   description: 'A picker allows the user to select a color.',
   input: Picker,
   settings: PickerSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     appendIcon: 'mdi-format-color-fill',

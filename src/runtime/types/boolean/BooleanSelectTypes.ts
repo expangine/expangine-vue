@@ -33,6 +33,7 @@ export const BooleanSelectInput: TypeVisualInput<BooleanType, BooleanSelectOptio
   description: 'A dropdown has a true and false option',
   input: BooleanSelect,
   settings: BooleanSelectSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     labelTrue: 'True',

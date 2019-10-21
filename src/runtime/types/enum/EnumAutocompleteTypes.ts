@@ -32,6 +32,7 @@ export const EnumAutocompleteInput: TypeVisualInput<EnumType, EnumAutocompleteOp
   description: 'An autocomplete where the option text is the enum key and the value is the enum value.',
   input: EnumAutocomplete,
   settings: EnumAutocompleteSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,

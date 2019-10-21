@@ -20,6 +20,7 @@ export const MapGridInput: TypeVisualInput<MapType, MapGridOptions, MapSubs> =
   description: 'A grid allows you to control how many columns and rows a Map takes up.',
   input: MapGrid,
   settings: MapGridSettings,
+  getComplexity: () => 2,
   isVisible: () => true,
   getDefaultOptions: () => ({
     minKeyWidth: 300,

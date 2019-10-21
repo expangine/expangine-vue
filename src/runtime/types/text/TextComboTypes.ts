@@ -36,6 +36,7 @@ export const TextComboInput: TypeVisualInput<TextType, TextComboOptions> =
   description: 'A combobox allows the user to enter text, optionally from a predefined list.',
   input: TextCombo,
   settings: TextComboSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     items: [],

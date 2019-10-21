@@ -4,14 +4,12 @@ import { createVisuals, TypeSubOption } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { getBuildType } from '@/app/BuildType';
-import { ManyInput } from './ManyTypes';
+import { ManyInput, ManySubs } from './ManyTypes';
 import ManyEditor from './ManyEditor.vue';
 import { initializeSubs, friendlyList } from '@/common';
 
 
-const ex = new ExpressionBuilder();
-
-export const ManyVisuals = createVisuals({
+export const ManyVisuals = createVisuals<ManySubs>()({
   type: ManyType,
   name: 'Many',
   description: 'A type that represents any number of possible types.',

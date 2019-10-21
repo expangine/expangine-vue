@@ -25,6 +25,7 @@ export const BooleanCheckboxInput: TypeVisualInput<BooleanType, BooleanCheckboxO
   description: 'A checkbox can be checked (true) or unchecked (false)',
   input: BooleanCheckbox,
   settings: BooleanCheckboxSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.hint,

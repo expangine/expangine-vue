@@ -160,6 +160,11 @@ export class Registry
     return visuals;
   }
 
+  public getTypeVisualInputComplexity(type: Type, settings: TypeSettings): number
+  {
+    return this.getTypeVisuals(type).inputs[settings.input].getComplexity({ type, settings, registry: this });
+  }
+
   public getTypeBuildersFor(input: TypeBuildInput): TypeBuildOption[]
   {
     const out: TypeBuildOption[] = [];

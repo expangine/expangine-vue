@@ -1,6 +1,6 @@
 
-import { ListType, TextType, ListOps, ExpressionBuilder, isString, isArray } from 'expangine-runtime';
-import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { ListType, TextType, ListOps, ExpressionBuilder, isString, isArray, ObjectType, objectReduce, objectValues } from 'expangine-runtime';
+import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';
@@ -12,11 +12,10 @@ import { ListObjectTableInput } from './ListObjectTableTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
 import { initializeSubs } from '@/common';
+import { ListSubs } from './ListTypes';
 
 
-const ex = new ExpressionBuilder();
-
-export const ListVisuals = createVisuals({
+export const ListVisuals = createVisuals<ListSubs>()({
   type: ListType,
   name: 'List',
   description: 'A list of values.',
@@ -52,14 +51,68 @@ export const ListVisuals = createVisuals({
       ? settings.sub.item
       : null;
   },
-  settingsFor: ({ registry, type, sub }) => ({ 
-    input: 'list', 
-    defaultValue: [], 
-    options: { ...ListListInput.getDefaultOptions(), ...registry.settingsOverrides, title: sub }, 
-    sub: { 
-      item: registry.getTypeSettings(type.options.item, sub), 
-    },
-  }),
+  settingsFor: ({ registry, type, sub }) => {
+    const item = type.options.item;
+    const settings = registry.getTypeSettings(item, sub);
+
+    if (item instanceof ObjectType) { 
+      const objectSettings = settings as TypeSettings<any, string>;
+      const complexity = objectReduce(objectSettings.sub, (propSetting, prop, max) => 
+        Math.max(max, registry.getTypeVisualInputComplexity(item.options.props[prop], propSetting))
+      , 0);
+
+      if (complexity === 0) {
+        return {
+          input: 'table',
+          defaultValue: [],
+          options: { 
+            ...ListObjectTableInput.getDefaultOptions(), 
+            ...registry.settingsOverrides,
+            title: sub, 
+            itemName: sub,
+            paging: true,
+            columns: objectValues(item.options.props, (propType, prop) => ({
+              prop,
+              label: prop,
+            })),
+          },
+          sub: {
+            item: settings,
+          },
+        };
+      } else {
+        return {
+          input: 'list',
+          defaultValue: [],
+          options: { 
+            ...ListListInput.getDefaultOptions(), 
+            ...registry.settingsOverrides,
+            title: sub, 
+            itemName: sub,
+            paging: true,
+            pageSize: complexity === 1 ? 5 : 1,
+          },
+          sub: {
+            item: settings,
+          },
+        };
+      }
+    }
+
+    return {
+      input: 'list', 
+      defaultValue: [], 
+      options: { 
+        ...ListListInput.getDefaultOptions(), 
+        ...registry.settingsOverrides, 
+        title: sub,
+        itemName: sub,
+      }, 
+      sub: { 
+        item: settings, 
+      },
+    };
+  },
   editor: ListEditor,
   options: ListOptions,
   defaultInput: 'list',

@@ -19,6 +19,9 @@ export const OptionalInput: TypeVisualInput<OptionalType, OptionalOptions, Optio
   description: 'An optional type allows a missing value.',
   input: Optional,
   settings: OptionalSettings,
+  getComplexity: ({ type, registry, settings }) => 
+    registry.getTypeVisualInputComplexity(type.options, settings.sub.innerType)
+  ,
   isVisible: () => true,
   getDefaultOptions: () => ({}),
   getName: () => '',

@@ -42,6 +42,7 @@ export const ListComboInput: TypeVisualInput<ListType, ListComboOptions, ListSub
   hideSubSettings: true,
   input: ListCombo,
   settings: ListComboSettings,
+  getComplexity: () => 0,
   isVisible: (type) => type.options.item instanceof TextType,
   getDefaultOptions: () => ({
     items: [],

@@ -13,7 +13,7 @@ export interface TypeBuildInput
   existingSettings?: TypeSettings;
 }
 
-export type TypeBuildHandler = () => Promise<TypeUpdateEvent<any, any, any> | false>;
+export type TypeBuildHandler = () => Promise<TypeUpdateEvent | false>;
 
 export interface TypeBuildOption
 {

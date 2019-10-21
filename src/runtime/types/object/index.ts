@@ -11,7 +11,7 @@ import ObjectEditor from './ObjectEditor.vue';
 
 const ex = new ExpressionBuilder();
 
-export const ObjectVisuals = createVisuals({
+export const ObjectVisuals = createVisuals<string>()({
   type: ObjectType,
   name: 'Object',
   description: 'An object is a collection of named fields.',

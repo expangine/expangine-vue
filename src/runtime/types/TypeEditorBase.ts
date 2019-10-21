@@ -2,7 +2,7 @@
 import Vue, { VueConstructor } from 'vue';
 import { Type, OptionalType, ManyType } from 'expangine-runtime';
 import { ListOptions } from '@/common';
-import { TypeVisuals, TypeVisualInput, TypeSettings, TypeUpdateEvent, SubsType } from './TypeVisuals';
+import { TypeVisuals, TypeVisualInput, TypeSettings, TypeUpdateEvent, SubsType, TypeSettingsAny } from './TypeVisuals';
 import { Registry } from '../Registry';
 
 
@@ -126,13 +126,13 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       update() {
         this.triggerChange({
           type: this.type,
-          settings: this.settings,
+          settings: this.settings as TypeSettingsAny,
         });
       },
       change(event: Partial<TypeUpdateEvent> = {}): void {
         this.triggerChange({
           type: this.type,
-          settings: this.settings,
+          settings: this.settings as TypeSettingsAny,
           ...event,
         });
       },

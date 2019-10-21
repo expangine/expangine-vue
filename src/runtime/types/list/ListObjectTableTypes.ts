@@ -42,6 +42,7 @@ export const ListObjectTableInput: TypeVisualInput<ListType, ListObjectTableOpti
   hideSubSettings: true,
   input: ListObjectTable,
   settings: ListObjectTableSettings,
+  getComplexity: () => 2,
   isVisible: (type) => isExactType(type.options.item, ObjectType),
   getDefaultOptions: () => ({
     columns: [],

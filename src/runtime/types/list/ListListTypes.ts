@@ -31,6 +31,7 @@ export const ListListInput: TypeVisualInput<ListType, ListListOptions, ListSubs>
   description: 'A list allows multiple values of a given type.',
   input: ListList,
   settings: ListListSettings,
+  getComplexity: () => 2,
   isVisible: () => true,
   getDefaultOptions: () => ({ pageSize: 10, pagination: {} }),
   getName: (options) => options.title || options.itemName,

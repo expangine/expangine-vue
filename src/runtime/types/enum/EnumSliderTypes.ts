@@ -31,6 +31,7 @@ export const EnumSliderInput: TypeVisualInput<EnumType, EnumSliderOptions, EnumS
   description: 'A slider where the labels are the enum keys and the values are the enum values.',
   input: EnumSlider,
   settings: EnumSliderSettings,
+  getComplexity: () => 0,
   isVisible: () => true,
   getDefaultOptions: () => ({
     label: '',

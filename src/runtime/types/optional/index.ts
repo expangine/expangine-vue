@@ -9,16 +9,8 @@ import { Registry } from '@/runtime/Registry';
 import OptionalEditor from './OptionalEditor.vue';
 
 
-const ex = new ExpressionBuilder();
 
-const isUndefined = (prop: string) => {
-  return ex.op(AnyOps.isEqual, {
-    value: ex.get(prop), 
-    test: ex.const(undefined),
-  });
-};
-
-export const OptionalVisuals = createVisuals({
+export const OptionalVisuals = createVisuals<OptionalSubs>()({
   type: OptionalType,
   name: 'Optional',
   description: 'An optional value',

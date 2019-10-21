@@ -41,6 +41,7 @@ export const ListEnumSelectInput: TypeVisualInput<ListType, ListEnumSelectOption
   hideSubSettings: true,
   input: ListEnumSelect,
   settings: ListEnumSelectSettings,
+  getComplexity: () => 0,
   isVisible: (type) => type.options.item instanceof EnumType,
   getDefaultOptions: () => ({}),
   getName: (options) => options.label || options.placeholder || options.hint,
