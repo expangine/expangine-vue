@@ -1,0 +1,397 @@
+{
+  "type": [
+    "obj",
+    {
+      "start": "num",
+      "end": "num",
+      "fizz": "text",
+      "buzz": "text"
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "start",
+          "cols": 12
+        },
+        {
+          "prop": "end",
+          "cols": 12
+        },
+        {
+          "prop": "fizz",
+          "cols": 12
+        },
+        {
+          "prop": "buzz",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "start": {
+        "input": "textbox",
+        "defaultValue": 0,
+        "options": {
+          "outlined": true,
+          "label": "Start"
+        }
+      },
+      "end": {
+        "input": "textbox",
+        "defaultValue": 0,
+        "options": {
+          "label": "End",
+          "outlined": true
+        }
+      },
+      "fizz": {
+        "input": "textbox",
+        "defaultValue": "",
+        "options": {
+          "autocomplete": "new-password",
+          "label": "Fizz",
+          "outlined": true
+        }
+      },
+      "buzz": {
+        "input": "textbox",
+        "defaultValue": "",
+        "options": {
+          "autocomplete": "new-password",
+          "label": "Buzz",
+          "outlined": true
+        }
+      }
+    }
+  },
+  "data": {
+    "start": 1,
+    "end": 100,
+    "fizz": "Fizz",
+    "buzz": "Buzz"
+  },
+  "program": [
+    "if",
+    [
+      [
+        [
+          "op",
+          "num:>",
+          {
+            "value": [
+              "get",
+              [
+                "start"
+              ]
+            ],
+            "test": [
+              "get",
+              [
+                "end"
+              ]
+            ]
+          }
+        ],
+        "Start must be greater than end."
+      ]
+    ],
+    [
+      "def",
+      [
+        [
+          "result",
+          [
+            "op",
+            "list:create",
+            {}
+          ]
+        ]
+      ],
+      [
+        "chain",
+        [
+          [
+            "for",
+            "i",
+            [
+              "get",
+              [
+                "start"
+              ]
+            ],
+            [
+              "get",
+              [
+                "end"
+              ]
+            ],
+            [
+              "def",
+              [
+                [
+                  "three",
+                  [
+                    "op",
+                    "num:%?",
+                    {
+                      "value": [
+                        "get",
+                        [
+                          "i"
+                        ]
+                      ],
+                      "by": 3
+                    }
+                  ]
+                ],
+                [
+                  "five",
+                  [
+                    "op",
+                    "num:%?",
+                    {
+                      "value": [
+                        "get",
+                        [
+                          "i"
+                        ]
+                      ],
+                      "by": 5
+                    }
+                  ]
+                ]
+              ],
+              [
+                "op",
+                "list:+",
+                {
+                  "list": [
+                    "get",
+                    [
+                      "result"
+                    ]
+                  ],
+                  "item": [
+                    "if",
+                    [
+                      [
+                        [
+                          "and",
+                          [
+                            [
+                              "get",
+                              [
+                                "three"
+                              ]
+                            ],
+                            [
+                              "get",
+                              [
+                                "five"
+                              ]
+                            ]
+                          ]
+                        ],
+                        [
+                          "op",
+                          "text:+",
+                          {
+                            "value": [
+                              "get",
+                              [
+                                "fizz"
+                              ]
+                            ],
+                            "append": [
+                              "get",
+                              [
+                                "buzz"
+                              ]
+                            ]
+                          }
+                        ]
+                      ],
+                      [
+                        [
+                          "get",
+                          [
+                            "three"
+                          ]
+                        ],
+                        [
+                          "get",
+                          [
+                            "fizz"
+                          ]
+                        ]
+                      ],
+                      [
+                        [
+                          "get",
+                          [
+                            "five"
+                          ]
+                        ],
+                        [
+                          "get",
+                          [
+                            "buzz"
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "get",
+                      [
+                        "i"
+                      ]
+                    ]
+                  ]
+                }
+              ]
+            ]
+          ],
+          [
+            "get",
+            [
+              "result"
+            ]
+          ]
+        ]
+      ]
+    ]
+  ],
+  "functions": {
+    "soundsLike": [
+      "func",
+      "bool",
+      [
+        "obj",
+        {
+          "a": "text",
+          "b": "text"
+        }
+      ],
+      [
+        "return",
+        [
+          "op",
+          "num:<=",
+          {
+            "value": [
+              "op",
+              "text:dist",
+              {
+                "value": [
+                  "op",
+                  "text:soundex",
+                  {
+                    "value": [
+                      "get",
+                      [
+                        "a"
+                      ]
+                    ]
+                  }
+                ],
+                "test": [
+                  "op",
+                  "text:soundex",
+                  {
+                    "value": [
+                      "get",
+                      [
+                        "b"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            ],
+            "test": 1
+          }
+        ]
+      ]
+    ],
+    "hueRotate": [
+      "func",
+      "color",
+      [
+        "obj",
+        {
+          "color": "color",
+          "amount": "num"
+        }
+      ],
+      [
+        "def",
+        [
+          [
+            "hsl",
+            [
+              "op",
+              "color:->hsl",
+              {
+                "value": [
+                  "get",
+                  [
+                    "color"
+                  ]
+                ]
+              }
+            ]
+          ]
+        ],
+        [
+          "chain",
+          [
+            [
+              "up",
+              [
+                "hsl",
+                "h"
+              ],
+              [
+                "op",
+                "num:+",
+                {
+                  "value": [
+                    "get",
+                    [
+                      "current"
+                    ]
+                  ],
+                  "addend": [
+                    "get",
+                    [
+                      "amount"
+                    ]
+                  ]
+                }
+              ]
+            ],
+            [
+              "return",
+              [
+                "op",
+                "color:<-hsl",
+                {
+                  "value": [
+                    "get",
+                    [
+                      "hsl"
+                    ]
+                  ]
+                }
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  }
+}

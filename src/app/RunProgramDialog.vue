@@ -29,6 +29,9 @@
         </v-tabs>
       </v-card-text>
       <v-card-actions>
+        <v-chip label>
+          Elapsed: {{ elapsedTime }}
+        </v-chip>
         <v-spacer></v-spacer>
         <v-btn 
           color="primary"
