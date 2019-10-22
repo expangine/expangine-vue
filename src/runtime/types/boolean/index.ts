@@ -28,6 +28,7 @@ export const BooleanVisuals = createVisuals()({
     
     return value ? 'true' : 'false';
   },
+  subNodes: () => [],
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 

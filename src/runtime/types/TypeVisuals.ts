@@ -17,6 +17,27 @@ export interface TypeSubOption extends TypeSub
   description: string;
 }
 
+export interface TypeSubNode
+{
+  sub: any;
+  subType: Type;
+  value: any;
+  valueType: Type;
+}
+
+/**
+ * sub: x, type: Map, value: Map, simple: false
+ *    sub: x, type: Number, value: 4, simple: true
+ *    sub: y, type: Number, value: 5, simple: true
+ * sub: y, type: List, value: [5, 6], simple: false
+ *    sub: 0, type: Number, value: 5, simple: true
+ *    sub: 1, type: Number, value: 6, simple: true
+ * 
+ * 
+ * { x: Map[x=>4, y=>5], y: [5, 6] }
+ * 
+ */
+
 export interface TypeVisuals<
   T extends Type = Type, 
   Subs extends SubsType = unknown, 
@@ -37,6 +58,11 @@ export interface TypeVisuals<
     process: (data: any, type: Type) => any,
     processInvalid: (data: any, type: Type) => any,
   }) => string;
+  subNodes: (options: { 
+    registry: Registry, 
+    type: T, 
+    value: any, 
+  }) => TypeSubNode[];
   subOptions: (registry: Registry, type: T) => TypeSubOption[];
   subSettings: (registry: Registry, type: T, settings: TypeSettings<any, Subs>, sub: TypeSub, forKey: boolean) => TypeSettings | null;
   settingsFor: (options: { registry: Registry, type: T, sub: Subs, overrides: Record<string, any> }) => TypeSettings<any, Subs>;

@@ -27,6 +27,7 @@ export const TextVisuals = createVisuals()({
 
     return value;
   },
+  subNodes: () => [],
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

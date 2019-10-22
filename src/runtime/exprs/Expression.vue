@@ -1,5 +1,5 @@
 <template>
-  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline }">
+  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline, highlighted }">
     <component
       v-if="readOnly"
       :is="visuals.viewer"
@@ -111,6 +111,16 @@ export default ExpressionBase().extend({
 
   &.multiline {
     display: block;
+  }
+
+  &.highlighted {
+    box-shadow: 0 0 3px #1E88E5;
+    background-color: #BBDEFB;
+
+    &:hover {
+      box-shadow: 0 0 3px #1E88E5;
+      background-color: #BBDEFB;
+    }
   }
 
   &.risky {

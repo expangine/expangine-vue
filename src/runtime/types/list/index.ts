@@ -36,6 +36,12 @@ export const ListVisuals = createVisuals<ListSubs>()({
       value.map((item: any) => padding + tab + registry.getTypeToString(item, type.options.item, tab, newline, padding + tab, process, processInvalid) + newline).join('') + 
       padding + ']';
   },
+  subNodes: ({ registry, type, value }) => value.map((item: any, index: any) => ({
+    sub: index,
+    subType: ListType.indexType,
+    value: item,
+    valueType: type.options.item,
+  })),
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'

@@ -28,6 +28,7 @@ export const DateVisuals = createVisuals()(
       ? (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear() + ' ' + value.getHours() + 'h' + value.getMinutes() + 'm'
       : (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
   },
+  subNodes: () => [],
   subOptions: () => [],
   subSettings: () => null,
   settingsFor: ({ registry, sub }) => ({ 

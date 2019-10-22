@@ -27,6 +27,7 @@ export const EnumVisuals = createVisuals<EnumSubs>()({
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => 
     registry.getTypeToString(value, type.options.value, tab, newline, padding, process, processInvalid)
   ,
+  subNodes: ({ registry, type, value }) => registry.getTypeSubNodes(value, type.options.value),
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options.value),
   subSettings: (registry, type, settings, sub, forKey) => {
     return forKey

@@ -16,6 +16,7 @@ export const AnyVisuals = createVisuals()({
   toString: ({ value, type, process, processInvalid }) => {
     return process(value, type);
   },
+  subNodes: () => [],
   subOptions: (registry, type) => [],
   subSettings: (registry, type, settings, sub) => null,
   settingsFor: ({ registry, sub }) => ({ 

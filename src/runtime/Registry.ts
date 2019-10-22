@@ -1,6 +1,6 @@
 
 import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder } from 'expangine-runtime';
-import { TypeVisuals, TypeSubOption, TypeSettings } from './types/TypeVisuals';
+import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
@@ -288,6 +288,16 @@ export class Registry
   ): string
   {
     return this.getTypeVisuals(type).toString({ registry: this, value, type, tab, newline, padding, process, processInvalid });
+  }
+
+  public getTypeSubNodes(value: any, type?: Type): TypeSubNode[]
+  {
+    if (!type) 
+    {
+      type = this.defs.describe(value);
+    }
+
+    return this.getTypeVisuals(type).subNodes({ value, type, registry: this });
   }
 
 }

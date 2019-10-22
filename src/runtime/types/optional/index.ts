@@ -25,6 +25,11 @@ export const OptionalVisuals = createVisuals<OptionalSubs>()({
 
     return registry.getTypeToString(value, type.options, tab, newline, padding, process, processInvalid);
   },
+  subNodes: ({ registry, type, value }) => 
+    value === undefined || value === null
+      ? []
+      : registry.getTypeSubNodes(value, type.options)
+  ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
   subSettings: (registry, type, settings, sub) => {
     return settings.sub.innerType;

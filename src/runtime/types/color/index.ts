@@ -25,6 +25,7 @@ export const ColorVisuals = createVisuals()(
 
     return ColorSpaceRGB.formatMap.bestfit.formatter(value);
   },
+  subNodes: () => [],
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = isString(key)
       ? key

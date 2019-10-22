@@ -43,7 +43,7 @@ export async function getRunProgram(options: Partial<RunProgramOptions> = {}): P
   const { registry, type, program, data } = runProgramDialog;
 
   const copyProgram = registry.defs.cloneExpression(program);
-  const copyData = type.fromJson(copy(type.toJson(data)));
+  const copyData = type.fromJson(type.toJson(data));
   const command = LiveRuntime.getCommand(copyProgram);
   const result = command(copyData);
 

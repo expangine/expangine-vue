@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextType, ColorType, ColorFormat, ColorSpaceRGB, Color } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 
@@ -200,4 +200,22 @@ export function renameVariable(startingAt: Expression, from: string, to: string)
       }
     }
   }));
+}
+
+export function getToStringSettings(fullHtml: boolean = false, wrapText: boolean = true)
+{
+  const colorFormat: ColorFormat<Color> = ColorSpaceRGB.formatMap.bestfit;
+
+  return {
+    tab: fullHtml ? '&nbsp;&nbsp;' : '  ',
+    newline: fullHtml ? '<br>' : '\n',
+    process: (data: any, t: Type) => 
+      t instanceof TextType
+        ? (wrapText ? '"' + data + '"' : data)
+        : t instanceof ColorType
+          ? '<span class="ex-string-color" style="background-color: ' + colorFormat.formatter(data) + '"></span>' +  colorFormat.formatter(data)
+          : undefined,
+    processInvalid: (data: any, t: Type) =>
+      '<span class="ex-string-invalid">' + JSON.stringify(data) + '</span>',
+  };
 }

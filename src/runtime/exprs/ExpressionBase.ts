@@ -25,6 +25,7 @@ export default function<E extends Expression>()
       computedTypeVisuals: TypeVisuals | null;
       conditionType: Type;
       invalid: boolean;
+      highlighted: boolean;
       hasValue: boolean;
       isRemovable: boolean;
       inOperation: boolean;
@@ -39,9 +40,10 @@ export default function<E extends Expression>()
       contextDetails: Record<string, string>;
       readOnly: boolean;
       registry: Registry;
-      settings: TypeSettings;
-      pathSettings: TypeSettings;
-      requiredType: Type;
+      settings: TypeSettings | null;
+      pathSettings: TypeSettings | null;
+      requiredType: Type | null;
+      highlight: Expression | null;
       showComplexity: boolean;
       mutates: boolean;
       canRemove: boolean;
@@ -74,12 +76,19 @@ export default function<E extends Expression>()
       },
       settings: {
         type: Object as () => TypeSettings,
+        default: null,
       },
       pathSettings: {
         type: Object as () => TypeSettings,
+        default: null,
       },
       requiredType: {
         type: Object as () => Type,
+        default: null,
+      },
+      highlight: {
+        type: Object as () => Expression,
+        default: null,
       },
       showComplexity: {
         type: Boolean,
@@ -121,6 +130,9 @@ export default function<E extends Expression>()
         return !!(this.requiredType 
           && this.computedTypeRaw
           && !this.requiredType.acceptsType(this.computedTypeRaw));
+      },
+      highlighted(): boolean {
+        return this.value === this.highlight;
       },
       hasValue(): boolean {
         return this.value && this.value !== NoExpression.instance;

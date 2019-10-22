@@ -152,6 +152,10 @@
               <v-icon>mdi-play</v-icon>
               Run
             </v-btn>
+            <v-btn text @click="debugProgram">
+              <v-icon>mdi-bug</v-icon>
+              Debug
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
       </v-col>
@@ -207,6 +211,7 @@ import { ObjectBuilder as DefaultBuilder } from '../runtime/types/object';
 import { getConfirmation } from '../app/Confirm';
 import { sendNotification } from '../app/Notify';
 import { getRunProgram } from '../app/RunProgram';
+import { getDebugProgram } from '../app/DebugProgram';
 import { getDescribeData } from '../app/DescribeData';
 import { getEditFunction } from '../app/EditFunction';
 import { getInput } from '../app/Input';
@@ -686,6 +691,21 @@ export default Vue.extend({
 
       try {
         await getRunProgram({ registry, type, program, data });
+      } catch (e) {
+        sendNotification({ message: 'There was an error in your program' });
+        
+        window.console.log(e);
+      }
+    },
+    async debugProgram() {
+      if (!this.type) {
+        return;
+      }
+
+      const { type, registry, program, data } = this;
+
+      try {
+        await getDebugProgram({ registry, type, program, data });
       } catch (e) {
         sendNotification({ message: 'There was an error in your program' });
         

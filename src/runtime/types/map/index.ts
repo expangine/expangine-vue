@@ -1,7 +1,7 @@
 
 import { Type, MapType, TextType, ObjectType, ManyType, MapOps, ExpressionBuilder, ListOps, isString, isMap} from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
-import { TypeSettings, createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeSettings, createVisuals, TypeSubNode } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { initializeSubs, isExactType } from '@/common';
@@ -46,6 +46,18 @@ export const MapVisuals = createVisuals<MapSubs>()({
     out += padding + '}';
 
     return out;
+  },
+  subNodes: ({ type, value }) => {
+    const nodes: TypeSubNode[] = [];
+    for (const [mapKey, mapValue] of value.entries()) {
+      nodes.push({
+        sub: mapKey,
+        subType: type.options.key,
+        value: mapValue,
+        valueType: type.options.value,
+      });
+    }
+    return nodes;
   },
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = '[ key ]';

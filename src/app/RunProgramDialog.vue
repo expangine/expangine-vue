@@ -44,21 +44,12 @@ import Vue from 'vue';
 import { diffLines } from 'diff';
 import { Type, AnyType, TextType, ColorType, ColorSpaceRGB } from 'expangine-runtime';
 import { runProgramDialog } from './RunProgram';
-import { ListOptions, friendlyList, asArray } from '../common';
+import { ListOptions, friendlyList, asArray, getToStringSettings } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
 import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
 
 
-const TAB = '  ';
-const NEWLINE = '\n';
-const PROCESS = (data: any, t: Type) => 
-  t instanceof TextType
-    ? '"' + data + '"'
-    : t instanceof ColorType
-      ? '<span class="color-square" style="background-color: ' + ColorSpaceRGB.formatMap.bestfit.formatter(data) + '"></span>' +  ColorSpaceRGB.formatMap.bestfit.formatter(data)
-      : undefined;
-const PROCESS_INVALID = (data: any) =>
-  '<span class="invalid">' + JSON.stringify(data) + '</span>';
+const toString = getToStringSettings();
 
 
 interface Part { value: string; added: boolean; removed: boolean; }
@@ -81,16 +72,16 @@ export default Vue.extend({
       return described || AnyType.baseType;
     },
     resultString(): string {
-      return this.registry.getTypeToString(this.result, this.resultType, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
+      return this.registry.getTypeToString(this.result, this.resultType, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
     },
     rawString(): string {
       return JSON.stringify(this.resultType.toJson(this.result), undefined, 2);
     },
     dataString(): string {
-      return this.registry.getTypeToString(this.data, this.type, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
+      return this.registry.getTypeToString(this.data, this.type, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
     },
     dataAfterString(): string {
-      return this.registry.getTypeToString(this.dataAfter, this.type, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
+      return this.registry.getTypeToString(this.dataAfter, this.type, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
     },
     showData(): boolean {
       return this.dataString !== this.dataAfterString;
@@ -135,21 +126,6 @@ export default Vue.extend({
   /deep/ .added {
     color: #02a024;
     background-color: #daf7da;
-  }
-  
-  /deep/ .invalid {
-    color: #e02618;
-    border-bottom: 1px solid #e02618;
-  }
-
-  /deep/ .color-square {
-    display: inline-block;
-    width: 11px;
-    height: 11px;
-    top: 2px;
-    position: relative;
-    margin-right: 3px;
-    margin-top: -2px;
   }
 }
 </style>

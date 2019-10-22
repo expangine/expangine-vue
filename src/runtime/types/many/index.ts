@@ -1,5 +1,5 @@
 
-import { ManyType, ExpressionBuilder, AnyOps, isSameClass, Type, isString } from 'expangine-runtime';
+import { ManyType, isSameClass, Type, isString } from 'expangine-runtime';
 import { createVisuals, TypeSubOption } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
@@ -32,6 +32,13 @@ export const ManyVisuals = createVisuals<ManySubs>()({
     return found 
       ? registry.getTypeToString(value, found, tab, newline, padding, process, processInvalid)
       : processInvalid(value, type);
+  },
+  subNodes: ({ registry, type, value }) => {
+    const found = type.options.find((t) => t.isValid(value));
+
+    return found
+      ? registry.getTypeSubNodes(value, found)
+      : [];
   },
   subOptions: (registry, type) => {
     const options: TypeSubOption[] = [];

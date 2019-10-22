@@ -37,6 +37,12 @@ export const TupleVisuals = createVisuals<TupleSubs>()({
         : '').join('') + 
       padding + ']';
   },
+  subNodes: ({ registry, type, value }) => value.map((item: any, index: any) => ({
+    sub: index,
+    subType: ListType.indexType,
+    value: item,
+    valueType: type.options[index],
+  })),
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'
