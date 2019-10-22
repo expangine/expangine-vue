@@ -7,6 +7,25 @@ You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/
 
 Expangine is a visual programming framework that allows you to create programs. You design the structure of your data, some test data to work on, and finally a program which processes that data. Expangine is **fully** customizable, so you can add your own data types and operations.
 
+The predefined expangine types:
+- `Any` (user can select which type & value they want)
+- `Boolean` (true / false)
+- `Color` (RGBA)
+- `Date`
+- `Enum` (has label-value pairs for the user to select from)
+- `Function` (has definition (input type), and implementation)
+- `List` (ie array)
+- `Many` (can be one of many defined types, user chooses which type & value)
+- `Map` (key-value pairs)
+- `Null`
+- `Number`
+- `Object` (with defined set of property names & types)
+- `Optional` (an optional subtype)
+- `Text`
+- `Tuple` (an array of fixed size where each element can have it's own type)
+
+[Future Types](https://github.com/expangine/expangine-runtime/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+Complex+Type)
+
 ### What can I do with this?
 
 This project is a sandbox to show you what comes with expangine currently. You could use the system to create your own Game maker, CMS, or API management console. For example, if you want to create game maker you would need to:
@@ -27,6 +46,29 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 5. Add your type to the defs (`import { defs } from 'expangine-runtime'; defs.addType(MyType);`)
 6. Add your type & operation visuals ([type visuals](https://github.com/expangine/expangine-vue/tree/master/src/runtime/types/number) and [operation visuals](https://github.com/expangine/expangine-vue/blob/master/src/runtime/ops/NumberOpsVisuals.ts#L5))
 7. Use your new types in your expangine programs!
+
+### Preview
+
+**Type View**
+![Type View](/docs/Type.png)
+**Data View**
+![Data View](/docs/Data.png)
+**Program View**
+![Program View](/docs/Program.png)
+**Execution**
+![Execution](/docs/Execution.png)
+**Debugger**
+![Debugger](/docs/Debugger.png)
+**Function Definition**
+![Function Definition](/docs/Function_Input.png)
+**Function Implementation**
+![Function Implementation](/docs/Function_Program.png)
+**Menu > File**
+![Menu > File](/docs/Menu_File.png)
+**Menu > Edit**
+![Menu > Edit](/docs/Menu_Edit.png)
+**Menu > Functions**
+![Menu > Functions](/docs/Menu_Functions.png)
 
 ## Project setup
 ```
