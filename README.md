@@ -3,6 +3,14 @@ A Vue & Vuetify component library for expangine, a visual programming framework.
 
 You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the program input, and develop the program. If you would like to download an example program [here's FizzBuzz](https://expangine.github.io/expangine-vue/examples/FizzBuzz.json). Import it via `File` > `Import`.
 
+Features of this example:
+- Import / Export your structure, data, program, and functions as JSON.
+- Use JSON or JS code to detect the data determine its types.
+- Undo / Redo history saved to your localStorage.
+- Add / Edit / Remove re-usable functions.
+- Run your program and see it's output. If your program would update your data see the data before, after, and the diff.
+- Debug your program and step through your program in any direction looking at the result of the current expression and the current state of your data.
+
 ## expangine
 
 Expangine is a visual programming framework that allows you to create programs. You design the structure of your data, some test data to work on, and finally a program which processes that data. Expangine is **fully** customizable, so you can add your own data types and operations.
@@ -37,7 +45,6 @@ This project is a sandbox to show you what comes with expangine currently. You c
 
 Once you get to step 3, you now have a tool that can create a game. Step 4 is actually giving your game it's appearance and behavior. What is generated is simple JSON, but could be compiled right down to code that doesn't even require expangine as a dependency.
 
-
 ### Adding your own Type
 1. Implement `Type` ([example](https://github.com/expangine/expangine-runtime/blob/master/src/types/Number.ts#L23))
 2. Define `operations`  for your type ([example](https://github.com/expangine/expangine-runtime/blob/master/src/ops/NumberOps.ts#L10))
@@ -46,6 +53,7 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 5. Add your type to the defs (`import { defs } from 'expangine-runtime'; defs.addType(MyType);`)
 6. Add your type & operation visuals ([type visuals](https://github.com/expangine/expangine-vue/tree/master/src/runtime/types/number) and [operation visuals](https://github.com/expangine/expangine-vue/blob/master/src/runtime/ops/NumberOpsVisuals.ts#L5))
 7. Use your new types in your expangine programs!
+
 
 ### Preview
 
@@ -59,6 +67,10 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 ![Execution](/docs/Execution.png)
 **Debugger**
 ![Debugger](/docs/Debugger.png)
+**Detect Types from Data**
+![Detect Input](/docs/Describe_Input.png)
+![Detected Type](/docs/Describe_Type.png)
+![Detected Data](/docs/Describe_Data.png)
 **Function Definition**
 ![Function Definition](/docs/Function_Input.png)
 **Function Implementation**
