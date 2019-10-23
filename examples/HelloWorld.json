@@ -1,0 +1,41 @@
+{
+  "type": [
+    "obj",
+    {
+      "message": "text"
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "message",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "message": {
+        "input": "textbox",
+        "defaultValue": "",
+        "options": {
+          "autocomplete": "new-password",
+          "label": "Message",
+          "outlined": true
+        }
+      }
+    }
+  },
+  "data": {
+    "message": "Hello World"
+  },
+  "program": [
+    "get",
+    [
+      "message"
+    ]
+  ],
+  "functions": {}
+}

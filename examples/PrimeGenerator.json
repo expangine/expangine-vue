@@ -1,0 +1,222 @@
+{
+  "type": [
+    "obj",
+    {
+      "primes": [
+        "num",
+        {
+          "min": 1,
+          "whole": true
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "primes",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "primes": {
+        "input": "textbox",
+        "defaultValue": 0,
+        "options": {
+          "label": "# of Prime Numbers",
+          "outlined": true
+        }
+      }
+    }
+  },
+  "data": {
+    "primes": 100
+  },
+  "program": [
+    "def",
+    [
+      [
+        "primeList",
+        [
+          "constant",
+          [
+            2
+          ]
+        ]
+      ],
+      [
+        "currentNumber",
+        3
+      ]
+    ],
+    [
+      "chain",
+      [
+        [
+          "while",
+          [
+            "op",
+            "num:<",
+            {
+              "value": [
+                "get",
+                [
+                  "primeList",
+                  "length"
+                ]
+              ],
+              "test": [
+                "get",
+                [
+                  "primes"
+                ]
+              ]
+            }
+          ],
+          [
+            "chain",
+            [
+              [
+                "if",
+                [
+                  [
+                    [
+                      "not",
+                      [
+                        "invoke",
+                        "listHasDivisor",
+                        {
+                          "list": [
+                            "get",
+                            [
+                              "primeList"
+                            ]
+                          ],
+                          "divisible": [
+                            "get",
+                            [
+                              "currentNumber"
+                            ]
+                          ]
+                        }
+                      ]
+                    ],
+                    [
+                      "op",
+                      "list:+",
+                      {
+                        "list": [
+                          "get",
+                          [
+                            "primeList"
+                          ]
+                        ],
+                        "item": [
+                          "get",
+                          [
+                            "currentNumber"
+                          ]
+                        ]
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "noop"
+                ]
+              ],
+              [
+                "up",
+                [
+                  "currentNumber"
+                ],
+                [
+                  "op",
+                  "num:+",
+                  {
+                    "value": [
+                      "get",
+                      [
+                        "current"
+                      ]
+                    ],
+                    "addend": 2
+                  }
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "get",
+          [
+            "primeList"
+          ]
+        ]
+      ]
+    ]
+  ],
+  "functions": {
+    "listHasDivisor": [
+      "func",
+      "bool",
+      [
+        "obj",
+        {
+          "list": [
+            "list",
+            "num"
+          ],
+          "divisible": "num"
+        }
+      ],
+      [
+        "return",
+        [
+          "op",
+          "list:contains",
+          {
+            "list": [
+              "get",
+              [
+                "list"
+              ]
+            ],
+            "item": [
+              "get",
+              [
+                "divisible"
+              ]
+            ],
+            "isEqual": [
+              "op",
+              "num:%?",
+              {
+                "value": [
+                  "get",
+                  [
+                    "divisibleValue"
+                  ]
+                ],
+                "by": [
+                  "get",
+                  [
+                    "listItem"
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "test": "listItem",
+            "value": "divisibleValue"
+          }
+        ]
+      ]
+    ]
+  }
+}
