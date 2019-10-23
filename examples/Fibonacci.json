@@ -1,0 +1,165 @@
+{
+  "type": [
+    "obj",
+    {
+      "count": [
+        "num",
+        {
+          "min": 2,
+          "whole": true
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "count",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "count": {
+        "input": "textbox",
+        "defaultValue": 2,
+        "options": {
+          "label": "# of Fibonacci Numbers",
+          "hint": "How many numbers in the fibonacci sequence do you want?",
+          "outlined": true
+        }
+      }
+    }
+  },
+  "data": {
+    "count": 10
+  },
+  "program": [
+    "def",
+    [
+      [
+        "fibonacci",
+        [
+          "constant",
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      [
+        "one",
+        1
+      ],
+      [
+        "two",
+        2
+      ]
+    ],
+    [
+      "chain",
+      [
+        [
+          "while",
+          [
+            "op",
+            "num:<",
+            {
+              "value": [
+                "get",
+                [
+                  "fibonacci",
+                  "length"
+                ]
+              ],
+              "test": [
+                "get",
+                [
+                  "count"
+                ]
+              ]
+            }
+          ],
+          [
+            "op",
+            "list:+",
+            {
+              "list": [
+                "get",
+                [
+                  "fibonacci"
+                ]
+              ],
+              "item": [
+                "op",
+                "num:+",
+                {
+                  "value": [
+                    "get",
+                    [
+                      "fibonacci",
+                      [
+                        "op",
+                        "num:-",
+                        {
+                          "value": [
+                            "get",
+                            [
+                              "fibonacci",
+                              "length"
+                            ]
+                          ],
+                          "subtrahend": [
+                            "get",
+                            [
+                              "one"
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  ],
+                  "addend": [
+                    "get",
+                    [
+                      "fibonacci",
+                      [
+                        "op",
+                        "num:-",
+                        {
+                          "value": [
+                            "get",
+                            [
+                              "fibonacci",
+                              "length"
+                            ]
+                          ],
+                          "subtrahend": [
+                            "get",
+                            [
+                              "two"
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        [
+          "get",
+          [
+            "fibonacci"
+          ]
+        ]
+      ]
+    ]
+  ],
+  "functions": {}
+}
