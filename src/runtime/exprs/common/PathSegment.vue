@@ -1,5 +1,5 @@
 <template>
-  <span class="ex-path-segment">
+  <span class="path-segment">
 
     <v-menu key="menu" max-height="400" offset-y>
       <template #activator="{ on }">
@@ -224,10 +224,10 @@ export default ExpressionBase().extend({
 </script>
 
 <style lang="less" scoped>
-.ex-path-segment {
+.path-segment {
   position: relative;
-  // display: flex;
-  // align-items: center;
-  // flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

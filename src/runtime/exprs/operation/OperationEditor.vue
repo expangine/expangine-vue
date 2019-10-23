@@ -107,7 +107,7 @@
               <span 
                 v-if="hasParameter(section)" 
                 class="param-span"
-                :class="{ 'blue-grey lighten-4 mx-3': mutatesParameter(section) }"
+                :class="{ 'blue-grey lighten-4': mutatesParameter(section) }"
                 :style="innerStyle">
 
                 <v-tooltip top v-if="!readOnly">

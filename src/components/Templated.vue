@@ -1,7 +1,7 @@
 <template>
   <span>
     <template v-for="(name, index) in parts">
-      <span :key="index" v-if="isText(index)" v-html="name" :style="textStyle"></span>
+      <span :key="index" v-if="isText(index)" :style="textStyle" v-html="name" class="mx-1"></span>
       <span :key="index" v-else>
         <slot name="section" :section="name">{{ name }}</slot>
       </span>
