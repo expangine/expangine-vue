@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { FunctionType, AnyType, ObjectType, NoExpression } from 'expangine-runtime';
+import { Type, FunctionType, AnyType, ObjectType, NoExpression } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
@@ -12,6 +12,7 @@ export interface EditFunctionOptions
   name: string;
   saveAs: string;
   func: FunctionType;
+  requiredParamsType: Type;
   settings: TypeSettings;
   visible: boolean;
   registry: Registry;
@@ -28,6 +29,7 @@ export function getEditFunctionDefaults(): EditFunctionOptions
       params: new ObjectType({ props: {} }),
       expression: NoExpression.instance,
     }),
+    requiredParamsType: ObjectType.baseType,
     settings: null as unknown as TypeSettings,
     visible: false,
     registry: null as unknown as Registry,

@@ -3,12 +3,8 @@
     <v-list-item>
       <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
-          :type="type"
-          :settings="settings"
-          :registry="registry"
-          :parent="parent"
-          :read-only="readOnly"
-          :hide-settings="hideSettings"
+          v-bind="$props"
+          :disable-sub-settings="false"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -41,7 +37,10 @@
       <v-list-item-content class="pa-0">
         <ex-type-editor
           :type="type.options.key"
+          :required-type="requiredKey"
+          :required-type-options="requiredTypeOptions"
           :settings="settings.sub.key"
+          :highlight="highlight"
           :registry="registry"
           :parent="type"
           :read-only="readOnly"
@@ -70,7 +69,10 @@
       <v-list-item-content class="pa-0">
         <ex-type-editor
           :type="type.options.value"
+          :required-type="requiredValue"
+          :required-type-options="requiredTypeOptions"
           :settings="settings.sub.value"
+          :highlight="highlight"
           :registry="registry"
           :parent="type"
           :read-only="readOnly"
@@ -93,6 +95,18 @@ import TypeEditorBase from '../TypeEditorBase';
 
 export default TypeEditorBase<MapType, any, MapSubs>().extend({
   name: 'MapEditor',
+  computed: {
+    requiredKey() {
+      return this.requiredType && this.requiredType instanceof MapType
+        ? this.requiredType.options.key
+        : null;
+    },
+    requiredValue() {
+      return this.requiredType && this.requiredType instanceof MapType
+        ? this.requiredType.options.value
+        : null;
+    },
+  },
   methods: {
     onChangeKey(event: TypeUpdateEvent) {
       this.type.options.key = event.type;

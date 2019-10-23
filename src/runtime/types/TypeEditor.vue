@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visuals">
+  <div v-if="visuals" :class="classes">
     <component 
       :is="visuals.editor" 
       v-bind="$props"

@@ -5,7 +5,7 @@
         <v-list-item-avatar class="cell-top pt-1 mr-0">
           <v-menu :close-on-content-click="false" :disabled="readOnly">
             <template #activator="{ on }">
-              <v-btn icon v-on="on">
+              <v-btn icon v-on="on" :color="color">
                 <v-icon>mdi-dots-horizontal</v-icon>
               </v-btn>
             </template>
@@ -30,8 +30,11 @@
         <v-list-item-content class="pa-0">
           <ex-type-editor
             :type="innerType"
+            :required-type="requiredTypeFor(innerType, index)"
+            :required-type-options="requiredTypeOptions"
             :parent="type"
             :settings="settings.sub[index]"
+            :highlight="highlight"
             :registry="registry"
             :read-only="readOnly"
             :hide-settings="hideSettings"
@@ -44,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ManyType, Expression, ExpressionBuilder } from 'expangine-runtime';
+import { Type, ManyType, NullType, Expression, ExpressionBuilder } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
@@ -55,6 +58,16 @@ import TypeEditorBase from '../TypeEditorBase';
 export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
   name: 'ManyEditor',
   methods: {
+    requiredTypeFor(type: Type, index: number): Type | null {
+      if (!(this.requiredType instanceof ManyType)) {
+        return null;
+      }
+
+      const subs = this.requiredType.options;
+      const valid = subs.find((sub) => this.isValidType(sub, type));
+
+      return valid || NullType.baseType;
+    },
     async removeType(index: number, innerType: Type) {
       if (!await getConfirmation()) {
         return;

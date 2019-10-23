@@ -1,6 +1,6 @@
 
 import Vue, { VueConstructor } from 'vue';
-import { Type, OptionalType, ManyType } from 'expangine-runtime';
+import { Type, OptionalType, ManyType, TypeCompatibleOptions } from 'expangine-runtime';
 import { ListOptions } from '@/common';
 import { TypeVisuals, TypeVisualInput, TypeSettings, TypeUpdateEvent, SubsType, TypeSettingsAny } from './TypeVisuals';
 import { Registry } from '../Registry';
@@ -14,6 +14,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       update(): void;
       change(event?: Partial<TypeUpdateEvent>): void;
       triggerChange(event: TypeUpdateEvent): void;
+      isValidType(requiredType: Type | null, type: Type): boolean;
     },
     {
       isRequired: boolean;
@@ -25,12 +26,20 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       inputSelected: TypeVisualInput<T, O, S>;
       inputSettings: VueConstructor;
       inputInput: VueConstructor;
+      invalid: boolean;
+      highlighted: boolean;
+      highlightColor: string;
+      classes: string;
+      color: string;
       summary: string;
       hasDefault: boolean;
       hideSubSettings: boolean;
     },
     {
       type: T;
+      requiredType: Type | null;
+      requiredTypeOptions: TypeCompatibleOptions | null;
+      highlight: Map<Type, string> | null;
       parent: Type;
       readOnly: boolean;
       registry: Registry;
@@ -43,6 +52,18 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       type: {
         type: Object as () => T,
         required: true,
+      },
+      requiredType: {
+        type: Object as () => T,
+        default: null,
+      },
+      requiredTypeOptions: {
+        type: Object as () => TypeCompatibleOptions,
+        default: null,
+      },
+      highlight: {
+        type: Map as unknown as () => Map<Type, string>,
+        default: null,
       },
       parent: {
         type: Object as () => Type,
@@ -115,6 +136,29 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       hideSubSettings(): boolean {
         return !!this.inputSelected.hideSubSettings;
       },
+      invalid(): boolean {
+        return !this.isValidType(this.requiredType, this.type);
+      },
+      color(): string {
+        return this.invalid 
+          ? 'error' 
+          : 'grey darken-2';
+      },
+      highlighted(): boolean {
+        return !!(this.highlight && this.highlight.has(this.type));
+      },
+      highlightColor(): string {
+        return this.highlight
+          ? this.highlight.get(this.type) || ''
+          : '';
+      },
+      classes(): string {
+        return this.highlighted
+          ? this.highlightColor
+          : this.invalid 
+            ? 'red lighten-5' 
+            : '';
+      },
       summary(): string {
         return this.inputSelected.getSummary(this.settings.options);
       },
@@ -138,6 +182,13 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
       triggerChange(event: TypeUpdateEvent) {
         this.$emit('change', event);
+      },
+      isValidType(requiredType: Type | null, type: Type): boolean {
+        return requiredType
+          ? this.requiredTypeOptions
+            ? requiredType.isCompatible(type, this.requiredTypeOptions)
+            : requiredType.acceptsType(type)
+          : true;
       },
     },
   });

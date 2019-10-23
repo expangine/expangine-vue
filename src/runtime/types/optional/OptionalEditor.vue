@@ -2,22 +2,19 @@
   <v-list-item>
     <v-list-item-avatar class="cell-top mr-0 pt-1">
       <ex-type-editor-menu
+        v-bind="$props"
         icon="mdi-help-circle-outline"
-        :type="type"
-        :settings="settings"
-        :registry="registry"
-        :parent="parent"
-        :read-only="readOnly"
-        :disable-sub-settings="disableSubSettings"
-        :hide-settings="hideSettings"
         @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">
       <ex-type-editor
         :type="type.options"
+        :required-type="requiredInner"
+        :required-type-options="requiredTypeOptions"
         :parent="type"
         :settings="settings.sub.innerType"
+        :highlight="highlight"
         :registry="registry"
         :read-only="readOnly"
         :hide-settings="hideSettings"
@@ -28,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { OptionalType } from 'expangine-runtime';
+import { Type, OptionalType } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { OptionalSubs, OptionalOptions } from './OptionalTypes';
 import TypeEditorBase from '../TypeEditorBase';
@@ -36,6 +33,13 @@ import TypeEditorBase from '../TypeEditorBase';
 
 export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().extend({
   name: 'OptionalEditor',
+  computed: {
+    requiredInner(): Type | null {
+      return this.requiredType && this.requiredType instanceof OptionalType
+        ? this.requiredType.options
+        : null;
+    },
+  },
   methods: {
     onChange(event: TypeUpdateEvent) {
       this.type.options = event.type;

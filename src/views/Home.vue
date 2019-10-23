@@ -165,6 +165,8 @@
         <v-list v-if="isDesign">
           <ex-type-editor
             :type="type"
+            :required-type="requiredType"
+            :highlight="highlightTypes"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
@@ -203,7 +205,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, Expression, isString, isObject, NoExpression, objectMap, FunctionType } from 'expangine-runtime';
+import { Type, defs, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import Registry from '../runtime';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
@@ -218,6 +220,8 @@ import { getInput } from '../app/Input';
 import { friendlyList } from '@/common';
 
 
+
+const tp = new TypeBuilder();
 
 function copy(a: any): any {
   return JSON.parse(JSON.stringify(a));
@@ -244,6 +248,14 @@ export default Vue.extend({
   data: () => ({
     mode: 0,
     type: null as null | Type,
+    requiredType: null, 
+    /* TEST
+    tp.object({
+      'x': tp.number(),
+      'y': tp.list(tp.text()),
+      '*': tp.many(tp.bool(), tp.number(), tp.date(), tp.text()),
+    }),
+    */
     settings: null as null | TypeSettings<any>,
     registry: Registry,
     readOnly: false,
@@ -258,6 +270,18 @@ export default Vue.extend({
     pushing: false,
   }),
   computed: {
+    highlightTypes(): Map<Type, string> {
+      const highlight = new Map();
+      /* TEST
+      if (this.type) {
+        const texts = this.type.traverse(Traverser.list<Type>().filterClass(TextType));
+        texts.forEach((result) => {
+          highlight.set(result.value, 'blue lighten-4');
+        });
+      }
+      */
+      return highlight;
+    },
     isReady(): boolean {
       return !!(this.type && this.settings);
     },

@@ -3,12 +3,8 @@
     <v-list-item>
       <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
-          :type="type"
-          :settings="settings"
-          :registry="registry"
-          :parent="parent"
-          :read-only="readOnly"
-          :hide-settings="hideSettings"
+          v-bind="$props"
+          :disable-sub-settings="false"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -27,14 +23,17 @@
         ></v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
-    <v-list-item>
+    <v-list-item class="pr-0">
       <v-list-item-avatar class="cell-top mr-0 pt-1">
         <v-icon>mdi-format-list-bulleted</v-icon>
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor
           :type="type.options.item"
+          :required-type="requiredItem"
+          :required-type-options="requiredTypeOptions"
           :settings="settings.sub.item"
+          :highlight="highlight"
           :registry="registry"
           :parent="type"
           :read-only="readOnly"
@@ -76,6 +75,11 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
       }
 
       return friendlyList(things);
+    },
+    requiredItem() {
+      return this.requiredType && this.requiredType instanceof ListType
+        ? this.requiredType.options.item
+        : null;
     },
   },
   methods: {

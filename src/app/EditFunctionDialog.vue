@@ -20,6 +20,7 @@
             <ex-type-editor
               hide-settings
               :type="func.options.params"
+              :required-type="requiredParamsType"
               :registry="registry"
               :settings="settings"
               @change="onChange"
@@ -45,7 +46,13 @@
         >Cancel</v-btn>
         <v-spacer></v-spacer>
         <v-alert 
-          v-if="!hasReturn"
+          v-if="!hasValidParams"
+          dense
+          type="error"
+          class="mb-0 mr-3"
+        >Your function parameters must be an object.</v-alert>
+        <v-alert 
+          v-else-if="!hasReturn"
           dense
           type="error"
           class="mb-0 mr-3"
@@ -80,6 +87,9 @@ export default Vue.extend({
     },
     disableSave(): boolean {
       return this.func.options.expression === NoExpression.instance;
+    },
+    hasValidParams(): boolean {
+      return this.requiredParamsType.acceptsType(this.func.options.params);
     },
     hasReturn(): boolean {
       return 0 < this.func.options.expression.traverse(

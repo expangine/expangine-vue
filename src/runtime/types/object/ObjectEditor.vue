@@ -3,12 +3,8 @@
     <v-list-item>
       <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
-          :type="type"
-          :settings="settings"
-          :registry="registry"
-          :parent="parent"
-          :read-only="readOnly"
-          :hide-settings="hideSettings"
+          v-bind="$props"
+          :disable-sub-settings="false"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -40,7 +36,7 @@
       <tbody>
         <template v-for="(propType, prop) in type.options.props">
           <tr :key="prop">
-            <td class="text-right border-right cell-top pa-4">
+            <td class="text-right border-right cell-top pa-3 pt-4">
               <v-menu :disabled="readOnly">
                 <template #activator="{ on }">
                   <v-chip label link outlined v-on="on" color="accent" class="property-element">{{ prop }}</v-chip>
@@ -63,10 +59,13 @@
                 ></ex-type-hook-list>
               </v-menu>
             </td>
-            <td class="pl-0">
+            <td class="px-0">
               <ex-type-editor
                 :type="propType"
+                :required-type="requiredTypeFor(prop)"
+                :required-type-options="requiredTypeOptions"
                 :parent="type"
+                :highlight="highlight"
                 :registry="registry"
                 :settings="settings.sub[prop]"
                 :read-only="readOnly"
@@ -123,6 +122,14 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
     },
   },
   methods: {
+    requiredTypeFor(prop: string) {
+      if (!(this.requiredType instanceof ObjectType)) {
+        return null;
+      }
+
+      return this.requiredType.options.props[prop] 
+        || this.requiredType.getWildcardType();
+    },
     async add() {
       const chosen = await getBuildType({
         input: {

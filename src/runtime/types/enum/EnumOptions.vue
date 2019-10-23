@@ -10,7 +10,10 @@
           <ex-type-editor
             disable-sub-settings
             :type="type.options.key"
+            :required-type="requiredKey"
+            :required-type-options="requiredTypeOptions"
             :settings="settings.sub.key"
+            :highlight="highlight"
             :registry="registry"
             :parent="type"
             :read-only="readOnly"
@@ -26,6 +29,8 @@
           <ex-type-editor
             disable-sub-settings
             :type="type.options.value"
+            :required-type="requiredValue"
+            :required-type-options="requiredTypeOptions"
             :settings="settings.sub.value"
             :registry="registry"
             :parent="type"
@@ -98,6 +103,18 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
   data: () => ({
     constants: [] as Array<[any, any]>,
   }),
+  computed: {
+    requiredKey() {
+      return this.requiredType && this.requiredType instanceof EnumType
+        ? this.requiredType.options.key
+        : null;
+    },
+    requiredValue() {
+      return this.requiredType && this.requiredType instanceof EnumType
+        ? this.requiredType.options.value
+        : null;
+    },
+  },
   watch: {
     'type.options.constants': {
       immediate: true,

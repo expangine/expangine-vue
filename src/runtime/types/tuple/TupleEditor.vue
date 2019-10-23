@@ -3,12 +3,8 @@
     <v-list-item>
       <v-list-item-avatar class="cell-top pt-1 mr-3">
         <ex-type-editor-menu
-          :type="type"
-          :settings="settings"
-          :registry="registry"
-          :parent="parent"
-          :read-only="readOnly"
-          :hide-settings="hideSettings"
+          v-bind="$props"
+          :disable-sub-settings="false"
           @change="triggerChange"
         ></ex-type-editor-menu>
       </v-list-item-avatar>
@@ -53,8 +49,11 @@
         <v-list-item-content class="pa-0">
           <ex-type-editor
             :type="innerType"
+            :required-type="requiredTypeFor(index)"
+            :required-type-options="requiredTypeOptions"
             :parent="type"
             :settings="settings.sub[index]"
+            :highlight="highlight"
             :registry="registry"
             :read-only="readOnly"
             :hide-settings="hideSettings"
@@ -67,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { Type, TupleType, Expression, ExpressionBuilder, ListOps } from 'expangine-runtime';
+import { Type, TupleType, Expression, ExpressionBuilder, ListOps, NullType } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
@@ -79,6 +78,13 @@ import TypeEditorBase from '../TypeEditorBase';
 export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
   name: 'TupleEditor',
   methods: {
+    requiredTypeFor(index: number) {
+      if (!(this.requiredType instanceof TupleType)) {
+        return null;
+      }
+
+      return this.requiredType.options[index] || NullType.baseType;
+    },
     async removeType(index: number, innerType: Type) {
       if (!await getConfirmation()) {
         return;

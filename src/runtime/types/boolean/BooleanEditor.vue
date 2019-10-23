@@ -2,13 +2,7 @@
   <v-list-item>
     <v-list-item-avatar class="cell-top pt-1 mr-3">
       <ex-type-editor-menu
-        :type="type"
-        :settings="settings"
-        :registry="registry"
-        :parent="parent"
-        :read-only="readOnly"
-        :disable-sub-settings="disableSubSettings"
-        :hide-settings="hideSettings"
+        v-bind="$props"
         @change="triggerChange"
       ></ex-type-editor-menu>
     </v-list-item-avatar>

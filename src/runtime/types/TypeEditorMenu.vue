@@ -4,11 +4,37 @@
     v-model="editing"
   >
     <template #activator="{ on }">
-      <v-btn icon v-on="on">
+      <v-btn icon v-on="on" :color="color">
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
     <v-list>
+      <v-menu
+        v-if="invalid"
+        offset-x
+        min-width="400"
+      >
+        <template #activator="{ on }">
+          <v-list-item v-on="on">
+            <v-list-item-content class="error--text">
+              <v-list-item-title>
+                Type Error
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                The defined type does not match the required type.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+        <v-card>
+          <v-card-title>
+            Expected Type
+          </v-card-title>
+          <v-card-text>
+            <code class="d-block pa-3" v-html="requiredTypeString"></code>
+          </v-card-text>
+        </v-card>
+      </v-menu>
       <v-menu 
         offset-x
         min-width="400"
@@ -17,9 +43,14 @@
       >
         <template #activator="{ on }">
           <v-list-item v-on="on">
-            <v-list-item-title>
-              Configure Type
-            </v-list-item-title>
+            <v-list-item-content>
+              <v-list-item-title>
+                Configure Type
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Define the visual input, the default value, and the acceptable values.
+              </v-list-item-subtitle>
+            </v-list-item-content>
           </v-list-item>
         </template>
         <v-card>
@@ -98,9 +129,14 @@
       >
         <template #activator="{ on }">
           <v-list-item v-on="on">
-            <v-list-item-title>
-              Edit {{ inputSelected.name }}
-            </v-list-item-title>
+            <v-list-item-content>
+              <v-list-item-title>
+                Edit {{ inputSelected.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Configure how the visual input looks.
+              </v-list-item-subtitle>
+            </v-list-item-content>
           </v-list-item>
         </template>
         <v-card>
@@ -165,11 +201,13 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
-import { ListOptions } from '../../common';
+import { ListOptions, getToStringSettings } from '../../common';
 import { TypeVisuals } from './TypeVisuals';
 import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './TypeEditorBase';
 
+
+const toString = getToStringSettings();
 
 export default TypeEditorBase<Type, any, any>().extend({
   props: {
@@ -215,6 +253,11 @@ export default TypeEditorBase<Type, any, any>().extend({
         this.settings.defaultValue = this.type.toJson(value);
         this.update();
       },
+    },
+    requiredTypeString(): string {
+      return this.requiredType
+        ? this.registry.getTypeDescribeLong(this.requiredType, toString.tab, toString.newline)
+        : '';
     },
   },
   methods: {
