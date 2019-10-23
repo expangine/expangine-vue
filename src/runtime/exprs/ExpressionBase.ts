@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, EnumType, OperationExpression } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, EnumType, OperationExpression, Color, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
@@ -26,6 +26,9 @@ export default function<E extends Expression>()
       conditionType: Type;
       invalid: boolean;
       highlighted: boolean;
+      highlightColor: string;
+      highlightStyle: any;
+      highlightShadowColor: string;
       hasValue: boolean;
       isRemovable: boolean;
       inOperation: boolean;
@@ -43,7 +46,7 @@ export default function<E extends Expression>()
       settings: TypeSettings | null;
       pathSettings: TypeSettings | null;
       requiredType: Type | null;
-      highlight: Expression | null;
+      highlight: Map<Expression, string> | null;
       showComplexity: boolean;
       mutates: boolean;
       canRemove: boolean;
@@ -87,7 +90,7 @@ export default function<E extends Expression>()
         default: null,
       },
       highlight: {
-        type: Object as () => Expression,
+        type: Map as unknown as () => Map<Expression, string>,
         default: null,
       },
       showComplexity: {
@@ -132,7 +135,30 @@ export default function<E extends Expression>()
           && !this.requiredType.acceptsType(this.computedTypeRaw));
       },
       highlighted(): boolean {
-        return this.value === this.highlight;
+        return !!(this.highlight && this.highlight.has(this.value));
+      },
+      highlightColor(): string {
+        return this.highlight
+          ? this.highlight.get(this.value) || '#BBDEFB'
+          : '#BBDEFB';
+      },
+      highlightStyle(): any {
+        return this.highlighted
+          ? { 'box-shadow': '0 0 3px ' + this.highlightShadowColor,
+              'background-color': this.highlightColor }
+          : { };
+      },
+      highlightShadowColor(): string {
+        const color = ColorType.baseType.normalize(this.highlightColor);
+        if (!color) { 
+          return this.highlightColor;
+        }
+        const hsl = ColorSpaceHSL.fromColor(color);
+        hsl.l -= 30;
+        const rgb = ColorSpaceHSL.toColor(hsl);
+        const formatted = ColorSpaceRGB.formatMap.hex.formatter(rgb);
+
+        return formatted;
       },
       hasValue(): boolean {
         return this.value && this.value !== NoExpression.instance;

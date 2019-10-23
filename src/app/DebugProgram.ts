@@ -12,7 +12,9 @@ export interface DebugProgramOptions
   data: any;
   program: Expression;
   steps: DebugStep[];
+  hoverStep: DebugStep | null;
   currentStep: number;
+  stepsLoaded: number;
   visible: boolean;
   registry: Registry;
   close: () => any;
@@ -39,6 +41,8 @@ export function getDebugProgramDefaults(): DebugProgramOptions
     data: undefined,
     program: NoExpression.instance,
     steps: [],
+    stepsLoaded: 10,
+    hoverStep: null,
     currentStep: 0,
     visible: false,
     registry: null as unknown as Registry,

@@ -1,11 +1,14 @@
 <template>
   <div class="pa-1"
+    :class="classes"
+    :style="style"
     @mouseenter="enter"
-    @mouseleave="exit">
+    @mouseleave="exit"
+    @click="select">
+    <v-icon>{{ icon }}</v-icon>
     <v-chip 
       small 
-      label
-      :color="color"
+      label 
       v-html="exprName"
     ></v-chip>
     <span 
@@ -28,6 +31,10 @@ export default Vue.extend({
       type: Object as () => DebugStep,
       required: true,
     },
+    value: {
+      type: Number,
+      required: true,
+    },
     index: {
       type: Number,
       required: true,
@@ -41,11 +48,25 @@ export default Vue.extend({
     exprName(): string {
       return this.registry.getExpressionName(this.step.expr);
     },
-    isCurrent(): boolean {
-      return this.index === 0;
+    relativeIndex(): number {
+      return this.index - this.value;
     },
-    color(): string {
-      return this.isCurrent ? 'primary' : 'theme--light';
+    icon(): string {
+      return this.step.type === 'enter' 
+        ? 'mdi-subdirectory-arrow-right' 
+        : 'mdi-chevron-left';
+    },
+    style(): any {
+      return {
+        'margin-left': this.step.depth * 8 + 'px', 
+      };
+    },
+    classes(): string {
+      return this.relativeIndex === 0
+        ? 'blue lighten-4'
+        : this.relativeIndex < 0
+          ? 'blue lighten-5'
+          : '';
     },
     returnType(): string {
       const returnType = this.step.expr.getType(this.registry.defs, this.step.contextType);
@@ -61,6 +82,9 @@ export default Vue.extend({
     },
     exit() {
       this.$emit('hover', null);
+    },
+    select() {
+      this.$emit('input', this.index);
     },
   },
 });
