@@ -6,7 +6,7 @@
           <ex-expression-menu
             v-bind="$props"
             v-on="$listeners"
-            text="Set"
+            text="Update"
             tooltip="Update the variable to the given value"
           ></ex-expression-menu>
         </td>
@@ -51,7 +51,7 @@ export default ExpressionBase<UpdateExpression>().extend({
   name: 'UpdateEditor',
   computed: {
     valueType(): Type | null {
-      return this.registry.defs.getPathType(this.value.path, this.context);
+      return Type.simplify(this.registry.defs.getPathType(this.value.path, this.context));
     },
     valueContext(): Type {
       return this.valueType

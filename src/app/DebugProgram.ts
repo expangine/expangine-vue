@@ -1,6 +1,6 @@
 
-import { Type, Expression, AnyType, NoExpression, copy, CommandProvider, InvokeExpression } from 'expangine-runtime';
-import { LiveRuntime, LiveCommand, LiveContext, LiveResult } from 'expangine-runtime-live';
+import { Type, Expression, AnyType, NoExpression, CommandProvider, InvokeExpression } from 'expangine-runtime';
+import { LiveRuntime, LiveContext, LiveResult } from 'expangine-runtime-live';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { getToStringSettings } from '@/common';
@@ -28,10 +28,8 @@ export interface DebugStep
   program: Expression;
   context: LiveContext;
   contextType: Type;
-  contextString: string;
   result?: any;
   resultType?: Type;
-  resultString?: string;
 }
 
 export function getDebugProgramDefaults(): DebugProgramOptions
@@ -50,9 +48,6 @@ export function getDebugProgramDefaults(): DebugProgramOptions
   };
 }
 
-export const debugToString = getToStringSettings();
-
-
 export function debugDescribe(registry: Registry, rawValue: any, valueType?: Type)
 {
   if (!valueType)
@@ -61,11 +56,9 @@ export function debugDescribe(registry: Registry, rawValue: any, valueType?: Typ
     valueType.removeDescribedRestrictions();
   }
 
-  const valueString = registry.getTypeToString(rawValue, valueType, debugToString.tab, debugToString.newline, '', debugToString.process, debugToString.processInvalid);
-
   const value = valueType.fromJson(valueType.toJson(rawValue));
 
-  return { value, valueType, valueString };
+  return { value, valueType };
 }
 
 
@@ -108,7 +101,6 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
           expr,
           context: enter.value,
           contextType: enter.valueType,
-          contextString: enter.valueString,
         });
 
         if (expr instanceof InvokeExpression) 
@@ -136,10 +128,8 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
           expr,
           context: exit.value,
           contextType: exit.valueType,
-          contextString: exit.valueString,
           result: output.value,
           resultType: output.valueType,
-          resultString: output.valueString,
         });
 
         return out;

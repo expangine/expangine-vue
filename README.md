@@ -1,7 +1,7 @@
 # expangine-vue
 A Vue & Vuetify component library for expangine, a visual programming framework. 
 
-You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the program input, and develop the program. If you would like to download an example program [here's FizzBuzz](https://expangine.github.io/expangine-vue/examples/FizzBuzz.json). Import it via `File` > `Import`.
+You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the program input, and develop the program. If you would like to download an example program here's [HelloWorld](https://expangine.github.io/expangine-vue/examples/HelloWorld.json), [FizzBuzz](https://expangine.github.io/expangine-vue/examples/FizzBuzz.json), [FindLeapYears](https://expangine.github.io/expangine-vue/examples/FindLeapYears.json), and [PrimeGenerator](https://expangine.github.io/expangine-vue/examples/PrimeGenerator.json). Import it via `File` > `Import`.
 
 Features of this example:
 - Import / Export your structure, data, program, and functions as JSON.

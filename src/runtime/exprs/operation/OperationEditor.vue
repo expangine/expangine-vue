@@ -225,6 +225,9 @@ export default ExpressionBase<OperationExpression>().extend({
   }),
   computed: {
     filterOperation: () => filterOperation,
+    inOperationClass(): string {
+      return (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly ? ' display-none' : '');
+    },
     isEmpty(): boolean {
       return !this.value.name;
     },

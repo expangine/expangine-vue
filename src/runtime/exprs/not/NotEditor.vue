@@ -4,6 +4,7 @@
       key="menu"
       v-bind="$props"
       v-on="$listeners"
+      class="mt-3"
       text="Not"
       tooltip="Negates the following expression"
       :can-remove="false"

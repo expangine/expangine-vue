@@ -19,7 +19,7 @@
     ></v-select>
     <template v-if="func">
       <template v-for="(paramType, param) in paramTypes">
-        <span :key="param" class="param-span">
+        <span :key="param" class="param-span" :style="innerStyle">
 
           <v-chip 
             x-small 
@@ -52,7 +52,7 @@
         </span>
       </template>
       <template v-for="(argExpr, arg) in value.args">
-        <span :key="arg" v-if="isExtraArgument(arg)" class="param-span">
+        <span :key="arg" v-if="isExtraArgument(arg)" :style="innerStyle" class="param-span">
 
           <v-chip 
             x-small 
@@ -116,6 +116,11 @@ export default ExpressionBase<InvokeExpression>().extend({
       return this.func
         ? this.func.options.params.options.props
         : {};
+    },
+    innerStyle(): any {
+      return this.readOnly
+        ? {}
+        : { marginTop: '15px' };
     },
   },
   methods: {

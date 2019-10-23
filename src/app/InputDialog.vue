@@ -10,6 +10,7 @@
       ></v-card-text>
       <v-card-text>
         <v-text-field
+          outlined
           :label="label"
           v-model="value"
         ></v-text-field>

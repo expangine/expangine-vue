@@ -1,0 +1,166 @@
+{
+  "type": [
+    "obj",
+    {
+      "leapYears": [
+        "num",
+        {
+          "min": 1,
+          "whole": true
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "leapYears",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "leapYears": {
+        "input": "textbox",
+        "defaultValue": 0,
+        "options": {
+          "hint": "How many leap years should we find?",
+          "label": "Leap Years",
+          "outlined": true
+        }
+      }
+    }
+  },
+  "data": {
+    "leapYears": 25
+  },
+  "program": [
+    "def",
+    [
+      [
+        "found",
+        [
+          "op",
+          "list:create",
+          {}
+        ]
+      ],
+      [
+        "currentYear",
+        [
+          "op",
+          "date:today",
+          {}
+        ]
+      ]
+    ],
+    [
+      "chain",
+      [
+        [
+          "while",
+          [
+            "op",
+            "num:<",
+            {
+              "value": [
+                "get",
+                [
+                  "found",
+                  "length"
+                ]
+              ],
+              "test": [
+                "get",
+                [
+                  "leapYears"
+                ]
+              ]
+            }
+          ],
+          [
+            "chain",
+            [
+              [
+                "if",
+                [
+                  [
+                    [
+                      "op",
+                      "date:leap?",
+                      {
+                        "value": [
+                          "get",
+                          [
+                            "currentYear"
+                          ]
+                        ]
+                      }
+                    ],
+                    [
+                      "op",
+                      "list:+",
+                      {
+                        "list": [
+                          "get",
+                          [
+                            "found"
+                          ]
+                        ],
+                        "item": [
+                          "op",
+                          "date:get",
+                          {
+                            "value": [
+                              "get",
+                              [
+                                "currentYear"
+                              ]
+                            ],
+                            "property": "year"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                ],
+                [
+                  "noop"
+                ]
+              ],
+              [
+                "up",
+                [
+                  "currentYear"
+                ],
+                [
+                  "op",
+                  "date:+",
+                  {
+                    "value": [
+                      "get",
+                      [
+                        "current"
+                      ]
+                    ],
+                    "unit": "year"
+                  }
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "get",
+          [
+            "found"
+          ]
+        ]
+      ]
+    ]
+  ],
+  "functions": {}
+}

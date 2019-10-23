@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "pages": "npm run build; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
   },
   "dependencies": {
     "@types/diff": "^4.0.2",

@@ -126,6 +126,7 @@
                         :step="step"
                         :index="stepIndex"
                         :registry="registry"
+                        @hover="onHover"
                         v-model="currentStep"
                       ></ex-debug-step>
                     </template>

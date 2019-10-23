@@ -39,10 +39,7 @@ export const NotVisuals: ExpressionVisuals<NotExpression> =
       isStart: () => false,
       isValid: () => false,
       getModifiers: (requiredType, expr, exprType) => 
-            requiredType 
-          && exprType
-          && BooleanType.baseType.acceptsType(requiredType)
-          && BooleanType.baseType.acceptsType(exprType)
+          exprType && BooleanType.baseType.acceptsType(exprType)
           ? [{
               text: 'Negate',
               description: 'The value is negated, a truthy value is made false, and falsy values are made true',
