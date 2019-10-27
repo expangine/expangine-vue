@@ -314,7 +314,7 @@ export default Vue.extend({
     },
     async clearFunctions() {
       if (await getConfirmation()) {
-        this.registry.defs.functions = {};
+        this.registry.defs.functions = LiveRuntime.defs.functions = {};
         this.saveFunctions();
       }
     },
@@ -328,7 +328,7 @@ export default Vue.extend({
     loadFunctions() {
       const parsed = this.loadVar('functions', {}, this.parseFunctionsData);
       if (parsed) {
-        this.registry.defs.functions = parsed;
+        this.registry.defs.functions = LiveRuntime.defs.functions = parsed;
       }
     },
     changeSummary(state: HistoryState[], count: number = 15) {
@@ -349,7 +349,7 @@ export default Vue.extend({
     setFunctionsData(data: any) {
       const parsed = this.parseFunctionsData(data);
       if (parsed) {
-        this.registry.defs.functions = parsed;
+        this.registry.defs.functions = LiveRuntime.defs.functions = parsed;
       }
     },
     getProgramData() {

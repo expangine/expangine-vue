@@ -106,7 +106,7 @@
 
                 <v-expansion-panel>
                   <v-expansion-panel-header>Inspect</v-expansion-panel-header>
-                  <v-expansion-panel-content>
+                  <v-expansion-panel-content class="pl-1 pb-1">
                     <template v-for="(node, nodeIndex) in scopeNodes">
                       <ex-debug-node
                         :key="nodeIndex"
@@ -120,14 +120,15 @@
                 <v-expansion-panel>
                   <v-expansion-panel-header>Steps</v-expansion-panel-header>
                   <v-expansion-panel-content style="max-height: 300px; overflow: scroll;">
-                    <template v-for="(step, stepIndex) in stepsVisible">
+                    <template v-for="step in stepsVisible">
                       <ex-debug-step
-                        :key="stepIndex"
+                        :key="step.index"
                         :step="step"
-                        :index="stepIndex"
+                        :index="step.index"
                         :registry="registry"
+                        :value="currentStep.step"
                         @hover="onHover"
-                        v-model="currentStep"
+                        @input="goto"
                       ></ex-debug-step>
                     </template>
                     <div v-intersect="onIntersect"></div>
@@ -146,7 +147,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Expression, TextType } from 'expangine-runtime';
-import { debugProgramDialog, DebugStep } from './DebugProgram';
+import { debugProgramDialog, debugProgram, DebugStep } from './DebugProgram';
 import { TypeSubNode } from '../runtime/types/TypeVisuals';
 import ExDebugStack from './DebugStack.vue';
 import ExDebugNode from './DebugNode.vue';
@@ -162,17 +163,29 @@ export default Vue.extend({
   data: () => debugProgramDialog,
   computed: {
     step(): DebugStep {
-      return this.steps[this.currentStep];
+      return this.currentStep.stepDebug;
     },
     highlightMap(): Map<Expression, string> {
       return this.hoverStep
         ? new Map([[this.step.expr, '#BBDEFB'], [this.hoverStep.expr, '#ddf0ffc4']])
         : new Map([[this.step.expr, '#BBDEFB']]);
     },
+    initialStep(): DebugStep {
+      return {
+        type: 'enter',
+        depth: -1,
+        index: -1,
+        program: this.program,
+        expr: this.program,
+        context: this.data,
+        contextType: this.type,
+      };
+    },
     callstack(): DebugStep[] {
       const stack: DebugStep[] = [];
       const { step, steps } = this;
-      let currentStep = this.currentStep;
+      const currentIndex = this.currentStep.stepDebug.index;
+      let currentStep = this.steps.findIndex((s) => s.index === currentIndex);
 
       let depth = step.depth;
       while (currentStep >= 0) { 
@@ -183,6 +196,8 @@ export default Vue.extend({
         }
         currentStep--;
       }
+
+      stack.push(this.initialStep);
       
       return stack;
     },
@@ -208,69 +223,50 @@ export default Vue.extend({
       return nodes;
     },
     disabledBack(): boolean {
-      return this.currentStep === 0;
+      return this.currentStep.step === 0;
     },
     disabledForward(): boolean {
-      return this.currentStep === this.steps.length - 1;
+      return this.currentStep.end;
     },
     stepsVisible(): DebugStep[] {
       return this.steps.slice(0, this.stepsLoaded);
     },
   },
   methods: {
+    sortSteps() {
+      this.steps.sort((a, b) => a.index - b.index);
+    },
+    pushCurrentStep() {
+      const currentStep = this.currentStep.stepDebug;
+      const currentStepIndex = this.steps.findIndex((s) => s.index === currentStep.index);
+      if (currentStepIndex === -1) {
+        this.steps.push(currentStep);
+        this.sortSteps();
+      } else {
+        this.$set(this.steps, currentStepIndex, currentStep);
+      }
+    },
+    goto(index: number) {
+      this.currentStep = debugProgram(index);
+      this.pushCurrentStep();
+    },
     first() {
-      this.currentStep = 0;
+      this.goto(0);
     },
     last() {
-      this.currentStep = this.steps.length - 1;
-    },
-    back() {
-      if (this.currentStep > 0) {
-        this.currentStep--;
-      }
-    },
-    forward() {
-      if (this.currentStep < this.steps.length - 1) {
-        this.currentStep++;
-      }
+      this.goto(9007199254740991);
     },
     stepBack() {
-      const curr = this.step;
-      this.back();
-      if (this.step.expr === curr.expr) {
-        this.back();
-      }
+      this.goto(this.currentStep.stepBack);
     },
     stepInto() {
-      const curr = this.step;
-      this.forward();
-      if (this.step.expr === curr.expr) {
-        this.forward();
-      }
+      this.goto(this.currentStep.stepInto);
     },
     stepOver() {
-      if (this.step.type === 'exit') {
-        this.forward();
-      } else {
-        this.forwardToDepth(this.step.depth);
-      }
+      this.goto(this.currentStep.stepOver);
     },
     stepOut() {
-      if (this.step.type === 'exit') {
-        this.forward();
-      } else {
-        this.forwardToDepth(this.step.depth - 1);
-      }
-    },
-    forwardToDepth(depth: number) {
-      const steps = this.steps;
-      const stop = steps.length - 1;
-      let index = this.currentStep + 1;
-      while (index < stop && steps[index].depth !== depth) {
-        index++;
-      }
-
-      this.currentStep = index;
+      this.goto(this.currentStep.stepOut);
     },
     onHover(step: DebugStep | null = null) {
       this.hoverStep = step;

@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-1">
+  <div class="pt-1">
     <div @click="toggle">
       <v-chip small label
         v-if="subString"

@@ -42,15 +42,14 @@ export async function getRunProgram(options: Partial<RunProgramOptions> = {}): P
   Object.assign(runProgramDialog, getRunProgramDefaults());
   Object.assign(runProgramDialog, options);
 
-  const { registry, type, program, data } = runProgramDialog;
+  const { type, program, data: originalData } = runProgramDialog;
 
-  const copyProgram = registry.defs.cloneExpression(program);
-  const copyData = type.fromJson(type.toJson(data));
-  const command = LiveRuntime.getCommand(copyProgram);
+  const data = type.fromJson(type.toJson(originalData));
+  const command = LiveRuntime.getCommand(program);
 
   const start = now();
 
-  const result = command(copyData);
+  const result = command(data);
 
   const end = now();
   const measureTime = -(now() - now());
@@ -82,7 +81,7 @@ export async function getRunProgram(options: Partial<RunProgramOptions> = {}): P
   elapsedTime.push('(' + total.substring(0, total.indexOf('.') + 10) + ' seconds total)');
 
   runProgramDialog.elapsedTime = elapsedTime.join(' ');
-  runProgramDialog.dataAfter = copyData;
+  runProgramDialog.dataAfter = data;
   runProgramDialog.result = result;
 
   runProgramDialog.visible = true;
