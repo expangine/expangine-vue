@@ -371,27 +371,27 @@ export default Vue.extend({
       { 
         text: 'Fibonacci', 
         description: 'Generates the Fibnoacci sequence up to N numbers.',
-        url: 'http://expangine.github.io/expangine-vue/examples/Fibonacci.json',
+        url: '//expangine.github.io/expangine-vue/examples/Fibonacci.json',
       },
       { 
         text: 'FindLeapYears', 
         description: 'Generates a list of N number of years that will be leap years.',
-        url: 'http://expangine.github.io/expangine-vue/examples/FindLeapYears.json',
+        url: '//expangine.github.io/expangine-vue/examples/FindLeapYears.json',
       },
       { 
         text: 'FizzBuzz', 
         description: 'The common FizzBuzz problem solved with expangine, with some added features.',
-        url: 'http://expangine.github.io/expangine-vue/examples/FizzBuzz.json',
+        url: '//expangine.github.io/expangine-vue/examples/FizzBuzz.json',
       },
       { 
         text: 'HelloWorld', 
         description: 'The simplest program that returns output.',
-        url: 'http://expangine.github.io/expangine-vue/examples/HelloWorld.json',
+        url: '//expangine.github.io/expangine-vue/examples/HelloWorld.json',
       },
       { 
         text: 'PrimeGenerator', 
         description: 'Generates a list of N primes.',
-        url: 'http://expangine.github.io/expangine-vue/examples/PrimeGenerator.json',
+        url: '//expangine.github.io/expangine-vue/examples/PrimeGenerator.json',
       },
     ],
   }),
@@ -472,7 +472,7 @@ export default Vue.extend({
       }
     },
     async loadExample(url: string) {
-      const response = await fetch(url);
+      const response = await fetch(location.protocol + url);
       const data = await response.json();
 
       if (isObject(data) && data.type && data.settings && data.program) {
