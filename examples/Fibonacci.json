@@ -1,4 +1,10 @@
 {
+  "metadata": {
+    "title": "Fibnonacci",
+    "description": "This program generates a Fibonacci sequence of a given size. Every number in a Fibonacci sequence is the sum of the previous two numbers in the sequence.",
+    "author": "Philip Diffenderfer",
+    "created": "October 22, 2019"
+  },
   "type": [
     "obj",
     {

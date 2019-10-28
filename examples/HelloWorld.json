@@ -1,4 +1,10 @@
 {
+  "metadata": {
+    "title": "Hello World",
+    "description": "This program is the simplest program you can make that outputs a user-supplied value.",
+    "author": "Philip Diffenderfer",
+    "created": "October 22, 2019"
+  },
   "type": [
     "obj",
     {
