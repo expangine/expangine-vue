@@ -7,7 +7,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "pages": "npm run build; rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
+    "pages": "npm run build; npm run pages:copy",
+    "pages:copy": "rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
   },
   "dependencies": {
     "@types/diff": "^4.0.2",
