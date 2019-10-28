@@ -1,4 +1,10 @@
 {
+  "metadata": {
+    "title": "Find Leap Years",
+    "description": "This program generates a list of the upcoming leap years given the number of leap years to return.",
+    "author": "Philip Diffenderfer",
+    "created": "October 22, 2019"
+  },
   "type": [
     "obj",
     {

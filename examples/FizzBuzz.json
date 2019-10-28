@@ -1,4 +1,10 @@
 {
+  "metadata": {
+    "title": "FizzBuzz",
+    "description": "This program is one way the simple programming problem FizzBuzz can be solved. This program has the added features that you can specify the starting number, the ending number, and also the words to use for 'Fizz' and 'Buzz'.",
+    "author": "Philip Diffenderfer",
+    "created": "October 22, 2019"
+  },
   "type": [
     "obj",
     {

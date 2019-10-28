@@ -4,7 +4,7 @@
       <v-col>
         <v-toolbar height="64">
           <v-toolbar-items>
-            <v-menu offset-y>
+            <v-menu offset-y close-on-content-click>
               <template #activator="{ on }">
                 <v-btn text v-on="on">
                   File
@@ -18,7 +18,7 @@
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-title>Export</v-list-item-title>
-                    <v-list-item-subtitle>Download the type, data, and program as a JSON file.</v-list-item-subtitle>
+                    <v-list-item-subtitle>Download the type, data, program, and functions as a JSON file.</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item @click="importJson">
@@ -27,7 +27,7 @@
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-title>Import</v-list-item-title>
-                    <v-list-item-subtitle>Upload a JSON file with a type, data, and program.</v-list-item-subtitle>
+                    <v-list-item-subtitle>Upload a JSON file with a type, data, program, and functions.</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item @click="describe">
@@ -39,12 +39,39 @@
                     <v-list-item-subtitle>Set the type &amp; data based on JSON or JS code.</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
+                <v-menu offset-x open-on-hover>
+                  <template #activator="{ on }">
+                    <v-list-item v-on="on">
+                      <v-list-item-icon>
+                        <v-icon>mdi-lightbulb-on</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>Examples</v-list-item-title>
+                        <v-list-item-subtitle>Try examples that have been created by the community.</v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-icon>
+                        <v-icon>mdi-menu-right</v-icon>
+                      </v-list-item-icon>
+                    </v-list-item>
+                  </template>
+                  <v-list>
+                    <template v-for="ex in examples">
+                      <v-list-item :key="ex.text" @click="loadExample(ex.url)">
+                        <v-list-item-content>
+                          <v-list-item-title v-html="ex.text"></v-list-item-title>
+                          <v-list-item-subtitle v-html="ex.description"></v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </template>
+                  </v-list>
+                </v-menu>
+                <v-divider></v-divider>
                 <v-list-item @click="reset">
                   <v-list-item-icon>
                     <v-icon>mdi-refresh</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title>Reset</v-list-item-title>
+                    <v-list-item-title>New Program</v-list-item-title>
                     <v-list-item-subtitle>Clears the designed type, data, and program.</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
@@ -58,6 +85,15 @@
                 </v-btn>
               </template>
               <v-list>
+                <v-list-item @click="metadataEditing = true">
+                  <v-list-item-icon>
+                    <v-icon>mdi-information</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title>Program Information</v-list-item-title>
+                    <v-list-item-subtitle>Author, Description, etc</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
                 <v-list-item @click="historyUndo" :disabled="undos.length === 0">
                   <v-list-item-icon>
                     <v-icon>mdi-undo</v-icon>
@@ -199,13 +235,68 @@
         </v-list>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="metadataEditing">
+      <v-card>
+        <v-card-title class="headline">
+          Program Information
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="8">
+                <v-text-field
+                  outlined
+                  hide-details
+                  label="Title"
+                  v-model="metadata.title"
+                  @change="saveMetadata"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4">
+                <v-text-field
+                  outlined
+                  hide-details
+                  label="Author"
+                  v-model="metadata.author"
+                  @change="saveMetadata"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  outlined
+                  hide-details
+                  auto-grow
+                  label="Description"
+                  rows="5"
+                  v-model="metadata.description"
+                  @change="saveMetadata"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-chip label>
+            Created: {{ metadata.created }}
+          </v-chip>
+          <v-spacer></v-spacer>
+          <v-btn 
+            color="primary"
+            @click="metadataEditing = false"
+          >Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType } from 'expangine-runtime';
+import { Type, defs, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import Registry from '../runtime';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
@@ -243,6 +334,7 @@ export default Vue.extend({
     this.loadProgram();
     this.loadHistory();
     this.loadFunctions();
+    this.loadMetadata();
     this.pushLast(['type', 'settings', 'data', 'program', 'functions']);
   },
   data: () => ({
@@ -258,6 +350,13 @@ export default Vue.extend({
     */
     settings: null as null | TypeSettings<any>,
     registry: Registry,
+    metadataEditing: false,
+    metadata: {
+      title: '',
+      description: '',
+      author: '',
+      created: '',
+    },
     readOnly: false,
     data: null as null | any,
     dataDebounce: 60 * 1000,
@@ -268,6 +367,33 @@ export default Vue.extend({
     redos: [] as HistoryState[],
     last: {} as HistoryState,
     pushing: false,
+    examples: [
+      { 
+        text: 'Fibonacci', 
+        description: 'Generates the Fibnoacci sequence up to N numbers.',
+        url: 'http://expangine.github.io/expangine-vue/examples/Fibonacci.json',
+      },
+      { 
+        text: 'FindLeapYears', 
+        description: 'Generates a list of N number of years that will be leap years.',
+        url: 'http://expangine.github.io/expangine-vue/examples/FindLeapYears.json',
+      },
+      { 
+        text: 'FizzBuzz', 
+        description: 'The common FizzBuzz problem solved with expangine, with some added features.',
+        url: 'http://expangine.github.io/expangine-vue/examples/FizzBuzz.json',
+      },
+      { 
+        text: 'HelloWorld', 
+        description: 'The simplest program that returns output.',
+        url: 'http://expangine.github.io/expangine-vue/examples/HelloWorld.json',
+      },
+      { 
+        text: 'PrimeGenerator', 
+        description: 'Generates a list of N primes.',
+        url: 'http://expangine.github.io/expangine-vue/examples/PrimeGenerator.json',
+      },
+    ],
   }),
   computed: {
     highlightTypes(): Map<Type, string> {
@@ -296,6 +422,33 @@ export default Vue.extend({
     },
   },
   methods: {
+    getMetadata() {
+      return {
+        title: '',
+        description: '',
+        author: '',
+        created: DateFormat.format('LLL', [new Date(), currentLocale]),
+      };
+    },
+    loadMetadata() {
+      const parsed = this.loadVar('metadata', this.getMetadata());
+      if (parsed) {
+        this.metadata = parsed;
+      }
+    },
+    saveMetadata() {
+      this.saveVar('metadata', this.getMetadataData);
+    },
+    setMetadataData(data: any) {
+      if (data) {
+        this.metadata = data;
+      } else {
+        this.metadata = this.getMetadata();
+      }
+    },
+    getMetadataData() {
+      return copy(this.metadata);
+    },
     async addFunction() {
       const { registry } = this;
       const result = await getEditFunction({ registry });
@@ -316,6 +469,20 @@ export default Vue.extend({
       if (await getConfirmation()) {
         this.registry.defs.functions = LiveRuntime.defs.functions = {};
         this.saveFunctions();
+      }
+    },
+    async loadExample(url: string) {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (isObject(data) && data.type && data.settings && data.program) {
+        if (await getConfirmation({ message: 'This will overwrite your current program, are you sure?' })) {
+          this.importData(data);
+        } else {
+          sendNotification({ message: 'Importing example canceled.' });
+        }
+      } else {
+        sendNotification({ message: 'This example seems corrupted, sorry!' });
       }
     },
     saveFunctions() {
@@ -446,10 +613,12 @@ export default Vue.extend({
         this.type = built.type;
         this.settings = built.settings;
         this.data = built.type.fromJson(built.settings.defaultValue);
+        this.metadata = this.getMetadata();
 
         this.saveType();
         this.saveData();
         this.saveProgram(NoExpression.instance);
+        this.saveMetadata();
       });
     },
     async exportJson() {
@@ -471,6 +640,7 @@ export default Vue.extend({
       }
 
       const exported = JSON.stringify({
+        metadata: this.getMetadataData(),
         type: this.getTypeData(),
         settings: this.getSettingsData(),
         data: this.getDataData(),
@@ -513,11 +683,13 @@ export default Vue.extend({
         this.setDataData(imported.data);
         this.setProgramData(imported.program);
         this.setFunctionsData(imported.functions);
+        this.setMetadataData(imported.metadata);
 
         this.saveType();
         this.saveData();
         this.saveProgram();
         this.saveFunctions();
+        this.saveMetadata();
       });
     },
     downloadFile(name: string, contents: any, type?: string) {

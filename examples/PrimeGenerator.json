@@ -1,4 +1,10 @@
 {
+  "metadata": {
+    "title": "Prime Number Generator",
+    "description": "This program generates a list of prime numbers given the number of prime numbers to generate. This program uses a custom function to help determine if a given number is divisible by any number in a list of numbers. This implementation has a few performance improvements, like starting at 3 and incrementing by 2 (since 2 is the only even prime number).",
+    "author": "Philip Diffenderfer",
+    "created": "October 22, 2019"
+  },
   "type": [
     "obj",
     {
