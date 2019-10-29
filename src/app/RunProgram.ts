@@ -17,6 +17,8 @@ export interface RunProgramOptions
   elapsedTime: string;
   visible: boolean;
   registry: Registry;
+  useResults: null | ((results: any) => Promise<boolean>);
+  useResultsLabel: string;
   close: () => any;
 }
 
@@ -33,6 +35,8 @@ export function getRunProgramDefaults(): RunProgramOptions
     elapsedTime: '0',
     visible: false,
     registry: null as unknown as Registry,
+    useResults: null,
+    useResultsLabel: '',
     close: () => undefined,
   };
 }

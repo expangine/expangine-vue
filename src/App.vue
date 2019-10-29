@@ -856,14 +856,44 @@ export default Vue.extend({
       }
 
       const { type, registry, program, data } = this;
+      const useResults = this.useProgramResults;
+      const useResultsLabel = 'Use results as the data for a new program';
 
       try {
-        await getRunProgram({ registry, type, program, data });
+        await getRunProgram({ registry, type, program, data, useResults, useResultsLabel });
       } catch (e) {
         sendNotification({ message: 'There was an error in your program' });
         
         window.console.log(e);
       }
+    },
+    async useProgramResults(data: any): Promise<boolean> {
+      if (await getConfirmation({ message: 'This will overwrite your current data, are you sure?' })) {
+        const type = this.registry.defs.describe(data);
+        const settings = this.registry.getTypeSettings(type);
+
+        if (this.type && this.type.acceptsData(type)) {
+          this.historyPush(['data'], () => {
+            this.data = data;
+
+            this.saveData();
+          });
+        } else {
+          this.historyPush(['type', 'settings', 'data'], () => {
+            type.removeDescribedRestrictions();
+
+            this.data = data;
+            this.type = type;
+            this.settings = settings;
+
+            this.saveType();
+            this.saveData();
+          });
+        }
+
+        return true;
+      }
+      return false;
     },
     async debugProgram() {
       if (!this.type) {
