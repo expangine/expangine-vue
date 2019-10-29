@@ -3,6 +3,10 @@
     <v-card v-if="visible">
       <v-card-title class="headline mb-2">
         Edit Function
+        <v-spacer></v-spacer>
+        <v-btn color="secondary" @click="test">
+          Test
+        </v-btn>
       </v-card-title>
       <v-card-text>
         <v-text-field
@@ -72,6 +76,7 @@ import Vue from 'vue';
 import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { editFunctionDialog } from './EditFunction';
+import { getTestFunction } from './TestFunction';
 
 
 export default Vue.extend({
@@ -109,6 +114,11 @@ export default Vue.extend({
     },
     onProgramChange(program: Expression) {
       this.func.options.expression = program;
+    },
+    test() {
+      const { registry, func, name } = this;
+
+      getTestFunction({ registry, func, name });
     },
   },
 });

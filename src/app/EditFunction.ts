@@ -4,7 +4,6 @@ import { Type, FunctionType, AnyType, ObjectType, NoExpression } from 'expangine
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
-import { ObjectFormInput } from '@/runtime/types/object/ObjectFormTypes';
 
 
 export interface EditFunctionOptions

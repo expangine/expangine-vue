@@ -247,6 +247,7 @@
       <ex-debug-program-dialog></ex-debug-program-dialog>
       <ex-describe-data-dialog></ex-describe-data-dialog>
       <ex-edit-function-dialog></ex-edit-function-dialog>
+      <ex-test-function-dialog></ex-test-function-dialog>
 
       <v-dialog v-model="metadataEditing" max-width="800">
         <v-card>

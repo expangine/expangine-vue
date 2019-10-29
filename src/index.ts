@@ -27,6 +27,7 @@ import EditFunctionDialog from './app/EditFunctionDialog.vue';
 import InputDialog from './app/InputDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import RunProgramDialog from './app/RunProgramDialog.vue';
+import TestFunctionDialog from './app/TestFunctionDialog.vue';
 
 
 export * from './app/BuildType';
@@ -96,6 +97,7 @@ export default {
     Vue.component('ex-input-dialog', InputDialog);
     Vue.component('ex-notify-dialog', NotifyDialog);
     Vue.component('ex-run-program-dialog', RunProgramDialog);
+    Vue.component('ex-test-function-dialog', TestFunctionDialog);
 
     Vue.component('ex-data-string', DataString);
     Vue.component('ex-color-picker', ColorPicker);
