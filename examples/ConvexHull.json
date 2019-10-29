@@ -1,0 +1,560 @@
+{
+  "metadata": {
+    "title": "Convex Hull",
+    "description": "This program uses Jarvis’s Algorithm to take a set of points and compute the points which represent a convex hull. A convex hull is the smallest convex polygon, that encloses all of the points in the set. This program uses several functions to compute the convex hull.",
+    "author": "Philip Diffenderfer",
+    "created": "October 29, 2019"
+  },
+  "type": [
+    "obj",
+    {
+      "points": [
+        "list",
+        [
+          "obj",
+          {
+            "x": "num",
+            "y": "num"
+          }
+        ]
+      ]
+    }
+  ],
+  "settings": {
+    "input": "form",
+    "defaultValue": {},
+    "options": {
+      "columns": [
+        {
+          "prop": "points",
+          "cols": 12
+        }
+      ]
+    },
+    "sub": {
+      "points": {
+        "input": "table",
+        "defaultValue": [],
+        "options": {
+          "columns": [
+            {
+              "prop": "x",
+              "label": "X"
+            },
+            {
+              "prop": "y",
+              "label": "Y"
+            }
+          ],
+          "pageSize": 10,
+          "pagination": {
+            "totalVisible": 10
+          },
+          "paging": true,
+          "title": "Points"
+        },
+        "sub": {
+          "item": {
+            "input": "form",
+            "defaultValue": {},
+            "options": {
+              "columns": [
+                {
+                  "prop": "x",
+                  "cols": 12
+                },
+                {
+                  "prop": "y",
+                  "cols": 12
+                }
+              ]
+            },
+            "sub": {
+              "x": {
+                "input": "textbox",
+                "defaultValue": 0,
+                "options": {
+                  "placeholder": "X",
+                  "outlined": true
+                }
+              },
+              "y": {
+                "input": "textbox",
+                "defaultValue": 0,
+                "options": {
+                  "placeholder": "Y",
+                  "outlined": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "data": {
+    "points": [
+      {
+        "x": 0,
+        "y": 3
+      },
+      {
+        "x": 2,
+        "y": 3
+      },
+      {
+        "x": 1,
+        "y": 1
+      },
+      {
+        "x": 2,
+        "y": 1
+      },
+      {
+        "x": 3,
+        "y": 0
+      },
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 3,
+        "y": 3
+      }
+    ]
+  },
+  "program": [
+    "if",
+    [
+      [
+        [
+          "op",
+          "num:<=",
+          {
+            "value": [
+              "get",
+              [
+                "points",
+                "length"
+              ]
+            ],
+            "test": 3
+          }
+        ],
+        [
+          "get",
+          [
+            "points"
+          ]
+        ]
+      ]
+    ],
+    [
+      "def",
+      [
+        [
+          "hull",
+          [
+            "op",
+            "list:create",
+            {}
+          ]
+        ],
+        [
+          "minX",
+          [
+            "op",
+            "list:min",
+            {
+              "list": [
+                "get",
+                [
+                  "points"
+                ]
+              ],
+              "value": [
+                "get",
+                [
+                  "point",
+                  "x"
+                ]
+              ]
+            },
+            {
+              "item": "point"
+            }
+          ]
+        ],
+        [
+          "minIndex",
+          [
+            "op",
+            "list:findIndex",
+            {
+              "list": [
+                "get",
+                [
+                  "points"
+                ]
+              ],
+              "where": [
+                "op",
+                "num:=",
+                {
+                  "value": [
+                    "get",
+                    [
+                      "point",
+                      "x"
+                    ]
+                  ],
+                  "test": [
+                    "get",
+                    [
+                      "minX"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "item": "point"
+            }
+          ]
+        ],
+        [
+          "currentIndex",
+          [
+            "get",
+            [
+              "minIndex"
+            ]
+          ]
+        ],
+        [
+          "nextIndex",
+          -1
+        ]
+      ],
+      [
+        "chain",
+        [
+          [
+            "do",
+            [
+              "op",
+              "num:!=",
+              {
+                "value": [
+                  "get",
+                  [
+                    "currentIndex"
+                  ]
+                ],
+                "test": [
+                  "get",
+                  [
+                    "minIndex"
+                  ]
+                ]
+              }
+            ],
+            [
+              "chain",
+              [
+                [
+                  "op",
+                  "list:+",
+                  {
+                    "list": [
+                      "get",
+                      [
+                        "hull"
+                      ]
+                    ],
+                    "item": [
+                      "get",
+                      [
+                        "points",
+                        [
+                          "get",
+                          [
+                            "currentIndex"
+                          ]
+                        ]
+                      ]
+                    ]
+                  }
+                ],
+                [
+                  "set",
+                  [
+                    "nextIndex"
+                  ],
+                  [
+                    "op",
+                    "num:%",
+                    {
+                      "value": [
+                        "op",
+                        "num:+",
+                        {
+                          "value": [
+                            "get",
+                            [
+                              "currentIndex"
+                            ]
+                          ],
+                          "addend": 1
+                        }
+                      ],
+                      "divisor": [
+                        "get",
+                        [
+                          "points",
+                          "length"
+                        ]
+                      ]
+                    }
+                  ]
+                ],
+                [
+                  "op",
+                  "list:each",
+                  {
+                    "list": [
+                      "get",
+                      [
+                        "points"
+                      ]
+                    ],
+                    "each": [
+                      "if",
+                      [
+                        [
+                          [
+                            "invoke",
+                            "isCounterClockwise",
+                            {
+                              "q": [
+                                "get",
+                                [
+                                  "point"
+                                ]
+                              ],
+                              "p": [
+                                "get",
+                                [
+                                  "points",
+                                  [
+                                    "get",
+                                    [
+                                      "currentIndex"
+                                    ]
+                                  ]
+                                ]
+                              ],
+                              "r": [
+                                "get",
+                                [
+                                  "points",
+                                  [
+                                    "get",
+                                    [
+                                      "nextIndex"
+                                    ]
+                                  ]
+                                ]
+                              ]
+                            }
+                          ],
+                          [
+                            "set",
+                            [
+                              "nextIndex"
+                            ],
+                            [
+                              "get",
+                              [
+                                "index"
+                              ]
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "noop"
+                      ]
+                    ]
+                  },
+                  {
+                    "item": "point"
+                  }
+                ],
+                [
+                  "set",
+                  [
+                    "currentIndex"
+                  ],
+                  [
+                    "get",
+                    [
+                      "nextIndex"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ],
+          [
+            "get",
+            [
+              "hull"
+            ]
+          ]
+        ]
+      ]
+    ]
+  ],
+  "functions": {
+    "isCounterClockwise": [
+      "func",
+      "bool",
+      [
+        "obj",
+        {
+          "p": [
+            "obj",
+            {
+              "x": "num",
+              "y": "num"
+            }
+          ],
+          "q": [
+            "obj",
+            {
+              "x": "num",
+              "y": "num"
+            }
+          ],
+          "r": [
+            "obj",
+            {
+              "x": "num",
+              "y": "num"
+            }
+          ]
+        }
+      ],
+      [
+        "return",
+        [
+          "op",
+          "num:<",
+          {
+            "value": [
+              "op",
+              "num:-",
+              {
+                "value": [
+                  "op",
+                  "num:*",
+                  {
+                    "value": [
+                      "op",
+                      "num:-",
+                      {
+                        "value": [
+                          "get",
+                          [
+                            "q",
+                            "y"
+                          ]
+                        ],
+                        "subtrahend": [
+                          "get",
+                          [
+                            "p",
+                            "y"
+                          ]
+                        ]
+                      }
+                    ],
+                    "multiplier": [
+                      "op",
+                      "num:-",
+                      {
+                        "value": [
+                          "get",
+                          [
+                            "r",
+                            "x"
+                          ]
+                        ],
+                        "subtrahend": [
+                          "get",
+                          [
+                            "q",
+                            "x"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "subtrahend": [
+                  "op",
+                  "num:*",
+                  {
+                    "value": [
+                      "op",
+                      "num:-",
+                      {
+                        "value": [
+                          "get",
+                          [
+                            "q",
+                            "x"
+                          ]
+                        ],
+                        "subtrahend": [
+                          "get",
+                          [
+                            "p",
+                            "x"
+                          ]
+                        ]
+                      }
+                    ],
+                    "multiplier": [
+                      "op",
+                      "num:-",
+                      {
+                        "value": [
+                          "get",
+                          [
+                            "r",
+                            "y"
+                          ]
+                        ],
+                        "subtrahend": [
+                          "get",
+                          [
+                            "q",
+                            "y"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "test": 0
+          }
+        ]
+      ]
+    ]
+  }
+}

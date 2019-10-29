@@ -23,5 +23,15 @@
     "text": "PrimeGenerator", 
     "description": "Generates a list of N primes.",
     "url": "//expangine.github.io/expangine-vue/examples/PrimeGenerator.json"
+  },
+  { 
+    "text": "PeopleSearch", 
+    "description": "Searches through a list of people for who which have a first name that sounds like given text, and then groups the results by their Gender.",
+    "url": "//expangine.github.io/expangine-vue/examples/PeopleSearch.json"
+  },
+  {
+    "text": "ConvexHull",
+    "description": "Computes the convex hull of a set of 2d points.",
+    "url": "//expangine.github.io/expangine-vue/examples/ConvexHull.json"
   }
 ]
