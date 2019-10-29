@@ -9,7 +9,7 @@
           <span>{{ designLabel }}</span>
         </v-tooltip>
       </v-btn>
-      <v-dialog v-model="designing">
+      <v-dialog v-model="designing" max-width="1000">
         <v-card>
           <v-card-title>
             Design Any Type

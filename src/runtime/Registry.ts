@@ -165,6 +165,14 @@ export class Registry
     return this.getTypeVisuals(type).inputs[settings.input].getComplexity({ type, settings, registry: this });
   }
 
+  public getTypeSettingsValidFor(type: Type | null, settings: TypeSettings | null): boolean
+  {
+    return !!(type
+      && settings 
+      && settings.input
+      && this.getTypeVisuals(type).inputs[settings.input]);
+  }
+
   public getTypeBuildersFor(input: TypeBuildInput): TypeBuildOption[]
   {
     const out: TypeBuildOption[] = [];

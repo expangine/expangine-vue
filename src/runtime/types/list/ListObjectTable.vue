@@ -2,6 +2,11 @@
   <v-simple-table v-bind="settings.options">
     <template #default>
       <thead>
+        <tr v-if="settings.options.title">
+          <td colspan="100%">
+            <strong v-html="settings.options.title"></strong>
+          </td>
+        </tr>
         <tr>
           <th>
             <v-menu v-if="hasMenu">

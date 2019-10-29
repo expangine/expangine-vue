@@ -2,32 +2,39 @@
   "name": "expangine-vue",
   "license": "GPL-3.0-or-later",
   "version": "0.1.0",
-  "private": true,
+  "description": "A Vue component library for expangine, a visual development framework.",
+  "main": "build/expangine.umd.js",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/expangine/expangine-vue"
+  },
+  "authors": [
+    "Philip Diffenderfer <pdiffenderfer@gmail.com>"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:lib": "vue-cli-service build --target lib --name expangine --dest build ./src/index.ts",
     "lint": "vue-cli-service lint",
     "pages": "npm run build; npm run pages:copy",
     "pages:copy": "rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
   },
   "dependencies": {
-    "@types/diff": "^4.0.2",
     "core-js": "^2.6.5",
     "diff": "^4.0.1",
     "expangine-runtime": "git+https://github.com/expangine/expangine-runtime.git#master",
     "expangine-runtime-live": "git+https://github.com/expangine/expangine-runtime-live.git#master",
-    "less": "^3.10.3",
-    "less-loader": "^5.0.0",
-    "source-map-loader": "^0.2.4",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.3",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.10.0",
+    "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-typescript": "^3.10.0",
     "@vue/cli-service": "^3.10.0",
+    "source-map-loader": "^0.2.4",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
     "node-sass": "^4.9.0",
     "sass": "^1.17.4",
     "sass-loader": "^7.1.0",

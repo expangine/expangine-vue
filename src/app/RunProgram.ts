@@ -1,5 +1,5 @@
 
-import { Type, Expression, AnyType, NoExpression, copy } from 'expangine-runtime';
+import { Type, Expression, AnyType, NoExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
@@ -9,7 +9,9 @@ export interface RunProgramOptions
 {
   type: Type;
   data: any;
+  dataString: string;
   dataAfter: any;
+  dataAfterString: string;
   result: any;
   program: Expression;
   elapsedTime: string;
@@ -23,7 +25,9 @@ export function getRunProgramDefaults(): RunProgramOptions
   return {
     type: AnyType.baseType,
     data: undefined,
+    dataString: '',
     dataAfter: undefined,
+    dataAfterString: '',
     result: undefined,
     program: NoExpression.instance,
     elapsedTime: '0',

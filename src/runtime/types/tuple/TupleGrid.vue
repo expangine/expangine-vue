@@ -1,5 +1,5 @@
 <template>
-  <v-container class="tuple-form">
+  <v-container fluid class="tuple-form">
     <v-row v-if="settings.options.title">
       <v-col>
         <strong v-html="settings.options.title"></strong>

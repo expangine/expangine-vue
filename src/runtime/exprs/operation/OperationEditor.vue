@@ -37,7 +37,6 @@
             v-if="!readOnly"
             v-bind="$props"
             v-on="$listeners"
-            class="mr-3"
             text="Op"
             :tooltip="operationTooltip">
             <template #prepend>
@@ -226,7 +225,7 @@ export default ExpressionBase<OperationExpression>().extend({
   computed: {
     filterOperation: () => filterOperation,
     inOperationClass(): string {
-      return (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly ? ' display-none' : '');
+      return (this.inOperation ? 'pl-0 pr-0' : 'pl-3 pr-0') + (this.readOnly && !this.multiline ? ' d-none' : '');
     },
     isEmpty(): boolean {
       return !this.value.name;

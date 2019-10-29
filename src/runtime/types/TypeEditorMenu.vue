@@ -201,13 +201,11 @@
 
 <script lang="ts">
 import { Type } from 'expangine-runtime';
-import { ListOptions, getToStringSettings } from '../../common';
+import { ListOptions } from '../../common';
 import { TypeVisuals } from './TypeVisuals';
 import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './TypeEditorBase';
 
-
-const toString = getToStringSettings();
 
 export default TypeEditorBase<Type, any, any>().extend({
   props: {
@@ -256,7 +254,7 @@ export default TypeEditorBase<Type, any, any>().extend({
     },
     requiredTypeString(): string {
       return this.requiredType
-        ? this.registry.getTypeDescribeLong(this.requiredType, toString.tab, toString.newline)
+        ? this.registry.getTypeDescribeLong(this.requiredType, '  ', '\n')
         : '';
     },
   },

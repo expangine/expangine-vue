@@ -1,8 +1,5 @@
 <template>
-  <span v-if="readOnly">
-    {{ readonlyValue }}
-  </span>
-  <span v-else :class="inOperationClass">
+  <span :class="inOperationClass">
 
     <ex-expression-menu
       v-bind="$props"
@@ -26,13 +23,29 @@
           <v-chip 
             v-on="on" 
             v-html="enumeratedLabel"
+            color="#00000022"
           ></v-chip>
         </template>
-        <span class="pa-2" v-html="readonlyValue"></span>
+        <ex-data-string
+          class="pa-2"
+          html
+          single-line
+          :registry="registry"
+          :data="value.value"
+          :type="computedType"
+        ></ex-data-string>
       </v-tooltip>
     </span>
 
-    <span class="pa-2" v-else v-html="readonlyValue"></span>
+    <ex-data-string
+      v-else
+      class="pa-2"
+      html
+      single-line
+      :registry="registry"
+      :data="value.value"
+      :type="computedType"
+    ></ex-data-string>
 
     <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline">
       <v-card>
@@ -65,17 +78,6 @@ import { Type, AnyType, TextType, ObjectType, EnumType, ColorType, ColorSpaceRGB
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
-
-const TAB = '';
-const NEWLINE = '&nbsp;&nbsp;';
-const PROCESS = (value: any, t: Type) =>
-  t instanceof TextType
-    ? '"' + value + '"'
-    : t instanceof ColorType
-      ? '<span class="color-square" style="background-color: ' + ColorSpaceRGB.formatMap.bestfit.formatter(value) + '"></span>' +  ColorSpaceRGB.formatMap.bestfit.formatter(value)
-      : undefined;
-const PROCESS_INVALID = (value: any) =>
-  '<code>' + JSON.stringify(value) + '</code>';
 
 export default ExpressionBase<ConstantExpression>().extend({
   name: 'ConstantEditor',
@@ -111,13 +113,8 @@ export default ExpressionBase<ConstantExpression>().extend({
 
       return null;
     },
-    readonlyValue(): string {
-      return this.invalid || !this.computedType
-        ? JSON.stringify(this.value.value)
-        : this.registry.getTypeToString(this.value.value, this.computedType, TAB, NEWLINE, '', PROCESS, PROCESS_INVALID);
-    },
     inputSettings(): TypeSettings | null {
-      return this.pathSettings
+      return this.registry.getTypeSettingsValidFor(this.inputType, this.pathSettings)
         ? this.pathSettings
         : this.inputType 
           ? this.registry.getTypeSettings(this.inputType)

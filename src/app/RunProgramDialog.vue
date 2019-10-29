@@ -7,21 +7,44 @@
       <v-card-text>
         <v-tabs>
           <v-tab>Output</v-tab>
-          <v-tab>Output Raw</v-tab>
+          <v-tab>Output (json)</v-tab>
           <v-tab v-if="showData">Data After Execution</v-tab>
           <v-tab v-if="showData">Data Before Execution</v-tab>
           <v-tab v-if="showData">Data Changes</v-tab>
           <v-tab-item class="data-container">
-            <pre class="data-box" v-html="resultString"></pre>
+            <pre class="data-box"><!--
+          --><ex-data-string
+              quotes
+              :registry="registry"
+              :data="result"
+              :type="resultType"
+             ></ex-data-string><!--
+         --></pre>
           </v-tab-item>
           <v-tab-item class="data-container">
             <pre class="data-box" v-html="rawString"></pre>
           </v-tab-item>
           <v-tab-item v-if="showData" class="data-container">
-            <pre class="data-box" v-html="dataAfterString"></pre>
+            <pre class="data-box"><!--
+          --><ex-data-string
+              quotes
+              :registry="registry"
+              :data="dataAfter"
+              :type="type"
+              @string="dataAfterString = $event"
+             ></ex-data-string><!--
+         --></pre>
           </v-tab-item>
           <v-tab-item v-if="showData" class="data-container">
-            <pre class="data-box" v-html="dataString"></pre>
+            <pre class="data-box"><!--
+          --><ex-data-string
+              quotes
+              :registry="registry"
+              :data="data"
+              :type="type"
+              @string="dataString = $event"
+             ></ex-data-string><!--
+         --></pre>
           </v-tab-item>
           <v-tab-item v-if="showData" class="data-container">
             <pre class="data-box" v-html="diffString"></pre>
@@ -47,12 +70,9 @@ import Vue from 'vue';
 import { diffLines } from 'diff';
 import { Type, AnyType, TextType, ColorType, ColorSpaceRGB } from 'expangine-runtime';
 import { runProgramDialog } from './RunProgram';
-import { ListOptions, friendlyList, asArray, getToStringSettings } from '../common';
+import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
 import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
-
-
-const toString = getToStringSettings();
 
 
 interface Part { value: string; added: boolean; removed: boolean; }
@@ -74,17 +94,8 @@ export default Vue.extend({
       }
       return described || AnyType.baseType;
     },
-    resultString(): string {
-      return this.registry.getTypeToString(this.result, this.resultType, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
-    },
     rawString(): string {
       return JSON.stringify(this.resultType.toJson(this.result), undefined, 2);
-    },
-    dataString(): string {
-      return this.registry.getTypeToString(this.data, this.type, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
-    },
-    dataAfterString(): string {
-      return this.registry.getTypeToString(this.dataAfter, this.type, toString.tab, toString.newline, '', toString.process, toString.processInvalid);
     },
     showData(): boolean {
       return this.dataString !== this.dataAfterString;

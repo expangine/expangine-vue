@@ -55,14 +55,6 @@
             3
           ]
         ]
-      ],
-      [
-        "one",
-        1
-      ],
-      [
-        "two",
-        2
       ]
     ],
     [
@@ -118,12 +110,7 @@
                               "length"
                             ]
                           ],
-                          "subtrahend": [
-                            "get",
-                            [
-                              "one"
-                            ]
-                          ]
+                          "subtrahend": 1
                         }
                       ]
                     ]
@@ -143,12 +130,7 @@
                               "length"
                             ]
                           ],
-                          "subtrahend": [
-                            "get",
-                            [
-                              "two"
-                            ]
-                          ]
+                          "subtrahend": 2
                         }
                       ]
                     ]

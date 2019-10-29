@@ -1,11 +1,11 @@
 <template>
-  <span>
+  <span class="set-viewer">
     <ex-path-viewer
       v-bind="$props"
       v-on="$listeners"
       :path="value.path"
     ></ex-path-viewer>
-    =
+    <span class="px-3">=</span>
     <ex-expression
       v-bind="$props"
       type="value"
@@ -24,3 +24,10 @@ export default ExpressionBase<SetExpression>().extend({
   name: 'SetViewer',
 });
 </script>
+
+<style lang="less" scoped>
+.set-viewer {
+  display: flex;
+  align-items: flex-start;
+}
+</style>

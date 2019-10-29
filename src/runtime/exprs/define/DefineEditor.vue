@@ -50,12 +50,11 @@
                   <td class="var-name py-2">
                     <span v-if="readOnly">
                       {{ pair[0] }}
-                      <v-icon>mdi-equal</v-icon>
+                      <span class="px-3">=</span>
                     </span>
                     <v-text-field
                       v-else
                       outlined
-                      dense
                       hide-details
                       append-outer-icon="mdi-equal"
                       :error="isVarInvalid(index)"
@@ -211,6 +210,5 @@ export default ExpressionBase<DefineExpression>().extend({
 .var-name {
   min-width: 200px;
   padding: 0px !important;
-  padding-right: 12px !important;
 }
 </style>

@@ -19,7 +19,7 @@
                 <v-icon>mdi-arrow-left</v-icon>
               </v-btn>
             </template>
-            <span>Back</span>
+            <span>Step Back {{ stepBackLabel }}</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000">
@@ -28,7 +28,7 @@
                 <v-icon>mdi-debug-step-into</v-icon>
               </v-btn>
             </template>
-            <span>Step Into (Forward)</span>
+            <span>Step Into {{ stepIntoLabel }}</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000">
@@ -37,7 +37,7 @@
                 <v-icon>mdi-debug-step-over</v-icon>
               </v-btn>
             </template>
-            <span>Step Over</span>
+            <span>Step Over {{ stepOverLabel }}</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000">
@@ -46,7 +46,7 @@
                 <v-icon>mdi-debug-step-out</v-icon>
               </v-btn>
             </template>
-            <span>Step Out</span>
+            <span>Step Out {{ stepOutLabel }}</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000">
@@ -67,78 +67,73 @@
         </v-toolbar>
 
       </v-card-title>
-      <v-card-text class="pa-0">
-        <v-container fluid fill-height>
-          <v-row>
+      <v-card-text class="pa-0 debug-pane">
+        <div class="debug-program">
 
-            <v-col cols="9">
+          <ex-expression
+            type="body"
+            :value="step.program"
+            :context="type"
+            :registry="registry"
+            :highlight="highlightMap"
+          ></ex-expression>
 
-              <ex-expression
-                type="body"
-                :value="step.program"
-                :context="type"
-                :registry="registry"
-                :highlight="highlightMap"
-              ></ex-expression>
-              
-            </v-col>
+        </div>
+        <div class="debug-inspect">
 
-            <v-col cols="3">
+          <v-expansion-panels accordion focusable multiple>
 
-              <v-expansion-panels accordion focusable multiple>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Callstack</v-expansion-panel-header>
+              <v-expansion-panel-content class="pa-0">
+                <v-list dense>
+                  <template v-for="(call, callIndex) in callstack">
+                    <ex-debug-stack 
+                      :key="callIndex"
+                      :registry="registry"
+                      :step="call"
+                      :index="callIndex"
+                      @hover="onHover"
+                    ></ex-debug-stack>
+                  </template>
+                </v-list>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 
-                <v-expansion-panel>
-                  <v-expansion-panel-header>Callstack</v-expansion-panel-header>
-                  <v-expansion-panel-content class="pa-0">
-                    <v-list dense>
-                      <template v-for="(call, callIndex) in callstack">
-                        <ex-debug-stack 
-                          :key="callIndex"
-                          :registry="registry"
-                          :step="call"
-                          :index="callIndex"
-                          @hover="onHover"
-                        ></ex-debug-stack>
-                      </template>
-                    </v-list>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Inspect</v-expansion-panel-header>
+              <v-expansion-panel-content class="pl-1 pb-1">
+                <template v-for="(node, nodeIndex) in scopeNodes">
+                  <ex-debug-node
+                    :key="nodeIndex"
+                    :registry="registry"
+                    :node="node"
+                  ></ex-debug-node>
+                </template>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 
-                <v-expansion-panel>
-                  <v-expansion-panel-header>Inspect</v-expansion-panel-header>
-                  <v-expansion-panel-content class="pl-1 pb-1">
-                    <template v-for="(node, nodeIndex) in scopeNodes">
-                      <ex-debug-node
-                        :key="nodeIndex"
-                        :registry="registry"
-                        :node="node"
-                      ></ex-debug-node>
-                    </template>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header>Steps</v-expansion-panel-header>
+              <v-expansion-panel-content style="max-height: 300px; overflow: scroll;">
+                <template v-for="step in stepsVisible">
+                  <ex-debug-step
+                    :key="step.index"
+                    :step="step"
+                    :index="step.index"
+                    :registry="registry"
+                    :value="currentStep.step"
+                    @hover="onHover"
+                    @input="goto"
+                  ></ex-debug-step>
+                </template>
+                <div v-intersect="onIntersect"></div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
 
-                <v-expansion-panel>
-                  <v-expansion-panel-header>Steps</v-expansion-panel-header>
-                  <v-expansion-panel-content style="max-height: 300px; overflow: scroll;">
-                    <template v-for="step in stepsVisible">
-                      <ex-debug-step
-                        :key="step.index"
-                        :step="step"
-                        :index="step.index"
-                        :registry="registry"
-                        :value="currentStep.step"
-                        @hover="onHover"
-                        @input="goto"
-                      ></ex-debug-step>
-                    </template>
-                    <div v-intersect="onIntersect"></div>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
+          </v-expansion-panels>
 
-              </v-expansion-panels>
-            </v-col>
-          </v-row>
-        </v-container>
+        </div>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -164,6 +159,9 @@ export default Vue.extend({
   computed: {
     step(): DebugStep {
       return this.currentStep.stepDebug;
+    },
+    stepName(): string {
+      return this.registry.getExpressionName(this.step.expr);
     },
     highlightMap(): Map<Expression, string> {
       return this.hoverStep
@@ -231,8 +229,30 @@ export default Vue.extend({
     stepsVisible(): DebugStep[] {
       return this.steps.slice(0, this.stepsLoaded);
     },
+    stepBackLabel(): string {
+      const step = this.getStepName(this.currentStep.stepBack);
+
+      return step ? ' to ' + step : '';
+    },
+    stepIntoLabel(): string {
+      return this.stepName;
+    },
+    stepOverLabel(): string {
+      return this.stepName;
+    },
+    stepOutLabel(): string {
+      return this.stepName;
+    },
   },
   methods: {
+    getStep(index: number): DebugStep | undefined {
+      return this.steps.find((s) => s.index === index);
+    },
+    getStepName(index: number): string {
+      const step = this.getStep(index);
+
+      return step ? this.registry.getExpressionName(step.expr) : '';
+    },
     sortSteps() {
       this.steps.sort((a, b) => a.index - b.index);
     },
@@ -283,5 +303,27 @@ export default Vue.extend({
 <style lang="less" scoped>
 /deep/ .v-expansion-panel-content__wrap {
   padding: 0;
+}
+
+.debug-pane {
+  position: relative;
+
+  .debug-program {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 300px;
+    bottom: 0;
+    overflow: scroll;
+  }
+
+  .debug-inspect {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    bottom: 0;
+    overflow: scroll;
+  }
 }
 </style>

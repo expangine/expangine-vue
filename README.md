@@ -57,6 +57,8 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 
 ### Preview
 
+**Example**
+![Main View](/docs/Main.png)
 **Type View**
 ![Type View](/docs/Type.png)
 **Data View**
@@ -75,12 +77,6 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 ![Function Definition](/docs/Function_Input.png)
 **Function Implementation**
 ![Function Implementation](/docs/Function_Program.png)
-**Menu > File**
-![Menu > File](/docs/Menu_File.png)
-**Menu > Edit**
-![Menu > Edit](/docs/Menu_Edit.png)
-**Menu > Functions**
-![Menu > Functions](/docs/Menu_Functions.png)
 
 ## Project setup
 ```

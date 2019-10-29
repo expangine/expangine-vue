@@ -1,0 +1,37 @@
+[
+  { 
+    "text": "Fibonacci", 
+    "description": "Generates the Fibnoacci sequence up to N numbers.",
+    "url": "//expangine.github.io/expangine-vue/examples/Fibonacci.json"
+  },
+  { 
+    "text": "FindLeapYears", 
+    "description": "Generates a list of N number of years that will be leap years.",
+    "url": "//expangine.github.io/expangine-vue/examples/FindLeapYears.json"
+  },
+  { 
+    "text": "FizzBuzz", 
+    "description": "The common FizzBuzz problem solved with expangine, with some added features.",
+    "url": "//expangine.github.io/expangine-vue/examples/FizzBuzz.json"
+  },
+  { 
+    "text": "HelloWorld", 
+    "description": "The simplest program that returns output.",
+    "url": "//expangine.github.io/expangine-vue/examples/HelloWorld.json"
+  },
+  { 
+    "text": "PrimeGenerator", 
+    "description": "Generates a list of N primes.",
+    "url": "//expangine.github.io/expangine-vue/examples/PrimeGenerator.json"
+  },
+  { 
+    "text": "PeopleSearch", 
+    "description": "Searches through a list of people for who which have a first name that sounds like given text, and then groups the results by their Gender.",
+    "url": "//expangine.github.io/expangine-vue/examples/PeopleSearch.json"
+  },
+  {
+    "text": "ConvexHull",
+    "description": "Computes the convex hull of a set of 2d points.",
+    "url": "//expangine.github.io/expangine-vue/examples/ConvexHull.json"
+  }
+]

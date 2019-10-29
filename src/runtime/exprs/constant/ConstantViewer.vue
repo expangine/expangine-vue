@@ -1,5 +1,11 @@
 <template>
-  <span>{{ readonlyValue }}</span>
+  <ex-data-string
+    html
+    single-line
+    :registry="registry"
+    :data="value.value"
+    :type="computedType"
+  ></ex-data-string>
 </template>
 
 <script lang="ts">
@@ -10,15 +16,5 @@ import ExpressionBase from '../ExpressionBase';
 
 export default ExpressionBase<ConstantExpression>().extend({
   name: 'ConstantViewer',
-  computed: {
-    inputType(): Type | null {
-      return this.computedType || this.requiredType;
-    },
-    readonlyValue(): string {
-      return this.computedType
-        ? this.registry.getTypeToString(this.value.value, this.computedType, '', '&nbsp;&nbsp;')
-        : this.value.value + '';
-    },
-  },
 });
 </script>
