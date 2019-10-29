@@ -21,7 +21,7 @@
         <v-btn 
           color="primary"
           @click="close">
-          Cancel
+          Done
         </v-btn>
         <v-spacer></v-spacer>
         <v-btn 

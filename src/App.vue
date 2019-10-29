@@ -28,6 +28,15 @@
               <v-list-item-subtitle>Upload a JSON file with a type, data, program, and functions.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="saveAsFunction">
+            <v-list-item-icon>
+              <v-icon>mdi-content-save-move-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Save as Function</v-list-item-title>
+              <v-list-item-subtitle>Save this program as a function.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item @click="describe">
             <v-list-item-icon>
               <v-icon>mdi-database-search</v-icon>
@@ -312,7 +321,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray } from 'expangine-runtime';
+import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -550,6 +559,37 @@ export default Vue.extend({
           case 'functions': this.last.functions = this.getFunctionsData(); break;
         }
       });
+    },
+    async saveAsFunction() {
+      if (!this.type || !(this.type instanceof ObjectType)) {
+        return sendNotification({ message: 'Save as Function requires the input to be an object.' });
+      }
+
+      const functionName = await getInput({ label: 'Function Name' });
+
+      if (!functionName) {
+        return sendNotification({ message: 'Save as Function canceled' });
+      }
+
+      if (this.registry.defs.functions[functionName]) {
+        if (!await getConfirmation({ message: 'A function with that name already exists, overwrite it?' })) {
+          return sendNotification({ message: 'Save as Function canceled' });
+        }
+      }
+
+      const params = this.registry.defs.cloneType(this.type) as ObjectType;
+      const expression = new ReturnExpression(this.registry.defs.cloneExpression(this.program));
+      const returnType = expression.getType(this.registry.defs, params) || AnyType.baseType;
+      
+      const newFunction = new FunctionType({
+        params,
+        expression,
+        returnType,
+      });
+
+      this.$set(this.registry.defs.functions, functionName, newFunction);
+
+      this.saveFunctions();
     },
     async describe() {
       const result = await getDescribeData({ registry: this.registry });
