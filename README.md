@@ -61,61 +61,61 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 
 ### Preview
 
-<details><summary>**Example**</summary>
+<details><summary>Example</summary>
 <p>
-![Main View](/docs/Main.png)
+  <img src="/docs/Main.png" alt="Main View">
 </p>
 </details>
-<details><summary>**Type View**</summary>
+<details><summary>Design View</summary>
 <p>
-![Type View](/docs/Type.png)
+  <img src="/docs/Type.png" alt="Type View">
 </p>
 </details>
-<details><summary>**Data View**</summary>
+<details><summary>Data View</summary>
 <p>
-![Data View](/docs/Data.png)
+  <img src="/docs/Data.png" alt="Data View">
 </p>
 </details>
-<details><summary>**Program View**</summary>
+<details><summary>Program View</summary>
 <p>
-![Program View](/docs/Program.png)
+  <img src="/docs/Program.png" alt="Program View">
 </p>
 </details>
-<details><summary>**Execution**</summary>
+<details><summary>Execution</summary>
 <p>
-![Execution](/docs/Execution.png)
+  <img src="/docs/Execution.png" alt="Execution">
 </p>
 </details>
-<details><summary>**Debugger**</summary>
+<details><summary>Debugger</summary>
 <p>
-![Debugger](/docs/Debugger.png)
+  <img src="/docs/Debugger.png" alt="Debugger">
 </p>
 </details>
-<details><summary>**Detect Types from Data**</summary>
+<details><summary>Detect Types from Data</summary>
 <p>
-![Detect Input](/docs/Describe_Input.png)
-![Detected Type](/docs/Describe_Type.png)
-![Detected Data](/docs/Describe_Data.png)
+  <img src="/docs/Describe_Input.png" alt="Detect Input">
+  <img src="/docs/Describe_Type.png" alt="Detected Type">
+  <img src="/docs/Describe_Data.png" alt="Detected Data">
 </p>
 </details>
-<details><summary>**Function Definition**</summary>
+<details><summary>Function Definition</summary>
 <p>
-![Function Definition](/docs/Function_Input.png)
+  <img src="/docs/Function_Input.png" alt="Function Definition">
 </p>
 </details>
-<details><summary>**Function Implementation**</summary>
+<details><summary>Function Implementation</summary>
 <p>
-![Function Implementation](/docs/Function_Program.png)
+  <img src="/docs/Function_Program.png" alt="Function Implementation">
 </p>
 </details>
-<details><summary>**Test Function**</summary>
+<details><summary>Test Function</summary>
 <p>
-![Test Function](/docs/Test_Function.png)
+  <img src="/docs/Test_Function.png" alt="Test Function">
 </p>
 </details>
-<details><summary>**Test Operation**</summary>
+<details><summary>Test Operation</summary>
 <p>
-![Test Operation](/docs/Test_Operation.png)
+  <img src="/docs/Test_Operation.png" alt="Test Operation">
 </p>
 </details>
 
