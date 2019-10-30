@@ -6,10 +6,14 @@ You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/
 Features of this example:
 - Import / Export your structure, data, program, and functions as JSON.
 - Use JSON or JS code to detect the data determine its types.
+- Load an example program & data.
 - Undo / Redo history saved to your localStorage.
 - Add / Edit / Remove re-usable functions.
+- Save the program as a re-usable function.
+- Test your functions outside the program.
 - Run your program and see it's output. If your program would update your data see the data before, after, and the diff.
 - Debug your program and step through your program in any direction looking at the result of the current expression and the current state of your data.
+- Test operations you use in your program.
 
 ## expangine
 
