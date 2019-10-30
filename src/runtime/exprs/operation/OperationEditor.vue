@@ -91,6 +91,17 @@
                 </v-list-item-content>
               </v-list-item>
 
+              <v-list-item @click="test">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Test
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Test this operation out
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
             </template>
           </ex-expression-menu>
 
@@ -209,6 +220,7 @@ import { filterOperation, getListOption, getMappingListOption, sortMappingListOp
 import OperationSearch from './OperationSearch.vue';
 import OperationInspector from './OperationInspector.vue';
 import ExpressionBase from '../ExpressionBase';
+import { getTestOperation } from '../../../app/TestOperation';
 
 
 export default ExpressionBase<OperationExpression>().extend({
@@ -284,6 +296,12 @@ export default ExpressionBase<OperationExpression>().extend({
     },
   },
   methods: {
+    test() {
+      getTestOperation({
+        registry: this.registry,
+        name: this.value.name,
+      });
+    },
     mapOperation(map: OperationMapping) {
       const params = this.value.params;
 

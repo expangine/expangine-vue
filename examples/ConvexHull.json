@@ -165,24 +165,31 @@
           "minX",
           [
             "op",
-            "list:min",
+            "any:coalesce",
             {
-              "list": [
-                "get",
-                [
-                  "points"
-                ]
+              "a": [
+                "op",
+                "list:min",
+                {
+                  "list": [
+                    "get",
+                    [
+                      "points"
+                    ]
+                  ],
+                  "value": [
+                    "get",
+                    [
+                      "point",
+                      "x"
+                    ]
+                  ]
+                },
+                {
+                  "item": "point"
+                }
               ],
-              "value": [
-                "get",
-                [
-                  "point",
-                  "x"
-                ]
-              ]
-            },
-            {
-              "item": "point"
+              "b": 0
             }
           ]
         ],

@@ -92,6 +92,34 @@
           </v-btn>
         </template>
         <v-list>
+          <v-list-item @click="historyUndo" :disabled="undos.length === 0">
+            <v-list-item-icon>
+              <v-icon>mdi-undo</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Undo</v-list-item-title>
+              <v-list-item-subtitle>Undo the last change.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="historyRedo" :disabled="redos.length === 0">
+            <v-list-item-icon>
+              <v-icon>mdi-redo</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Redo</v-list-item-title>
+              <v-list-item-subtitle>Redo the last undone change.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-menu offset-y>
+        <template #activator="{ on }">
+          <v-btn text v-on="on">
+            View
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
           <v-list-item @click="metadataEditing = true">
             <v-list-item-icon>
               <v-icon>mdi-information</v-icon>
@@ -110,25 +138,6 @@
             <v-list-item-content>
               <v-list-item-title>Read Only</v-list-item-title>
               <v-list-item-subtitle>See what the tool looks like in read-only mode.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="historyUndo" :disabled="undos.length === 0">
-            <v-list-item-icon>
-              <v-icon>mdi-undo</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Undo</v-list-item-title>
-              <v-list-item-subtitle>Undo the last change.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="historyRedo" :disabled="redos.length === 0">
-            <v-list-item-icon>
-              <v-icon>mdi-redo</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Redo</v-list-item-title>
-              <v-list-item-subtitle>Redo the last undone change.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -248,15 +257,16 @@
         </v-tab-item>
       </v-tabs-items>
       
-      <ex-confirm-dialog></ex-confirm-dialog>
       <ex-input-dialog></ex-input-dialog>
       <ex-notify-dialog></ex-notify-dialog>
+      <ex-confirm-dialog></ex-confirm-dialog>
       <ex-build-type-dialog></ex-build-type-dialog>
       <ex-run-program-dialog></ex-run-program-dialog>
       <ex-debug-program-dialog></ex-debug-program-dialog>
       <ex-describe-data-dialog></ex-describe-data-dialog>
       <ex-edit-function-dialog></ex-edit-function-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
+      <ex-test-operation-dialog></ex-test-operation-dialog>
 
       <v-dialog v-model="metadataEditing" max-width="800">
         <v-card>
