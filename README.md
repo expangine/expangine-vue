@@ -77,6 +77,10 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 ![Function Definition](/docs/Function_Input.png)
 **Function Implementation**
 ![Function Implementation](/docs/Function_Program.png)
+**Test Function**
+![Test Function](/docs/Test_Function.png)
+**Test Operation**
+![Test Operation](/docs/Test_Operation.png)
 
 ## Project setup
 ```
