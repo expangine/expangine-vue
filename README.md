@@ -1,7 +1,7 @@
 # expangine-vue
 A Vue & Vuetify component library for expangine, a visual development framework. 
 
-You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the program input, and develop the program. If you would like to download an example program here's [HelloWorld](https://expangine.github.io/expangine-vue/examples/HelloWorld.json), [FizzBuzz](https://expangine.github.io/expangine-vue/examples/FizzBuzz.json), [Fibonacci](https://expangine.github.io/expangine-vue/examples/Fibonacci.json), [FindLeapYears](https://expangine.github.io/expangine-vue/examples/FindLeapYears.json), and [PrimeGenerator](https://expangine.github.io/expangine-vue/examples/PrimeGenerator.json). Import it via `File` > `Import`.
+You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the input, and develop the program. 
 
 Features of this example:
 - Import / Export your structure, data, program, and functions as JSON.
@@ -17,7 +17,7 @@ Features of this example:
 
 ## expangine
 
-Expangine is a visual programming framework that allows you to create programs. You design the structure of your data, some test data to work on, and finally a program which processes that data. Expangine is **fully** customizable, so you can add your own data types and operations.
+Expangine is a visual programming framework that allows you to create programs. You design the structure of your data, some test data to work on, and finally a program which processes that data. Expangine is **fully** customizable, so you can add your own data types, operations, and expressions.
 
 The predefined expangine types:
 - `Any` (user can select which type & value they want)
