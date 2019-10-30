@@ -61,30 +61,63 @@ Once you get to step 3, you now have a tool that can create a game. Step 4 is ac
 
 ### Preview
 
-**Example**
+<details><summary>**Example**</summary>
+<p>
 ![Main View](/docs/Main.png)
-**Type View**
+</p>
+</details>
+<details><summary>**Type View**</summary>
+<p>
 ![Type View](/docs/Type.png)
-**Data View**
+</p>
+</details>
+<details><summary>**Data View**</summary>
+<p>
 ![Data View](/docs/Data.png)
-**Program View**
+</p>
+</details>
+<details><summary>**Program View**</summary>
+<p>
 ![Program View](/docs/Program.png)
-**Execution**
+</p>
+</details>
+<details><summary>**Execution**</summary>
+<p>
 ![Execution](/docs/Execution.png)
-**Debugger**
+</p>
+</details>
+<details><summary>**Debugger**</summary>
+<p>
 ![Debugger](/docs/Debugger.png)
-**Detect Types from Data**
+</p>
+</details>
+<details><summary>**Detect Types from Data**</summary>
+<p>
 ![Detect Input](/docs/Describe_Input.png)
 ![Detected Type](/docs/Describe_Type.png)
 ![Detected Data](/docs/Describe_Data.png)
-**Function Definition**
+</p>
+</details>
+<details><summary>**Function Definition**</summary>
+<p>
 ![Function Definition](/docs/Function_Input.png)
-**Function Implementation**
+</p>
+</details>
+<details><summary>**Function Implementation**</summary>
+<p>
 ![Function Implementation](/docs/Function_Program.png)
-**Test Function**
+</p>
+</details>
+<details><summary>**Test Function**</summary>
+<p>
 ![Test Function](/docs/Test_Function.png)
-**Test Operation**
+</p>
+</details>
+<details><summary>**Test Operation**</summary>
+<p>
 ![Test Operation](/docs/Test_Operation.png)
+</p>
+</details>
 
 ## Project setup
 ```
