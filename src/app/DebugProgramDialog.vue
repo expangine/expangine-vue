@@ -241,7 +241,9 @@ export default Vue.extend({
       return this.stepName;
     },
     stepOutLabel(): string {
-      return this.stepName;
+      const step = this.getStepName(this.currentStep.stepBack);
+
+      return step ? ' of ' + step : '';
     },
   },
   methods: {

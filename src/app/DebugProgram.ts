@@ -194,7 +194,6 @@ export function debugProgram(step: number): DebugProgramResult
           }; 
 
           stepOver = stepCurrent + 1;
-          stepOut = stepCurrent + 1;
 
           if (lastExpression)
           {
@@ -206,15 +205,15 @@ export function debugProgram(step: number): DebugProgramResult
             step = stepCurrent;
             end = true;
           }
-
-          throw new Error('stop');
         }
         else if (isEnter)
         {
           stepOver = stepCurrent;
-          stepOut = stepCurrent + 1;
+        }
 
-          throw new Error('stop');
+        if (stepOut === -1 && currentDepth === stepDebug.depth - 1)
+        {
+          stepOut = stepCurrent;
         }
 
         stepCurrent++;
@@ -230,6 +229,11 @@ export function debugProgram(step: number): DebugProgramResult
     command(data);
   } catch (e) {
     // ignore error
+  }
+
+  if (stepOut === -1) 
+  {
+    stepOut = stepDebug.index + 1;
   }
 
   return {
