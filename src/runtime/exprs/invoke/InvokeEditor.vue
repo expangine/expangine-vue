@@ -80,7 +80,7 @@
             :value="argExpr"
             :required-type="null"
             @input="setParam(arg, $event)"
-            @remove="setParam(arg)"
+            @remove="removeParam(arg)"
           ></ex-expression>
 
         </span>
@@ -142,6 +142,10 @@ export default ExpressionBase<InvokeExpression>().extend({
     },
     setParam(param: string, expr?: Expression) {
       this.$set(this.value.args, param, expr || NoExpression.instance);
+      this.update();
+    },
+    removeParam(param: string) {
+      this.$delete(this.value.args, param);
       this.update();
     },
   },

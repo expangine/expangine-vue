@@ -130,9 +130,19 @@ export default function<E extends Expression>()
         return BooleanType.baseType;
       },
       invalid(): boolean {
-        return !!(this.requiredType 
-          && this.computedTypeRaw
-          && !this.requiredType.acceptsType(this.computedTypeRaw));
+        if (!this.requiredType) {
+          return false;
+        }
+
+        if (this.value === NoExpression.instance && this.requiredType.isOptional()) {
+          return false;
+        }
+
+        if (!this.computedTypeRaw) {
+          return true;
+        }
+
+        return !this.requiredType.acceptsType(this.computedTypeRaw);
       },
       highlighted(): boolean {
         return !!(this.highlight && this.highlight.has(this.value));

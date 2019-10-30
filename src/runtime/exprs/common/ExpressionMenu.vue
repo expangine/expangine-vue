@@ -173,6 +173,7 @@ export default ExpressionBase().extend({
     },
     invalidOverride: {
       type: Boolean,
+      default: null,
     },
   },
   data: () => ({
@@ -180,7 +181,7 @@ export default ExpressionBase().extend({
   }),
   computed: {
     isInvalid(): boolean {
-      return this.invalidOverride !== undefined ? this.invalidOverride : this.invalid;
+      return this.invalidOverride !== null ? this.invalidOverride : this.invalid;
     },
     hasTypeInformation(): boolean {
       return !!(this.requiredType && !(this.requiredType instanceof AnyType))
