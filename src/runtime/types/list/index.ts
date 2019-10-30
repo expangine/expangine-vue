@@ -77,6 +77,9 @@ export const ListVisuals = createVisuals<ListSubs>()({
             title: sub, 
             itemName: sub,
             paging: true,
+            pagination: {
+              totalVisible: 10,
+            },
             columns: objectValues(item.options.props, (propType, prop) => ({
               prop,
               label: prop,
@@ -96,6 +99,9 @@ export const ListVisuals = createVisuals<ListSubs>()({
             title: sub, 
             itemName: sub,
             paging: true,
+            pagination: {
+              totalVisible: 10,
+            },
             pageSize: complexity === 1 ? 5 : 1,
           },
           sub: {

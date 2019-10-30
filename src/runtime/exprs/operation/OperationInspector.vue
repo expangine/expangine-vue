@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="visible" width="1000">
-    <v-card>
+    <v-card v-if="visible">
       <v-card-text>
 
         <p class="display-1 text--primary pa-2 pt-4">
