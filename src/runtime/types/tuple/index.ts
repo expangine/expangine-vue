@@ -147,6 +147,7 @@ export const TupleModifierAddType: TypeModifier<TupleType> =
 
     return { 
       text: `Add Tuple Type [${type.options.length + 1}]`,
+      description: 'Adds another element to the tuple',
       priority: 1,
       value: async () => {
         const chosen = await getBuildType({

@@ -1,5 +1,5 @@
 
-import { Type, OptionalType, AnyOps, ExpressionBuilder} from 'expangine-runtime';
+import { Type, OptionalType } from 'expangine-runtime';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
@@ -61,6 +61,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
 
     return {
       text: 'Make Optional',
+      description: 'An optional type does not require a value',
       priority: 2,
       value: async () => {
         if (!await getConfirmation()) {
@@ -84,6 +85,7 @@ export const OptionalModifierRequire: TypeModifier =
 
     return { 
       text: 'Make Required',
+      description: 'The type should no longer be optional',
       priority: 1,
       value: async () => {
         if (!await getConfirmation()) {

@@ -1,5 +1,5 @@
 
-import { ListType, TextType, ListOps, ExpressionBuilder, isString, isArray, ObjectType, objectReduce, objectValues } from 'expangine-runtime';
+import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues } from 'expangine-runtime';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -143,7 +143,7 @@ export const ListBuilder: TypeBuilder =
 {
   getOption: ({ registry, existingType, existingSettings }) => ({
     text: 'List',
-    description: 'An collection/list/array of values',
+    description: 'A collection/list/array of values',
     priority: 4,
     value: async () => (initializeSubs(registry, {
       type: ListType.forItem(existingType || new TextType({ })),

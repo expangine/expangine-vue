@@ -93,6 +93,7 @@ export const ManyModifier: TypeModifier<ManyType> =
 
     return {
       text: 'Add Alternative Type',
+      description: 'Allow this type to accept another type as well',
       priority: 2,
       value: async () => {
         const chosen = await getBuildType({

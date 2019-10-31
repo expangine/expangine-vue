@@ -1,5 +1,5 @@
 
-import { TextType, TextOps, ExpressionBuilder, isString } from 'expangine-runtime';
+import { TextType, isString } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from './TextBoxTypes';
@@ -60,6 +60,7 @@ export const TextBuilder: TypeBuilder =
 {
   getOption: () => ({
     text: 'Text',
+    description: 'Any number of characters',
     priority: 1,
     value: async () => ({
       type: new TextType({ }), 

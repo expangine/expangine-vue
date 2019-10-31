@@ -8,7 +8,10 @@
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
-    <v-list>
+    <v-list subheader>
+
+      <v-subheader v-if="invalid">Info</v-subheader>
+
       <v-menu
         v-if="invalid"
         offset-x
@@ -35,6 +38,10 @@
           </v-card-text>
         </v-card>
       </v-menu>
+
+      <v-divider></v-divider>
+      <v-subheader>Configure</v-subheader>
+
       <v-menu 
         offset-x
         min-width="400"
@@ -179,6 +186,9 @@
           </v-card-actions>
         </v-card>
       </v-menu>
+
+      <v-divider></v-divider>
+      <v-subheader>Transform</v-subheader>
 
       <template v-if="!readOnly && editing">
         <template v-for="modify in modifiableOptions">

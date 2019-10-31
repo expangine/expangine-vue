@@ -1,16 +1,16 @@
 
 import { EnumType, TextType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { initializeSubs } from '@/common';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { EnumSelectInput } from './EnumSelectTypes';
 import { EnumAutocompleteInput } from './EnumAutocompleteTypes';
 import { EnumSliderInput } from './EnumSliderTypes';
 import { EnumRadioInput } from './EnumRadioTypes';
+import { EnumSubs } from './EnumTypes';
 import EnumEditor from './EnumEditor.vue';
 import EnumOptions from './EnumOptions.vue';
-import { initializeSubs } from '@/common';
-import { EnumSubs } from './EnumTypes';
 
 
 export const EnumVisuals = createVisuals<EnumSubs>()({

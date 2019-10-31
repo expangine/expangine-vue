@@ -2,7 +2,9 @@
   <span class="d-inline-block">
     
     <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
-      <v-list>
+      <v-list subheader>
+
+        <v-subheader>Info</v-subheader>
 
         <v-list-item v-if="hasTypeInformation" @click="showTypeInformation = true">
           <v-list-item-content>
@@ -16,17 +18,6 @@
         </v-list-item>
 
         <slot name="prepend"></slot>
-
-        <v-list-item v-if="canRemove" @click="requestRemove">
-          <v-list-item-content class="red--text darken-4">
-            <v-list-item-title>
-              Remove {{ visuals.name }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              The entire expression will be removed
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
 
         <ex-expression-clipboard :registry="registry">
           <template #default="{ copy }">
@@ -43,6 +34,9 @@
           </template>
         </ex-expression-clipboard>
 
+        <v-divider></v-divider>
+        <v-subheader>Transform</v-subheader>
+
         <template v-for="expr in modifiers">
           <v-list-item :key="expr.text" @click="modify(expr.value)">
             <v-list-item-content>
@@ -51,6 +45,20 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+
+        <v-divider></v-divider>
+        <v-subheader>Change</v-subheader>
+
+        <v-list-item v-if="canRemove" @click="requestRemove">
+          <v-list-item-content class="red--text darken-4">
+            <v-list-item-title>
+              Remove {{ visuals.name }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              The entire expression will be removed
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
 
         <v-menu max-height="400" offset-x open-on-hover class="d-inline">
           <template #activator="{ on }">

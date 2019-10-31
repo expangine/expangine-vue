@@ -1,5 +1,5 @@
 
-import { ObjectType, MapType, TextType, ManyType, Type, TupleType, ObjectOps, ExpressionBuilder, isString, objectValues, objectMap, AnyType, isObject, TypeSub } from 'expangine-runtime';
+import { ObjectType, MapType, TextType, ManyType, Type, TupleType, isString, objectValues, objectMap, AnyType, isObject } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj, isExactType } from '@/common';
 import { createVisuals, TypeSettings, TypeSubNode } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
@@ -8,8 +8,6 @@ import { getConfirmation } from '@/app/Confirm';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
 
-
-const ex = new ExpressionBuilder();
 
 export const ObjectVisuals = createVisuals<string>()({
   type: ObjectType,

@@ -16,10 +16,11 @@ export const CopyModifier: TypeModifier =
 {
   getOption: ({ registry, type, typeSettings }) => ({
     text: 'Copy',
+    description: 'Copy the type so you can paste it in another type',
     priority: 15,
     value: async () => {
-      copyType = type;
-      copySettings = typeSettings;
+      copyType = type.clone();
+      copySettings = copy(typeSettings);
       copyRegistry = registry;
 
       sendNotification({ message: 'Type Copied!' });

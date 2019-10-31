@@ -1,9 +1,9 @@
 
 import { AnyType } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
+import { TypeBuilder } from '../TypeBuilder';
 import { AnyInput } from './AnyTypes';
 import AnyEditor from './AnyEditor.vue';
-import { TypeBuilder } from '../TypeBuilder';
 
 
 

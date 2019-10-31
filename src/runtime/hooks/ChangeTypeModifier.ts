@@ -8,6 +8,7 @@ export const ChangeTypeModifier: TypeModifier =
 {
   getOption: ({ registry, parent, type, typeSettings }) => ({
     text: 'Change Type',
+    description: 'Replace this type with a different type and try to convert the data',
     priority: 10,
     value: async () => {
       const chosen = await getBuildType({ 
@@ -26,7 +27,6 @@ export const ChangeTypeModifier: TypeModifier =
       }
 
       const ex = new ExpressionBuilder();
-      const visual = registry.getTypeVisuals(chosen.type);
       const cast = `${type.getId()}:~${chosen.type.getId()}`;
       const castOperation = type.getOperations()[cast];
       const transform = castOperation
