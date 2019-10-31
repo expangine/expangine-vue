@@ -7,9 +7,6 @@ import { ConfirmOptions } from '@/app/Confirm';
 
 
 
-export type ExpressionTypes = 'body' | 'condition' | 'value';
-
-
 export interface ExpressionVisuals<E extends Expression = any> 
 {
   expr: ExpressionClass<E>;
@@ -20,21 +17,12 @@ export interface ExpressionVisuals<E extends Expression = any>
   editor: VueConstructor;
   complex: boolean;
   isMultiline: (registry: Registry, expr: E) => boolean;
-  types: Record<ExpressionTypes, ExpressionTypeDefinition<E>>;
-}
-
-export interface ExpressionTypeDefinition<E extends Expression>
-{
   isStart: ExpressionStarter;
-  isValid: ExpressionValidator<E>;
   getModifiers: ExpressionModifier;
 }
 
 export type ExpressionStarter = 
   (requiredType: Type | null) => boolean;
-
-export type ExpressionValidator<E extends Expression> = 
-  (requiredType: Type | null, expr: E, exprType: Type | null) => any;
 
 export type ExpressionModifier = 
   (requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry) => ListOptions<ExpressionModifierCallback>;

@@ -65,7 +65,6 @@
                   <td>
                     <ex-expression
                       v-bind="$props"
-                      type="value"
                       :context="getContextAt(index)"
                       :required-type="null"
                       :value="pair[1]"
@@ -89,7 +88,6 @@
           <td>
             <ex-expression
               v-bind="$props"
-              type="body"
               :value="value.body"
               :context="bodyContext"
               @input="updateBody($event)"

@@ -71,7 +71,6 @@
         <div class="debug-program">
 
           <ex-expression
-            type="body"
             :value="step.program"
             :context="type"
             :registry="registry"

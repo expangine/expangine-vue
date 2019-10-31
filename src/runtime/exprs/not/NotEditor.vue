@@ -12,7 +12,6 @@
     <ex-expression
       key="expression"
       v-bind="$props"
-      type="condition"
       class="expression-inside parenthesis"
       :value="value.expression"
       :required-type="conditionType"

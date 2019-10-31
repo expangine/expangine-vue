@@ -20,7 +20,7 @@
       <template #activator="{ on }">
         <v-btn text v-on="on" :color="statusColor">
           <v-icon>mdi-plus</v-icon>
-          {{ type }}
+          Expression
         </v-btn>
       </template>
       <v-list>
@@ -91,7 +91,7 @@ export default ExpressionBase().extend({
   name: 'Expression',
   computed: {
     starters(): ExpressionVisuals[] {
-      return this.registry.getExpressionsStart(this.type, this.requiredType);
+      return this.registry.getExpressionsStart(this.requiredType);
     },
     statusColor(): string {
       return this.invalid ? 'error' : 'primary';

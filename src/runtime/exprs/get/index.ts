@@ -17,39 +17,13 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   isMultiline: (registry, expr) => expr.path.some((e) => 
     registry.getExpressionMultiline(e),
   ),
-  types: {
-    condition: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
-        ? [{
-            text: 'Transform to Get',
-            description: 'Get the current value',
-            value: () => new GetExpression(expr.path),
-          }]
-        : [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => false,
-      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
-        ? [{
-            text: 'Transform to Get',
-            description: 'Get the current value',
-            value: () => new GetExpression(expr.path),
-          }]
-        : [],
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
-        ? [{
-            text: 'Transform to Get',
-            description: 'Get the current value',
-            value: () => new GetExpression(expr.path),
-          }]
-        : [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression
+    ? [{
+        text: 'Transform to Get',
+        description: 'Get the current value',
+        value: () => new GetExpression(expr.path),
+      }]
+    : []
+  ,
 };

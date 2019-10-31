@@ -14,49 +14,35 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
   editor: ChainEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => false,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof ChainExpression
-        ? []
-        : expr.parent instanceof ChainExpression
-          ? [{
-              text: 'Insert Expression',
-              description: 'Add an expression at this position',
-              value: () => {
-                if (expr.parent instanceof ChainExpression) {
-                  const i = expr.parent.chain.indexOf(expr);
-                  expr.parent.chain.splice(i, 0, NoExpression.instance);
-                }
-                return expr;
-              },
-            }, {
-              text: 'Add Expression',
-              description: 'Add an expression after this expression',
-              value: () => {
-                if (expr.parent instanceof ChainExpression) {
-                  const i = expr.parent.chain.indexOf(expr);
-                  expr.parent.chain.splice(i + 1, 0, NoExpression.instance);
-                }
-                return expr;
-              },
-            }]
-          : [{
-              text: 'Add Expression',
-              description: 'Add an expression after this expression',
-              value: () => new ChainExpression([expr]),
-            }],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => false,
+  getModifiers: (type, expr) => expr instanceof ChainExpression
+    ? []
+    : expr.parent instanceof ChainExpression
+      ? [{
+          text: 'Insert Expression',
+          description: 'Add an expression at this position',
+          value: () => {
+            if (expr.parent instanceof ChainExpression) {
+              const i = expr.parent.chain.indexOf(expr);
+              expr.parent.chain.splice(i, 0, NoExpression.instance);
+            }
+            return expr;
+          },
+        }, {
+          text: 'Add Expression',
+          description: 'Add an expression after this expression',
+          value: () => {
+            if (expr.parent instanceof ChainExpression) {
+              const i = expr.parent.chain.indexOf(expr);
+              expr.parent.chain.splice(i + 1, 0, NoExpression.instance);
+            }
+            return expr;
+          },
+        }]
+      : [{
+          text: 'Add Expression',
+          description: 'Add an expression after this expression',
+          value: () => new ChainExpression([expr]),
+        }]
+  ,
 };

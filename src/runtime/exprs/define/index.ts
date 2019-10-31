@@ -1,6 +1,6 @@
-import { Expression, DefineExpression, NoExpression, objectEach, ExpressionMap, GetExpression, ConstantExpression, Type } from 'expangine-runtime';
+import { Expression, DefineExpression, NoExpression, GetExpression, ConstantExpression, Type } from 'expangine-runtime';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
-import { obj, ListOptions } from '@/common';
+import { ListOptions } from '@/common';
 import { Registry } from '@/runtime/Registry';
 
 import DefineEditor from './DefineEditor.vue';
@@ -15,24 +15,9 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
   viewer: DefineEditor,
   editor: DefineEditor,
   complex: true,
+  isStart: () => true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers,
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers,
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers,
-    },
-  },
+  getModifiers,
 };
 
 type ExpressionNamePair = [string, Expression];
@@ -40,10 +25,6 @@ type ExpressionNamePair = [string, Expression];
 function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptions<ExpressionModifierCallback>
 {
   const options: ListOptions<ExpressionModifierCallback> = [];
-
-  if (!registry.getExpressionsValid('value', null, expr, exprType)) {
-    return options;
-  }
 
   const { define, before } = getDefineAndBefore(expr);
 

@@ -254,7 +254,6 @@
           <v-container fluid>
             <ex-expression
               can-remove
-              type="body"
               :value="program"
               :context="type"
               :read-only="readOnly"

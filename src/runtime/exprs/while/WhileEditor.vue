@@ -25,7 +25,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="condition"
             :value="value.condition"
             :required-type="conditionType"
             @input="updateCondition($event)"
@@ -43,7 +42,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="body"
             :value="value.body"
             :context="bodyContext"
             @input="updateBody($event)"

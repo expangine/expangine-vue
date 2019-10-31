@@ -47,7 +47,6 @@
                   <td>
                     <ex-expression
                       v-bind="$props"
-                      type="value"
                       :required-type="null"
                       :value="value"
                       @input="changePropertyExpression(prop, $event)"

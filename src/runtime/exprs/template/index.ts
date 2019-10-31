@@ -1,4 +1,4 @@
-import { TemplateExpression, NoExpression } from 'expangine-runtime';
+import { TemplateExpression } from 'expangine-runtime';
 import { ExpressionVisuals } from '../ExpressionVisuals';
 import { obj } from '@/common';
 
@@ -15,21 +15,6 @@ export const TemplateVisuals: ExpressionVisuals<TemplateExpression> =
   editor: TemplateEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => true,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: () => [],
 };

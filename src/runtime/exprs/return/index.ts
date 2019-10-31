@@ -15,31 +15,19 @@ export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
   editor: ReturnEditor,
   complex: false,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (requiredType, expr) => expr instanceof ReturnExpression
-        ? [{
-            text: 'Remove Return',
-            description: 'Remove the return expression',
-            value: () => expr.value,
-          }]
-        : [{
-            text: 'Return',
-            description: 'Return this expression as the function result',
-            value: () => new ReturnExpression(expr),
-          }],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: (requiredType, expr) => requiredType
+    ? []
+    : expr instanceof ReturnExpression
+      ? [{
+          text: 'Remove Return',
+          description: 'Remove the return expression',
+          value: () => expr.value,
+        }]
+      : [{
+          text: 'Return',
+          description: 'Return this expression as the function result',
+          value: () => new ReturnExpression(expr),
+        }]
+  ,
 };

@@ -24,21 +24,6 @@ export const ForVisuals: ExpressionVisuals<ForExpression> =
   editor: ForEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: () => [],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: () => [],
 };

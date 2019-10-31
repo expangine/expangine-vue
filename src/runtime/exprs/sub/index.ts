@@ -21,23 +21,8 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
       registry.getExpressionMultiline(e),
     )
   ,
-  types: {
-    condition: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers,
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers,
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers,
-    },
-  },
+  isStart: () => false,
+  getModifiers,
 };
 
 function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptions<ExpressionModifierCallback>

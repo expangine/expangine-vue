@@ -211,10 +211,10 @@ export default ExpressionBase().extend({
       return `Expected ${expected} but given ${actual}`;
     },
     starters(): ExpressionVisuals[] {
-      return this.registry.getExpressionsStart(this.type, this.requiredType);
+      return this.registry.getExpressionsStart(this.requiredType);
     },
     modifiers(): ListOptions<ExpressionModifierCallback> {
-      return this.registry.getExpressionsModifiers(this.type, this.requiredType, this.value, this.computedType);
+      return this.registry.getExpressionsModifiers(this.requiredType, this.value, this.computedType);
     },
     requiredTypeDescription(): string {
       return this.requiredType

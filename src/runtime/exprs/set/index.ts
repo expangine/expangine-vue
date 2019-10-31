@@ -17,42 +17,13 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
   isMultiline: (registry, expr) => 
     registry.getExpressionMultiline(expr.value)
   ,
-  types: {
-    condition: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof UpdateExpression
-        ? [{ 
-            text: 'Transform to Set', 
-            description: 'Returns true if value is applied, otherwise false', 
-            value: () => new SetExpression(expr.path, NoExpression.instance),
-          }]
-        : []
-      ,
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof UpdateExpression
-        ? [{ 
-            text: 'Transform to Set', 
-            description: 'Set the current value to a new value',
-            value: () => new SetExpression(expr.path, NoExpression.instance),
-          }]
-        : []
-      ,
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof UpdateExpression
-        ? [{ 
-            text: 'Transform to Set', 
-            description: 'Returns true if value is applied, otherwise false', 
-            value: () => new SetExpression(expr.path, NoExpression.instance),
-          }]
-        : []
-      ,
-    },
-  },
+  isStart: () => true,
+  getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof UpdateExpression
+    ? [{ 
+        text: 'Transform to Set', 
+        description: 'Set the current value to a new value',
+        value: () => new SetExpression(expr.path, NoExpression.instance),
+      }]
+    : []
+  ,
 };

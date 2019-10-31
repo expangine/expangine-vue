@@ -5,7 +5,7 @@ import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
 import { TypeHook, TypeHookInput, TypeHookOption } from './types/TypeHook';
-import { ExpressionVisuals, ExpressionTypes } from './exprs/ExpressionVisuals';
+import { ExpressionVisuals } from './exprs/ExpressionVisuals';
 import { OperationVisuals } from './ops/OperationVisuals';
 
 
@@ -74,20 +74,20 @@ export class Registry
     return this.exprMap[expr.getId()];
   }
 
-  public getExpressionsValid(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null): ExpressionVisuals[]
+  public getExpressions(): ExpressionVisuals[]
   {
-    return this.exprs.filter((visual) => visual.types[type].isValid(requiredType, expr, exprType));
+    return this.exprs;
   }
 
-  public getExpressionsStart(type: ExpressionTypes, requiredType: Type | null): ExpressionVisuals[]
+  public getExpressionsStart(requiredType: Type | null): ExpressionVisuals[]
   {
-    return this.exprs.filter((visual) => visual.types[type].isStart(requiredType));
+    return this.exprs.filter((visual) => visual.isStart(requiredType));
   }
-
-  public getExpressionsModifiers(type: ExpressionTypes, requiredType: Type | null, expr: Expression, exprType: Type | null)
+  
+  public getExpressionsModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null)
   {
     return this.exprs
-      .map((visual) => visual.types[type].getModifiers(requiredType, expr, exprType, this))
+      .map((visual) => visual.getModifiers(requiredType, expr, exprType, this))
       .reduce((prev, next) => next.concat(prev), [])
     ;
   }

@@ -14,39 +14,13 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   editor: IfEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: (type, expr) => expr instanceof IfExpression
-        ? [{
-            text: 'Add Else If',
-            description: 'Adds a new condition & body at the end of the If',
-            value: () => expr.elseif(NoExpression.instance),
-          }]
-        : [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof IfExpression
-        ? [{
-            text: 'Add Else If',
-            description: 'Adds a new condition & body at the end of the If',
-            value: () => expr.elseif(NoExpression.instance),
-          }]
-        : [],
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof IfExpression
-        ? [{
-            text: 'Add Else If',
-            description: 'Adds a new condition & body at the end of the If',
-            value: () => expr.elseif(NoExpression.instance),
-          }]
-        : [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: (type, expr) => expr instanceof IfExpression
+    ? [{
+        text: 'Add Else If',
+        description: 'Adds a new condition & body at the end of the If',
+        value: () => expr.elseif(NoExpression.instance),
+      }]
+    : []
+  ,
 };

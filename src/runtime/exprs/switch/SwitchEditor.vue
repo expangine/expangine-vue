@@ -70,7 +70,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="value"
             :value="value.value"
             :required-type="null"
             @input="updateValue($event)"
@@ -111,7 +110,6 @@
 
                 <ex-expression
                   v-bind="$props"
-                  type="value"
                   :value="test"
                   :required-type="valueType"
                   @input="updateTestValue(caseIndex, testIndex, $event)"

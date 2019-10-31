@@ -21,21 +21,6 @@ export const SwitchVisuals: ExpressionVisuals<SwitchExpression> =
   editor: SwitchEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: () => [],
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: () => [],
 };

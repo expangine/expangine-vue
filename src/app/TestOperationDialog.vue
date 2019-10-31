@@ -37,7 +37,6 @@
                 </td>
                 <td v-else>
                   <ex-expression
-                    type="value"
                     :registry="registry"
                     :context="paramContext(param)"
                     :context-details="paramContextDetails(param)"

@@ -14,27 +14,12 @@ export const DoVisuals: ExpressionVisuals<DoExpression> =
   editor: DoEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof WhileExpression
-        ? [{
-            text: 'Convert to Do',
-            description: 'A Do executes the expression and continues if the condition is true',
-            value: () => new DoExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
-          }]
-        : [],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: (type, expr) => expr instanceof WhileExpression
+    ? [{
+        text: 'Convert to Do',
+        description: 'A Do executes the expression and continues if the condition is true',
+        value: () => new DoExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
+      }]
+    : [],
 };

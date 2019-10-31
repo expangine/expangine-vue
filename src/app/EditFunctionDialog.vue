@@ -32,7 +32,6 @@
           </v-tab-item>
           <v-tab-item class="data-container">
             <ex-expression
-              type="body"
               :value="func.options.expression"
               :context="func.options.params"
               :registry="registry"

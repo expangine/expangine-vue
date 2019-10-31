@@ -55,7 +55,6 @@
             v-else
             v-bind="$props"
             class="parenthesis"
-            type="value"
             :value="getParam(param)"
             :required-type="paramType"
             @input="setParam(param, $event)"
@@ -89,7 +88,6 @@
             v-else
             v-bind="$props"
             class="parenthesis"
-            type="value"
             :value="argExpr"
             :required-type="null"
             @input="setParam(arg, $event)"

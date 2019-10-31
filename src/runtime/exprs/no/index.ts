@@ -14,21 +14,6 @@ export const NoVisuals: ExpressionVisuals<NoExpression> =
   editor: NoEditor,
   complex: false,
   isMultiline: () => false,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => false,
+  getModifiers: () => [],
 };

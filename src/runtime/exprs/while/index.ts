@@ -14,27 +14,13 @@ export const WhileVisuals: ExpressionVisuals<WhileExpression> =
   editor: WhileEditor,
   complex: true,
   isMultiline: () => true,
-  types: {
-    condition: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (type, expr) => expr instanceof DoExpression
-        ? [{
-            text: 'Convert to While',
-            description: 'A while checks a condition and while true executes an expression',
-            value: () => new WhileExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
-          }]
-        : [],
-    },
-    value: {
-      isStart: () => false,
-      isValid: () => false,
-      getModifiers: () => [],
-    },
-  },
+  isStart: () => true,
+  getModifiers: (type, expr) => expr instanceof DoExpression
+    ? [{
+        text: 'Convert to While',
+        description: 'A while checks a condition and while true executes an expression',
+        value: () => new WhileExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
+      }]
+    : []
+  ,
 };

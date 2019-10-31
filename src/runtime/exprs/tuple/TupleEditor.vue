@@ -41,7 +41,6 @@
                   <td class="py-2">
                     <ex-expression
                       v-bind="$props"
-                      type="value"
                       :key="index"
                       :value="expr"
                       :required-type="null"
@@ -58,7 +57,6 @@
                 <td class="py-2">
                   <ex-expression
                     v-bind="$props"
-                    type="value"
                     :value="noop"
                     :required-type="null"
                     @input="addExpression"

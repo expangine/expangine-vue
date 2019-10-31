@@ -29,7 +29,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="value"
             :required-type="valueTypeSimplified"
             :value="value.value"
             :path-settings="valueSettings"
@@ -72,7 +71,6 @@
           <span class="d-inline-block my-3">
             <ex-expression
               v-bind="$props"
-              type="value"
               :required-type="valueTypeSimplified"
               :value="value.value"
               :path-settings="valueSettings"

@@ -49,7 +49,6 @@
           <td>
             <ex-expression
               v-bind="$props"
-              type="condition"
               :value="group[0]"
               :required-type="conditionType"
               @input="updateCondition(index, $event)"

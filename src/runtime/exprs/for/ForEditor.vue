@@ -26,7 +26,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="value"
             :value="value.start"
             :required-type="variableType"
             @input="updateStart($event)"
@@ -44,7 +43,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="value"
             :value="value.end"
             :required-type="variableType"
             @input="updateEnd($event)"
@@ -62,7 +60,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="body"
             :value="value.body"
             :context="bodyContext"
             @input="updateBody($event)"

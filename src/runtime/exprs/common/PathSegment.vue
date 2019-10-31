@@ -37,7 +37,6 @@
         <ex-expression
           key="value"
           v-bind="$props"
-          type="value"
           :class="segmentClass"
           :read-only="segmentReadOnly"
           :required-type="expectedType"

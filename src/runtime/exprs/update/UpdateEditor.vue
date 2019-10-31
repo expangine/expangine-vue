@@ -28,7 +28,6 @@
         <td>
           <ex-expression
             v-bind="$props"
-            type="value"
             :required-type="valueType"
             :value="value.value"
             :context="valueContext"

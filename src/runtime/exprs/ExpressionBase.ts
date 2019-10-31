@@ -3,7 +3,7 @@ import Vue from 'vue';
 import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
-import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
+import { ExpressionVisuals } from './ExpressionVisuals';
 import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 import { ComplexityColors } from '@/common';
 
@@ -41,7 +41,6 @@ export default function<E extends Expression>()
     },
     {
       value: E;
-      type: ExpressionTypes;
       context: Type;
       contextDetails: Record<string, string>;
       readOnly: boolean;
@@ -58,10 +57,6 @@ export default function<E extends Expression>()
     props: {
       value: {
         type: Object as () => E,
-        required: true,
-      },
-      type: {
-        type: String as () => ExpressionTypes,
         required: true,
       },
       context: {

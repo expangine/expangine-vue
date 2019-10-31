@@ -8,7 +8,6 @@
     <span class="px-3">=</span>
     <ex-expression
       v-bind="$props"
-      type="value"
       :value="value.value"
     ></ex-expression>
   </span>

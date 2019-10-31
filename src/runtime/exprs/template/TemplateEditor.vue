@@ -36,7 +36,6 @@
             <v-icon class="ma-2">mdi-equal</v-icon>
             <ex-expression
               v-bind="$props"
-              type="value"
               :value="param"
               :required-type="paramType"
               @input="saveVar(name, $event)"

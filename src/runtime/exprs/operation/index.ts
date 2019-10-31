@@ -15,48 +15,19 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   viewer: OperationEditor,
   editor: OperationEditor,
   complex: true,
-  isMultiline: (registry, expr) => objectReduce(expr.params, 
-    (paramExpr, param, oneOf) => (oneOf || registry.getExpressionMultiline(paramExpr))
-  , false as boolean),
-  types: {
-    condition: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (requiredType, expr, exprType) => [{
-        text: 'Operate',
-        description: exprType 
-          ? 'Perform an operation on the current expression'
-          : requiredType
-            ? 'Perform an operation to return the desired type'
-            : 'Perform an operation',
-        value: () => new OperationExpression('', { [STARTING_PARAM]: expr }),
-      }],
-    },
-    body: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (requiredType, expr, exprType) => [{
-        text: 'Operate',
-        description: exprType 
-          ? 'Perform an operation on the current expression'
-          : requiredType
-            ? 'Perform an operation to return the desired type'
-            : 'Perform an operation',
-        value: () => new OperationExpression('', { [STARTING_PARAM]: expr }),
-      }],
-    },
-    value: {
-      isStart: () => true,
-      isValid: () => true,
-      getModifiers: (requiredType, expr, exprType) => [{
-        text: 'Operate',
-        description: exprType 
-          ? 'Perform an operation on the current expression'
-          : requiredType
-            ? 'Perform an operation to return the desired type'
-            : 'Perform an operation',
-        value: () => new OperationExpression('', { [STARTING_PARAM]: expr }),
-      }],
-    },
-  },
+  isMultiline: (registry, expr) => 
+    objectReduce(expr.params, (paramExpr, param, oneOf) => 
+        (oneOf || registry.getExpressionMultiline(paramExpr)
+    ), false as boolean)
+  ,
+  isStart: () => true,
+  getModifiers: (requiredType, expr, exprType) => [{
+    text: 'Operate',
+    description: exprType 
+      ? 'Perform an operation on the current expression'
+      : requiredType
+        ? 'Perform an operation to return the desired type'
+        : 'Perform an operation',
+    value: () => new OperationExpression('', { [STARTING_PARAM]: expr }),
+  }],
 };

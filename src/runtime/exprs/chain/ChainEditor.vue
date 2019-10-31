@@ -9,7 +9,6 @@
           <td>
             <ex-expression
               v-bind="$props"
-              type="body"
               :key="index"
               :value="expr"
               :required-type="getRequiredType(index)"

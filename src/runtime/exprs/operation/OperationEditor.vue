@@ -144,7 +144,6 @@
                   v-else
                   v-bind="$props"
                   class="parenthesis"
-                  type="value"
                   :value="value.params[section]"
                   :context="paramContext(section)"
                   :context-details="paramContextDetails(section)"
@@ -193,7 +192,6 @@
             <td>
               <ex-expression
                 v-bind="$props"
-                type="value"
                 :value="param"
                 :context="paramContext(name)"
                 :context-details="paramContextDetails(name)"
