@@ -53,11 +53,9 @@ export async function getRunProgram(options: Partial<RunProgramOptions> = {}): P
   const { type, program, data: originalData } = runProgramDialog;
 
   const data = type.fromJson(type.toJson(originalData));
-  const command = LiveRuntime.getCommand(program);
-
   const start = now();
 
-  const result = command(data);
+  const result = LiveRuntime.run(program, data);
 
   const end = now();
   const measureTime = -(now() - now());
