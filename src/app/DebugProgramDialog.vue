@@ -49,6 +49,33 @@
             <span>Step Out {{ stepOutLabel }}</span>
           </v-tooltip>
 
+          <v-tooltip bottom open-delay="1000" v-if="!goto">
+            <template #activator="{ on }">
+              <v-btn icon v-on="on" @click="gotoStart">
+                <v-icon>mdi-cursor-pointer</v-icon>
+              </v-btn>
+            </template>
+            <span>Go To</span>
+          </v-tooltip>
+
+          <v-tooltip bottom open-delay="1000" v-if="goto && gotoExpression">
+            <template #activator="{ on }">
+              <v-btn icon v-on="on" @click="gotoEnd">
+                <v-icon>mdi-check</v-icon>
+              </v-btn>
+            </template>
+            <span>Go To {{ registry.getExpressionName(gotoExpression) }}</span>
+          </v-tooltip>
+
+          <v-tooltip bottom open-delay="1000" v-if="goto">
+            <template #activator="{ on }">
+              <v-btn icon v-on="on" @click="gotoCancel">
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </template>
+            <span>Go To Cancel</span>
+          </v-tooltip>
+
           <v-tooltip bottom open-delay="1000">
             <template #activator="{ on }">
               <v-btn icon :disabled="disabledForward" v-on="on" @click="last">
@@ -75,6 +102,7 @@
             :context="type"
             :registry="registry"
             :highlight="highlightMap"
+            :event-listeners="eventListeners"
           ></ex-expression>
 
         </div>
@@ -146,6 +174,7 @@ import { TypeSubNode } from '../runtime/types/TypeVisuals';
 import ExDebugStack from './DebugStack.vue';
 import ExDebugNode from './DebugNode.vue';
 import ExDebugStep from './DebugStep.vue';
+import { ExpressionEventListeners } from '../runtime/exprs/ExpressionBase';
 
 
 export default Vue.extend({
@@ -163,9 +192,17 @@ export default Vue.extend({
       return this.registry.getExpressionName(this.step.expr);
     },
     highlightMap(): Map<Expression, string> {
-      return this.hoverStep
-        ? new Map([[this.step.expr, '#BBDEFB'], [this.hoverStep.expr, '#ddf0ffc4']])
-        : new Map([[this.step.expr, '#BBDEFB']]);
+      const highlights = new Map([[this.step.expr, '#BBDEFB']]);
+
+      if (this.hoverStep) {
+        highlights.set(this.hoverStep.expr, '#DDF0FFC4');
+      }
+
+      if (this.gotoExpression) {
+        highlights.set(this.gotoExpression, '#9CCC65');
+      }
+
+      return highlights;
     },
     initialStep(): DebugStep {
       return {
@@ -244,8 +281,33 @@ export default Vue.extend({
 
       return step ? ' of ' + step : '';
     },
+    eventListeners(): ExpressionEventListeners {
+      return { click: this.gotoClick };
+    },
   },
   methods: {
+    gotoClick(ev: Event, expr: Expression) {
+      if (this.goto) {
+        this.gotoExpression = expr;
+
+        ev.stopPropagation();
+        ev.preventDefault();
+      }
+    },
+    gotoStart() {
+      this.goto = true;
+      this.gotoExpression = null;
+    },
+    gotoEnd() {
+      if (this.gotoExpression) {
+        this.gotoStep(this.currentStep.step, this.gotoExpression);
+      }
+      this.gotoCancel();
+    },
+    gotoCancel() {
+      this.goto = false;
+      this.gotoExpression = null;
+    },
     getStep(index: number): DebugStep | undefined {
       return this.steps.find((s) => s.index === index);
     },
@@ -267,27 +329,27 @@ export default Vue.extend({
         this.$set(this.steps, currentStepIndex, currentStep);
       }
     },
-    goto(index: number) {
-      this.currentStep = debugProgram(index);
+    gotoStep(index: number, searchFor?: Expression) {
+      this.currentStep = debugProgram(index, searchFor);
       this.pushCurrentStep();
     },
     first() {
-      this.goto(0);
+      this.gotoStep(0);
     },
     last() {
-      this.goto(9007199254740991);
+      this.gotoStep(9007199254740991);
     },
     stepBack() {
-      this.goto(this.currentStep.stepBack);
+      this.gotoStep(this.currentStep.stepBack);
     },
     stepInto() {
-      this.goto(this.currentStep.stepInto);
+      this.gotoStep(this.currentStep.stepInto);
     },
     stepOver() {
-      this.goto(this.currentStep.stepOver);
+      this.gotoStep(this.currentStep.stepOver);
     },
     stepOut() {
-      this.goto(this.currentStep.stepOut);
+      this.gotoStep(this.currentStep.stepOut);
     },
     onHover(step: DebugStep | null = null) {
       this.hoverStep = step;

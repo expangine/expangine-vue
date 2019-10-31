@@ -14,6 +14,8 @@ export interface DebugProgramOptions
   hoverStep: DebugStep | null;
   currentStep: DebugProgramResult;
   stepsLoaded: number;
+  goto: boolean;
+  gotoExpression: Expression | null;
   visible: boolean;
   registry: Registry;
   close: () => any;
@@ -52,6 +54,8 @@ export function getDebugProgramDefaults(): DebugProgramOptions
     program: NoExpression.instance,
     steps: [],
     stepsLoaded: 10,
+    goto: false,
+    gotoExpression: null,
     hoverStep: null,
     currentStep: null as unknown as DebugProgramResult,
     visible: false,
@@ -101,13 +105,13 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
  * Step Out Of (goto to depth - 1 starting at current + 1)
  * Back (goto index = current - 1)
  */
-export function debugProgram(step: number): DebugProgramResult
+export function debugProgram(step: number, searchFor?: Expression): DebugProgramResult
 {
   const { registry, type, program, data: originalData } = debugProgramDialog;
 
   const data = type.fromJson(type.toJson(originalData));
   const programStack: Expression[] = [program];
-  const stepInto = step + 1;
+  let stepInto = step + 1;
   let stepBack = step - 1;
   let stepOver = -1;
   let stepOut = -1;
@@ -123,6 +127,7 @@ export function debugProgram(step: number): DebugProgramResult
   };
   let currentDepth = 0;
   let end = false;
+  let found = false;
 
   const debugProvider: CommandProvider<LiveContext, LiveResult> = 
   {
@@ -136,7 +141,8 @@ export function debugProgram(step: number): DebugProgramResult
 
       return (context: LiveContext) => 
       {
-        const isEnter = stepCurrent === step;
+        const isSearchFound = stepCurrent >= step && expr === searchFor && !found;
+        const isEnter = stepCurrent === step || isSearchFound;
         const stepEnter = stepCurrent;
 
         if (isEnter)
@@ -152,6 +158,14 @@ export function debugProgram(step: number): DebugProgramResult
             context: enter.value,
             contextType: enter.valueType,
           };
+
+          if (isSearchFound)
+          {
+            stepInto = stepCurrent + 1;
+            stepBack = stepCurrent - 1;
+            stepOut = -1;
+            found = true;
+          }
         }
 
         stepCurrent++;

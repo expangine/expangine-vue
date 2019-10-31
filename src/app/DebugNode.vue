@@ -7,7 +7,7 @@
           :registry="registry"
           :data="node.sub"
           :type="node.subType"
-          @string="subString"
+          @string="subString = $event"
         ></ex-data-string>
       </v-chip>
       <ex-data-string
