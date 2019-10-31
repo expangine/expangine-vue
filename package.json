@@ -20,10 +20,12 @@
     "pages:copy": "rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
   },
   "dependencies": {
+    "@types/papaparse": "^5.0.1",
     "core-js": "^2.6.5",
     "diff": "^4.0.1",
     "expangine-runtime": "git+https://github.com/expangine/expangine-runtime.git#master",
     "expangine-runtime-live": "git+https://github.com/expangine/expangine-runtime-live.git#master",
+    "papaparse": "^5.1.0",
     "vue": "^2.6.10",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.1.0"

@@ -28,6 +28,15 @@
               <v-list-item-subtitle>Upload a development environment JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="importCsv">
+            <v-list-item-icon>
+              <v-icon>mdi-file-delimited-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Import CSV</v-list-item-title>
+              <v-list-item-subtitle>Upload data in a CSV.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item @click="saveAsFunction">
             <v-list-item-icon>
               <v-icon>mdi-content-save-move-outline</v-icon>
@@ -341,6 +350,7 @@
 <script lang="ts">
 
 import Vue from 'vue';
+import * as Papa from 'papaparse';
 import * as ex from 'expangine-runtime';
 import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
@@ -352,10 +362,10 @@ import { getRunProgram } from './app/RunProgram';
 import { getDebugProgram } from './app/DebugProgram';
 import { getDescribeData } from './app/DescribeData';
 import { getEditFunction } from './app/EditFunction';
+import { getSimpleInput, SimpleInputOptions } from './app/SimpleInput';
 import { getInput } from './app/Input';
 import { friendlyList, SimpleFieldOption } from '@/common';
 import Registry from './runtime';
-import { getSimpleInput } from './app/SimpleInput';
 
 
 
@@ -717,6 +727,95 @@ export default Vue.extend({
       const exported = JSON.stringify(exporting, undefined, 2);
 
       this.downloadFile(settings.name + '.json', exported, 'text/json');
+    },
+    importCsv() {
+      const finput = document.createElement('input');
+      finput.type = 'file';
+      finput.multiple = true;
+      finput.accept = '.csv';
+      finput.onchange = (e) => finput.files && finput.files.length > 0 ? this.importCsvFile(finput.files[0]) : undefined;
+      finput.click();
+      finput.remove();
+    },
+    importCsvFile(file: File) {
+      Papa.parse(file, {
+        header: true,
+        complete: async ({ data, meta }: { data: any, meta: { fields: string[], aborted: boolean }}) => {
+          if (meta.aborted) {
+            sendNotification({ message: 'There was a problem parsing the CSV.' });
+          } else {
+            const fields: SimpleFieldOption[] = [
+              { name: 'property', type: 'text', label: 'Property', details: 'The property to store the CSV data in.' },
+              { name: 'columns', type: 'object', label: 'Columns', 
+                fields: meta.fields.map((column) => ({
+                  name: column,
+                  type: 'boolean',
+                  label: column,
+                })),
+              },
+            ];
+
+            if (this.type instanceof ObjectType) {
+              fields.push({
+                name: 'action',
+                type: 'select',
+                label: 'Action',
+                items: [
+                  { text: 'Replace data & type', value: 'replace' },
+                  { text: 'Add as property of current data & type', value: 'merge' },
+                ],
+              });
+            }
+
+            const settings = await getSimpleInput<any>({
+              value: { columns: {}, action: 'replace', property: 'data' },
+              fields,
+            });
+  
+            data.forEach((row: any) => {
+              for (const prop in row) {
+                if (!settings.columns[prop]) {
+                  delete row[prop];
+                }
+              }
+            });
+
+            if (settings.action === 'replace') {
+              data = { [settings.property]: data };
+
+              const type = this.registry.defs.describe(data);
+              type.removeDescribedRestrictions();
+              
+              const typeSettings = this.registry.getTypeSettings(type);
+
+              this.historyPush(['data', 'type', 'settings'], () => {
+                this.type = type;
+                this.settings = typeSettings;
+                this.data = data;
+
+                this.saveType();
+                this.saveData();
+              });
+            } else {
+              const type = this.registry.defs.describe(data);
+              type.removeDescribedRestrictions();
+
+              const typeSettings = this.registry.getTypeSettings(type);
+
+              this.historyPush(['data', 'type', 'settings'], () => {
+                if (this.type instanceof ObjectType) {
+                  this.$set(this.type.options.props, settings.property, type);
+                  this.$set((this.settings as any).sub, settings.property, typeSettings);
+                  this.$set(this.data, settings.property, data);
+
+                  this.saveType();
+                  this.saveData();
+                }
+              });
+            }
+          }
+        },
+      });
     },
     importJson() {
       const finput = document.createElement('input');
