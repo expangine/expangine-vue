@@ -61,15 +61,13 @@
             </td>
             <td class="px-0">
               <ex-type-editor
+                v-bind="$props"
                 :type="propType"
                 :required-type="requiredTypeFor(prop)"
                 :required-type-options="requiredTypeOptions"
                 :parent="type"
-                :highlight="highlight"
-                :registry="registry"
                 :settings="settings.sub[prop]"
-                :read-only="readOnly"
-                :hide-settings="hideSettings"
+                :disable-sub-settings="false"
                 @change="onChange(prop, $event)"
               ></ex-type-editor>
             </td>

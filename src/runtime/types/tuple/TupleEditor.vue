@@ -48,15 +48,13 @@
         </v-list-item-avatar>
         <v-list-item-content class="pa-0">
           <ex-type-editor
+            v-bind="$props"
             :type="innerType"
             :required-type="requiredTypeFor(index)"
             :required-type-options="requiredTypeOptions"
             :parent="type"
             :settings="settings.sub[index]"
-            :highlight="highlight"
-            :registry="registry"
-            :read-only="readOnly"
-            :hide-settings="hideSettings"
+            :disable-sub-settings="false"
             @change="onChange(index, innerType, $event)"
           ></ex-type-editor>
         </v-list-item-content>

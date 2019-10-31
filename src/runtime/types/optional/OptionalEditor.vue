@@ -9,15 +9,13 @@
     </v-list-item-avatar>
     <v-list-item-content class="pa-0">
       <ex-type-editor
+        v-bind="$props"
         :type="type.options"
         :required-type="requiredInner"
         :required-type-options="requiredTypeOptions"
         :parent="type"
         :settings="settings.sub.innerType"
-        :highlight="highlight"
-        :registry="registry"
-        :read-only="readOnly"
-        :hide-settings="hideSettings"
+        :disable-sub-settings="false"
         @change="onChange"
       ></ex-type-editor>
     </v-list-item-content>

@@ -36,16 +36,13 @@
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor
+          v-bind="$props"
           :type="type.options.key"
           :required-type="requiredKey"
           :required-type-options="requiredTypeOptions"
           :settings="settings.sub.key"
-          :highlight="highlight"
-          :registry="registry"
           :parent="type"
-          :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
-          :hide-settings="hideSettings"
           @change="onChangeKey"
         ></ex-type-editor>
       </v-list-item-content>
@@ -68,16 +65,13 @@
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor
+          v-bind="$props"
           :type="type.options.value"
           :required-type="requiredValue"
           :required-type-options="requiredTypeOptions"
           :settings="settings.sub.value"
-          :highlight="highlight"
-          :registry="registry"
           :parent="type"
-          :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
-          :hide-settings="hideSettings"
           @change="onChangeValue"
         ></ex-type-editor>
       </v-list-item-content>

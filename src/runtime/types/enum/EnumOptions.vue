@@ -8,15 +8,13 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <ex-type-editor
+            v-bind="$props"
             disable-sub-settings
             :type="type.options.key"
             :required-type="requiredKey"
             :required-type-options="requiredTypeOptions"
             :settings="settings.sub.key"
-            :highlight="highlight"
-            :registry="registry"
             :parent="type"
-            :read-only="readOnly"
             @change="onChangeKey"
           ></ex-type-editor>
         </v-list-item-content>
@@ -27,14 +25,13 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <ex-type-editor
+            v-bind="$props"
             disable-sub-settings
             :type="type.options.value"
             :required-type="requiredValue"
             :required-type-options="requiredTypeOptions"
             :settings="settings.sub.value"
-            :registry="registry"
             :parent="type"
-            :read-only="readOnly"
             @change="onChangeValue"
           ></ex-type-editor>
         </v-list-item-content>

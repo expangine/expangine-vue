@@ -1,9 +1,15 @@
 
 import Vue, { VueConstructor } from 'vue';
-import { Type, OptionalType, ManyType, TypeCompatibleOptions } from 'expangine-runtime';
+import { Type, OptionalType, ManyType, TypeCompatibleOptions, objectMap } from 'expangine-runtime';
 import { ListOptions } from '@/common';
 import { TypeVisuals, TypeVisualInput, TypeSettings, TypeUpdateEvent, SubsType, TypeSettingsAny } from './TypeVisuals';
 import { Registry } from '../Registry';
+
+
+
+export type TypeEventListeners = Record<string, (event: Event, type: Type) => void>;
+
+export type TypeNativeListeners = Record<string, EventListener>;
 
 
 export default function <T extends Type, O, S extends SubsType = unknown>()
@@ -34,6 +40,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       summary: string;
       hasDefault: boolean;
       hideSubSettings: boolean;
+      eventListenersNative: TypeNativeListeners;
     },
     {
       type: T;
@@ -46,6 +53,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       settings: TypeSettings<O, S>;
       hideSettings: boolean;
       disableSubSettings: boolean;
+      eventListeners: TypeEventListeners;
     }
   >({
     props: {
@@ -87,6 +95,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       disableSubSettings: {
         type: Boolean,
         default: false,
+      },
+      eventListeners: {
+        type: Object as () => TypeEventListeners,
+        default: () => ({}),
       },
     },
     computed: {
@@ -164,6 +176,9 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       },
       hasDefault(): boolean {
         return this.visuals.allowsDefault !== false;
+      },
+      eventListenersNative(): TypeNativeListeners {
+        return objectMap(this.eventListeners, (handler) => (event) => handler(event, this.type));
       },
     },
     methods: {

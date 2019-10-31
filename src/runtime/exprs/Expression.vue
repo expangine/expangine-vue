@@ -1,5 +1,11 @@
 <template>
-  <span v-if="hasValue && visuals" class="ex-expression" :class="{ multiline }" :style="highlightStyle">
+  <span 
+    v-if="hasValue && visuals" 
+    class="ex-expression" 
+    :class="{ multiline }" 
+    :style="highlightStyle"
+    v-on="eventListenersNative"
+  >
     <component
       v-if="readOnly"
       :is="visuals.viewer"
@@ -12,10 +18,18 @@
       v-on="$listeners"
     ></component>
   </span>
-  <span v-else-if="hasValue">
+
+  <span 
+    v-else-if="hasValue"
+    v-on="eventListenersNative"
+  >
     No expression visuals exist for {{ value.getId() }}.
   </span>
-  <span v-else>
+
+  <span 
+    v-else 
+    v-on="eventListenersNative"
+  >
     <v-menu max-height="400">
       <template #activator="{ on }">
         <v-btn text v-on="on" :color="statusColor">

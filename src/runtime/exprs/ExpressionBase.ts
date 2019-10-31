@@ -1,11 +1,17 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
 import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 import { ComplexityColors } from '@/common';
+
+
+
+export type ExpressionEventListeners = Record<string, (event: Event, expression: Expression) => void>;
+
+export type ExpressionNativeListeners = Record<string, EventListener>;
 
 
 export default function<E extends Expression>()
@@ -38,6 +44,7 @@ export default function<E extends Expression>()
       multiline: boolean;
       complexity: number;
       complexityColor: string;
+      eventListenersNative: ExpressionNativeListeners;
     },
     {
       value: E;
@@ -52,6 +59,7 @@ export default function<E extends Expression>()
       showComplexity: boolean;
       mutates: boolean;
       canRemove: boolean;
+      eventListeners: ExpressionEventListeners;
     }
   >({
     props: {
@@ -102,6 +110,10 @@ export default function<E extends Expression>()
       canRemove: {
         type: Boolean,
         default: true,
+      },
+      eventListeners: {
+        type: Object as () => ExpressionEventListeners,
+        default: () => ({}),
       },
     },
     computed: {
@@ -201,6 +213,9 @@ export default function<E extends Expression>()
         const i = Math.min(c, ComplexityColors.length - 1);
 
         return ComplexityColors[i];
+      },
+      eventListenersNative(): ExpressionNativeListeners {
+        return objectMap(this.eventListeners, (handler) => (event) => handler(event, this.value));
       },
     },
     methods: {

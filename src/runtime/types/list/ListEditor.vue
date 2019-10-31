@@ -29,14 +29,12 @@
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">
         <ex-type-editor
+          v-bind="$props"
           :type="type.options.item"
           :required-type="requiredItem"
           :required-type-options="requiredTypeOptions"
           :settings="settings.sub.item"
-          :highlight="highlight"
-          :registry="registry"
           :parent="type"
-          :read-only="readOnly"
           :disable-sub-settings="hideSubSettings"
           @change="onChange"
         ></ex-type-editor>
