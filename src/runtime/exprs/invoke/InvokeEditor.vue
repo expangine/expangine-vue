@@ -6,7 +6,20 @@
       v-on="$listeners"
       text="Invoke"
       tooltip="Execute a user-defined function"
-    ></ex-expression-menu>
+    >
+      <template #prepend>
+        <v-list-item @click="test">
+          <v-list-item-content>
+            <v-list-item-title>
+              Test
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              Test this function out
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </ex-expression-menu>
     <v-select
       outlined
       dense
@@ -94,6 +107,7 @@ import Vue from 'vue';
 import { TypeMap, Expression, ChainExpression, InvokeExpression, ExpressionBuilder, NoExpression, FunctionType, objectValues } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { ListOptions } from '../../../common';
+import { getTestFunction } from '../../../app/TestFunction';
 
 
 export default ExpressionBase<InvokeExpression>().extend({
@@ -147,6 +161,12 @@ export default ExpressionBase<InvokeExpression>().extend({
     removeParam(param: string) {
       this.$delete(this.value.args, param);
       this.update();
+    },
+    test() {
+      const registry = this.registry;
+      const name = this.value.name;
+
+      getTestFunction({ registry, name });
     },
   },
 });
