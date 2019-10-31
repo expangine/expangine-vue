@@ -272,6 +272,7 @@
       <ex-confirm-dialog></ex-confirm-dialog>
       <ex-build-type-dialog></ex-build-type-dialog>
       <ex-run-program-dialog></ex-run-program-dialog>
+      <ex-simple-input-dialog></ex-simple-input-dialog>
       <ex-debug-program-dialog></ex-debug-program-dialog>
       <ex-describe-data-dialog></ex-describe-data-dialog>
       <ex-edit-function-dialog></ex-edit-function-dialog>
@@ -341,7 +342,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression } from 'expangine-runtime';
+import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -354,6 +355,7 @@ import { getEditFunction } from './app/EditFunction';
 import { getInput } from './app/Input';
 import { friendlyList } from '@/common';
 import Registry from './runtime';
+import { getSimpleInput } from './app/SimpleInput';
 
 
 
@@ -662,29 +664,59 @@ export default Vue.extend({
         return;
       }
 
-      const name = await getInput({ 
+      const settings = await getSimpleInput({
         title: 'Export',
-        message: 'The name of the JSON file',
-        label: 'Filename',
-        value: 'export-' + Date.now(),
         confirm: 'Export',
         unconfirm: 'Cancel',
+        value: {
+          name: 'export-' + Date.now(),
+          metadata: true,
+          type: true,
+          settings: true,
+          data: true,
+          program: true,
+          functions: true,
+        },
+        fields: [
+          { name: 'name', type: 'text', label: 'Export As', required: true, details: 'The name of the exported file, without .json extension.' },
+          { name: 'metadata', type: 'boolean', label: 'Include Metadata', required: true, details: 'Export program name, description, and author?'},
+          { name: 'type', type: 'boolean', label: 'Type', required: true, details: 'Export the designed data type?' },
+          { name: 'settings', type: 'boolean', label: 'Type Visual Settings', required: true, details: 'Export the visual settings for your data (how your input looks in the Data tab).' },
+          { name: 'data', type: 'boolean', label: 'Data', required: true },
+          { name: 'program', type: 'boolean', label: 'Program', required: true },
+          { name: 'functions', type: 'boolean', label: 'Functions', required: true, details: friendlyList(objectValues(this.registry.defs.functions, (f, name) => name)) },
+        ],
       });
 
-      if (!name) {
+      if (!settings || !settings.name) {
+        sendNotification({ message: 'Export canceled.' });
         return;
       }
 
-      const exported = JSON.stringify({
-        metadata: this.getMetadataData(),
-        type: this.getTypeData(),
-        settings: this.getSettingsData(),
-        data: this.getDataData(),
-        program: this.getProgramData(),
-        functions: this.getFunctionsData(),
-      }, undefined, 2);
+      const exporting: any = {};
 
-      this.downloadFile(name + '.json', exported, 'text/json');
+      if (settings.metadata) {
+        exporting.metadata = this.getMetadataData();
+      }
+      if (settings.type) {
+        exporting.type = this.getTypeData();
+      }
+      if (settings.settings) {
+        exporting.settings = this.getSettingsData();
+      }
+      if (settings.data) {
+        exporting.data = this.getDataData();
+      }
+      if (settings.program) {
+        exporting.program = this.getProgramData();
+      }
+      if (settings.functions) {
+        exporting.functions = this.getFunctionsData();
+      }
+
+      const exported = JSON.stringify(exporting, undefined, 2);
+
+      this.downloadFile(settings.name + '.json', exported, 'text/json');
     },
     importJson() {
       const finput = document.createElement('input');

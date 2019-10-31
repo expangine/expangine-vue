@@ -25,6 +25,7 @@ import DebugProgramDialog from './app/DebugProgramDialog.vue';
 import DescribeDataDialog from './app/DescribeDataDialog.vue';
 import EditFunctionDialog from './app/EditFunctionDialog.vue';
 import InputDialog from './app/InputDialog.vue';
+import SimpleInputDialog from './app/SimpleInputDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import RunProgramDialog from './app/RunProgramDialog.vue';
 import TestFunctionDialog from './app/TestFunctionDialog.vue';
@@ -96,6 +97,7 @@ export default {
     Vue.component('ex-describe-data-dialog', DescribeDataDialog);
     Vue.component('ex-edit-function-dialog', EditFunctionDialog);
     Vue.component('ex-input-dialog', InputDialog);
+    Vue.component('ex-simple-input-dialog', SimpleInputDialog);
     Vue.component('ex-notify-dialog', NotifyDialog);
     Vue.component('ex-run-program-dialog', RunProgramDialog);
     Vue.component('ex-test-function-dialog', TestFunctionDialog);
