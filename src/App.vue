@@ -141,7 +141,7 @@
           <v-list-item @click="toggleReadOnly">
             <v-list-item-action>
               <v-checkbox
-                v-model="readOnly"
+                :input-value="readOnly"
               ></v-checkbox>
             </v-list-item-action>
             <v-list-item-content>
@@ -152,12 +152,25 @@
           <v-list-item @click="toggleComplexity">
             <v-list-item-action>
               <v-checkbox
-                v-model="showComplexity"
+                color="#FFE0B2"
+                :input-value="showComplexity"
               ></v-checkbox>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>Show Complexity</v-list-item-title>
               <v-list-item-subtitle>See the performance complexity for each expression in the program.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="toggleShowReturnExpressions">
+            <v-list-item-action>
+              <v-checkbox
+                :color="showReturnColor"
+                :input-value="showReturnExpressions"
+              ></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Show Return Expressions</v-list-item-title>
+              <v-list-item-subtitle>See which expressions define the program return type.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -269,6 +282,7 @@
               :registry="registry"
               :settings="settings"
               :show-complexity="showComplexity"
+              :highlight="highlightExpressions"
               @remove="resetProgram"
               @input="saveProgram"
             ></ex-expression>
@@ -394,11 +408,14 @@ export default Vue.extend({
     dataTimeout: -1,
     program: NoExpression.instance as Expression,
     showComplexity: false,
+    showReturnExpressions: false,
+    showReturnColor: '#E1BEE7',
     undos: [] as HistoryState[],
     redos: [] as HistoryState[],
     last: {} as HistoryState,
     pushing: false,
     examples: [] as any[],
+    highlightExpressions: new Map(),
   }),
   computed: {
     isReady(): boolean {
@@ -407,6 +424,10 @@ export default Vue.extend({
     hasExamples(): boolean {
       return this.examples.length > 0;
     },
+  },
+  watch: {
+    showReturnExpressions: 'updateHighlightExpressions',
+    program: 'updateHighlightExpressions',
   },
   async mounted() {
     (window as any).registry = Registry;
@@ -429,6 +450,24 @@ export default Vue.extend({
     },
     toggleComplexity() {
       this.showComplexity = !this.showComplexity;
+    },
+    updateHighlightExpressions() {
+      const highlights = new Map();
+      if (this.showReturnExpressions) {
+        const returns = this.program.traverse(Traverser.list<Expression>().filterClass(ReturnExpression));
+        returns.forEach((expr) => {
+          this.registry.getExpressionReturns(expr.value).forEach((highlight) => {
+            highlights.set(highlight, this.showReturnColor);
+          });
+        });
+        this.registry.getExpressionReturns(this.program).forEach((highlight) => {
+          highlights.set(highlight, this.showReturnColor);
+        });
+      }
+      this.highlightExpressions = highlights;
+    },
+    toggleShowReturnExpressions() {
+      this.showReturnExpressions = !this.showReturnExpressions;
     },
     async loadExamples() {
       const response = await fetch(location.protocol + '//expangine.github.io/expangine-vue/examples/index.json');
@@ -1254,6 +1293,8 @@ export default Vue.extend({
 
         this.saveVar('program', this.getProgramData);
       });
+
+      this.updateHighlightExpressions();
     },
     resetProgram() {
       this.saveProgram(NoExpression.instance);

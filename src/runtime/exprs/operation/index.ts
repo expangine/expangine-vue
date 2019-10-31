@@ -20,6 +20,7 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
         (oneOf || registry.getExpressionMultiline(paramExpr)
     ), false as boolean)
   ,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: (requiredType, expr, exprType) => [{
     text: 'Operate',

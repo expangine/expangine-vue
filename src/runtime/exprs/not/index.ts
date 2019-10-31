@@ -14,6 +14,7 @@ export const NotVisuals: ExpressionVisuals<NotExpression> =
   editor: NotEditor,
   complex: false,
   isMultiline: (registry, expr) => registry.getExpressionMultiline(expr.expression),
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers: (requiredType, expr) => expr instanceof NotExpression
     ? [{

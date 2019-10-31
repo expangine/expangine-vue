@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { IfExpression, NoExpression } from 'expangine-runtime';
+import { IfExpression, NoExpression, Expression } from 'expangine-runtime';
 
 import IfEditor from './IfEditor.vue';
 
@@ -14,6 +14,19 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   editor: IfEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => {
+    const returns: Expression[] = [];
+
+    expr.cases.forEach(([test, value]) => {
+      returns.push(...registry.getExpressionReturns(value));
+    });
+
+    if (expr.otherwise !== NoExpression.instance) {
+      returns.push(...registry.getExpressionReturns(expr.otherwise));
+    }
+
+    return returns;
+  },
   isStart: () => true,
   getModifiers: (type, expr) => expr instanceof IfExpression
     ? [{

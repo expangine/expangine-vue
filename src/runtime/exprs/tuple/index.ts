@@ -14,6 +14,7 @@ export const TupleVisuals: ExpressionVisuals<TupleExpression> =
   editor: TupleEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: () => [],
 };

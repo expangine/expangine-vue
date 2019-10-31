@@ -18,6 +18,7 @@ export const AndVisuals: ExpressionVisuals<AndExpression> =
       registry.getExpressionMultiline(e),
     )
   ,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers: (requiredType, expr) => expr.parent instanceof AndExpression
     ? [{

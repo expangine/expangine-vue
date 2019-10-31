@@ -14,6 +14,7 @@ export const InvokeVisuals: ExpressionVisuals<InvokeExpression> =
   editor: InvokeEditor,
   complex: false,
   isMultiline: () => false,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: () => [],
 };

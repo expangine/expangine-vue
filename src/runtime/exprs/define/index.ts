@@ -15,6 +15,7 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
   viewer: DefineEditor,
   editor: DefineEditor,
   complex: true,
+  getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.body),
   isStart: () => true,
   isMultiline: () => true,
   getModifiers,

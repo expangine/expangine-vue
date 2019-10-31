@@ -92,6 +92,11 @@ export class Registry
     ;
   }
 
+  public getExpressionReturns(expr?: Expression | null): Expression[]
+  {
+    return expr ? this.getExpressionVisuals(expr).getReturnExpressions(this, expr) : [];
+  }
+
   public getExpressionMultiline(expr: Expression): boolean
   {
     return this.getExpressionVisuals(expr).isMultiline(this, expr);

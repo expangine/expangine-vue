@@ -18,6 +18,7 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
       registry.getExpressionMultiline(e),
     )
   ,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers: (requiredType, expr) => expr.parent instanceof OrExpression
     ? [{

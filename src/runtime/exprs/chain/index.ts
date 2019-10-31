@@ -15,6 +15,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
   complex: true,
   isMultiline: () => true,
   isStart: () => false,
+  getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.chain[expr.chain.length - 1]),
   getModifiers: (type, expr) => expr instanceof ChainExpression
     ? []
     : expr.parent instanceof ChainExpression

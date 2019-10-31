@@ -15,6 +15,7 @@ export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
   editor: ConstantEditor,
   complex: true,
   isMultiline: () => false,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: () => [],
 };

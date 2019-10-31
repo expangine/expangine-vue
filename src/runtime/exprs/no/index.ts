@@ -14,6 +14,7 @@ export const NoVisuals: ExpressionVisuals<NoExpression> =
   editor: NoEditor,
   complex: false,
   isMultiline: () => false,
+  getReturnExpressions: (registry, expr) => [],
   isStart: () => false,
   getModifiers: () => [],
 };

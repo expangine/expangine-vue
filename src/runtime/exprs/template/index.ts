@@ -15,6 +15,7 @@ export const TemplateVisuals: ExpressionVisuals<TemplateExpression> =
   editor: TemplateEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: () => [],
 };

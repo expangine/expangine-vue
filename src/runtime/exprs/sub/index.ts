@@ -21,6 +21,7 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
       registry.getExpressionMultiline(e),
     )
   ,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers,
 };

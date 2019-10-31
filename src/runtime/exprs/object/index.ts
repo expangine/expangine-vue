@@ -14,6 +14,7 @@ export const ObjectVisuals: ExpressionVisuals<ObjectExpression> =
   editor: ObjectEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: () => [],
 };

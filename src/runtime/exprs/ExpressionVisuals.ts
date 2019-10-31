@@ -17,6 +17,7 @@ export interface ExpressionVisuals<E extends Expression = any>
   editor: VueConstructor;
   complex: boolean;
   isMultiline: (registry: Registry, expr: E) => boolean;
+  getReturnExpressions: (registry: Registry, expr: E) => Expression[];
   isStart: ExpressionStarter;
   getModifiers: ExpressionModifier;
 }

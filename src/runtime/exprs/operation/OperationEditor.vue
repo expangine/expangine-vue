@@ -117,7 +117,7 @@
               <span 
                 v-if="hasParameter(section)" 
                 class="param-span"
-                :class="{ 'blue-grey lighten-4': mutatesParameter(section) }"
+                :class="{ 'param-mutates': mutatesParameter(section) }"
                 :style="innerStyle">
 
                 <v-tooltip top v-if="!readOnly">
@@ -462,6 +462,10 @@ export default ExpressionBase<OperationExpression>().extend({
   > .param-group-middle {
     flex: 1 0;
   }
+}
+
+.param-mutates {
+  background-color: #FFB74D55;
 }
 
 .ex-operation {

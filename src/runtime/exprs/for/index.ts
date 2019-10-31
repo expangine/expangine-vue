@@ -24,6 +24,7 @@ export const ForVisuals: ExpressionVisuals<ForExpression> =
   editor: ForEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.body),
   isStart: () => true,
   getModifiers: () => [],
 };

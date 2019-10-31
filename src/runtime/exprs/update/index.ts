@@ -15,6 +15,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
   editor: UpdateEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: (type, expr) => expr instanceof GetExpression || expr instanceof SetExpression
     ? [{ 

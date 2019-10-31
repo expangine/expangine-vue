@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { SwitchExpression, NoExpression } from 'expangine-runtime';
+import { SwitchExpression, NoExpression, Expression } from 'expangine-runtime';
 
 import SwitchEditor from './SwitchEditor.vue';
 
@@ -21,6 +21,19 @@ export const SwitchVisuals: ExpressionVisuals<SwitchExpression> =
   editor: SwitchEditor,
   complex: true,
   isMultiline: () => true,
+  getReturnExpressions: (registry, expr) => {
+    const returns: Expression[] = [];
+
+    expr.cases.forEach(([tests, value]) => {
+      returns.push(...registry.getExpressionReturns(value));
+    });
+
+    if (expr.defaultCase !== NoExpression.instance) {
+      returns.push(...registry.getExpressionReturns(expr.defaultCase));
+    }
+
+    return returns;
+  },
   isStart: () => true,
   getModifiers: () => [],
 };
