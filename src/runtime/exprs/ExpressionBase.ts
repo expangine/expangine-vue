@@ -1,10 +1,11 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, EnumType, OperationExpression, Color, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals, ExpressionTypes } from './ExpressionVisuals';
 import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
+import { ComplexityColors } from '@/common';
 
 
 export default function<E extends Expression>()
@@ -35,6 +36,8 @@ export default function<E extends Expression>()
       inOperationClass: string;
       visuals: ExpressionVisuals<E>;
       multiline: boolean;
+      complexity: number;
+      complexityColor: string;
     },
     {
       value: E;
@@ -148,12 +151,16 @@ export default function<E extends Expression>()
         return !!(this.highlight && this.highlight.has(this.value));
       },
       highlightColor(): string {
-        return this.highlight
-          ? this.highlight.get(this.value) || '#BBDEFB'
-          : '#BBDEFB';
+        const DEFAULT_COLOR = '#BBDEFB';
+
+        return this.showComplexity
+          ? this.complexityColor
+          : this.highlight
+            ? this.highlight.get(this.value) || DEFAULT_COLOR
+            : DEFAULT_COLOR;
       },
       highlightStyle(): any {
-        return this.highlighted
+        return this.highlighted || this.showComplexity
           ? { 'box-shadow': '0 0 3px ' + this.highlightShadowColor,
               'background-color': this.highlightColor }
           : { };
@@ -190,6 +197,15 @@ export default function<E extends Expression>()
       },
       multiline(): boolean {
         return this.registry.getExpressionMultiline(this.value);
+      },
+      complexity(): number {
+        return this.value.getComplexity(this.registry.defs);
+      },
+      complexityColor(): string {
+        const c = Math.round(this.complexity);
+        const i = Math.min(c, ComplexityColors.length - 1);
+
+        return ComplexityColors[i];
       },
     },
     methods: {

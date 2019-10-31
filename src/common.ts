@@ -4,6 +4,15 @@ import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/
 import { Registry } from './runtime/Registry';
 
 
+export const ComplexityColors = [
+  '#C8E6C9',
+  '#FFF9C4',
+  '#FFE0B2',
+  '#FFCDD2',
+  '#D1C4E9',
+  '#BDBDBD',
+];
+
 export type ListOptions<T = string> = Array<{ 
   text: string; 
   description?: string; 

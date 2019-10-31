@@ -140,6 +140,17 @@
               <v-list-item-subtitle>See what the tool looks like in read-only mode.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="toggleComplexity">
+            <v-list-item-action>
+              <v-checkbox
+                v-model="showComplexity"
+              ></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Show Complexity</v-list-item-title>
+              <v-list-item-subtitle>See the performance complexity for each expression in the program.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-menu offset-y>
@@ -404,6 +415,9 @@ export default Vue.extend({
   methods: {
     toggleReadOnly() {
       this.readOnly = !this.readOnly;
+    },
+    toggleComplexity() {
+      this.showComplexity = !this.showComplexity;
     },
     async loadExamples() {
       const response = await fetch(location.protocol + '//expangine.github.io/expangine-vue/examples/index.json');
