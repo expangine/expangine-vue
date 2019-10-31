@@ -16,7 +16,7 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Export</v-list-item-title>
-              <v-list-item-subtitle>Download the type, data, program, and functions as a JSON file.</v-list-item-subtitle>
+              <v-list-item-subtitle>Download current development environment as a JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="importJson">
@@ -25,7 +25,7 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Import</v-list-item-title>
-              <v-list-item-subtitle>Upload a JSON file with a type, data, program, and functions.</v-list-item-subtitle>
+              <v-list-item-subtitle>Upload a development environment JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="saveAsFunction">
@@ -344,7 +344,7 @@ import Vue from 'vue';
 import * as ex from 'expangine-runtime';
 import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { TypeVisuals, TypeSettings, TypeUpdateEvent } from './runtime/types/TypeVisuals';
+import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
 import { getConfirmation } from './app/Confirm';
 import { sendNotification } from './app/Notify';
@@ -353,7 +353,7 @@ import { getDebugProgram } from './app/DebugProgram';
 import { getDescribeData } from './app/DescribeData';
 import { getEditFunction } from './app/EditFunction';
 import { getInput } from './app/Input';
-import { friendlyList } from '@/common';
+import { friendlyList, SimpleFieldOption } from '@/common';
 import Registry from './runtime';
 import { getSimpleInput } from './app/SimpleInput';
 
@@ -734,7 +734,7 @@ export default Vue.extend({
           try {
             const parsed = JSON.parse(reader.result);
 
-            this.importData(parsed);
+            this.importData(parsed, true);
           } catch (e) {
             sendNotification({ message: 'The file selected did not contain a valid JSON value.' });
           }
@@ -744,20 +744,233 @@ export default Vue.extend({
       };
       reader.readAsText(file);
     },
-    importData(imported: any) {
-      this.historyPush(['type', 'settings', 'data', 'program', 'functions'], () => {
-        this.setTypeData(imported.type);
-        this.setSettingsData(imported.settings);
-        this.setDataData(imported.data);
-        this.setProgramData(imported.program);
-        this.setFunctionsData(imported.functions);
-        this.setMetadataData(imported.metadata);
+    async importData(imported: any, customize: boolean = false) {
+      
+      const currentObject = this.type instanceof ObjectType;
+      const fields: Record<string, SimpleFieldOption> = {};
 
-        this.saveType();
-        this.saveData();
-        this.saveProgram();
-        this.saveFunctions();
-        this.saveMetadata();
+      let value = {
+        metadata: false,
+        type: 'ignore' as 'ignore' | 'replace' | 'merge',
+        typeMergeName: 'imported_data',
+        settings: false,
+        data: 'ignore' as 'ignore' | 'merge' | 'replace',
+        program: 'ignore' as 'ignore' | 'saveas' | 'replace',
+        programFunctionName: 'imported_function',
+        functions: 'ignore' as 'ignore' | 'mergeReplace' | 'mergeIgnore' | 'replace',
+      };
+
+      if (imported.metadata) {
+        value.metadata = true;
+        fields.metadata = { name: 'metadata', type: 'boolean', label: 'Metadata' };
+      }
+
+      if (imported.data !== undefined) {
+        fields.data = { name: 'data', type: 'select', label: 'Data', required: true, items: [
+          { text: 'Ignore data', value: 'ignore' },
+        ]};
+      }
+
+      if (imported.type) {
+        value.type = 'replace';
+        fields.type = { name: 'type', type: 'select', label: 'Type', required: true, items: [
+          { text: 'Replace type', value: 'replace' },
+          { text: 'Ignore type', value: 'ignore' },
+        ]};
+        
+        if (currentObject && fields.type.items) {
+          fields.type.items.push({ text: 'Add imported type as property of current type', value: 'merge' });
+          fields.typeMergeName = { name: 'typeMergeName', type: 'text', label: 'Property', details: 'Only applicable if "Type" is "Add imported type..."' };
+        }
+
+        if (imported.data !== undefined && fields.data.items) {
+          fields.data.items.push({ text: 'Replace or merge data', value: 'merge' });
+          value.data = 'merge';
+        }
+      }
+
+      if (imported.settings) {
+        value.settings = true;
+        fields.settings = { name: 'settings', type: 'boolean', label: 'Settings', required: true };
+      }
+
+      if (imported.data !== undefined) {
+        const parsed = this.parseDataData(imported.data);
+        if (this.type && this.type.isValid(parsed) && fields.data.items) {
+          fields.data.items.push({ text: 'Repace data', value: 'replace' });
+          if (value.data === 'ignore') {
+            value.data = 'replace';
+          }
+        }
+      }
+
+      if (imported.program) {
+        value.program = 'replace';
+        fields.program = { name: 'program', type: 'select', label: 'Program', required: true, items: [
+          { text: 'Replace program', value: 'replace' },
+          { text: 'Ignore program', value: 'ignore' },
+        ]};
+
+        if (imported.type && fields.program.items) {
+          fields.program.items.push({ text: 'Save program as function', value: 'saveas' });
+          fields.programFunctionName = { name: 'programFunctionName', type: 'text', label: 'Function Name', details: 'Only applicable if "Program" is "Save program as function"' };
+        }
+      }
+
+      if (imported.functions) {
+        value.functions = 'replace';
+        fields.functions = { name: 'functions', type: 'select', label: 'Functions', required: true, items: [
+          { text: 'Replace functions', value: 'replace' },
+          { text: 'Merge functions, replace existing', value: 'mergeReplace' },
+          { text: 'Merge functions, ignore existing', value: 'mergeIgnore' },
+          { text: 'Ignore functions', value: 'ignore' },
+        ]};
+      }
+
+      if (customize) {
+        const newValue = await getSimpleInput<any>({
+          title: 'Import Options',
+          message: 'Actions to perform on import',
+          confirm: 'Import',
+          unconfirm: 'Cancel',
+          value,
+          fields: objectValues(fields),
+        });
+
+        if (!newValue) {
+          return sendNotification({ message: 'Import canceled.' });
+        }
+
+        if (value.type === 'merge' && (!value.typeMergeName || (this.type instanceof ObjectType && this.type.options.props[value.typeMergeName]))) {
+          return sendNotification({ message: 'Import canceled, if you want to merge a type you need to name a unique property.' });
+        }
+
+        if (value.program === 'saveas' && (!value.programFunctionName || (this.registry.defs.functions[value.programFunctionName]))) {
+          return sendNotification({ message: 'Import canceled, if you want to save the program as a function you need to supply a unique function name.' });
+        }
+
+        value = newValue;
+      }
+
+      const importing: HistoryStateProps = [];
+      if (value.type !== 'ignore') {
+        importing.push('type');
+      }
+      if (value.settings) {
+        importing.push('settings');
+      }
+      if (value.data !== 'ignore') {
+        importing.push('data');
+      }
+      if (value.program !== 'ignore') {
+        importing.push('program');
+      }
+      if (value.functions !== 'ignore') {
+        importing.push('functions');
+      }
+
+      this.historyPush(importing, () => {
+
+        let functionsChanged = false;
+
+        switch (value.type) {
+          case 'replace':
+            this.setTypeData(imported.type);
+            if (value.settings) {
+              this.setSettingsData(imported.settings);
+            } else if (this.type) {
+              this.settings = this.registry.getTypeSettings(this.type);
+            }
+            this.saveType();
+            if (value.data !== 'ignore') {
+              this.setDataData(imported.data);
+              this.saveData();
+            }
+            break;
+          case 'merge':
+            const importedType = this.parseTypeData(imported.type);
+            if (this.type instanceof ObjectType && this.settings) {
+              this.$set(this.type.options.props, value.typeMergeName, importedType);
+              if (value.settings) {
+                this.$set((this.settings as any).sub, value.typeMergeName, this.parseSettingsData(imported.settings));
+              } else if (importedType) {
+                this.$set((this.settings as any).sub, value.typeMergeName, this.registry.getTypeSettings(importedType));
+              }
+              this.saveType();
+              if (value.data !== 'ignore') {
+                this.$set(this.data, value.typeMergeName, this.parseDataData(imported.data));
+                this.saveData();
+              }
+            }
+            break;
+          default:
+            if (value.data !== 'ignore') {
+              this.setDataData(imported.data);
+              this.saveData();
+            }
+            break;
+        }
+
+        switch (value.functions) {
+          case 'replace':
+            this.setFunctionsData(imported.functions);
+            functionsChanged = true;
+            break;
+          case 'mergeReplace':
+            const mergeReplace = this.parseFunctionsData(imported.functions);
+            const functionsReplace = this.registry.defs.functions;
+
+            for (const functionName in mergeReplace) {
+              this.$set(functionsReplace, functionName, mergeReplace[functionName]);
+              functionsChanged = true;
+            }
+            break;
+          case 'mergeIgnore':
+            const mergeIgnore = this.parseFunctionsData(imported.functions);
+            const functionsIgnore = this.registry.defs.functions;
+
+            for (const functionName in mergeReplace) {
+              if (!functionsIgnore[functionName]) {
+                this.$set(functionsIgnore, functionName, mergeReplace[functionName]);
+                functionsChanged = true;
+              }
+            }
+            break;
+        }
+
+        switch (value.program) {
+          case 'replace':
+            this.setProgramData(imported.program);
+            this.saveProgram();
+            break;
+          case 'saveas':
+            const functions = this.registry.defs.functions;
+            const program = this.parseProgramData(imported.program);
+            const params = this.parseTypeData(imported.type);
+            if (program && params instanceof ObjectType) {
+              const returnType = program.getType(this.registry.defs, params) || AnyType.baseType;
+              const expression = program instanceof ReturnExpression
+                ? program
+                : new ReturnExpression(program);
+
+              this.$set(functions, value.programFunctionName, new FunctionType({
+                returnType,
+                params, 
+                expression,
+              }));
+              functionsChanged = true;
+            }
+            break;
+        }
+
+        if (value.metadata) {
+          this.setMetadataData(imported.metadata);
+          this.saveMetadata();
+        }
+
+        if (functionsChanged) {
+          this.saveFunctions();
+        }
       });
     },
     downloadFile(name: string, contents: any, type?: string) {
