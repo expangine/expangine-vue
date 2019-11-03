@@ -42,7 +42,7 @@ export const ColorVisuals = createVisuals()(
   settingsFor: ({ registry, sub }) => ({ 
     input: 'picker', 
     defaultValue: { r: COMPONENT_MAX, g: COMPONENT_MAX, b: COMPONENT_MAX, a: COMPONENT_MAX }, 
-    options: { ...ColorPickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+    options: { ...ColorPickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' },
   }),
   editor: ColorEditor,
   options: ColorOptions,

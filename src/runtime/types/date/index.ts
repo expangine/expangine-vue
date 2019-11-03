@@ -34,7 +34,7 @@ export const DateVisuals = createVisuals()(
   settingsFor: ({ registry, sub }) => ({ 
     input: 'picker', 
     defaultValue: new Date().toISOString(), 
-    options: { ...DatePickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+    options: { ...DatePickerInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' },
   }),
   editor: DateEditor,
   options: DateOptions,

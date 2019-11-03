@@ -2,8 +2,8 @@
 import './app.less';
 
 import { VueConstructor } from 'vue';
-
 import Draggable from 'vuedraggable';
+
 import TypeEditor from './runtime/types/TypeEditor.vue';
 import TypeEditorMenu from './runtime/types/TypeEditorMenu.vue';
 import TypeInput from './runtime/types/TypeInput.vue';
@@ -13,6 +13,7 @@ import PathEditor from './runtime/exprs/common/PathEditor.vue';
 import PathViewer from './runtime/exprs/common/PathViewer.vue';
 import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
+
 import DataString from './app/DataString.vue';
 import ChipMenu from './app/ChipMenu.vue';
 import ColorPicker from './app/ColorPicker.vue';
@@ -34,14 +35,25 @@ import TestOperationDialog from './app/TestOperationDialog.vue';
 
 export * from './app/BuildType';
 export * from './app/Confirm';
+export * from './app/DataImport';
 export * from './app/DebugProgram';
 export * from './app/DescribeData';
 export * from './app/EditFunction';
+export * from './app/FileExport';
+export * from './app/FileImport';
 export * from './app/Icons';
 export * from './app/Input';
 export * from './app/Notify';
+export * from './app/Project';
+export * from './app/ProjectExport';
+export * from './app/ProjectHistory';
+export * from './app/ProjectImport';
 export * from './app/Promiser';
 export * from './app/RunProgram';
+export * from './app/SimpleInput';
+export * from './app/TestFunction';
+export * from './app/TestOperation';
+export * from './app/Transcoder';
 
 export { default as registry } from './runtime';
 export * from './runtime/Registry';

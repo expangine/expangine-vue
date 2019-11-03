@@ -42,7 +42,7 @@ export const TextVisuals = createVisuals()({
   settingsFor: ({ registry, sub }) => ({ 
     input: 'textbox', 
     defaultValue: '', 
-    options: { ...TextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+    options: { ...TextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' },
   }),
   editor: TextEditor,
   options: TextOptions,

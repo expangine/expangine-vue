@@ -25,7 +25,7 @@ export const AnyVisuals = createVisuals()({
     options: { 
       ...AnyInput.getDefaultOptions(), 
       ...registry.settingsOverrides, 
-      label: sub,
+      label: sub + '',
     },
   }),
   editor: AnyEditor,

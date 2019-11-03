@@ -73,7 +73,7 @@ export const MapVisuals = createVisuals<MapSubs>()({
   settingsFor: ({ registry, type, sub }) => ({ 
     input: 'grid', 
     defaultValue: [], 
-    options: { ...MapGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub }, 
+    options: { ...MapGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' }, 
     sub: {
       key: registry.getTypeSettings(type.options.key, 'Key'), 
       value: registry.getTypeSettings(type.options.value, sub), 

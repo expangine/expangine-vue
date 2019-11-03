@@ -34,7 +34,7 @@ export const BooleanVisuals = createVisuals()({
   settingsFor: ({ registry, sub }) => ({ 
     input: 'checkbox', 
     defaultValue: false, 
-    options: { ...BooleanCheckboxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub },
+    options: { ...BooleanCheckboxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' },
   }),
   editor: BooleanEditor,
   options: BooleanOptions,

@@ -1,7 +1,7 @@
 <template>
-  <span class="flex-centered">
+  <span class="center-aligned">
     <template v-for="(condition, index) in value.expressions">
-      <span :key="index" class="flex-centered">
+      <span :key="index" class="center-aligned">
         <span v-if="index > 0" class="expression-divider">OR</span>
         <ex-expression
           v-bind="$props"
@@ -82,10 +82,3 @@ export default ExpressionBase<OrExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.flex-centered {
-  display: flex;
-  align-items: center;
-}
-</style>

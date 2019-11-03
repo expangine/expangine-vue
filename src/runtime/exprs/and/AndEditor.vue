@@ -1,7 +1,7 @@
 <template>
-  <span>
+  <span class="center-aligned">
     <template v-for="(condition, index) in value.expressions">
-      <span :key="index">
+      <span :key="index" class="center-aligned">
         <span v-if="index > 0" class="expression-divider">AND</span>
         <ex-expression
           v-bind="$props"
@@ -32,6 +32,12 @@
             <v-list-item-subtitle>Wrap the And in an Or</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="addNot">
+          <v-list-item-content>
+            <v-list-item-title>Not</v-list-item-title>
+            <v-list-item-subtitle>Wrap the Or in a Not</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-menu>
   </span>
@@ -39,7 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AndExpression, NoExpression, OrExpression } from 'expangine-runtime';
+import { Expression, AndExpression, NoExpression, OrExpression, NotExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -52,6 +58,9 @@ export default ExpressionBase<AndExpression>().extend({
     },
     addOr() {
       this.input(new OrExpression([this.value, NoExpression.instance]));
+    },
+    addNot() {
+      this.input(new NotExpression(this.value));
     },
     updateExpression(index: number, expr?: Expression) {
       if (expr) {

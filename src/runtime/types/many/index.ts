@@ -70,7 +70,7 @@ export const ManyVisuals = createVisuals<ManySubs>()({
     return {
       input: 'many',
       defaultValue: subs.map((s) => s.defaultValue),
-      options: { ...registry.settingsOverrides, label: sub },
+      options: { ...registry.settingsOverrides, label: sub + '' },
       sub: subs,
     };
   },

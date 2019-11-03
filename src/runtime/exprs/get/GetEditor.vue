@@ -1,5 +1,5 @@
 <template>
-  <div class="get-editor" :class="inOperationClass">
+  <div class="center-aligned" :class="inOperationClass">
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
@@ -24,11 +24,3 @@ export default ExpressionBase<GetExpression>().extend({
   name: 'GetEditor',
 });
 </script>
-
-<style lang="less" scoped>
-.get-editor {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-</style>

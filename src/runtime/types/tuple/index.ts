@@ -75,7 +75,7 @@ export const TupleVisuals = createVisuals<TupleSubs>()({
       options: { 
         ...TupleGridInput.getDefaultOptions(), 
         ...registry.settingsOverrides, 
-        label: sub,
+        label: sub + '',
         columns: subs.map(() => ({ cols: 12 })),
       },
       sub: subs,

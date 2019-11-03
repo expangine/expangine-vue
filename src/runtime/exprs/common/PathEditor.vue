@@ -1,5 +1,5 @@
 <template>
-  <span class="path-editor">
+  <span class="center-aligned">
     <path-segment
       v-if="hasSegment"
       v-bind="$props"
@@ -105,11 +105,3 @@ export default ExpressionBase().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.path-editor {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-</style>

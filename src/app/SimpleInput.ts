@@ -4,6 +4,7 @@ import { SimpleFieldSettings } from '@/common';
 
 export interface SimpleInputOptions<T = any>
 {
+  persistent: boolean;
   title: string;
   message: string;
   value: T;
@@ -16,6 +17,7 @@ export interface SimpleInputOptions<T = any>
 
 export function getSimpleInputDefaults<T = any>(): SimpleInputOptions<T> {
   return {
+    persistent: true,
     title: 'Input',
     message: '',
     value: null as unknown as T,

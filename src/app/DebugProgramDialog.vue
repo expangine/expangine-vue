@@ -52,28 +52,28 @@
           <v-tooltip bottom open-delay="1000" v-if="!goto">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoStart">
-                <v-icon>mdi-cursor-pointer</v-icon>
+                <v-icon>mdi-checkbox-blank-circle</v-icon>
               </v-btn>
             </template>
-            <span>Go To</span>
+            <span>Set Breakpoint Expression</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000" v-if="goto && gotoExpression">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoEnd">
-                <v-icon>mdi-check</v-icon>
+                <v-icon>mdi-arrow-right-drop-circle</v-icon>
               </v-btn>
             </template>
-            <span>Go To {{ registry.getExpressionName(gotoExpression) }}</span>
+            <span>Go To Breakpoint at {{ registry.getExpressionName(gotoExpression) }}</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000" v-if="goto">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoCancel">
-                <v-icon>mdi-cancel</v-icon>
+                <v-icon>mdi-close-circle</v-icon>
               </v-btn>
             </template>
-            <span>Go To Cancel</span>
+            <span>Cancel Set Breakpoint</span>
           </v-tooltip>
 
           <v-tooltip bottom open-delay="1000">

@@ -1,5 +1,5 @@
 <template>
-  <span class="pl-3 flex-centered">
+  <span class="pl-3 center-aligned">
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -37,10 +37,3 @@ export default ExpressionBase<NotExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.flex-centered {
-  display: flex;
-  align-items: center;
-}
-</style>

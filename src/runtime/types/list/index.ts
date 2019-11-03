@@ -74,8 +74,8 @@ export const ListVisuals = createVisuals<ListSubs>()({
           options: { 
             ...ListObjectTableInput.getDefaultOptions(), 
             ...registry.settingsOverrides,
-            title: sub, 
-            itemName: sub,
+            title: sub + '', 
+            itemName: sub + '',
             paging: true,
             pagination: {
               totalVisible: 10,
@@ -96,8 +96,8 @@ export const ListVisuals = createVisuals<ListSubs>()({
           options: { 
             ...ListListInput.getDefaultOptions(), 
             ...registry.settingsOverrides,
-            title: sub, 
-            itemName: sub,
+            title: sub + '', 
+            itemName: sub + '',
             paging: true,
             pagination: {
               totalVisible: 10,
@@ -117,8 +117,8 @@ export const ListVisuals = createVisuals<ListSubs>()({
       options: { 
         ...ListListInput.getDefaultOptions(), 
         ...registry.settingsOverrides, 
-        title: sub,
-        itemName: sub,
+        title: sub + '',
+        itemName: sub + '',
       }, 
       sub: { 
         item: settings, 

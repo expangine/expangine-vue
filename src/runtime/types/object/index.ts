@@ -97,7 +97,7 @@ export const ObjectVisuals = createVisuals<string>()({
       defaultValue: objectMap(subs, (s) => s.defaultValue),
       options: { 
         ...ObjectFormInput.getDefaultOptions(), 
-        label: sub, 
+        label: sub + '', 
         columns: objectValues(subs, (_, prop) => ({ prop, cols: 12 })),
       },
       sub: subs,

@@ -112,7 +112,7 @@
 
         </td>
         <td v-if="showSingleLine">
-          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle" class="ex-operation">
+          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle" class="center-aligned">
             <template #section="{ section }">
               <span 
                 v-if="hasParameter(section)" 
@@ -466,11 +466,5 @@ export default ExpressionBase<OperationExpression>().extend({
 
 .param-mutates {
   background-color: #FFB74D55;
-}
-
-.ex-operation {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
 }
 </style>

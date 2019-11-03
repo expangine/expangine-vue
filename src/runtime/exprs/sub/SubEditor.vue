@@ -1,5 +1,5 @@
 <template>
-  <div class="set-editor">
+  <div class="center-aligned">
     <ex-expression
       v-bind="$props"
       class="parenthesis"
@@ -53,10 +53,3 @@ export default ExpressionBase<SubExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.set-editor {
-  display: flex;
-  align-items: center;
-}
-</style>
