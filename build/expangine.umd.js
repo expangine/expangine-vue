@@ -55251,12 +55251,12 @@ var ListObjectTablevue_type_template_id_986b7bc8_staticRenderFns = []
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.sort.js
 var es6_array_sort = __webpack_require__("55dd");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"db53d306-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/object/ObjectFormField.vue?vue&type=template&id=50d98b46&
-var ObjectFormFieldvue_type_template_id_50d98b46_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('ex-type-input',{attrs:{"type":_vm.fieldType,"read-only":_vm.readOnly,"registry":_vm.registry,"settings":_vm.fieldSettings},model:{value:(_vm.field),callback:function ($$v) {_vm.field=$$v},expression:"field"}})}
-var ObjectFormFieldvue_type_template_id_50d98b46_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"db53d306-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/object/ObjectFormField.vue?vue&type=template&id=16e597cc&
+var ObjectFormFieldvue_type_template_id_16e597cc_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('ex-type-input',{attrs:{"type":_vm.fieldType,"read-only":_vm.readOnly,"registry":_vm.registry,"settings":_vm.fieldSettings},model:{value:(_vm.field),callback:function ($$v) {_vm.field=$$v},expression:"field"}})}
+var ObjectFormFieldvue_type_template_id_16e597cc_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/runtime/types/object/ObjectFormField.vue?vue&type=template&id=50d98b46&
+// CONCATENATED MODULE: ./src/runtime/types/object/ObjectFormField.vue?vue&type=template&id=16e597cc&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/object/ObjectFormField.vue?vue&type=script&lang=ts&
 
@@ -55274,8 +55274,17 @@ var ObjectFormFieldvue_type_template_id_50d98b46_staticRenderFns = []
       get: function get() {
         var current = this.value[this.prop];
 
-        if (current === undefined && this.fieldSettings) {
-          current = this.fieldType.fromJson(this.fieldSettings.defaultValue);
+        if (current === undefined) {
+          if (this.fieldType.isOptional()) {
+            current = null;
+          } else if (this.fieldSettings) {
+            current = this.fieldType.fromJson(this.fieldSettings.defaultValue);
+
+            if (current === undefined) {
+              current = null;
+            }
+          }
+
           this.$set(this.value, this.prop, current);
           current = this.value[this.prop];
           this.update();
@@ -55308,8 +55317,8 @@ var ObjectFormFieldvue_type_template_id_50d98b46_staticRenderFns = []
 
 var ObjectFormField_component = Object(componentNormalizer["a" /* default */])(
   object_ObjectFormFieldvue_type_script_lang_ts_,
-  ObjectFormFieldvue_type_template_id_50d98b46_render,
-  ObjectFormFieldvue_type_template_id_50d98b46_staticRenderFns,
+  ObjectFormFieldvue_type_template_id_16e597cc_render,
+  ObjectFormFieldvue_type_template_id_16e597cc_staticRenderFns,
   false,
   null,
   null,

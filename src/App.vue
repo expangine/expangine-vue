@@ -173,6 +173,15 @@
               <v-list-item-subtitle>See which expressions define the program return type.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="showExamples = true">
+            <v-list-item-icon>
+              <v-icon>mdi-lightbulb-on</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Introduction Dialog</v-list-item-title>
+              <v-list-item-subtitle>Show the dialog your saw when you first visited this application.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-menu offset-y>
@@ -363,6 +372,39 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-dialog v-model="showExamples" max-width="800">
+        <v-card>
+          <v-card-title class="headline">
+            Welcome to Expangine!
+          </v-card-title>
+          <v-card-text>
+            Expangine is a visual development framework. 
+            It's a series of TypeScript/JS libraries which provide data type functionality and operations as well as runtimes which convert your operations and programs into any desired output. At the moment the only runtime is one that executes the program you've developed in the browser (or NodeJS). Potential runtimes could convert your program into any Programming Language or into a series of SQL commands.
+            <strong>expangine-vue</strong> is the component library built from Vue &amp; Vuetify. This is just an example interface, any interface could be used to create programs and types.
+          </v-card-text>
+          <v-card-text>
+            <p>Listed below are examples to start you off.</p>
+            <v-list>
+              <template v-for="ex in examples">
+                <v-list-item :key="ex.text" @click="loadExample(ex.url)">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="ex.text"></v-list-item-title>
+                    <v-list-item-subtitle v-html="ex.description"></v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn 
+              color="primary"
+              @click="showExamples = false"
+            >Skip</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-content>
 
   </v-app>
@@ -390,7 +432,7 @@ import { ProjectHistory, ProjectState } from './app/ProjectHistory';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
 import { getDataImport } from './app/DataImport';
-import { newStore } from './app/Transcoder';
+import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
 import { friendlyList, SimpleFieldOption } from '@/common';
 import { getPromiser } from './app/Promiser';
@@ -463,6 +505,7 @@ export default Vue.extend({
     showReturnExpressions: false,
     showReturnColor: '#E1BEE7',
     examples: [] as any[],
+    showExamples: false,
     highlightExpressions: new Map(),
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
@@ -635,6 +678,19 @@ export default Vue.extend({
         if (isArray(examples)) 
         {
           this.examples = examples;
+
+          if (examples.length > 0) {
+            const first = new TranscoderStore('first', {
+              encode: (value: boolean) => value,
+              decode: (data: boolean) => data,
+              getDefault: () => true,
+            });
+
+            if (first.load()) {
+              this.showExamples = true;
+              first.save(false);
+            }
+          }
         }
       });
     },
@@ -647,7 +703,7 @@ export default Vue.extend({
 
         if (isObject(data) && data.type && data.settings && data.program) 
         {
-          if (await getConfirmation({ message: 'This will overwrite your current program, are you sure?' })) 
+          if (this.showExamples || await getConfirmation({ message: 'This will overwrite your current program, are you sure?' })) 
           {
             await this.importData(data);
           } 
@@ -660,6 +716,8 @@ export default Vue.extend({
         {
           sendNotification({ message: 'This example seems corrupted, sorry!' });
         }
+
+        this.showExamples = false;
       });
     },
     // FUNCTIONS
