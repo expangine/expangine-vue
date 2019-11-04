@@ -55,6 +55,15 @@
               <v-list-item-subtitle>Set the type &amp; data based on JSON or JS code.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="share">
+            <v-list-item-icon>
+              <v-icon>mdi-share</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Share</v-list-item-title>
+              <v-list-item-subtitle>Send expangine or a friend your project via E-mail.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-menu offset-x open-on-hover v-if="hasExamples">
             <template #activator="{ on }">
               <v-list-item v-on="on">
@@ -432,6 +441,7 @@ import { ProjectHistory, ProjectState } from './app/ProjectHistory';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
 import { getDataImport } from './app/DataImport';
+import { getSendMail } from './app/SendMail';
 import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
 import { friendlyList, SimpleFieldOption } from '@/common';
@@ -718,6 +728,25 @@ export default Vue.extend({
         }
 
         this.showExamples = false;
+      });
+    },
+    // SHARE
+    share()
+    {
+      const name = this.metadata.title || '<Project Name>';
+      const exported = JSON.stringify({
+        metadata: this.store.metadata.encode(this.metadata),
+        type: this.store.type.encode(this.type),
+        settings: this.store.settings.encode(this.settings),
+        data: this.store.data.encode(this.data),
+        program: this.store.program.encode(this.program),
+        functions: this.store.functions.encode(this.functions),
+      });
+
+      getSendMail({
+        to: 'pdiffenderfer@gmail.com',
+        subject: 'I would like to share my Expangine project with you',
+        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}. You can save this in a JSON file and import it into https://expangine.github.io/expangine-vue.\n\n\n${exported}`,
       });
     },
     // FUNCTIONS
