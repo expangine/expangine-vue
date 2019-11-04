@@ -1,9 +1,11 @@
 
-import { Type, Expression, AnyType, NoExpression, CommandProvider, InvokeExpression } from 'expangine-runtime';
+import { Type, Expression, AnyType, NoExpression, CommandProvider, InvokeExpression, Traverser } from 'expangine-runtime';
 import { LiveRuntime, LiveContext, LiveResult } from 'expangine-runtime-live';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 
+
+export type DebugBreakpoint = [Expression, boolean];
 
 export interface DebugProgramOptions
 {
@@ -11,11 +13,12 @@ export interface DebugProgramOptions
   data: any;
   program: Expression;
   steps: DebugStep[];
-  hoverStep: DebugStep | null;
+  hoverExpression: Expression | null;
   currentStep: DebugProgramResult;
   stepsLoaded: number;
-  goto: boolean;
-  gotoExpression: Expression | null;
+  breakpointSet: boolean;
+  breakpoint: Expression | null;
+  breakpoints: DebugBreakpoint[];
   visible: boolean;
   registry: Registry;
   close: () => any;
@@ -54,9 +57,10 @@ export function getDebugProgramDefaults(): DebugProgramOptions
     program: NoExpression.instance,
     steps: [],
     stepsLoaded: 10,
-    goto: false,
-    gotoExpression: null,
-    hoverStep: null,
+    breakpointSet: false,
+    breakpoint: null,
+    breakpoints: [],
+    hoverExpression: null,
     currentStep: null as unknown as DebugProgramResult,
     visible: false,
     registry: null as unknown as Registry,
@@ -85,10 +89,20 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
 {
   const { resolve, promise } = getPromiser<void>();
 
+  const oldBreakpoints = new Map(debugProgramDialog.breakpoints);
+  const newBreakpoints: DebugBreakpoint[] = [];
+
   Object.assign(debugProgramDialog, getDebugProgramDefaults());
   Object.assign(debugProgramDialog, options);
+  
+  debugProgramDialog.program.traverse(Traverser.list()).forEach((expr) => {
+    if (oldBreakpoints.has(expr.value)) {
+      newBreakpoints.push([ expr.value, oldBreakpoints.get(expr.value) as boolean ]);
+    }
+  });
 
   debugProgramDialog.currentStep = debugProgram(0);
+  debugProgramDialog.breakpoints = newBreakpoints;
   debugProgramDialog.visible = true;
   debugProgramDialog.close = () => {
     resolve();
@@ -105,7 +119,7 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
  * Step Out Of (goto to depth - 1 starting at current + 1)
  * Back (goto index = current - 1)
  */
-export function debugProgram(step: number, searchFor?: Expression): DebugProgramResult
+export function debugProgram(step: number, stopAt?: Map<Expression, boolean>): DebugProgramResult
 {
   const { registry, type, program, data: originalData } = debugProgramDialog;
 
@@ -141,7 +155,7 @@ export function debugProgram(step: number, searchFor?: Expression): DebugProgram
 
       return (context: LiveContext) => 
       {
-        const isSearchFound = stepCurrent >= step && expr === searchFor && !found;
+        const isSearchFound = stopAt && stepCurrent >= step && stopAt.get(expr) && !found;
         const isEnter = stepCurrent === step || isSearchFound;
         const stepEnter = stepCurrent;
 
@@ -161,6 +175,7 @@ export function debugProgram(step: number, searchFor?: Expression): DebugProgram
 
           if (isSearchFound)
           {
+            step = stepCurrent;
             stepInto = stepCurrent + 1;
             stepBack = stepCurrent - 1;
             stepOut = -1;

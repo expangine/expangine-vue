@@ -49,25 +49,34 @@
             <span>Step Out {{ stepOutLabel }}</span>
           </v-tooltip>
 
-          <v-tooltip bottom open-delay="1000" v-if="!goto">
+          <v-tooltip bottom open-delay="1000">
+            <template #activator="{ on }">
+              <v-btn icon v-on="on" :disabled="breakpoints.length === 0" @click="stepToBreakpoint">
+                <v-icon>mdi-play</v-icon>
+              </v-btn>
+            </template>
+            <span>Step to Next Breakpoint</span>
+          </v-tooltip>
+
+          <v-tooltip bottom open-delay="1000" v-if="!breakpointSet">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoStart">
                 <v-icon>mdi-checkbox-blank-circle</v-icon>
               </v-btn>
             </template>
-            <span>Set Breakpoint Expression</span>
+            <span>Add Breakpoint</span>
           </v-tooltip>
 
-          <v-tooltip bottom open-delay="1000" v-if="goto && gotoExpression">
+          <v-tooltip bottom open-delay="1000" v-if="breakpointSet && breakpoint">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoEnd">
-                <v-icon>mdi-arrow-right-drop-circle</v-icon>
+                <v-icon>mdi-plus-circle</v-icon>
               </v-btn>
             </template>
-            <span>Go To Breakpoint at {{ registry.getExpressionName(gotoExpression) }}</span>
+            <span>Add Breakpoint {{ registry.getExpressionName(breakpoint) }}</span>
           </v-tooltip>
 
-          <v-tooltip bottom open-delay="1000" v-if="goto">
+          <v-tooltip bottom open-delay="1000" v-if="breakpointSet">
             <template #activator="{ on }">
               <v-btn icon v-on="on" @click="gotoCancel">
                 <v-icon>mdi-close-circle</v-icon>
@@ -111,6 +120,24 @@
           <v-expansion-panels accordion focusable multiple>
 
             <v-expansion-panel>
+              <v-expansion-panel-header>Breakpoints</v-expansion-panel-header>
+              <v-expansion-panel-content class="pa-0">
+                <v-list dense>
+                  <template v-for="(breakpoint, breakpointIndex) in breakpoints">
+                    <ex-debug-breakpoint
+                      :key="breakpointIndex"
+                      :breakpoint="breakpoint"
+                      :registry="registry"
+                      :current="step.expr"
+                      @hover="onHoverBreakpoint"
+                      @remove="removeBreakpoint(breakpointIndex)"
+                    ></ex-debug-breakpoint>
+                  </template>
+                </v-list>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+
+            <v-expansion-panel>
               <v-expansion-panel-header>Callstack</v-expansion-panel-header>
               <v-expansion-panel-content class="pa-0">
                 <v-list dense>
@@ -120,7 +147,7 @@
                       :registry="registry"
                       :step="call"
                       :index="callIndex"
-                      @hover="onHover"
+                      @hover="onHoverStep"
                     ></ex-debug-stack>
                   </template>
                 </v-list>
@@ -150,8 +177,8 @@
                     :index="step.index"
                     :registry="registry"
                     :value="currentStep.step"
-                    @hover="onHover"
-                    @input="goto"
+                    @hover="onHoverStep"
+                    @input="gotoStep"
                   ></ex-debug-step>
                 </template>
                 <div v-intersect="onIntersect"></div>
@@ -169,12 +196,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Expression, TextType } from 'expangine-runtime';
-import { debugProgramDialog, debugProgram, DebugStep } from './DebugProgram';
+import { debugProgramDialog, debugProgram, DebugStep, DebugBreakpoint } from './DebugProgram';
+import { ExpressionEventListeners } from '../runtime/exprs/ExpressionBase';
 import { TypeSubNode } from '../runtime/types/TypeVisuals';
 import ExDebugStack from './DebugStack.vue';
 import ExDebugNode from './DebugNode.vue';
 import ExDebugStep from './DebugStep.vue';
-import { ExpressionEventListeners } from '../runtime/exprs/ExpressionBase';
+import ExDebugBreakpoint from './DebugBreakpoint.vue';
 
 
 export default Vue.extend({
@@ -182,6 +210,7 @@ export default Vue.extend({
     ExDebugStack,
     ExDebugNode,
     ExDebugStep,
+    ExDebugBreakpoint,
   },
   data: () => debugProgramDialog,
   computed: {
@@ -192,14 +221,28 @@ export default Vue.extend({
       return this.registry.getExpressionName(this.step.expr);
     },
     highlightMap(): Map<Expression, string> {
-      const highlights = new Map([[this.step.expr, '#BBDEFB']]);
-
-      if (this.hoverStep) {
-        highlights.set(this.hoverStep.expr, '#DDF0FFC4');
+      const highlights = new Map();
+      
+      if (this.breakpoint) {
+        highlights.set(this.breakpoint, '#9CCC65');
+      } else {
+        this.breakpoints.forEach(([breakpoint, enabled]) => {
+          if (enabled) {
+            highlights.set(breakpoint, '#FFCDD2');
+          }
+        });
       }
 
-      if (this.gotoExpression) {
-        highlights.set(this.gotoExpression, '#9CCC65');
+      if (this.hoverExpression) {
+        highlights.set(this.hoverExpression, '#DDF0FFC4');
+      }
+
+      if (!this.breakpointSet) {
+        if (highlights.has(this.step.expr)) {
+          highlights.set(this.step.expr, '#E1BEE7');
+        } else {
+          highlights.set(this.step.expr, '#BBDEFB');
+        }
       }
 
       return highlights;
@@ -284,29 +327,32 @@ export default Vue.extend({
     eventListeners(): ExpressionEventListeners {
       return { click: this.gotoClick };
     },
+    breakpointMap(): Map<Expression, boolean> {
+      return new Map(this.breakpoints);
+    },
   },
   methods: {
     gotoClick(ev: Event, expr: Expression) {
-      if (this.goto) {
-        this.gotoExpression = expr;
+      if (this.breakpointSet) {
+        this.breakpoint = expr;
 
         ev.stopPropagation();
         ev.preventDefault();
       }
     },
     gotoStart() {
-      this.goto = true;
-      this.gotoExpression = null;
+      this.breakpointSet = true;
+      this.breakpoint = null;
     },
     gotoEnd() {
-      if (this.gotoExpression) {
-        this.gotoStep(this.currentStep.step, this.gotoExpression);
+      if (this.breakpoint) {
+        this.breakpoints.push([this.breakpoint, true]);
       }
       this.gotoCancel();
     },
     gotoCancel() {
-      this.goto = false;
-      this.gotoExpression = null;
+      this.breakpointSet = false;
+      this.breakpoint = null;
     },
     getStep(index: number): DebugStep | undefined {
       return this.steps.find((s) => s.index === index);
@@ -329,9 +375,12 @@ export default Vue.extend({
         this.$set(this.steps, currentStepIndex, currentStep);
       }
     },
-    gotoStep(index: number, searchFor?: Expression) {
-      this.currentStep = debugProgram(index, searchFor);
+    gotoStep(index: number, stopAt?: Map<Expression, boolean>) {
+      this.currentStep = debugProgram(index, stopAt);
       this.pushCurrentStep();
+    },
+    removeBreakpoint(index: number) {
+      this.breakpoints.splice(index, 1);
     },
     first() {
       this.gotoStep(0);
@@ -351,8 +400,26 @@ export default Vue.extend({
     stepOut() {
       this.gotoStep(this.currentStep.stepOut);
     },
-    onHover(step: DebugStep | null = null) {
-      this.hoverStep = step;
+    stepToBreakpoint() {
+      const start = this.currentStep.step;
+      if (this.breakpointMap.has(this.step.expr)) {
+        this.gotoStep(start + 1, this.breakpointMap);
+        if (!this.breakpointMap.has(this.step.expr)) {
+          this.last();
+        }
+      } else {
+        const startingStep = this.currentStep.step;
+        this.gotoStep(start, this.breakpointMap);
+        if (this.currentStep.step === start) {
+          this.last();
+        }
+      }
+    },
+    onHoverStep(step: DebugStep | null = null) {
+      this.hoverExpression = step ? step.expr : null;
+    },
+    onHoverBreakpoint(breakpoint: DebugBreakpoint | null = null) {
+      this.hoverExpression = breakpoint ? breakpoint[0] : null;
     },
     onIntersect(entries: Array<{ isIntersecting: boolean }>) {
       if (entries[0].isIntersecting && this.stepsLoaded < this.steps.length) {
