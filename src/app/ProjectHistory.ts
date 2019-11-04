@@ -9,6 +9,7 @@ export interface ProjectHistoryOptions
   project: Project;
   transcoders: ProjectTranscoderStores;
   onSaveError: TranscoderErrorHandler<any, any>;
+  canSave: () => boolean;
 }
 
 export type ProjectState = Partial<Record<ProjectType, any>>;
@@ -25,7 +26,7 @@ export class ProjectHistory
   public undosTranscoder: TranscoderStore<ProjectState[], ProjectState[]>;
   public redosTranscoder: TranscoderStore<ProjectState[], ProjectState[]>;
 
-  public constructor({ project, transcoders, onSaveError }: ProjectHistoryOptions)
+  public constructor({ project, transcoders, onSaveError, canSave }: ProjectHistoryOptions)
   {
     this.project = project;
     this.transcoders = transcoders;
@@ -36,12 +37,14 @@ export class ProjectHistory
       decode: (data: ProjectState[]) => data,
       getDefault: () => [],
       onSaveError,
+      canSave,
     }),
     this.undosTranscoder = newStore('undos', {
       encode: (value: ProjectState[]) => value,
       decode: (data: ProjectState[]) => data,
       getDefault: () => [],
       onSaveError,
+      canSave,
     });
 
     this.undos = this.undosTranscoder.load();

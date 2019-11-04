@@ -5,6 +5,7 @@ export type TranscoderErrorHandler<I, O> = (error: any, transcoder: Transcoder<I
 export interface Transcoder<I, O>
 {
   onSaveError?: TranscoderErrorHandler<I, O>;
+  canSave?: () => boolean;
   encode(input: I): O;
   decode(output: O): I;
   getDefault(): I;
@@ -43,6 +44,11 @@ export class TranscoderStore<I, O> implements Transcoder<I, O>
     return this.transcoder.getDefault();
   }
 
+  public canSave(): boolean
+  {
+    return !this.transcoder.canSave || this.transcoder.canSave();
+  }
+
   public stringify(input: I): string
   {
     return JSON.stringify(this.encode(input));
@@ -62,6 +68,11 @@ export class TranscoderStore<I, O> implements Transcoder<I, O>
 
   public async save(input: I)
   {
+    if (!this.canSave())
+    {
+      return;
+    }
+
     try 
     {
       window.console.log('saving', this.key);

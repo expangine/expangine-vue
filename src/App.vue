@@ -110,6 +110,18 @@
           </v-btn>
         </template>
         <v-list>
+          <v-list-item @click="toggleAutoSave">
+            <v-list-item-action>
+              <v-checkbox
+                :input-value="autoSave.value"
+              ></v-checkbox>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Auto Save</v-list-item-title>
+              <v-list-item-subtitle>Your project is automatically saved to your browser so you can resume your work anytime.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
           <v-list-item @click="historyUndo" :disabled="history.undos.length === 0">
             <v-list-item-icon>
               <v-icon>mdi-undo</v-icon>
@@ -496,6 +508,23 @@ async function onSaveError(error: any): Promise<boolean>
   return options.retry;
 }
 
+const autoSave = (() => {
+  const store = newStore('autoSave', {
+    encode: (value: boolean) => value,
+    decode: (data: boolean) => data,
+    getDefault: () => true,
+  });
+
+  return {
+    value: store.load(),
+    can: () => autoSave.value,
+    set(value: boolean) {
+      store.save(this.value = value);
+    },
+  };
+})();
+
+
 
 export default Vue.extend({
   name: 'App',
@@ -508,6 +537,7 @@ export default Vue.extend({
     data: null as any,
     program: NoExpression.instance as Expression,
     // Editor Properties
+    autoSave,
     mode: 0,
     metadataEditing: false,
     readOnly: false,
@@ -544,10 +574,13 @@ export default Vue.extend({
         project: this, 
         transcoders: this.store, 
         onSaveError,
+        canSave: autoSave.can,
       });
     },
     store() {
       window.console.log('store created');
+
+      const canSave = autoSave.can;
       
       return {
         type: newStore('type', {
@@ -555,18 +588,21 @@ export default Vue.extend({
           decode: (data: any) => this.registry.defs.getType(data),
           getDefault: () => new ObjectType({ props: {} }),
           onSaveError,
+          canSave,
         }),
         settings: newStore('settings', {
           encode: (value: TypeSettingsAny) => copy(value),
           decode: (data: any) => copy(data) as TypeSettingsAny,
           getDefault: () => this.registry.getTypeSettings(this.type),
           onSaveError,
+          canSave,
         }),
         data: newStore('data', {
           encode: (value: any) => this.type.toJson(value),
           decode: (data: any) => this.type.fromJson(data),
           getDefault: () => this.type.fromJson(copy(this.settings.defaultValue)),
           onSaveError,
+          canSave,
         }),
         program: newStore('program', {
           encode: (value: Expression) => value.encode(),
@@ -578,6 +614,7 @@ export default Vue.extend({
           },
           getDefault: () => NoExpression.instance,
           onSaveError,
+          canSave,
         }),
         metadata: newStore('metadata', {
           encode: (value: any) => copy(value),
@@ -589,12 +626,14 @@ export default Vue.extend({
             created: DateFormat.format('LLL', [new Date(), currentLocale]),
           }),
           onSaveError,
+          canSave,
         }),
         functions: newStore('functions', {
           encode: (value: Record<string, FunctionType>) => objectMap(value, (func) => func.encode()),
           decode: (data: any) => objectMap(data, (functionData) => this.registry.defs.getType(functionData) as FunctionType),
           getDefault: () => this.registry.defs.functions,
           onSaveError,
+          canSave,
         }),
       };
     },
@@ -615,12 +654,30 @@ export default Vue.extend({
     this.settings = this.store.settings.load();
     this.data = this.store.data.load();
     this.program = this.store.program.load();
-    this.registry.defs.functions = this.store.functions.load();
+    this.functions = this.store.functions.load();
     this.metadata = this.store.metadata.load();
     
     this.history.resetLast();
   },
   methods: {
+    // AUTO SAVE
+    async toggleAutoSave()
+    {
+      if (autoSave.value) {
+        const result = await getConfirmation({
+          title: 'Disable Auto Save',
+          message: 'Your work will no longer be saved to your browser. Would you like to <b>clear</b> the data from your browser or <b>leave</b> it there for next time you visit?',
+          confirm: 'Clear',
+          unconfirm: 'Leave',
+        });
+
+        if (result) {
+          localStorage.clear();
+        }
+      }
+
+      autoSave.set(!autoSave.value);
+    },
     // READONLY
     toggleReadOnly() 
     {
@@ -746,7 +803,7 @@ export default Vue.extend({
       getSendMail({
         to: 'pdiffenderfer@gmail.com',
         subject: 'I would like to share my Expangine project with you',
-        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}. You can save this in a JSON file and import it into https://expangine.github.io/expangine-vue.\n\n\n${exported}`,
+        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into https://expangine.github.io/expangine-vue.\n\n\n${exported}`,
       });
     },
     // FUNCTIONS
