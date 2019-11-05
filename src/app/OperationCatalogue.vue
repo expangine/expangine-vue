@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="800">
+  <v-dialog v-model="visible" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
     <v-card>
       <v-card-title class="headline">
         Operation Catalogue

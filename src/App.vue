@@ -321,7 +321,7 @@
     </v-app-bar>
 
     <v-content>
-      <v-tabs-items touchless v-model="mode">
+      <v-tabs-items v-if="initialized" touchless v-model="mode">
         <v-tab-item :key="0">
           <v-container fluid>
             <ex-type-editor
@@ -362,6 +362,11 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
+      <div v-else class="pa-3">
+        <v-skeleton-loader
+          type="list-item-avatar-three-line"
+        ></v-skeleton-loader>
+      </div>
       
       <ex-input-dialog></ex-input-dialog>
       <ex-notify-dialog></ex-notify-dialog>
@@ -379,7 +384,7 @@
         :show.sync="showOperations"
       ></ex-operation-catalogue-dialog>
 
-      <v-dialog v-model="metadataEditing" max-width="800">
+      <v-dialog v-model="metadataEditing" max-width="800"  :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
           <v-card-title class="headline">
             Program Information
@@ -434,7 +439,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="showExamples" max-width="800">
+      <v-dialog v-model="showExamples" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
           <v-card-title class="headline">
             Welcome to Expangine!
@@ -470,8 +475,10 @@
       <v-navigation-drawer
         v-model="historyDrawer"
         right
-        absolute
+        fixed
         temporary
+        disable-resize-watcher
+        disable-route-watcher
       >
         <ex-project-history-list
           :history="history"
@@ -545,6 +552,7 @@ export default Vue.extend({
     data: null as any,
     program: NoExpression.instance as Expression,
     // Editor Properties
+    initialized: false,
     autoSave,
     mode: 0,
     metadataEditing: false,
@@ -682,6 +690,8 @@ export default Vue.extend({
 
     this.updateHistoryData();
     this.history.on('change', this.updateHistoryData);
+
+    this.initialized = true;
   },  
   methods: {
     // SAVE ERROR

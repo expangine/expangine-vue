@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
     <v-card v-if="visible">
       <v-card-title class="headline">
         Test Operation
@@ -108,7 +108,14 @@ export default Vue.extend({
   },
   methods: {
     setConstant(name: string, value: any) {
-      this.$set(this.params[name], 'value', value);
+      const paramExpr = this.params[name];
+      if (value === undefined || value === null) {
+        this.$set(this.params, name, NoExpression.instance);
+      } else if (paramExpr instanceof NoExpression) {
+        this.$set(this.params, name, new ConstantExpression(value));
+      } else if (paramExpr instanceof ConstantExpression) {
+        paramExpr.value = value;
+      }
       this.updateResult();
     },
     showDefault(name: string) {

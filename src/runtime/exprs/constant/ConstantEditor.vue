@@ -47,7 +47,7 @@
       :type="computedType"
     ></ex-data-string>
 
-    <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline">
+    <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline" :fullscreen="$vuetify.breakpoint.mdAndDown">
       <v-card>
         <v-card-title>
           <span class="headline">Enter Value</span>

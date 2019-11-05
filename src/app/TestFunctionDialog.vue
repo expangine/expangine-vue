@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
     <v-card v-if="visible">
       <v-card-title class="headline">
         {{ title }}

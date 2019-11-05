@@ -9,7 +9,7 @@
           <span>{{ designLabel }}</span>
         </v-tooltip>
       </v-btn>
-      <v-dialog v-model="designing" max-width="1000">
+      <v-dialog v-model="designing" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
           <v-card-title>
             Design Any Type

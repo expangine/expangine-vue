@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" width="1000">
+  <v-dialog v-model="visible" width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
     <v-card v-if="visible">
       <v-card-text>
 
@@ -193,6 +193,9 @@
 
       </v-card-text>
       <v-card-actions>
+        <v-btn color="primary" @click="test">
+          Test
+        </v-btn>
         <div class="flex-grow-1"></div>
         <v-btn text @click="visible = false">
           Close
@@ -207,6 +210,7 @@ import Vue from 'vue';
 import { Expression, Type, TypeMap, OperationExpression, OperationPair, Operation, OperationTypes, ObjectType } from 'expangine-runtime';
 import { OperationVisuals } from '../runtime/ops/OperationVisuals';
 import { Registry } from '../runtime/Registry';
+import { getTestOperation } from './TestOperation';
 
 
 const COMPLEXITY_LABELS = [
@@ -296,6 +300,11 @@ export default Vue.extend({
       return this.operationTypes
         ? this.registry.defs.getOperationInputType(this.operationTypes.scope[name], this.paramTypes)
         : null;
+    },
+    test() {
+      const { name, registry } = this;
+
+      getTestOperation({ name, registry });
     },
   },
 });

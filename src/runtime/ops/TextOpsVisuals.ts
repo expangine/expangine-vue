@@ -299,6 +299,136 @@ export default (registry: Registry) =>
     returnComments: 'The [value] text padded.',
   });
 
+  registry.addOperation(TextOps.regexTest, {
+    name: 'Matches Regular Expression',
+    description: 'Determines if [value] matches [regex]',
+    singleline: '{value} matches {regex}? ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value to test',
+      regex: 'The regular expression',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'True if [value] matches [regex], otherwise false.',
+  });
+
+  registry.addOperation(TextOps.regexSplit, {
+    name: 'Split Text with Regular Expression',
+    description: 'Determines if [value] matches [regex]',
+    singleline: 'split {value} with {regex} limit {limit} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value to split',
+      regex: 'The regular expression to split by',
+      limit: 'This maximum number of splits to do',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      limit: 'none',
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'A list of text built by splitting [value] by [regex].',
+  });
+
+  registry.addOperation(TextOps.regexMatch, {
+    name: 'Get Regular Expression Matches',
+    description: 'Get a list of the matches in [value] to a [regex]',
+    singleline: 'matches of {regex} in {value} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value to find matches in',
+      regex: 'The regular expression to search with',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'A list of text with each match in [value] with [regex]',
+  });
+
+  registry.addOperation(TextOps.regexMatchAll, {
+    name: 'Get Regular Expression Match Groups',
+    description: 'Get a list of the match groups in [value] to a [regex]',
+    singleline: 'match groups of {regex} in {value} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value to find matches in',
+      regex: 'The regular expression to search with',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'A list of match objects for each match in [value] with [regex]',
+  });
+
+  registry.addOperation(TextOps.regexReplace, {
+    name: 'Replace Text using Regular Expression',
+    description: 'Replace occurrences of [regex] with [replacement] in [value]',
+    singleline: '{value} replace {regex} with {replacement} all occurrences {all} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value replace parts of',
+      regex: 'The regular expression to replace with',
+      replacement: 'The text to replace for all matches. If groups are using the the regular expression you can refer to them with $1, $2, and so on.',
+      all: 'Replace all occurrences in the value',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      all: 'false',
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'The text [value] with all [replacement]s requested.',
+  });
+
+  registry.addOperation(TextOps.regexReplaceDynamic, {
+    name: 'Replace Text Dynamically using Regular Expression',
+    description: 'Replace occurrences in [value] of [regex] calling [replace] for each match',
+    singleline: '{value} replace {regex} using {replace} all occurrences {all} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value replace parts of',
+      regex: 'The regular expression to replace with',
+      replace: 'The text to replace for the current match',
+      all: 'Replace all occurrences in the value',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    scopeComments: {
+      match: 'The current match being replaced',
+    },
+    defaults: {
+      all: 'false',
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'The text [value] with all [replace]s requested.',
+  });
+
+  registry.addOperation(TextOps.regexIndexOf, {
+    name: 'Index of Text using Regular Expression',
+    description: 'Finds the index of [regex] in [value]',
+    singleline: 'index of {regex} in {value} ignore case {ignoreCase} multiple lines {multiline}',
+    comments: {
+      value: 'The text value to search through',
+      regex: 'The regular expression to search with',
+      ignoreCase: 'Whether to ignore case while attempting a match in a string',
+      multiline: 'Whether or not to search in strings across multiple lines',
+    },
+    defaults: {
+      ignoreCase: 'false',
+      multiline: 'false',
+    },
+    returnComments: 'The index of [regex] in [value] or -1 if the expression was not found.',
+  });
+
   registry.addOperation(TextOps.toNumber, {
     name: 'Convert Text to Number',
     description: 'Convert [value] to number, otherwise return [invalidValue]',

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" width="1000">
+  <v-dialog v-model="visible" width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
     <v-card v-if="visible">
       <v-card-text>
 
@@ -208,6 +208,9 @@
 
       </v-card-text>
       <v-card-actions>
+        <v-btn color="primary" @click="test">
+          Test
+        </v-btn>
         <div class="flex-grow-1"></div>
         <v-btn text @click="visible = false">
           Close
@@ -221,6 +224,7 @@
 import Vue from 'vue';
 import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression } from 'expangine-runtime';
 import { OperationVisuals } from '../../ops/OperationVisuals';
+import { getTestOperation } from '@/app/TestOperation';
 import OperationSearch from './OperationSearch.vue';
 import ExpressionBase from '../ExpressionBase';
 
@@ -353,6 +357,14 @@ export default ExpressionBase<OperationExpression>().extend({
       }
 
       return context;
+    },
+    test() {
+      const { operation, registry } = this;
+
+      if (operation) 
+      {
+        getTestOperation({ name: operation.id, registry });
+      }
     },
   },
 });
