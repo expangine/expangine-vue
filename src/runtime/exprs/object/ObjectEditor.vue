@@ -91,7 +91,7 @@ export default ExpressionBase<ObjectExpression>().extend({
       return next;
     },
     hasProperty(name: string) {
-      return !!(this.value && this.value.props[name]);
+      return !!(this.value && this.value.props && this.value.props[name]);
     },
     isPropertyInvalid(prop: string): boolean {
       return !prop;

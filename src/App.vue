@@ -186,6 +186,15 @@
               <v-list-item-subtitle>Author, Description, etc</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="showOperations = true">
+            <v-list-item-icon>
+              <v-icon>mdi-file-document-box-search-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Operation Catalogue</v-list-item-title>
+              <v-list-item-subtitle>Search through the list of available operations.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item @click="toggleReadOnly">
             <v-list-item-action>
               <v-checkbox
@@ -365,6 +374,10 @@
       <ex-edit-function-dialog></ex-edit-function-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
       <ex-test-operation-dialog></ex-test-operation-dialog>
+      <ex-operation-catalogue-dialog
+        :registry="registry"
+        :show.sync="showOperations"
+      ></ex-operation-catalogue-dialog>
 
       <v-dialog v-model="metadataEditing" max-width="800">
         <v-card>
@@ -545,6 +558,7 @@ export default Vue.extend({
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
+    showOperations: false,
     // History
     historyEmpty: true,
     undoEmpty: true,

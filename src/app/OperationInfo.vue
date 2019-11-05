@@ -49,7 +49,6 @@
               <ul class="ma-5">
                 <li><strong>Parameter</strong>: The name of the operation value, required values are denoted with a <span class="red--text text--darken-4">*</span>.</li>
                 <li><strong>Expected Type</strong>: The type that is needed for this expression. If the expected type is exactly same as the current type that means the operation types are dynamic.</li>
-                <li><strong>Current Type</strong>: The type detected in the given expression.</li>
                 <li><strong>Comment</strong>: Explanation of the parameter.</li>
                 <li><strong>Mutates</strong>: If Yes, that means the value returned by the expression will be changed.</li>
                 <li><strong>Has Scope?</strong>: If Yes, that means new variables are added to the scope so the expression can use them to generate a value. Scoped expressions can be called once or multiple times with different values depending on the operation.</li>
@@ -60,10 +59,9 @@
 
         <v-simple-table class="fixed-table">
           <colgroup>
-            <col style="width: 100px">
-            <col style="width: 30%;">
-            <col style="width: 30%;">
-            <col style="width: 40%;">
+            <col style="width: 130px">
+            <col style="width: 45%;">
+            <col style="width: 55%;">
             <col style="width: 80px">
             <col style="width: 100px">
             <col style="width: 100px">
@@ -72,7 +70,6 @@
             <tr>
               <th>Parameter</th>
               <th>Expected Type</th>
-              <th>Current Type</th>
               <th>Comment</th>
               <th>Mutates</th>
               <th>Has Scope?</th>
@@ -89,12 +86,6 @@
                 <td>
                   <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-html="describeType(paramTypes[param])"
-                  ></code>
-                </td>
-                <td class="ex-scrollable">
-                  <code class="d-block pa-2 ma-1 ex-scrollable" 
-                    v-if="value.params[param]"
-                    v-html="describeType(paramActual(param))"
                   ></code>
                 </td>
                 <td>
@@ -122,12 +113,6 @@
                 <td class="ex-scrollable">
                   <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-html="describeType(paramTypes[param])"
-                  ></code>
-                </td>
-                <td class="ex-scrollable">
-                  <code class="d-block pa-2 ma-1 ex-scrollable" 
-                    v-if="value.params[param]"
-                    v-html="describeType(paramActual(param))"
                   ></code>
                 </td>
                 <td>
@@ -219,10 +204,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression } from 'expangine-runtime';
-import { OperationVisuals } from '../../ops/OperationVisuals';
-import OperationSearch from './OperationSearch.vue';
-import ExpressionBase from '../ExpressionBase';
+import { Expression, Type, TypeMap, OperationExpression, OperationPair, Operation, OperationTypes, ObjectType } from 'expangine-runtime';
+import { OperationVisuals } from '../runtime/ops/OperationVisuals';
+import { Registry } from '../runtime/Registry';
 
 
 const COMPLEXITY_LABELS = [
@@ -241,11 +225,19 @@ const COMPLEXITY_COLORS = [
 const COMPLEXITY_COLOR_MAX = 'black';
 
 
-export default ExpressionBase<OperationExpression>().extend({
-  name: 'OperationInspector',
+export default Vue.extend({
+  name: 'OperationInfo',
   props: {
     show: {
       type: Boolean,
+      required: true,
+    },
+    registry: {
+      type: Object as () => Registry,
+      required: true,
+    },
+    name: {
+      type: String,
       required: true,
     },
   },
@@ -262,13 +254,13 @@ export default ExpressionBase<OperationExpression>().extend({
       },
     },
     operation(): Operation<any, any, any, any, any> | null {
-      return this.registry.defs.getOperation(this.value.name);
+      return this.registry.defs.getOperation(this.name);
     },
     operationTypes(): OperationTypes<any, any, any> | null {
-      return this.registry.defs.getOperationTypes(this.value.name);
+      return this.registry.defs.getOperationTypes(this.name);
     },
     operationVisuals(): OperationVisuals {
-      return this.registry.getOperationVisuals(this.value.name);
+      return this.registry.getOperationVisuals(this.name);
     },
     operationName(): string {
       return this.operationVisuals.name;
@@ -277,7 +269,9 @@ export default ExpressionBase<OperationExpression>().extend({
       return this.operationVisuals.description;
     },
     complexity(): number {
-      return this.value.getComplexity(this.registry.defs);
+      return this.operation
+        ? this.operation.complexity
+        : 0;
     },
     operationComplexity(): string {
       return COMPLEXITY_LABELS[Math.round(this.complexity)] || COMPLEXITY_LABEL_MAX;
@@ -286,7 +280,7 @@ export default ExpressionBase<OperationExpression>().extend({
       return COMPLEXITY_COLORS[Math.round(this.complexity)] || COMPLEXITY_COLOR_MAX;
     },
     paramTypes(): TypeMap {
-      return this.registry.defs.getOperationExpectedTypes(this.value.name, this.value.params, this.value.scopeAlias, this.context);
+      return this.registry.defs.getOperationExpectedTypes(this.name, {}, {}, ObjectType.baseType);
     },
     returnType(): Type | null {
       return this.operationTypes 
@@ -298,61 +292,10 @@ export default ExpressionBase<OperationExpression>().extend({
     describeType(type?: Type): string {
       return type ? this.registry.getTypeDescribeLong(type, '&nbsp;&nbsp;', '<br>') : '';
     },
-    paramActual(name: string): Type | null {
-      const paramExpr = this.value.params[name];
-      if (!paramExpr) {
-        return null;
-      }
-
-      const paramType = paramExpr.getType(this.registry.defs, this.paramContext(name));
-      if (!paramType) {
-        return null;
-      }
-
-      return Type.simplify(paramType);
-    },
     scopeType(name: string): Type | null {
       return this.operationTypes
         ? this.registry.defs.getOperationInputType(this.operationTypes.scope[name], this.paramTypes)
         : null;
-    },
-    paramContext(name: string): Type {
-      const defs = this.registry.defs;
-      const op = this.operation;
-      const opTypes = this.operationTypes;
-
-      if (op && opTypes && op.hasScope.indexOf(name) !== -1) 
-      {
-        return this.scopedContext();
-      }
-
-      return this.context;
-    },
-    scopedContext(): Type {
-      const defs = this.registry.defs;
-      const op = this.operation;
-      const opTypes = this.operationTypes;
-
-      if (!op || !opTypes)
-      {
-        return this.context;
-      }
-
-      const { context, scope } = defs.getContextWithScope(this.context);
-
-      for (const scopeParam of op.scope) 
-      {
-        const scopeType = defs.getOperationInputType(opTypes.scope[scopeParam], this.paramTypes);
-
-        if (scopeType) 
-        {
-          const alias = this.value.scopeAlias[scopeParam] || scopeParam;
-
-          scope[alias] = scopeType.getSimplifiedType();
-        }
-      }
-
-      return context;
     },
   },
 });
