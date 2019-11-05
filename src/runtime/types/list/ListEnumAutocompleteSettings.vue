@@ -47,7 +47,3 @@ export default TypeSettingsBase<ListType, ListEnumAutocompleteOptions>().extend(
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

@@ -30,7 +30,3 @@ export default TypeInputBase<NumberType, NumberSliderOptions, number | string>([
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

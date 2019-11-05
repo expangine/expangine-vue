@@ -41,7 +41,3 @@ export default TypeSettingsBase<NumberType, NumberTextBoxOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <span class="pl-3 center-aligned">
+  <span class="pl-3 ex-center-aligned">
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -12,7 +12,7 @@
     <ex-expression
       key="expression"
       v-bind="$props"
-      class="expression-inside parenthesis"
+      class="ex-inside ex-parenthesis"
       :value="value.expression"
       :required-type="conditionType"
       @input="updateExpression($event)"

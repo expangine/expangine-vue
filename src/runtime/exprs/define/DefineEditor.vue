@@ -1,5 +1,5 @@
 <template>
-  <table class="expression-table striped">
+  <table class="ex-table ex-striped">
     <tbody>
       <tr>
         <td>
@@ -34,18 +34,19 @@
           </ex-expression-menu>
         </td>
         <td>
-          <ex-draggable class="expression-table" 
+          <ex-draggable class="ex-table" 
             tag="table" 
-            ghost-class="ghost"
-            handle=".sorting-handle" 
-            :class="{ three: sorting, readOnly }"
+            ghost-class="ex-ghost"
+            handle=".ex-sorting-handle" 
+            :class="{ 'ex-three': sorting, 'ex-read-only': readOnly }"
             v-model="value.define" 
-            @end="update">
+            @end="update"
+          >
             <template v-for="(pair, index) in value.define">
               <tbody :key="index">
                 <tr>
                   <td v-if="sorting">
-                    <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+                    <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
                   </td>
                   <td class="var-name py-2">
                     <span v-if="readOnly">

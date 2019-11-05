@@ -10,6 +10,7 @@ export const InvokeVisuals: ExpressionVisuals<InvokeExpression> =
   create: () => new InvokeExpression('', {}),
   name: 'Invoke',
   description: 'Execute a user-defined function',
+  describe: ({ registry, expr }) => 'Invoke ' + expr.name,
   viewer: InvokeEditor,
   editor: InvokeEditor,
   complex: false,

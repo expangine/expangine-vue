@@ -43,7 +43,3 @@ export default TypeSettingsBase<TextType, TextRadioOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

@@ -196,7 +196,7 @@ export function renameVariable(startingAt: Expression, from: string, to: string)
 {
   startingAt.traverse(new Traverser((expr) =>  
   {
-    if (expr instanceof GetExpression || expr instanceof SetExpression || expr instanceof UpdateExpression) 
+    if (isPathExpression(expr)) 
     {
       const first = expr.path[0];
       
@@ -209,4 +209,16 @@ export function renameVariable(startingAt: Expression, from: string, to: string)
       }
     }
   }));
+}
+
+export function isPathExpression(expr: Expression): expr is (GetExpression | SetExpression | UpdateExpression) 
+{
+  return expr instanceof GetExpression || expr instanceof SetExpression || expr instanceof UpdateExpression;
+}
+
+export function isInPathExpression(expr: Expression): boolean
+{
+  return expr.parent 
+    && isPathExpression(expr.parent)
+    && expr.parent.path.indexOf(expr) !== -1;
 }

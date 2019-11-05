@@ -1,5 +1,5 @@
 <template>
-  <table v-if="multiline" class="expression-table">
+  <table v-if="multiline" class="ex-table">
     <tbody>
       <tr>
         <td>
@@ -38,7 +38,7 @@
       </tr>
     </tbody>
   </table>
-  <table v-else class="expression-table">
+  <table v-else class="ex-table">
     <tbody>
       <tr>
         <td>

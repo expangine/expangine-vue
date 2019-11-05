@@ -1,8 +1,8 @@
 <template>
-  <div class="center-aligned">
+  <div class="ex-center-aligned">
     <ex-expression
       v-bind="$props"
-      class="parenthesis"
+      class="ex-parenthesis"
       :value="value.value"
       @input="setValue"
       @remove="clearValue"

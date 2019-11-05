@@ -1,5 +1,5 @@
 <template>
-  <table class="expression-table striped">
+  <table class="ex-table ex-striped">
     <tbody>
       <tr>
         <td>
@@ -24,7 +24,7 @@
           </ex-expression-menu>
         </td>
         <td>
-          <table class="expression-table" :class="{ readOnly }">
+          <table class="ex-table" :class="{ 'ex-read-only': readOnly }">
             <template v-for="(value, prop) in value.props">
               <tbody :key="prop">
                 <tr>
@@ -91,7 +91,7 @@ export default ExpressionBase<ObjectExpression>().extend({
       return next;
     },
     hasProperty(name: string) {
-      return !!this.value.props[name];
+      return !!(this.value && this.value.props[name]);
     },
     isPropertyInvalid(prop: string): boolean {
       return !prop;

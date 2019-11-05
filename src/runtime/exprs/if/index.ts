@@ -10,6 +10,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   create: (forType) => new IfExpression([[NoExpression.instance, NoExpression.instance]], NoExpression.instance),
   name: 'If',
   description: 'If (condition A) then (B) else if (condition C) then (D) else (E)',
+  describe: ({ registry, expr }) => 'If ' + registry.getExpressionDescribe(expr.cases[0][0]),
   viewer: IfEditor,
   editor: IfEditor,
   complex: true,

@@ -31,7 +31,3 @@ export default TypeSettingsBase<BooleanType, BooleanSwitchOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

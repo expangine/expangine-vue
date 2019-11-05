@@ -10,6 +10,7 @@ export const DoVisuals: ExpressionVisuals<DoExpression> =
   create: () => new DoExpression(NoExpression.instance, NoExpression.instance),
   name: 'Do',
   description: 'Do an expression repeatedly while a condition is true',
+  describe: ({ registry, expr }) => 'Do While ' + registry.getExpressionDescribe(expr.condition),
   viewer: DoEditor,
   editor: DoEditor,
   complex: true,

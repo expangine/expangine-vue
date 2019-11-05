@@ -29,7 +29,7 @@
     </template>
   </v-autocomplete>
 
-  <table v-else class="expression-table">
+  <table v-else class="ex-table">
     <tbody>
       <tr :style="rowStyle">
         <td :class="inOperationClass">
@@ -112,7 +112,7 @@
 
         </td>
         <td v-if="showSingleLine">
-          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle" class="center-aligned">
+          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle" class="ex-center-aligned">
             <template #section="{ section }">
               <span 
                 v-if="hasParameter(section)" 
@@ -135,7 +135,7 @@
                 </v-tooltip>
 
                 <span v-if="hiddenParameter(section)"
-                  class="ex-expression parenthesis">
+                  class="ex-expression ex-parenthesis">
                   <v-btn text @click="toggleParameter(section)">
                     show
                   </v-btn>
@@ -143,7 +143,7 @@
                 <ex-expression
                   v-else
                   v-bind="$props"
-                  class="parenthesis"
+                  class="ex-parenthesis"
                   :value="value.params[section]"
                   :context="paramContext(section)"
                   :context-details="paramContextDetails(section)"

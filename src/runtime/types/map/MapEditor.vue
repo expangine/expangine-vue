@@ -1,7 +1,7 @@
 <template>
   <v-list class="pa-0">
     <v-list-item>
-      <v-list-item-avatar class="cell-top pt-1 mr-3">
+      <v-list-item-avatar class="ex-cell-top pt-1 mr-3">
         <ex-type-editor-menu
           v-bind="$props"
           :disable-sub-settings="false"
@@ -19,7 +19,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item>
-      <v-list-item-avatar class="cell-top large-avatar">
+      <v-list-item-avatar class="ex-cell-top large-avatar">
         <v-menu :disabled="readOnly">
           <template #activator="{ on }">
             <v-chip label link outlined v-on="on" color="accent">Key</v-chip>
@@ -48,7 +48,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item>
-      <v-list-item-avatar class="cell-top large-avatar">
+      <v-list-item-avatar class="ex-cell-top large-avatar">
         <v-menu :disabled="readOnly">
           <template #activator="{ on }">
             <v-chip label link outlined v-on="on" color="accent">Value</v-chip>

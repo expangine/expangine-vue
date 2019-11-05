@@ -1,7 +1,7 @@
 <template>
   <v-list class="pa-0">
     <v-list-item>
-      <v-list-item-avatar class="cell-top pt-1 mr-3">
+      <v-list-item-avatar class="ex-cell-top pt-1 mr-3">
         <ex-type-editor-menu
           v-bind="$props"
           :disable-sub-settings="false"
@@ -24,7 +24,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item class="pr-0">
-      <v-list-item-avatar class="cell-top mr-0 pt-1">
+      <v-list-item-avatar class="ex-cell-top mr-0 pt-1">
         <v-icon>mdi-format-list-bulleted</v-icon>
       </v-list-item-avatar>
       <v-list-item-content class="pa-0">

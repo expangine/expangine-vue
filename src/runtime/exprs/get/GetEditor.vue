@@ -1,5 +1,5 @@
 <template>
-  <div class="center-aligned" :class="inOperationClass">
+  <div class="ex-center-aligned" :class="inOperationClass">
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"

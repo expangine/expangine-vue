@@ -1,11 +1,12 @@
 <template>
-  <ex-draggable class="expression-table striped" 
+  <ex-draggable class="ex-table ex-striped" 
     tag="table" 
-    ghost-class="ghost"
-    handle=".sorting-handle" 
-    :class="{ three: sorting }"
+    ghost-class="ex-ghost"
+    handle=".ex-sorting-handle" 
+    :class="{ 'ex-three': sorting }"
     v-model="value.cases" 
-    @end="update">
+    @end="update"
+  >
     <tbody>
       <tr>
         <td v-if="sorting"></td>
@@ -82,7 +83,7 @@
       <tbody :key="caseIndex">
         <tr>
           <td v-if="sorting">
-            <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+            <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
           </td>
           <td>
             <ex-chip-menu
@@ -104,9 +105,9 @@
           </td>
           <td>
             <template v-for="(test, testIndex) in group[0]">
-              <div :key="testIndex" class="my-3 ex-case-test">
+              <div :key="testIndex" class="my-3 ase-test">
 
-                <v-chip v-if="testIndex" class="ex-case-or">or</v-chip>
+                <v-chip v-if="testIndex" class="case-or">or</v-chip>
 
                 <ex-expression
                   v-bind="$props"
@@ -253,10 +254,10 @@ export default ExpressionBase<SwitchExpression>().extend({
 </script>
 
 <style lang="less" scoped>
-.ex-case-test {
+.case-test {
   position: relative;
 
-  .ex-case-or {
+  .case-or {
     position: absolute;
     top: -22px;
     left: -18px;

@@ -39,7 +39,3 @@ export default TypeInputBase<TextType, TextAreaOptions, string>(String).extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

@@ -46,7 +46,3 @@ export default TypeInputBase<DateType, DatePickerOptions, Date>(Date).extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

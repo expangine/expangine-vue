@@ -40,7 +40,3 @@ export default TypeInputBase<NumberType, NumberTextBoxOptions, number | string>(
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

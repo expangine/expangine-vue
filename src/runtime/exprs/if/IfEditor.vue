@@ -1,16 +1,17 @@
 <template>
-  <ex-draggable class="expression-table striped" 
+  <ex-draggable class="ex-table ex-striped" 
     tag="table" 
-    ghost-class="ghost"
-    handle=".sorting-handle" 
-    :class="{ three: sorting }"
+    ghost-class="ex-ghost"
+    handle=".ex-sorting-handle" 
+    :class="{ 'ex-three': sorting }"
     v-model="value.cases" 
-    @end="update">
+    @end="update"
+  >
     <template v-for="(group, index) in value.cases">
       <tbody :key="index">
         <tr>
           <td v-if="sorting">
-            <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+            <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
           </td>
           <td>
             <ex-expression-menu 

@@ -3,7 +3,7 @@
     <v-row>
       <v-col class="pa-0">
         <v-list-item>
-            <v-list-item-icon class="cell-top mr-2 mt-6">
+            <v-list-item-icon class="ex-cell-top mr-2 mt-6">
               <v-btn icon @click="addEntry">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -18,7 +18,7 @@
       <template v-for="(entry, entryIndex) in entries">
         <v-col :key="entry.id" :cols="rowColumns" class="pa-0">
           <v-list-item :class="{ 'error white--text': entry.invalid }">
-            <v-list-item-icon class="cell-top mr-2 mt-6">
+            <v-list-item-icon class="ex-cell-top mr-2 mt-6">
               <v-btn icon @click="removeEntry(entryIndex)" >
                 <v-icon>mdi-minus</v-icon>
               </v-btn>

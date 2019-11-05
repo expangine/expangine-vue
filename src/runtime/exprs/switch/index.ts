@@ -17,6 +17,7 @@ export const SwitchVisuals: ExpressionVisuals<SwitchExpression> =
   ),
   name: 'Switch',
   description: 'If (value) equals (A or B) then (C) if (value) equals (D) then (E) otherwise (F)',
+  describe: ({ registry, expr }) => 'Switch ' + registry.getExpressionDescribe(expr.value),
   viewer: SwitchEditor,
   editor: SwitchEditor,
   complex: true,

@@ -10,6 +10,7 @@ export const TupleVisuals: ExpressionVisuals<TupleExpression> =
   create: (forType) => new TupleExpression([]),
   name: 'Tuple',
   description: 'Create a dynamic Tuple',
+  describe: ({ registry, expr }) => '[' + expr.expressions.map((element) => registry.getExpressionDescribe(element)).join(', ') + ']',
   viewer: TupleEditor,
   editor: TupleEditor,
   complex: true,

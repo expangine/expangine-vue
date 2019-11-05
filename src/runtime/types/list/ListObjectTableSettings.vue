@@ -145,7 +145,3 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

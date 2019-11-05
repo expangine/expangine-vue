@@ -27,7 +27,3 @@ export default TypeInputBase<BooleanType, BooleanSwitchOptions, boolean>(Boolean
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

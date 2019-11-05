@@ -117,6 +117,11 @@ export class Registry
     return this.getExpressionVisuals(expr).description;
   }
 
+  public getExpressionDescribe(expr: Expression): string
+  {
+    return this.getExpressionVisuals(expr).describe({ registry: this, expr });
+  }
+
   public addType(type: TypeVisuals<any, any, any>): this
   {
     this.typeMap[type.type.id] = type;

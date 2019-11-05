@@ -10,6 +10,7 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
   create: () => new OrExpression([]),
   name: 'Or',
   description: 'Returns true if any of the conditions are true',
+  describe: ({ registry, expr }) => 'Or (' + registry.getExpressionDescribe(expr.expressions[0]) + ') + ' + (expr.expressions.length - 1) + ' more',
   viewer: OrEditor,
   editor: OrEditor,
   complex: true,

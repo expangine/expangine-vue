@@ -33,7 +33,3 @@ export default TypeSettingsBase<EnumType, EnumRadioOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

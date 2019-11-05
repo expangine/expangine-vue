@@ -103,7 +103,7 @@
               v-if="hasConfigure"
               tile 
               max-height="300" 
-              class="scrollable mt-3 py-3"
+              class="ex-scrollable mt-3 py-3"
             >
               <component
                 :is="visuals.options"
@@ -153,7 +153,7 @@
               <v-list-item-subtitle v-html="inputSelected.description"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-sheet max-height="300" :dark="settings.options && settings.options.dark" class="scrollable mx-4 my-2 pa-3" elevation="2">
+          <v-sheet max-height="300" :dark="settings.options && settings.options.dark" class="ex-scrollable mx-4 my-2 pa-3" elevation="2">
             <div class="pb-2">Preview</div>
             <component
               :is="inputInput"
@@ -163,7 +163,7 @@
               :value="previewValue"
             ></component>
           </v-sheet>
-          <v-sheet tile max-height="300" class="scrollable mt-3 py-3">
+          <v-sheet tile max-height="300" class="ex-scrollable mt-3 py-3">
             <component 
               :is="inputSettings" 
               :type="type"
@@ -306,7 +306,7 @@ export default TypeEditorBase<Type, any, any>().extend({
 .v-menu--inline {
   display: block;
 }
-.scrollable {
+.ex-scrollable {
   overflow: scroll;
   border-top: 1px solid rgba(0, 0, 0, 0.14);
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);

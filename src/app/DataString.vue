@@ -119,20 +119,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.ex-string-invalid {
-  color: #e02618;
-  border-bottom: 1px solid #e02618;
-}
-
-.ex-string-color {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  top: 2px;
-  position: relative;
-  margin-right: 3px;
-  margin-top: -2px;
-}
-</style>

@@ -1,6 +1,6 @@
 <template>
   <v-list-item v-if="hasValue" class="pa-0">
-    <v-list-item-avatar class="cell-top mr-1 pt-2">
+    <v-list-item-avatar class="ex-cell-top mr-1 pt-2">
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="removeValue" v-on="on">

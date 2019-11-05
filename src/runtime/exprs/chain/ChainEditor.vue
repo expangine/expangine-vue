@@ -1,10 +1,17 @@
 <template>
-  <ex-draggable class="expression-table striped" v-model="value.chain" tag="table" handle=".sorting-handle" @end="update" ghost-class="ghost">
+  <ex-draggable 
+    class="ex-table ex-striped" 
+    tag="table"
+    ghost-class="ex-ghost"
+    handle=".ex-sorting-handle"
+    v-model="value.chain" 
+    @end="update" 
+  >
     <template v-for="(expr, index) in value.chain">
       <tbody :key="index">
         <tr>
           <td>
-            <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+            <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
           </td>
           <td>
             <ex-expression

@@ -35,7 +35,3 @@ export default TypeEditorBase<Type, any>().extend({
   
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

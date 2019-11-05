@@ -48,7 +48,3 @@ export default TypeSettingsBase<ListType, ListComboOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

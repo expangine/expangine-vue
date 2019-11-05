@@ -1,16 +1,18 @@
 <template>
-  <div class="pa-1"
+  <div class="pa-1 ex-center-aligned ex-no-wrap"
     @mouseenter="enter"
     @mouseleave="exit">
     <v-chip 
       small 
       label
+      class="ex-full-size"
       :color="color"
       v-html="exprName"
     ></v-chip>
     <span 
-      class="ml-1"
-      v-html="returnType"
+      class="ml-1 ex-single-line"
+      :title="exprDescribe"
+      v-html="exprDescribe"
     ></span>
   </div>
 </template>
@@ -41,18 +43,14 @@ export default Vue.extend({
     exprName(): string {
       return this.registry.getExpressionName(this.step.expr);
     },
+    exprDescribe(): string {
+      return this.registry.getExpressionDescribe(this.step.expr);
+    },
     isCurrent(): boolean {
       return this.index === 0;
     },
     color(): string {
       return this.isCurrent ? 'primary' : 'theme--light';
-    },
-    returnType(): string {
-      const returnType = this.step.expr.getType(this.registry.defs, this.step.contextType);
-      if (!returnType) {
-        return '';
-      }
-      return this.registry.getTypeDescribe(returnType);
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <span class="path-segment center-aligned">
+  <span class="path-segment ex-center-aligned">
 
     <v-menu key="menu" max-height="400" offset-y>
       <template #activator="{ on }">
@@ -137,7 +137,7 @@ export default ExpressionBase().extend({
     },
     segmentClass(): any {
       return { 
-        'expression-inside brackets': this.hasBrackets,
+        'ex-inside ex-brackets': this.hasBrackets,
         'risky': this.segmentRisky,
       };
     },

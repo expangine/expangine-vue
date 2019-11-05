@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-1"
+  <div class="pa-1 ex-center-aligned ex-no-wrap"
     :class="classes"
     :style="style"
     @mouseenter="enter"
@@ -9,11 +9,13 @@
     <v-chip 
       small 
       label 
+      class="ex-full-size"
       v-html="exprName"
     ></v-chip>
     <span 
-      class="ml-1"
-      v-html="returnType"
+      class="ml-1 ex-single-line"
+      :title="exprDescribe"
+      v-html="exprDescribe"
     ></span>
   </div>
 </template>
@@ -48,6 +50,9 @@ export default Vue.extend({
     exprName(): string {
       return this.registry.getExpressionName(this.step.expr);
     },
+    exprDescribe(): string {
+      return this.registry.getExpressionDescribe(this.step.expr);
+    },
     relativeIndex(): number {
       return this.index - this.value;
     },
@@ -67,13 +72,6 @@ export default Vue.extend({
         : this.relativeIndex < 0
           ? 'blue lighten-5'
           : '';
-    },
-    returnType(): string {
-      const returnType = this.step.expr.getType(this.registry.defs, this.step.contextType);
-      if (!returnType) {
-        return '';
-      }
-      return this.registry.getTypeDescribe(returnType);
     },
   },
   methods: {

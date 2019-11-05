@@ -10,6 +10,7 @@ export const AndVisuals: ExpressionVisuals<AndExpression> =
   create: (forType) => new AndExpression([]),
   name: 'And',
   description: 'Returns true if all conditions are true',
+  describe: ({ registry, expr }) => 'And (' + registry.getExpressionDescribe(expr.expressions[0]) + ') + ' + (expr.expressions.length - 1) + ' more',
   viewer: AndEditor,
   editor: AndEditor,
   complex: true,

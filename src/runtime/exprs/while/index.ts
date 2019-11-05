@@ -10,6 +10,7 @@ export const WhileVisuals: ExpressionVisuals<WhileExpression> =
   create: () => new WhileExpression(NoExpression.instance, NoExpression.instance),
   name: 'While',
   description: 'While a condition is true, do an expression',
+  describe: ({ registry, expr }) => 'While ' + registry.getExpressionDescribe(expr.condition),
   viewer: WhileEditor,
   editor: WhileEditor,
   complex: true,

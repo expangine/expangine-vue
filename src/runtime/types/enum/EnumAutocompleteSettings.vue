@@ -39,7 +39,3 @@ export default TypeSettingsBase<EnumType, EnumAutocompleteOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

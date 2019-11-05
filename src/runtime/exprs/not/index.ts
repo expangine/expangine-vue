@@ -10,6 +10,7 @@ export const NotVisuals: ExpressionVisuals<NotExpression> =
   create: (forType) => new NotExpression(NoExpression.instance),
   name: 'Not',
   description: 'Negates the following expression',
+  describe: ({ registry, expr }) => 'Not ' + registry.getExpressionDescribe(expr.expression),
   viewer: NotEditor,
   editor: NotEditor,
   complex: false,

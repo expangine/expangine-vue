@@ -83,7 +83,3 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

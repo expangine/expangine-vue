@@ -11,7 +11,7 @@
       </v-card-title>
       <v-card-text>
         <p v-html="visuals.description"></p>
-        <table class="expression-table">
+        <table class="ex-table">
           <tbody>
             <template v-for="param in paramNames">
               <tr :key="param">

@@ -34,7 +34,3 @@ export default TypeSettingsBase<EnumType, ListEnumCheckboxOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

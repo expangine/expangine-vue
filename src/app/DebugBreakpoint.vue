@@ -1,17 +1,28 @@
 <template>
-  <div class="pa-1 center-aligned"
+  <div class="pa-1 ex-center-aligned ex-no-wrap"
     :class="classes"
     @mouseenter="enter"
     @mouseleave="exit">
-    <v-icon class="mx-1" @click="toggle">{{ toggleIcon }}</v-icon>
+    <v-icon 
+      class="mx-1" 
+      @click="toggle"
+    >{{ toggleIcon }}</v-icon>
     <v-chip 
       small 
       label 
+      class="ex-full-size"
       :color="exprColor"
       v-html="exprName"
     ></v-chip>
+    <span 
+      class="ex-single-line pl-1" 
+      :title="exprDescribe"
+      v-html="exprDescribe"
+    ></span>
     <v-spacer></v-spacer>
-    <v-icon @click="remove">mdi-minus-circle</v-icon>
+    <v-icon 
+      @click="remove"
+    >mdi-minus-circle</v-icon>
   </div>
 </template>
 
@@ -47,6 +58,9 @@ export default Vue.extend({
     },
     exprName(): string {
       return this.registry.getExpressionName(this.expr);
+    },
+    exprDescribe(): string {
+      return this.registry.getExpressionDescribe(this.expr);
     },
     exprColor(): string {
       return this.enabled

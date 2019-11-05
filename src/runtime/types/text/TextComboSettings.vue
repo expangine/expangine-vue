@@ -44,7 +44,3 @@ export default TypeSettingsBase<TextType, TextComboOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

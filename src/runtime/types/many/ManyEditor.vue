@@ -2,7 +2,7 @@
   <v-list class="pa-0">
     <template v-for="(innerType, index) in type.options">
       <v-list-item :key="index">
-        <v-list-item-avatar class="cell-top pt-1 mr-0">
+        <v-list-item-avatar class="ex-cell-top pt-1 mr-0">
           <v-menu :close-on-content-click="false" :disabled="readOnly">
             <template #activator="{ on }">
               <v-btn icon v-on="on" :color="color">
@@ -136,7 +136,3 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

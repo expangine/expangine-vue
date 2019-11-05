@@ -1,11 +1,11 @@
 <template>
-  <span class="center-aligned">
+  <span class="ex-center-aligned">
     <template v-for="(condition, index) in value.expressions">
-      <span :key="index" class="center-aligned">
-        <span v-if="index > 0" class="expression-divider">AND</span>
+      <span :key="index" class="ex-center-aligned">
+        <span v-if="index > 0" class="ex-divider">AND</span>
         <ex-expression
           v-bind="$props"
-          class="parenthesis expression-inside"
+          class="ex-parenthesis ex-inside"
           :value="condition"
           :required-type="conditionType"
           @input="updateExpression(index, $event)"

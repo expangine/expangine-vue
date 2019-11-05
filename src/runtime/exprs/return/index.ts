@@ -11,6 +11,7 @@ export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
   create: (forType) => new ReturnExpression(NoExpression.instance),
   name: 'Return',
   description: 'Return this value immediately',
+  describe: ({ registry, expr }) => 'Return ' + registry.getExpressionDescribe(expr),
   viewer: ReturnEditor,
   editor: ReturnEditor,
   complex: false,

@@ -44,7 +44,3 @@ export default TypeSettingsBase<NumberType, NumberComboOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

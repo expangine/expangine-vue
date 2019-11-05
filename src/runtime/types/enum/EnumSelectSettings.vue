@@ -41,7 +41,3 @@ export default TypeSettingsBase<EnumType, EnumSelectOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

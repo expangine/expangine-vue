@@ -1,5 +1,5 @@
 <template>
-  <span class="center-aligned pl-3">
+  <span class="ex-center-aligned pl-3">
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -45,7 +45,7 @@
           </v-chip>
 
           <span v-if="hiddenParameter(param)"
-            class="ex-expression parenthesis">
+            class="ex-expression ex-parenthesis">
             <v-btn text @click="toggleParameter(param)">
               show
             </v-btn>
@@ -54,7 +54,7 @@
           <ex-expression
             v-else
             v-bind="$props"
-            class="parenthesis"
+            class="ex-parenthesis"
             :value="getParam(param)"
             :required-type="paramType"
             @input="setParam(param, $event)"
@@ -78,7 +78,7 @@
           </v-chip>
 
           <span v-if="hiddenParameter(arg)"
-            class="ex-expression parenthesis">
+            class="ex-expression ex-parenthesis">
             <v-btn text @click="toggleParameter(arg)">
               show
             </v-btn>
@@ -87,7 +87,7 @@
           <ex-expression
             v-else
             v-bind="$props"
-            class="parenthesis"
+            class="ex-parenthesis"
             :value="argExpr"
             :required-type="null"
             @input="setParam(arg, $event)"

@@ -1,5 +1,5 @@
 <template>
-  <table class="expression-table striped">
+  <table class="ex-table ex-striped">
     <tbody>
       <tr>
         <td>
@@ -27,16 +27,17 @@
         <td>
           <ex-draggable 
             tag="table"
-            handle=".sorting-handle"
-            ghost-class="ghost"
-            :class="{ 'expression-table striped': sorting }"
+            handle=".ex-sorting-handle"
+            ghost-class="ex-ghost"
+            :class="{ 'ex-table ex-striped': sorting }"
             v-model="value.expressions"
-            @end="update">
+            @end="update"
+          >
             <template v-for="(expr, index) in value.expressions">
               <tbody :key="index">
                 <tr class="tuple-row">
                   <td v-if="sorting">
-                    <v-icon class="sorting-handle">mdi-drag-horizontal</v-icon>
+                    <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
                   </td>
                   <td class="py-2">
                     <ex-expression

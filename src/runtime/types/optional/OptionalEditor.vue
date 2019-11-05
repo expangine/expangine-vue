@@ -1,6 +1,6 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar class="cell-top mr-0 pt-1">
+    <v-list-item-avatar class="ex-cell-top mr-0 pt-1">
       <ex-type-editor-menu
         v-bind="$props"
         icon="mdi-help-circle-outline"

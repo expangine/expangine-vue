@@ -12,6 +12,15 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   create: (forType) => new OperationExpression('', {}),
   name: 'Operation',
   description: 'Perform an operation',
+  describe: ({ registry, expr }) => registry.getOperationVisuals(expr.name).singleline.split(/[\{\}]/g).map((part, index) => {
+    if (index % 2 === 0) {
+      return part;
+    } else if (expr.params[part]) {
+      return '(' + registry.getExpressionDescribe(expr.params[part]) + ')';
+    } else {
+      return '{' + part + '}';
+    }
+  }).join(''),
   viewer: OperationEditor,
   editor: OperationEditor,
   complex: true,

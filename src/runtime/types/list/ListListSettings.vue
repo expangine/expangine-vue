@@ -38,7 +38,3 @@ export default TypeSettingsBase<ListType, ListListOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

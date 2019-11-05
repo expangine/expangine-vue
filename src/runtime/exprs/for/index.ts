@@ -20,6 +20,7 @@ export const ForVisuals: ExpressionVisuals<ForExpression> =
   ),
   name: 'For',
   description: 'Execute an expression a number of times',
+  describe: ({ registry, expr }) => 'For ' + expr.variable + ' = (' + registry.getExpressionDescribe(expr.start) + '), ' + expr.variable + ' < (' + registry.getExpressionDescribe(expr.end) + ')',
   viewer: ForEditor,
   editor: ForEditor,
   complex: true,

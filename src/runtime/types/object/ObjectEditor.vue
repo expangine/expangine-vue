@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-list-item>
-      <v-list-item-avatar class="cell-top pt-1 mr-3">
+      <v-list-item-avatar class="ex-cell-top pt-1 mr-3">
         <ex-type-editor-menu
           v-bind="$props"
           :disable-sub-settings="false"
@@ -36,7 +36,7 @@
       <tbody>
         <template v-for="(propType, prop) in type.options.props">
           <tr :key="prop">
-            <td class="text-right border-right cell-top pa-3 pt-4">
+            <td class="text-right border-right ex-cell-top pa-3 pt-4">
               <v-menu :disabled="readOnly">
                 <template #activator="{ on }">
                   <v-chip label link outlined v-on="on" color="accent" class="property-element">{{ prop }}</v-chip>
@@ -84,7 +84,7 @@
               v-model="addProp"
             ></v-text-field>
           </td>
-          <td class="cell-top pa-3">
+          <td class="ex-cell-top pa-3">
             <v-btn icon @click="add" :disabled="!isValidProp">
               <v-icon>mdi-plus</v-icon>
             </v-btn>

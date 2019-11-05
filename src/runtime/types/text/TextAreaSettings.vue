@@ -75,7 +75,3 @@ export default TypeSettingsBase<TextType, TextAreaOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

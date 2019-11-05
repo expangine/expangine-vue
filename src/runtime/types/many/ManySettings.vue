@@ -12,7 +12,3 @@ export default TypeSettingsBase<ManyType, ManyOptions>().extend({
   name: 'ManySettings',
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

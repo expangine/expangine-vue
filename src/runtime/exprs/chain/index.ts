@@ -10,6 +10,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
   create: (forType) => new ChainExpression([]),
   name: 'Body',
   description: 'Multiple expressions, return the result of the last one',
+  describe: ({ registry, expr }) => 'Body ' + registry.getExpressionDescribe(expr.chain[0]) + ' + ' + (expr.chain.length - 1) + ' more',
   viewer: ChainEditor,
   editor: ChainEditor,
   complex: true,

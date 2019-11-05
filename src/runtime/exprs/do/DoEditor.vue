@@ -1,5 +1,5 @@
 <template>
-  <table class="expression-table">
+  <table class="ex-table">
     <tbody>
       <tr>
         <td>

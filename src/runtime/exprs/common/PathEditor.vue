@@ -1,5 +1,5 @@
 <template>
-  <span class="center-aligned">
+  <span class="ex-center-aligned">
     <path-segment
       v-if="hasSegment"
       v-bind="$props"

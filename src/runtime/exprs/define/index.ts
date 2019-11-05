@@ -1,6 +1,6 @@
 import { Expression, DefineExpression, NoExpression, GetExpression, ConstantExpression, Type } from 'expangine-runtime';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
-import { ListOptions } from '@/common';
+import { ListOptions, friendlyList } from '@/common';
 import { Registry } from '@/runtime/Registry';
 
 import DefineEditor from './DefineEditor.vue';
@@ -12,6 +12,7 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
   create: (forType) => new DefineExpression([], NoExpression.instance),
   name: 'Define',
   description: 'Define variables to use later',
+  describe: ({ registry, expr }) => 'Define ' + friendlyList(expr.define.map(([key]) => key)),
   viewer: DefineEditor,
   editor: DefineEditor,
   complex: true,

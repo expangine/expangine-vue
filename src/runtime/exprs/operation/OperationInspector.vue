@@ -23,7 +23,7 @@
           class="pa-2 mt-2"
         ></p>
 
-        <code class="d-block pa-2 mt-2 scrollable" 
+        <code class="d-block pa-2 mt-2 ex-scrollable" 
           v-if="returnType"
           v-html="describeType(returnType)"
         ></code>
@@ -71,12 +71,12 @@
                   <span class="red--text text--darken-4">*</span>
                 </td>
                 <td>
-                  <code class="d-block pa-2 ma-1 scrollable" 
+                  <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-html="describeType(paramTypes[param])"
                   ></code>
                 </td>
-                <td class="scrollable">
-                  <code class="d-block pa-2 ma-1 scrollable" 
+                <td class="ex-scrollable">
+                  <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-if="value.params[param]"
                     v-html="describeType(paramActual(param))"
                   ></code>
@@ -103,13 +103,13 @@
                 <td class="nowrap" :title="param">
                   {{ param }}
                 </td>
-                <td class="scrollable">
-                  <code class="d-block pa-2 ma-1 scrollable" 
+                <td class="ex-scrollable">
+                  <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-html="describeType(paramTypes[param])"
                   ></code>
                 </td>
-                <td class="scrollable">
-                  <code class="d-block pa-2 ma-1 scrollable" 
+                <td class="ex-scrollable">
+                  <code class="d-block pa-2 ma-1 ex-scrollable" 
                     v-if="value.params[param]"
                     v-html="describeType(paramActual(param))"
                   ></code>
@@ -166,8 +166,8 @@
                   <td class="nowrap" :title="param">
                     {{ param }}
                   </td>
-                  <td class="scrollable">
-                    <code class="d-block pa-2 ma-1 scrollable" 
+                  <td class="ex-scrollable">
+                    <code class="d-block pa-2 ma-1 ex-scrollable" 
                       v-html="describeType(scopeType(param))"
                     ></code>
                   </td>
@@ -336,11 +336,6 @@ export default ExpressionBase<OperationExpression>().extend({
 .fixed-table /deep/ table {
   table-layout: fixed;
   
-  .scrollable {
-    white-space: nowrap;
-    overflow: scroll;
-  }
-
   .nowrap {
     white-space: nowrap;
     text-overflow: ellipsis;

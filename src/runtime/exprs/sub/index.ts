@@ -12,6 +12,7 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
   create: () => new SubExpression(NoExpression.instance, []),
   name: 'Sub',
   description: 'A sub-property of a value',
+  describe: ({ registry, expr }) => 'Sub ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' of ' + registry.getExpressionDescribe(expr.value),
   viewer: SubEditor,
   editor: SubEditor,
   complex: true,

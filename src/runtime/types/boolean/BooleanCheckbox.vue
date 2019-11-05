@@ -27,7 +27,3 @@ export default TypeInputBase<BooleanType, BooleanCheckboxOptions, boolean>(Boole
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

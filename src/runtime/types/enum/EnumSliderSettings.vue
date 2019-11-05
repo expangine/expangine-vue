@@ -38,7 +38,3 @@ export default TypeSettingsBase<EnumType, EnumSliderOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

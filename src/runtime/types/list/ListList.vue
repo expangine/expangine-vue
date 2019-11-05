@@ -17,7 +17,7 @@
     </v-list-item>
     <template v-for="(item, itemIndex) in page">
       <v-list-item :key="itemIndex">
-        <v-list-item-avatar class="cell-top pt-1 mr-0">
+        <v-list-item-avatar class="ex-cell-top pt-1 mr-0">
           <v-menu :disabled="readOnly">
             <template #activator="{ on }">
               <v-btn icon v-on="on">

@@ -44,7 +44,3 @@ export default TypeInputBase<BooleanType, BooleanRadioOptions, boolean>(Boolean)
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

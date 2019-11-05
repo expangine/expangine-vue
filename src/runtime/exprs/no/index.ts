@@ -10,6 +10,7 @@ export const NoVisuals: ExpressionVisuals<NoExpression> =
   create: (forType) => NoExpression.instance,
   name: 'No',
   description: 'No expression',
+  describe: ({ registry, expr }) => '',
   viewer: NoEditor,
   editor: NoEditor,
   complex: false,

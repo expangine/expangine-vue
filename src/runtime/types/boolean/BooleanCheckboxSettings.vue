@@ -33,7 +33,3 @@ export default TypeSettingsBase<BooleanType, BooleanCheckboxOptions>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

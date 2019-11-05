@@ -24,7 +24,3 @@ export default TypeInputBase<Type, any, any>(PropTypeAny).extend({
   
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

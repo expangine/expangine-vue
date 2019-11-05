@@ -11,6 +11,7 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
   create: () => new SetExpression([], NoExpression.instance),
   name: 'Set',
   description: 'Set a data value',
+  describe: ({ registry, expr }) => 'Set ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' = ' + registry.getExpressionDescribe(expr.value),
   viewer: SetViewer,
   editor: SetEditor,
   complex: true,

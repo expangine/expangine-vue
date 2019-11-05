@@ -31,7 +31,3 @@ export default TypeInputBase<DateType, DateTextBoxOptions, Date>(Date).extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

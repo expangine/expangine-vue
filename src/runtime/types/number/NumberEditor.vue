@@ -1,6 +1,6 @@
 <template>
   <v-list-item>
-    <v-list-item-avatar class="cell-top pt-1 mr-3">
+    <v-list-item-avatar class="ex-cell-top pt-1 mr-3">
       <ex-type-editor-menu
         v-bind="$props"
         @change="triggerChange"
@@ -59,7 +59,3 @@ export default TypeEditorBase<NumberType, any>().extend({
   },
 });
 </script>
-
-<style lang="sass" scoped>
-
-</style>

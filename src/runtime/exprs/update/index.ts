@@ -11,6 +11,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
   create: () => new UpdateExpression([], NoExpression.instance),
   name: 'Update',
   description: 'Set a value based on the current value',
+  describe: ({ registry, expr }) => 'Update ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' = ' + registry.getExpressionDescribe(expr.value),
   viewer: UpdateViewer,
   editor: UpdateEditor,
   complex: true,

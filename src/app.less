@@ -1,19 +1,34 @@
 
-.cell-top {
+.ex-cell-top {
   align-self: start !important;
   vertical-align: top !important;
 }
 
-.scrollable {
+.ex-scrollable {
   white-space: nowrap;
   overflow: scroll;
   text-overflow: initial;
 }
 
-.center-aligned {
+.ex-center-aligned {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+
+  &.ex-no-wrap {
+    flex-wrap: nowrap;
+  }
+}
+
+.ex-single-line {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.ex-full-size {
+  min-width: min-content;
 }
 
 .ex-string-color {
@@ -31,11 +46,11 @@
   border-bottom: 1px solid #e02618;
 }
 
-.expression-table {
+.ex-table {
   width: 100%;
   border-spacing: 0px;
 
-  &.striped > tbody {
+  &.ex-striped > tbody {
     &:nth-child(even) > tr > td {
       background-color: rgba(0,0,0,0.03);
     }
@@ -57,21 +72,14 @@
     }
   }
 
-  &.readOnly {
+  &.ex-read-only {
     > tbody > tr > td:nth-child(1) {
       width: auto;
       min-width: auto;
     }
   }
 
-  &.nopadding {
-
-    > tbody > tr > td {
-      padding: 0;
-    }
-  }
-
-  &.three {
+  &.ex-three {
 
     > tbody > tr > td {
       align-self: start !important;
@@ -98,25 +106,25 @@
   }
 }
 
-.ex-expression.expression-inside {
+.ex-expression.ex-inside {
 
   > .pl-3 {
     padding-left: 0 !important;
   }
 }
 
-.expression-divider {
+.ex-divider {
   font-weight: bold;
   font-size: 16px;
   top: 2px;
   position: relative;
 }
 
-.ghost {
+.ex-ghost {
   background-color: white;
 }
 
-.sorting-handle {
+.ex-sorting-handle {
   cursor: move;
 }
 
@@ -125,7 +133,7 @@
 
 .ex-expression {
 
-  &.parenthesis {
+  &.ex-parenthesis {
     position: relative;
     margin-left: 16px;
     margin-right: 16px;
@@ -157,7 +165,7 @@
     }
   }
 
-  &.brackets {
+  &.ex-brackets {
     position: relative;
     margin-left: 16px;
     margin-right: 16px;

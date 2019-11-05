@@ -1,5 +1,6 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { ConstantExpression } from 'expangine-runtime';
+import { ConstantExpression, AnyType, isString } from 'expangine-runtime';
+import { isInPathExpression } from '@/common';
 
 import ConstantEditor from './ConstantEditor.vue';
 import ConstantViewer from './ConstantViewer.vue';
@@ -11,6 +12,7 @@ export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
   create: (forType) => new ConstantExpression(forType ? forType.create() : ''),
   name: 'Constant',
   description: 'A constant value',
+  describe: ({ registry, expr }) => isString(expr.value) && isInPathExpression(expr) ? expr.value : JSON.stringify(AnyType.baseType.toJson(expr.value)),
   viewer: ConstantViewer,
   editor: ConstantEditor,
   complex: true,
