@@ -3,6 +3,7 @@ import './app.less';
 
 import { VueConstructor } from 'vue';
 import Draggable from 'vuedraggable';
+import VueTimeago from 'vue-timeago';
 
 import TypeEditor from './runtime/types/TypeEditor.vue';
 import TypeEditorMenu from './runtime/types/TypeEditorMenu.vue';
@@ -26,9 +27,10 @@ import DebugProgramDialog from './app/DebugProgramDialog.vue';
 import DescribeDataDialog from './app/DescribeDataDialog.vue';
 import EditFunctionDialog from './app/EditFunctionDialog.vue';
 import InputDialog from './app/InputDialog.vue';
-import SimpleInputDialog from './app/SimpleInputDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
+import ProjectHistoryList from './app/ProjectHistoryList.vue';
 import RunProgramDialog from './app/RunProgramDialog.vue';
+import SimpleInputDialog from './app/SimpleInputDialog.vue';
 import TestFunctionDialog from './app/TestFunctionDialog.vue';
 import TestOperationDialog from './app/TestOperationDialog.vue';
 
@@ -39,10 +41,12 @@ export * from './app/DataImport';
 export * from './app/DebugProgram';
 export * from './app/DescribeData';
 export * from './app/EditFunction';
+export * from './app/EventBase';
 export * from './app/FileExport';
 export * from './app/FileImport';
 export * from './app/Icons';
 export * from './app/Input';
+export * from './app/LinkedNode';
 export * from './app/Notify';
 export * from './app/Project';
 export * from './app/ProjectExport';
@@ -51,6 +55,8 @@ export * from './app/ProjectImport';
 export * from './app/Promiser';
 export * from './app/RunProgram';
 export * from './app/SimpleInput';
+export * from './app/StopWatch';
+export * from './app/Store';
 export * from './app/TestFunction';
 export * from './app/TestOperation';
 export * from './app/Transcoder';
@@ -111,6 +117,7 @@ export default {
     Vue.component('ex-input-dialog', InputDialog);
     Vue.component('ex-simple-input-dialog', SimpleInputDialog);
     Vue.component('ex-notify-dialog', NotifyDialog);
+    Vue.component('ex-project-history-list', ProjectHistoryList);
     Vue.component('ex-run-program-dialog', RunProgramDialog);
     Vue.component('ex-test-function-dialog', TestFunctionDialog);
     Vue.component('ex-test-operation-dialog', TestOperationDialog);
@@ -121,5 +128,7 @@ export default {
     Vue.component('ex-simple-fields', SimpleFields);
     Vue.component('ex-draggable', Draggable);
     Vue.component('ex-templated', Templated);
+
+    Vue.use(VueTimeago, {});
   },
 };

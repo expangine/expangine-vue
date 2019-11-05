@@ -94,6 +94,10 @@
             <span>End Debugging</span>
           </v-tooltip>
 
+          <v-chip label>
+            Stepped in {{ elapsed.elapsedSecondsFormatted }}s
+          </v-chip>
+
           <v-spacer></v-spacer>
 
           <v-btn icon @click="close">
@@ -203,6 +207,7 @@ import ExDebugStack from './DebugStack.vue';
 import ExDebugNode from './DebugNode.vue';
 import ExDebugStep from './DebugStep.vue';
 import ExDebugBreakpoint from './DebugBreakpoint.vue';
+import { measure } from './StopWatch';
 
 
 export default Vue.extend({
@@ -376,7 +381,8 @@ export default Vue.extend({
       }
     },
     gotoStep(index: number, stopAt?: Map<Expression, boolean>) {
-      this.currentStep = debugProgram(index, stopAt);
+      this.elapsed = measure(() => debugProgram(index, stopAt));
+      this.currentStep = this.elapsed.result;
       this.pushCurrentStep();
     },
     removeBreakpoint(index: number) {

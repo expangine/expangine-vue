@@ -1,10 +1,9 @@
+import { EventBase } from './EventBase';
+import { Store } from './Store';
 
-
-export type TranscoderErrorHandler<I, O> = (error: any, transcoder: Transcoder<I, O>) => boolean | Promise<boolean>;
 
 export interface Transcoder<I, O>
 {
-  onSaveError?: TranscoderErrorHandler<I, O>;
   canSave?: () => boolean;
   encode(input: I): O;
   decode(output: O): I;
@@ -16,8 +15,12 @@ export function newStore<I, O>(key: string, transcoder: Transcoder<I, O>)
   return new TranscoderStore<I, O>(key, transcoder);
 }
 
+export interface TranscoderStoreEvents<I, O>
+{
+  saveError(error: any, store: TranscoderStore<I, O>): Promise<boolean>;
+}
 
-export class TranscoderStore<I, O> implements Transcoder<I, O>
+export class TranscoderStore<I, O> extends EventBase<TranscoderStoreEvents<I, O>> implements Transcoder<I, O>
 {
 
   public key: string;
@@ -25,6 +28,8 @@ export class TranscoderStore<I, O> implements Transcoder<I, O>
 
   public constructor(key: string, transcoder: Transcoder<I, O>)
   {
+    super();
+
     this.key = key;
     this.transcoder = transcoder;
   }
@@ -59,9 +64,9 @@ export class TranscoderStore<I, O> implements Transcoder<I, O>
     return this.decode(JSON.parse(json) as unknown as O);
   }
 
-  public load(): I
+  public async load(): Promise<I>
   {
-    const loaded = localStorage.getItem(this.key);
+    const loaded = await Store.get(this.key);
 
     return loaded !== null ? this.parse(loaded) : this.getDefault();
   }
@@ -77,16 +82,16 @@ export class TranscoderStore<I, O> implements Transcoder<I, O>
     {
       window.console.log('saving', this.key);
 
-      localStorage.setItem(this.key, this.stringify(input));
-    } 
+      await Store.set(this.key, this.stringify(input));
+    }
     catch (e) 
     {
-      if (this.transcoder.onSaveError)
+      const results = await Promise.all(this.trigger('saveError', e, this));
+      const retry = results.some((r) => r);
+
+      if (retry)
       {
-        if (await this.transcoder.onSaveError(e, this))
-        {
-          this.save(input);
-        }
+        await this.save(input);
       }
     }
   }

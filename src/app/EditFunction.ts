@@ -38,7 +38,7 @@ export function getEditFunctionDefaults(): EditFunctionOptions
 
 export const editFunctionDialog = getEditFunctionDefaults();
 
-export type EditFunctionResult = FunctionType | false;
+export type EditFunctionResult = { name: string, function: FunctionType } | false;
 
 
 export async function getEditFunction(options: Partial<EditFunctionOptions> = {}): Promise<EditFunctionResult>
@@ -66,7 +66,10 @@ export async function getEditFunction(options: Partial<EditFunctionOptions> = {}
       Vue.delete(registry.defs.functions, name);
       Vue.set(registry.defs.functions, saveAs, func);
 
-      resolve(func);
+      resolve({
+        name: saveAs,
+        function: func,
+      });
     } else {
       resolve(false);
     }

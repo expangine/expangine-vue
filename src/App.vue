@@ -102,7 +102,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-menu offset-y :close-on-content-click="false">
+      <v-menu offset-y>
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Edit
@@ -121,23 +121,50 @@
               <v-list-item-subtitle>Your project is automatically saved to your browser so you can resume your work anytime.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="saveDataPending" :disabled="isDataSaved">
+            <v-list-item-icon>
+              <v-icon>mdi-clock-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Save Pending</v-list-item-title>
+              <v-list-item-subtitle>Your data changes are saved periodically.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-divider></v-divider>
-          <v-list-item @click="historyUndo" :disabled="history.undos.length === 0">
+          <v-list-item @click="historyUndo" :disabled="undoEmpty">
             <v-list-item-icon>
               <v-icon>mdi-undo</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Undo</v-list-item-title>
-              <v-list-item-subtitle>Undo the last change.</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ undoLabel }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="historyRedo" :disabled="history.redos.length === 0">
+          <v-list-item @click="historyRedo" :disabled="redoEmpty">
             <v-list-item-icon>
               <v-icon>mdi-redo</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Redo</v-list-item-title>
-              <v-list-item-subtitle>Redo the last undone change.</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ redoLabel }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="historyClear" :disabled="historyEmpty">
+            <v-list-item-icon>
+              <v-icon>mdi-trash-can</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Clear History</v-list-item-title>
+              <v-list-item-subtitle>Free up browser space by clearing undo/redo history.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="historyDrawer = true" :disabled="historyEmpty">
+            <v-list-item-icon>
+              <v-icon>mdi-altimeter</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>View Change History</v-list-item-title>
+              <v-list-item-subtitle>View all stored undo/redo events and go to any point in time.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -285,7 +312,7 @@
     </v-app-bar>
 
     <v-content>
-      <v-tabs-items v-model="mode">
+      <v-tabs-items touchless v-model="mode">
         <v-tab-item :key="0">
           <v-container fluid>
             <ex-type-editor
@@ -426,6 +453,17 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-navigation-drawer
+        v-model="historyDrawer"
+        right
+        absolute
+        temporary
+      >
+        <ex-project-history-list
+          :history="history"
+        ></ex-project-history-list>
+      </v-navigation-drawer>
     </v-content>
 
   </v-app>
@@ -449,7 +487,7 @@ import { getSimpleInput, SimpleInputOptions } from './app/SimpleInput';
 import { getInput } from './app/Input';
 import { getFile, FileImportStatus } from './app/FileImport';
 import { Project } from './app/Project';
-import { ProjectHistory, ProjectState } from './app/ProjectHistory';
+import { ProjectHistory, ProjectState, PROJECT_STATE_META } from './app/ProjectHistory';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
 import { getDataImport } from './app/DataImport';
@@ -459,54 +497,10 @@ import { exportFile } from './app/FileExport';
 import { friendlyList, SimpleFieldOption } from '@/common';
 import { getPromiser } from './app/Promiser';
 import Registry from './runtime';
+import { Store } from './app/Store';
 
 
 
-
-async function onSaveError(error: any): Promise<boolean>
-{
-  const options = await getSimpleInput({
-    title: 'Oh no!',
-    message: 'There was an error saving your project data to your browser. This data is saved to your browser so you don\'t lose your work if the browser closes. If you have a lot of data or a long undo/redo history this error can be thrown. What would you like to do next to avoid this problem?',
-    value: { 
-      action: 'history' as 'clear' | 'ignore' | 'history',
-      retry: false,
-    },
-    fields: [
-      { name: 'action', type: 'select', label: 'Action', items: [
-        { text: 'Clear all project data', value: 'clear' },
-        { text: 'Clear undo/redo history only', value: 'history' },
-        { text: 'Ignore error', value: 'ignore' },
-      ]},
-      { name: 'retry', type: 'boolean', label: 'Retry' },
-    ],
-  });
-
-  if (!options) 
-  {
-    return false;
-  }
-  
-  switch (options.action) 
-  {
-    case 'history':
-      localStorage.removeItem('redos');
-      localStorage.removeItem('undos');
-      sendNotification({ message: 'Undo/redo history cleared.' });
-      break;
-
-    case 'clear':
-      localStorage.clear();
-      sendNotification({ message: 'Project data cleared.' });
-      break;
-
-    case 'ignore':
-      sendNotification({ message: 'Error ignored. Your last change could not be saved.' });
-      break;
-  }
-
-  return options.retry;
-}
 
 const autoSave = (() => {
   const store = newStore('autoSave', {
@@ -515,15 +509,16 @@ const autoSave = (() => {
     getDefault: () => true,
   });
 
+  store.load().then((initialValue) => autoSave.value = initialValue);
+
   return {
-    value: store.load(),
+    value: true,
     can: () => autoSave.value,
     set(value: boolean) {
       store.save(this.value = value);
     },
   };
 })();
-
 
 
 export default Vue.extend({
@@ -550,6 +545,13 @@ export default Vue.extend({
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
+    // History
+    historyEmpty: true,
+    undoEmpty: true,
+    undoLabel: '',
+    redoEmpty: true,
+    redoLabel: '',
+    historyDrawer: false,
   }),
   computed: 
   {
@@ -573,7 +575,6 @@ export default Vue.extend({
       return new ProjectHistory({
         project: this, 
         transcoders: this.store, 
-        onSaveError,
         canSave: autoSave.can,
       });
     },
@@ -587,21 +588,18 @@ export default Vue.extend({
           encode: (value: Type) => value.encode(),
           decode: (data: any) => this.registry.defs.getType(data),
           getDefault: () => new ObjectType({ props: {} }),
-          onSaveError,
           canSave,
         }),
         settings: newStore('settings', {
           encode: (value: TypeSettingsAny) => copy(value),
           decode: (data: any) => copy(data) as TypeSettingsAny,
           getDefault: () => this.registry.getTypeSettings(this.type),
-          onSaveError,
           canSave,
         }),
         data: newStore('data', {
           encode: (value: any) => this.type.toJson(value),
           decode: (data: any) => this.type.fromJson(data),
           getDefault: () => this.type.fromJson(copy(this.settings.defaultValue)),
-          onSaveError,
           canSave,
         }),
         program: newStore('program', {
@@ -613,7 +611,6 @@ export default Vue.extend({
             return program;
           },
           getDefault: () => NoExpression.instance,
-          onSaveError,
           canSave,
         }),
         metadata: newStore('metadata', {
@@ -625,17 +622,18 @@ export default Vue.extend({
             author: '',
             created: DateFormat.format('LLL', [new Date(), currentLocale]),
           }),
-          onSaveError,
           canSave,
         }),
         functions: newStore('functions', {
           encode: (value: Record<string, FunctionType>) => objectMap(value, (func) => func.encode()),
           decode: (data: any) => objectMap(data, (functionData) => this.registry.defs.getType(functionData) as FunctionType),
           getDefault: () => this.registry.defs.functions,
-          onSaveError,
           canSave,
         }),
       };
+    },
+    isDataSaved(): boolean {
+      return this.dataTimeout === -1;
     },
   },
   watch: {
@@ -650,16 +648,73 @@ export default Vue.extend({
 
     this.loadExamples();
 
-    this.type = this.store.type.load();
-    this.settings = this.store.settings.load();
-    this.data = this.store.data.load();
-    this.program = this.store.program.load();
-    this.functions = this.store.functions.load();
-    this.metadata = this.store.metadata.load();
+    this.type = await this.store.type.load();
+    this.settings = await this.store.settings.load();
+    this.data = await this.store.data.load();
+    this.program = await this.store.program.load();
+    this.functions = await this.store.functions.load();
+    this.metadata = await this.store.metadata.load();
     
     this.history.resetLast();
-  },
+
+    this.store.type.on('saveError', this.onSaveError);
+    this.store.settings.on('saveError', this.onSaveError);
+    this.store.data.on('saveError', this.onSaveError);
+    this.store.program.on('saveError', this.onSaveError);
+    this.store.functions.on('saveError', this.onSaveError);
+    this.store.metadata.on('saveError', this.onSaveError);
+    this.history.redosTranscoder.on('saveError', this.onSaveError);
+    this.history.undosTranscoder.on('saveError', this.onSaveError);
+
+    this.updateHistoryData();
+    this.history.on('change', this.updateHistoryData);
+  },  
   methods: {
+    // SAVE ERROR
+    async onSaveError(error: any, transcoder: TranscoderStore<any, any>): Promise<boolean>
+    {
+      const options = await getSimpleInput({
+        title: 'Oh no!',
+        message: 'There was an error saving your project data to your browser. This data is saved to your browser so you don\'t lose your work if the browser closes. If you have a lot of data or a long undo/redo history this error can be thrown. What would you like to do next to avoid this problem?',
+        value: { 
+          action: 'history' as 'clear' | 'ignore' | 'history',
+          retry: false,
+        },
+        fields: [
+          { name: 'action', type: 'select', label: 'Action', items: [
+            { text: 'Clear all project data', value: 'clear' },
+            { text: 'Clear undo/redo history only', value: 'history' },
+            { text: 'Ignore error', value: 'ignore' },
+          ]},
+          { name: 'retry', type: 'boolean', label: 'Retry' },
+        ],
+      });
+
+      if (!options) 
+      {
+        return false;
+      }
+      
+      switch (options.action) 
+      {
+        case 'history':
+          Store.remove('redos');
+          Store.remove('undos');
+          sendNotification({ message: 'Undo/redo history cleared.' });
+          break;
+
+        case 'clear':
+          Store.clear();
+          sendNotification({ message: 'Project data cleared.' });
+          break;
+
+        case 'ignore':
+          sendNotification({ message: 'Error ignored. Your last change could not be saved.' });
+          break;
+      }
+
+      return options.retry;
+    },
     // AUTO SAVE
     async toggleAutoSave()
     {
@@ -672,7 +727,7 @@ export default Vue.extend({
         });
 
         if (result) {
-          localStorage.clear();
+          Store.clear();
         }
       }
 
@@ -753,7 +808,7 @@ export default Vue.extend({
               getDefault: () => true,
             });
 
-            if (first.load()) {
+            if (await first.load()) {
               this.showExamples = true;
               first.save(false);
             }
@@ -815,7 +870,7 @@ export default Vue.extend({
       if (result) 
       {
         this.saveDataPending();
-        this.history.save({ functions: this.functions });
+        this.history.save({ functions: this.functions }, `Function ${result.name} added.`);
       }
     },
     async editFunction(name: string) 
@@ -826,15 +881,17 @@ export default Vue.extend({
       if (result) 
       {
         this.saveDataPending();
-        this.history.save({ functions: this.functions });
+        this.history.save({ functions: this.functions }, `Function ${result.name} edited.`);
       }
     },
     async clearFunctions() 
     {
       if (await getConfirmation()) 
       {
+        const functionsCleared = friendlyList(objectValues(this.functions, (_, name) => name));
+
         this.saveDataPending();
-        this.history.save({ functions: {} });
+        this.history.save({ functions: {} }, `Functions cleared: ${functionsCleared}`);
       }
     },
     async saveAsFunction() 
@@ -875,7 +932,7 @@ export default Vue.extend({
 
       this.saveDataPending();
       this.$set(functions, functionName, newFunction);
-      this.history.save({ functions });
+      this.history.save({ functions }, `Saved program as function ${functionName}.`);
     },
     // TYPE & SETTINGS CHANGE
     handleChange(event: TypeUpdateEvent) 
@@ -893,7 +950,7 @@ export default Vue.extend({
       }
 
       this.saveDataPending();
-      this.history.save(saving);
+      this.history.save(saving, transform ? 'Type, Settings, and Data change.' : 'Type and Settings change.');
     },
     // DESCRIBE
     async describe() 
@@ -903,7 +960,7 @@ export default Vue.extend({
       if (result) 
       {
         this.saveDataPending();
-        this.history.save(result);
+        this.history.save(result, 'Detected data, type, and settings.');
       }
     },
     // RESET
@@ -928,7 +985,7 @@ export default Vue.extend({
         data: this.store.data.getDefault(),
         metadata: this.store.metadata.getDefault(),
         program: this.store.program.getDefault(),
-      });
+      }, 'Project reset.');
     },
     async getDefaultTypes(): Promise<TypeUpdateEvent | false> 
     {
@@ -970,7 +1027,7 @@ export default Vue.extend({
         else
         {
           this.saveDataPending();
-          this.history.save(result.transform(this));
+          this.history.save(result.transform(this), 'Import CSV.');
         }
       });
     },
@@ -1024,7 +1081,7 @@ export default Vue.extend({
               this.store[prop].save(this[prop] = transformer(this));
             }
           });
-        });
+        }, 'Imported Project.');
       }
     },
     // HISTORY
@@ -1037,6 +1094,27 @@ export default Vue.extend({
     {
       this.saveDataPending();
       this.history.redo();
+    },
+    async historyClear()
+    {
+      if (await getConfirmation())
+      {
+        this.saveDataPending();
+        this.history.clear();
+      }
+    },
+    updateHistoryData()
+    {
+      const history = this.history;
+      const undo = history.getLastUndoDetails();
+      const redo = history.getLastRedoDetails();
+
+      this.undoEmpty = history.undos.length === 0;
+      this.redoEmpty = history.redos.length === 0;
+      this.historyEmpty = this.undoEmpty && this.redoEmpty;
+
+      this.undoLabel = undo ? `Undo "${undo}"` : 'Undo the last change.';
+      this.redoLabel = redo ? `Redo "${redo}"` : 'Redo the last undone change.';
     },
     // METADATA
     saveMetadata()
@@ -1068,7 +1146,7 @@ export default Vue.extend({
 
       this.loadable(() => 
       {
-        this.history.save({ data: this.data });
+        this.history.save({ data: this.data }, 'Data saved.');
       });
     },
     // PROGRAM
@@ -1077,7 +1155,7 @@ export default Vue.extend({
       program.setParent();
 
       this.saveDataPending();
-      this.history.save({ program });
+      this.history.save({ program }, 'Program saved.');
 
       this.updateHighlightExpressions();
     },
@@ -1113,7 +1191,7 @@ export default Vue.extend({
 
         if (type && type.acceptsData(dataType)) 
         {
-          history.save({ data });
+          history.save({ data }, 'Saved program results as Data.');
         }
         else 
         {
@@ -1123,7 +1201,7 @@ export default Vue.extend({
             type: dataType,
             settings: dataSettings,
             data,
-          });
+          }, 'Saved program results as Type, Settings, and Data.');
         }
 
         return true;

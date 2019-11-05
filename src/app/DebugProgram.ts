@@ -1,8 +1,9 @@
 
-import { Type, Expression, AnyType, NoExpression, CommandProvider, InvokeExpression, Traverser } from 'expangine-runtime';
+import { Type, Expression, AnyType, NoExpression, CommandProvider, InvokeExpression, Traverser, isBoolean } from 'expangine-runtime';
 import { LiveRuntime, LiveContext, LiveResult } from 'expangine-runtime-live';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
+import { StopWatchOutput, measure } from './StopWatch';
 
 
 export type DebugBreakpoint = [Expression, boolean];
@@ -19,6 +20,7 @@ export interface DebugProgramOptions
   breakpointSet: boolean;
   breakpoint: Expression | null;
   breakpoints: DebugBreakpoint[];
+  elapsed: StopWatchOutput<any>;
   visible: boolean;
   registry: Registry;
   close: () => any;
@@ -62,6 +64,7 @@ export function getDebugProgramDefaults(): DebugProgramOptions
     breakpoints: [],
     hoverExpression: null,
     currentStep: null as unknown as DebugProgramResult,
+    elapsed: measure(() => undefined),
     visible: false,
     registry: null as unknown as Registry,
     close: () => undefined,
@@ -96,12 +99,14 @@ export async function getDebugProgram(options: Partial<DebugProgramOptions> = {}
   Object.assign(debugProgramDialog, options);
   
   debugProgramDialog.program.traverse(Traverser.list()).forEach((expr) => {
-    if (oldBreakpoints.has(expr.value)) {
-      newBreakpoints.push([ expr.value, oldBreakpoints.get(expr.value) as boolean ]);
+    const enabled = oldBreakpoints.get(expr.value);
+    if (isBoolean(enabled)) {
+      newBreakpoints.push([ expr.value, enabled ]);
     }
   });
 
-  debugProgramDialog.currentStep = debugProgram(0);
+  debugProgramDialog.elapsed = measure(() => debugProgram(0));
+  debugProgramDialog.currentStep = debugProgramDialog.elapsed.result;
   debugProgramDialog.breakpoints = newBreakpoints;
   debugProgramDialog.visible = true;
   debugProgramDialog.close = () => {
