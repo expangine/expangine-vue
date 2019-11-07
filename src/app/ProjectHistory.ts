@@ -24,6 +24,7 @@ export interface ProjectHistoryEvents
 {
   change(history: ProjectHistory, type: keyof ProjectHistoryEvents): void;
   clear(history: ProjectHistory): void;
+  load(history: ProjectHistory): void;
   undo(history: ProjectHistory, state: ProjectState): void;
   redo(history: ProjectHistory, state: ProjectState): void;
   push(history: ProjectHistory, state: ProjectState, details: string): void;
@@ -307,6 +308,9 @@ export class ProjectHistory extends EventBase<ProjectHistoryEvents>
   {
     this.undos = await this.undosTranscoder.load();
     this.redos = await this.redosTranscoder.load();
+
+    this.trigger('load', this);
+    this.trigger('change', this, 'load');
   }
 
 }

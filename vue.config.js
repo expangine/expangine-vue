@@ -1,7 +1,5 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
-    ? '/expangine-vue/'
-    : '/',
+  publicPath: '',
   configureWebpack(config) {
     if (process.env.NODE_ENV !== 'production') {
       config.devtool = 'eval-source-map';

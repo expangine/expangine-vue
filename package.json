@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint",
     "build:lib": "vue-cli-service build --target lib --name expangine --dest build ./src/index.ts",
     "pages": "npm run build; npm run pages:copy",
-    "pages:copy": "rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/; cp -R examples/* ../expangine-vue-pages/examples/"
+    "pages:copy": "rm -rf ../expangine-vue-pages/css; rm -rf ../expangine-vue-pages/js; rm -rf ../expangine-vue-pages/img; rm -rf ../expangine-vue-pages/examples; rm ../expangine-vue-pages/index.html; cp -R dist/* ../expangine-vue-pages/"
   },
   "main": "build/expangine.umd.js",
   "dependencies": {

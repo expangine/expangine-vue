@@ -289,7 +289,7 @@
         </template>
         <span>Debug Program</span>
       </v-tooltip>
-      <v-btn icon target="_blank" href="https://github.com/expangine/expangine-vue">
+      <v-btn icon target="_blank" href="https://github.com/expangine/">
         <v-icon>mdi-github-circle</v-icon>
       </v-btn>
 
@@ -818,7 +818,7 @@ export default Vue.extend({
     {
       this.loadable(async () => 
       {
-        const response = await fetch(location.protocol + '//expangine.github.io/expangine-vue/examples/index.json');
+        const response = await fetch('examples/index.json');
         const examples = await response.json();
 
         if (isArray(examples)) 
@@ -844,7 +844,7 @@ export default Vue.extend({
     {
       this.loadable(async () => 
       {
-        const response = await fetch(location.protocol + url);
+        const response = await fetch(url);
         const data = await response.json();
 
         if (isObject(data) && data.type && data.settings && data.program) 
@@ -882,7 +882,7 @@ export default Vue.extend({
       getSendMail({
         to: 'pdiffenderfer@gmail.com',
         subject: 'I would like to share my Expangine project with you',
-        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into https://expangine.github.io/expangine-vue.\n\n\n${exported}`,
+        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into ${location.href}.\n\n\n${exported}`,
       });
     },
     // FUNCTIONS
