@@ -214,9 +214,9 @@ export default (registry: Registry) =>
   });
 
   registry.addOperation(TextOps.soundex, {
-    name: 'Phonetic Value',
+    name: 'Phonetic Value using Soundex',
     description: 'Computes the phonetic code of a text [value], also known as soundex. The phonetic code can be used to determine if two words sound similar in English. The closer the code is in characters, the more they sound alike.',
-    singleline: 'phonetic code of {value} with minimum length {min} and maximum {max}',
+    singleline: 'soundex of {value} with minimum length {min} and maximum {max}',
     comments: {
       value: 'The text to compute the phonetic code of',
       max: 'The maximum number of characters to return',
@@ -226,7 +226,17 @@ export default (registry: Registry) =>
       max: 'no maximum',
       min: '4',
     },
-    returnComments: 'The phonetic code of [value].',
+    returnComments: 'The phonetic code of [value] using soundex.',
+  });
+
+  registry.addOperation(TextOps.metaphone, {
+    name: 'Phonetic Value using Metaphone',
+    description: 'Computes the phonetic code of a text [value], also known as metaphone. The phonetic code can be used to determine if two words sound similar in English. The closer the code is in characters, the more they sound alike.',
+    singleline: 'metaphone of {value}',
+    comments: {
+      value: 'The text to compute the phonetic code of',
+    },
+    returnComments: 'The phonetic code of [value] using metaphone.',
   });
 
   registry.addOperation(TextOps.distance, {

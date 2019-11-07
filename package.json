@@ -18,6 +18,7 @@
     "expangine-runtime": "git+https://github.com/expangine/expangine-runtime.git#master",
     "expangine-runtime-live": "git+https://github.com/expangine/expangine-runtime-live.git#master",
     "localforage": "^1.7.3",
+    "metaphone": "^1.0.5",
     "papaparse": "^5.1.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",

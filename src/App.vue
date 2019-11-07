@@ -447,7 +447,10 @@
           <v-card-text>
             Expangine is a visual development framework. 
             It's a series of TypeScript/JS libraries which provide data type functionality and operations as well as runtimes which convert your operations and programs into any desired output. At the moment the only runtime is one that executes the program you've developed in the browser (or NodeJS). Potential runtimes could convert your program into any Programming Language or into a series of SQL commands.
-            <strong>expangine-vue</strong> is the component library built from Vue &amp; Vuetify. This is just an example interface, any interface could be used to create programs and types.
+            <strong>expangine-vue</strong> is the component library built using Vue &amp; Vuetify. This is just an example interface, any interface could be used to create programs and types.
+          </v-card-text>
+          <v-card-text>
+            If you experience any problems or would like to provide feed back you can <a href="mailto:pdiffenderfer@gmail.com" target="_blank" rel="noopener">here</a> or on <a href="https://github.com/expangine/expangine-vue" target="_blank" rel="noopener">GitHub</a>.
           </v-card-text>
           <v-card-text>
             <p>Listed below are examples to start you off.</p>
