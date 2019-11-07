@@ -27,7 +27,7 @@
   </span>
 
   <span 
-    v-else 
+    v-else-if="!readOnly"
     v-on="eventListenersNative"
   >
     <v-menu max-height="400">

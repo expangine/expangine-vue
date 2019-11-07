@@ -22,7 +22,7 @@
               tooltip="If this condition is true, execute the then expression"
             >
               <template #prepend>
-                <v-list-item @click="sortStart">
+                <v-list-item v-if="!readOnly" @click="sortStart">
                   <v-list-item-content>
                     <v-list-item-title>
                       Toggle Sort If/Else If

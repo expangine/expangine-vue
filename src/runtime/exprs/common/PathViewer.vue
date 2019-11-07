@@ -6,9 +6,9 @@
         <ex-expression
           v-bind="$props"
           v-on="$listeners"
+          :class="getSegmentClass(segment)"
           :value="segment"
         ></ex-expression>
-        {{ getSegmentSuffix(segment, index) }}
       </span>
     </template>
   </span>
@@ -29,13 +29,15 @@ export default ExpressionBase().extend({
     },
   },
   methods: {
+    getSegmentClass(segment: Expression) {
+      return segment instanceof ConstantExpression && isString(segment.value)
+        ? ''
+        : 'ex-brackets';
+    },
     getSegmentPrefix(segment: Expression, index: number) {
       return segment instanceof ConstantExpression && isString(segment.value)
-        ? index > 0 ? '.' : '' : '[';
-    },
-    getSegmentSuffix(segment: Expression, index: number) {
-      return segment instanceof ConstantExpression && isString(segment.value)
-        ? '' : ']';
+        ? (index > 0 ? '.' : '')
+        : '';
     },
   },
 });

@@ -20,7 +20,9 @@
         </v-list-item>
       </template>
     </ex-expression-menu>
+    <span v-if="readOnly" class="ml-3">{{ value.name }}</span>
     <v-select
+      v-else
       outlined
       dense
       hide-details

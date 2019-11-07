@@ -11,7 +11,11 @@
           ></ex-expression-menu>
         </td>
         <td>
+          <span v-if="readOnly">
+            {{ value.template }}
+          </span>
           <v-text-field
+            v-else
             outlined
             persistent-hint
             hint="Text with {vars} embedded in it that {can} be replaced"
@@ -23,7 +27,11 @@
       <template v-for="(param, name) in value.params">
         <tr :key="name">
           <td class="pa-0 pl-3">
+            <span v-if="readOnly">
+              {{ name }}
+            </span>
             <v-text-field
+              v-else
               outlined
               hide-details
               :value="name"
@@ -33,7 +41,9 @@
             ></v-text-field>
           </td>
           <td>
-            <v-icon class="ma-2">mdi-equal</v-icon>
+            <span v-if="readOnly">&nbsp;=&nbsp;</span>
+            <v-icon class="ma-2" v-else>mdi-equal</v-icon>
+
             <ex-expression
               v-bind="$props"
               :value="param"

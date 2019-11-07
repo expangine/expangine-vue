@@ -11,7 +11,7 @@
             tooltip="Creates a dynamic Tuple"
           >
             <template #prepend>
-              <v-list-item @click="toggleSort">
+              <v-list-item v-if="!readOnly" @click="toggleSort">
                 <v-list-item-content>
                   <v-list-item-title>
                     Toggle Sort

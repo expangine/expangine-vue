@@ -34,95 +34,103 @@
           </template>
         </ex-expression-clipboard>
 
-        <v-divider></v-divider>
-        <v-subheader>Transform</v-subheader>
+        <template v-if="canTransform">
 
-        <template v-for="expr in modifiers">
-          <v-list-item :key="expr.text" @click="modify(expr.value)">
-            <v-list-item-content>
-              <v-list-item-title>{{ expr.text }}</v-list-item-title>
-              <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+          <v-divider></v-divider>
+          <v-subheader>Transform</v-subheader>
 
-        <v-divider></v-divider>
-        <v-subheader>Change</v-subheader>
-
-        <v-list-item v-if="canRemove" @click="requestRemove">
-          <v-list-item-content class="red--text darken-4">
-            <v-list-item-title>
-              Remove {{ visuals.name }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              The entire expression will be removed
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-menu max-height="400" offset-x open-on-hover class="d-inline">
-          <template #activator="{ on }">
-            <v-list-item v-on="on">
-              <v-list-item-content class="red--text darken-4">
-                <v-list-item-title>
-                  Replace with...
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  The entire expression will be replaced with a new one
-                </v-list-item-subtitle>
+          <template v-for="expr in modifiers">
+            <v-list-item :key="expr.text" @click="modify(expr.value)">
+              <v-list-item-content>
+                <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
               </v-list-item-content>
-              <v-list-item-avatar>
-                <v-icon>mdi-menu-right</v-icon>
-              </v-list-item-avatar>
             </v-list-item>
           </template>
-          <v-list>
-            <template v-for="expr in starters">
-              <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
-                <v-list-item-content>
-                  <v-list-item-title>{{ expr.name }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+
+        </template>
+
+        <template v-if="canChange">
+
+          <v-divider></v-divider>
+          <v-subheader>Change</v-subheader>
+
+          <v-list-item v-if="isRemovable" @click="requestRemove">
+            <v-list-item-content class="red--text darken-4">
+              <v-list-item-title>
+                Remove {{ visuals.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                The entire expression will be removed
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-menu max-height="400" offset-x open-on-hover class="d-inline">
+            <template #activator="{ on }">
+              <v-list-item v-on="on">
+                <v-list-item-content class="red--text darken-4">
+                  <v-list-item-title>
+                    Replace with...
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    The entire expression will be replaced with a new one
+                  </v-list-item-subtitle>
                 </v-list-item-content>
+                <v-list-item-avatar>
+                  <v-icon>mdi-menu-right</v-icon>
+                </v-list-item-avatar>
               </v-list-item>
             </template>
-          </v-list>
-        </v-menu>
-
-        <ex-expression-clipboard 
-          :registry="registry" 
-          :context="context" 
-          :required-type="requiredType" 
-          @pasted="input">
-          <template #default="{ copiedOptions, paste }">
-            <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
-              <template #activator="{ on }">
-                <v-list-item v-on="on">
-                  <v-list-item-content class="red--text darken-4">
-                    <v-list-item-title>
-                      Paste...
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      The entire expression will be replaced with one from the clipboard
-                    </v-list-item-subtitle>
+            <v-list>
+              <template v-for="expr in starters">
+                <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ expr.name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
                   </v-list-item-content>
-                  <v-list-item-avatar>
-                    <v-icon>mdi-menu-right</v-icon>
-                  </v-list-item-avatar>
                 </v-list-item>
               </template>
-              <v-list>
-                <template v-for="(expr, index) in copiedOptions">
-                  <v-list-item :key="index" @click="paste(expr.value)">
-                    <v-list-item-content>
-                      <v-list-item-title>{{ expr.text }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+            </v-list>
+          </v-menu>
+
+          <ex-expression-clipboard 
+            :registry="registry" 
+            :context="context" 
+            :required-type="requiredType" 
+            @pasted="input">
+            <template #default="{ copiedOptions, paste }">
+              <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
+                <template #activator="{ on }">
+                  <v-list-item v-on="on">
+                    <v-list-item-content class="red--text darken-4">
+                      <v-list-item-title>
+                        Paste...
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        The entire expression will be replaced with one from the clipboard
+                      </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-avatar>
+                      <v-icon>mdi-menu-right</v-icon>
+                    </v-list-item-avatar>
                   </v-list-item>
                 </template>
-              </v-list>
-            </v-menu>
-          </template>
-        </ex-expression-clipboard>
+                <v-list>
+                  <template v-for="(expr, index) in copiedOptions">
+                    <v-list-item :key="index" @click="paste(expr.value)">
+                      <v-list-item-content>
+                        <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-list>
+              </v-menu>
+            </template>
+          </ex-expression-clipboard>
+
+        </template>
         
         <slot name="append"></slot>
 
@@ -194,6 +202,12 @@ export default ExpressionBase().extend({
     hasTypeInformation(): boolean {
       return !!(this.requiredType && !(this.requiredType instanceof AnyType))
           || !!(this.computedType && !(this.computedType instanceof AnyType));
+    },
+    canTransform(): boolean {
+      return !this.readOnly;
+    },
+    canChange(): boolean {
+      return !this.readOnly;
     },
     statusColor(): string {
       return this.isInvalid ? 'error' : this.color;

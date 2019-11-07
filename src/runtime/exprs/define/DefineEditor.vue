@@ -10,26 +10,28 @@
             tooltip="Define multiple variables to be used in a sub-expression"
           >
             <template #prepend>
-              <v-list-item @click="addVar">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    Add Variable
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Define a new variable to be used in the body
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item @click="toggleSort">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    Toggle Sort
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Re-order the definitions with dragging
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+              <template v-if="!readOnly">
+                <v-list-item @click="addVar">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Add Variable
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Define a new variable to be used in the body
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="toggleSort">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Toggle Sort
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Re-order the definitions with dragging
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
             </template>
           </ex-expression-menu>
         </td>

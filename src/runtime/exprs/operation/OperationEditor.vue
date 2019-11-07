@@ -34,7 +34,6 @@
       <tr :style="rowStyle">
         <td :class="inOperationClass">
           <ex-expression-menu
-            v-if="!readOnly"
             v-bind="$props"
             v-on="$listeners"
             text="Op"
@@ -80,7 +79,7 @@
                 </v-list>
               </v-menu>
 
-              <v-list-item @click="changing = true">
+              <v-list-item v-if="!readOnly" @click="changing = true">
                 <v-list-item-content>
                   <v-list-item-title>
                     Change
@@ -154,10 +153,14 @@
 
               </span>
 
-              <span v-else class="param-span" :style="innerStyle">
+              <span v-else-if="!readOnly" class="param-span" :style="innerStyle">
                 <v-btn text @click="resetParam(section)">
                   {{ operationVisuals.defaults[section] || section }}
                 </v-btn>
+              </span>
+
+              <span v-else class="param-span" :style="innerStyle">
+                {{ operationVisuals.defaults[section] || section }}
               </span>
 
             </template>
@@ -235,7 +238,7 @@ export default ExpressionBase<OperationExpression>().extend({
   computed: {
     filterOperation: () => filterOperation,
     inOperationClass(): string {
-      return (this.inOperation ? 'pl-0 pr-0' : 'pl-3 pr-0') + (this.readOnly && !this.multiline ? ' d-none' : '');
+      return (this.readOnly ? '' : 'pr-0 ') + (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly && !this.multiline ? ' d-none' : '');
     },
     isEmpty(): boolean {
       return !this.value.name;

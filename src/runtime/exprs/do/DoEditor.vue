@@ -9,7 +9,7 @@
             text="Do"
             tooltip="Execute this expression while the above expression is true">
             <template #prepend>
-              <v-list-item @click="toggleConfigure">
+              <v-list-item v-if="!readOnly" @click="toggleConfigure">
                 <v-list-item-content>
                   <v-list-item-title>
                     {{ configureLabel }}

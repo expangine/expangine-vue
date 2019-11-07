@@ -17,54 +17,56 @@
             text="Switch Value"
             tooltip="If a value equals one of a set of tests values, execute an expression.">
               <template #prepend>
-                <v-list-item @click="addCase">
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      Add Case &amp; Then
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      Adds a new Case &amp; Then to the bottom of the Switch.
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item @click="sortStart">
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      Toggle Sort Cases
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                      Re-order the Cases cases with dragging
-                    </v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
+                <template v-if="!readOnly">
+                  <v-list-item @click="addCase">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        Add Case &amp; Then
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        Adds a new Case &amp; Then to the bottom of the Switch.
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item @click="sortStart">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        Toggle Sort Cases
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        Re-order the Cases cases with dragging
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
 
-                <v-menu v-if="alternativeOperations.length > 1" max-height="400" offset-x open-on-hover class="d-inline">
-                  <template #activator="{ on }">
-                    <v-list-item v-on="on">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          Change Switch Operation
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          Change the comparison operation used to compare the value with the test values
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-avatar>
-                        <v-icon>mdi-menu-right</v-icon>
-                      </v-list-item-avatar>
-                    </v-list-item>
-                  </template>
-                  <v-list>
-                    <template v-for="op in alternativeOperations">
-                      <v-list-item :key="op.value" @click="updateOperation(op.value)" :input-value="op.value === value.op">
+                  <v-menu v-if="alternativeOperations.length > 1" max-height="400" offset-x open-on-hover class="d-inline">
+                    <template #activator="{ on }">
+                      <v-list-item v-on="on">
                         <v-list-item-content>
-                          <v-list-item-title>{{ op.text }}</v-list-item-title>
-                          <v-list-item-subtitle>{{ op.description }}</v-list-item-subtitle>
+                          <v-list-item-title>
+                            Change Switch Operation
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Change the comparison operation used to compare the value with the test values
+                          </v-list-item-subtitle>
                         </v-list-item-content>
+                        <v-list-item-avatar>
+                          <v-icon>mdi-menu-right</v-icon>
+                        </v-list-item-avatar>
                       </v-list-item>
                     </template>
-                  </v-list>
-                </v-menu>
+                    <v-list>
+                      <template v-for="op in alternativeOperations">
+                        <v-list-item :key="op.value" @click="updateOperation(op.value)" :input-value="op.value === value.op">
+                          <v-list-item-content>
+                            <v-list-item-title>{{ op.text }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ op.description }}</v-list-item-subtitle>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                    </v-list>
+                  </v-menu>
+                </template>
               </template>
             </ex-expression-menu>
         </td>
@@ -89,7 +91,7 @@
             <ex-chip-menu
               text="If Value ="
               tooltip="If the value equals any of these values return the Then expression.">
-              <v-list>
+              <v-list v-if="!readOnly">
                 <v-list-item @click="addTestValue(caseIndex)">
                   <v-list-item-content>
                     Add Test Value

@@ -10,7 +10,7 @@
             tooltip="Create a dynamic Object"
           >
             <template #prepend>
-              <v-list-item @click="addProperty">
+              <v-list-item v-if="!readOnly" @click="addProperty">
                 <v-list-item-content>
                   <v-list-item-title>
                     Add Property
@@ -30,8 +30,7 @@
                 <tr>
                   <td class="var-name py-2">
                     <span v-if="readOnly">
-                      {{ prop }}
-                      <v-icon>mdi-equal</v-icon>
+                      {{ prop }} =
                     </span>
                     <v-text-field
                       v-else
