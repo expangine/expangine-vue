@@ -682,6 +682,8 @@ export default Vue.extend({
     
     this.history.resetLast();
 
+    this.initialized = true;
+
     this.store.type.on('saveError', this.onSaveError);
     this.store.settings.on('saveError', this.onSaveError);
     this.store.data.on('saveError', this.onSaveError);
@@ -693,8 +695,6 @@ export default Vue.extend({
 
     this.updateHistoryData();
     this.history.on('change', this.updateHistoryData);
-
-    this.initialized = true;
   },  
   methods: {
     // SAVE ERROR

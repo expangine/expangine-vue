@@ -716,6 +716,98 @@ export default (registry: Registry) =>
     returnComments: 'A map where the key is "getKey" and the value is the item optionally passed through "getValue".',
   });
 
+  registry.addOperation(ListOps.joinInner, {
+    name: 'Inner Join',
+    description: 'Performs an inner join on [a] and [b] on [on]',
+    singleline: 'inner join {a} and {b} on {on} join {join}',
+    comments: {
+      a: 'The first list to join',
+      b: 'The second list to join',
+      on: 'The condition that must be true to join an item from [a] and [b]',
+      join: 'Joins [joinA] and [joinB] into a result item',
+    },
+    scopeComments: {
+      onA: 'The item from the [a] list to check in the on condition',
+      onB: 'The item from the [b] list to check in the on condition',
+      joinA: 'The item from the [a] list that passed the condition and should be joined',
+      joinB: 'The item from the [b] list that passed the condition and should be joined',
+    },
+    returnComments: 'A list of joined results for all items from [a] and [b] that passed the on condition.',
+  });
+
+  registry.addOperation(ListOps.joinLeft, {
+    name: 'Left Join',
+    description: 'Performs a left join on [a] and [b] on [on]',
+    singleline: 'left join {a} and {b} on {on} join {join}',
+    comments: {
+      a: 'The first list to join',
+      b: 'The second list to join',
+      on: 'The condition that must be true to join an item from [a] and [b]',
+      join: 'Joins [joinA] and [joinB] into a result item',
+    },
+    scopeComments: {
+      onA: 'The item from the [a] list to check in the on condition',
+      onB: 'The item from the [b] list to check in the on condition',
+      joinA: 'The item from the [a] list that passed the condition and should be joined',
+      joinB: 'The item from the [b] list that passed the condition and should be joined, and possibly undefined if [itemA] did not have a match in [b]',
+    },
+    returnComments: 'A list of joined results where all items from [a] have at least one joined result, potentially without a matched item from [b].',
+  });
+
+  registry.addOperation(ListOps.joinRight, {
+    name: 'Right Join',
+    description: 'Performs a right join on [a] and [b] on [on]',
+    singleline: 'left join {a} and {b} on {on} join {join}',
+    comments: {
+      a: 'The first list to join',
+      b: 'The second list to join',
+      on: 'The condition that must be true to join an item from [a] and [b]',
+      join: 'Joins [joinA] and [joinB] into a result item',
+    },
+    scopeComments: {
+      onA: 'The item from the [a] list to check in the on condition',
+      onB: 'The item from the [b] list to check in the on condition',
+      joinA: 'The item from the [a] list that passed the condition and should be joined, and possibly undefined if [itemB] did not have a match in [a]',
+      joinB: 'The item from the [b] list that passed the condition and should be joined',
+    },
+    returnComments: 'A list of joined results where all items from [b] have at least one joined result, potentially without a matched item from [a].',
+  });
+
+  registry.addOperation(ListOps.joinFull, {
+    name: 'Full Join',
+    description: 'Performs a full join on [a] and [b] on [on]',
+    singleline: 'full join {a} and {b} on {on} join {join}',
+    comments: {
+      a: 'The first list to join',
+      b: 'The second list to join',
+      on: 'The condition that must be true to join an item from [a] and [b]',
+      join: 'Joins [joinA] and [joinB] into a result item',
+    },
+    scopeComments: {
+      onA: 'The item from the [a] list to check in the on condition',
+      onB: 'The item from the [b] list to check in the on condition',
+      joinA: 'The item from the [a] list that passed the condition and should be joined, and possibly undefined if [itemB] did not have a match in [a]',
+      joinB: 'The item from the [b] list that passed the condition and should be joined, and possibly undefined if [itemA] did not have a match in [b]',
+    },
+    returnComments: 'A list of joined results where all items from [a] and [b] have at least one joined result, potentially without a matched item from the other list.',
+  });
+
+  registry.addOperation(ListOps.joinCross, {
+    name: 'Cross Join',
+    description: 'Performs a cross join (cartesian product) on [a] and [b]',
+    singleline: 'cross join {a} and {b} join {join}',
+    comments: {
+      a: 'The first list to join',
+      b: 'The second list to join',
+      join: 'Joins [joinA] and [joinB] into a result item',
+    },
+    scopeComments: {
+      joinA: 'The item from the [a] list that passed the condition and should be joined, and possibly undefined if [itemB] did not have a match in [a]',
+      joinB: 'The item from the [b] list that passed the condition and should be joined, and possibly undefined if [itemA] did not have a match in [b]',
+    },
+    returnComments: 'A list of joined results where all items from [a] are joined with all items from [b].',
+  });
+
   registry.addOperation(ListOps.min, {
     name: 'Items Min',
     description: 'Get minimum [value] in a [list]',

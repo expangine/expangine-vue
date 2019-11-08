@@ -66,9 +66,21 @@ export class TranscoderStore<I, O> extends EventBase<TranscoderStoreEvents<I, O>
 
   public async load(): Promise<I>
   {
-    const loaded = await Store.get(this.key);
+    try
+    {
+      const loaded = await Store.get(this.key);
 
-    return loaded !== null ? this.parse(loaded) : this.getDefault();
+      if (loaded)
+      {
+        return this.parse(loaded);
+      }
+    }
+    catch (e)
+    {
+      window.console.log('load error', e);
+    }
+
+    return this.getDefault();
   }
 
   public async save(input: I)

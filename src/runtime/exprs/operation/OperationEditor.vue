@@ -238,7 +238,7 @@ export default ExpressionBase<OperationExpression>().extend({
   computed: {
     filterOperation: () => filterOperation,
     inOperationClass(): string {
-      return (this.readOnly ? '' : 'pr-0 ') + (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly && !this.multiline ? ' d-none' : '');
+      return (this.readOnly || this.multiline ? '' : 'pr-0 ') + (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly && !this.multiline ? ' d-none' : '');
     },
     isEmpty(): boolean {
       return !this.value.name;
