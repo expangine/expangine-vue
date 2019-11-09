@@ -39,7 +39,11 @@ export const NumberVisuals = createVisuals()({
   settingsFor: ({ registry, sub }) => ({ 
     input: 'textbox', 
     defaultValue: 0, 
-    options: { ...NumberTextBoxInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' },
+    options: { 
+      ...NumberTextBoxInput.getDefaultOptions(), 
+      ...registry.settingsOverrides, 
+      label: sub + '',
+    },
   }),
   editor: NumberEditor,
   options: NumberOptions,

@@ -12,6 +12,16 @@ export interface MapGridOptions
   title?: string;
   minKeyWidth: number;
   minValueWidth: number;
+  paging?: boolean;
+  pageSize: number;
+  pagination: {
+    circle?: boolean;
+    color?: string;
+    dark?: boolean;
+    nextIcon?: string;
+    prevIcon?: string;
+    totalVisible?: number;
+  };
 }
 
 export const MapGridInput: TypeVisualInput<MapType, MapGridOptions, MapSubs> = 
@@ -25,6 +35,8 @@ export const MapGridInput: TypeVisualInput<MapType, MapGridOptions, MapSubs> =
   getDefaultOptions: () => ({
     minKeyWidth: 300,
     minValueWidth: 300,
+    pageSize: 10,
+    pagination: {},
   }),
   getName: (options) => options.title,
   getSummary: (options) => (

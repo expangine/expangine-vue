@@ -80,15 +80,40 @@ export const MapVisuals = createVisuals<MapSubs>()({
       ? settings.sub.key
       : settings.sub.value;
   },
-  settingsFor: ({ registry, type, sub }) => ({ 
-    input: 'grid', 
-    defaultValue: [], 
-    options: { ...MapGridInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' }, 
-    sub: {
-      key: registry.getTypeSettings(type.options.key, 'Key'), 
-      value: registry.getTypeSettings(type.options.value, sub), 
-    },
-  }),
+  settingsFor: ({ registry, type, sub }) => {
+    const settingsKey = registry.getTypeSettings(type.options.key, 'Key');
+    const settingsValue = registry.getTypeSettings(type.options.value, sub);
+    const complexityKey = registry.getTypeVisualInputComplexity(type.options.key, settingsKey);
+    const complexityValue = registry.getTypeVisualInputComplexity(type.options.value, settingsValue);
+    const complex = complexityKey > 0 || complexityValue > 0;
+    const veryComplex = complexityKey > 1 || complexityValue > 1;
+    const minKeyWidth = complex ? 2000 : 200;
+    const minValueWidth = complex ? 2000 : 200;
+    const pageSize = veryComplex ? 1 : complex ? 5 : 10;
+    const paging = complex;
+    const pagination = complex 
+      ? { totalVisible: 10 }
+      : { };
+
+    return { 
+      input: 'grid', 
+      defaultValue: [], 
+      options: { 
+        ...MapGridInput.getDefaultOptions(), 
+        ...registry.settingsOverrides, 
+        title: sub + '', 
+        minKeyWidth,
+        minValueWidth,
+        paging,
+        pageSize,
+        pagination,
+      }, 
+      sub: {
+        key: settingsKey, 
+        value: settingsValue, 
+      },
+    };
+  },
   editor: MapEditor,
   defaultInput: 'grid',
   inputsOrder: ['grid'],

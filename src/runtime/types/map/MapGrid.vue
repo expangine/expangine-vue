@@ -15,7 +15,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <template v-for="(entry, entryIndex) in entries">
+      <template v-for="(entry, entryIndex) in page">
         <v-col :key="entry.id" :cols="rowColumns" class="pa-0">
           <v-list-item :class="{ 'error white--text': entry.invalid }">
             <v-list-item-icon class="ex-cell-top mr-2 mt-6">
@@ -52,6 +52,15 @@
           </v-list-item>
         </v-col>
       </template>
+    </v-row>
+    <v-row if="hasPaging">
+      <v-col>
+        <v-pagination
+          v-bind="pagination"
+          v-model="pageIndex"
+          :length="pageCount"
+        ></v-pagination>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -94,6 +103,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
   name: 'MapGrid',
   data: () => ({
     entries: [] as MapEntry[],
+    pageIndex: 1,
     width: 1,
     id: 0,
   }),
@@ -128,6 +138,34 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       const clamped = Math.max(0, Math.min(minColumns, GRID_COLUMNS));
       return MIN_COLUMN_TO_COLUMNS[clamped];
     },
+    rowCount(): number {
+      return this.entries.length;
+    },
+    pagination(): any {
+      return this.settings.options.pagination;
+    },
+    hasPaging(): boolean {
+      return !!this.settings.options.paging && !!this.pagination;
+    },
+    pageSize(): number {
+      return this.settings.options.pageSize || 10;
+    },
+    pageCount(): number {
+      return Math.ceil(this.rowCount / this.pageSize);
+    },
+    pageStart(): number {
+      return this.hasPaging
+        ? Math.min(Math.min(this.pageIndex - 1, this.pageCount - 1) * this.pageSize, this.rowCount)
+        : 0;
+    },
+    pageEnd(): number {
+      return this.hasPaging
+        ? Math.min(this.pageStart + this.pageSize, this.rowCount)
+        : this.rowCount;
+    },
+    page(): any[] {
+      return this.entries.slice(this.pageStart, this.pageEnd);
+    },
   },
   watch: {
     value: {
@@ -144,13 +182,15 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       const el = this.$refs.parent as HTMLElement;
       this.width = Math.max(1, el.offsetWidth);
     },
-    setValue(index: number, newValue: any) {
+    setValue(pageIndex: number, newValue: any) {
+      const index = pageIndex + this.pageStart;
       const entry = this.entries[index];
       this.value.set(entry.key, newValue);
       entry.value = newValue;
       this.update();
     },
-    setKey(index: number, newKey: any) {
+    setKey(pageIndex: number, newKey: any) {
+      const index = pageIndex + this.pageStart;
       const entry = this.entries[index];
 
       this.value.delete(entry.key);
@@ -165,7 +205,8 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
 
       this.update();
     },
-    async removeEntry(index: number) {
+    async removeEntry(pageIndex: number) {
+      const index = pageIndex + this.pageStart;
       if (!await getConfirmation()) {
         return;
       }

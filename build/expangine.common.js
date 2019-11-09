@@ -64882,15 +64882,14 @@ var es7_symbol_async_iterator = __webpack_require__("ac4d");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
 var es6_symbol = __webpack_require__("8a81");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGrid.vue?vue&type=template&id=09732b03&
-var MapGridvue_type_template_id_09732b03_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-container',{directives:[{name:"resize",rawName:"v-resize",value:(_vm.updateWidth),expression:"updateWidth"}],ref:"parent",staticClass:"pa-0",attrs:{"fluid":""}},[_c('v-row',[_c('v-col',{staticClass:"pa-0"},[_c('v-list-item',[_c('v-list-item-icon',{staticClass:"ex-cell-top mr-2 mt-6"},[_c('v-btn',{attrs:{"icon":""},on:{"click":_vm.addEntry}},[_c('v-icon',[_vm._v("mdi-plus")])],1)],1),_c('v-list-item-content',{staticClass:"pa-0"},[_vm._v("\n            "+_vm._s(_vm.settings.options.title)+"\n          ")])],1)],1)],1),_c('v-row',[_vm._l((_vm.entries),function(entry,entryIndex){return [_c('v-col',{key:entry.id,staticClass:"pa-0",attrs:{"cols":_vm.rowColumns}},[_c('v-list-item',{class:{ 'error white--text': entry.invalid }},[_c('v-list-item-icon',{staticClass:"ex-cell-top mr-2 mt-6"},[_c('v-btn',{attrs:{"icon":""},on:{"click":function($event){return _vm.removeEntry(entryIndex)}}},[_c('v-icon',[_vm._v("mdi-minus")])],1)],1),_c('v-list-item-content',{staticClass:"pa-0"},[_c('v-container',{staticClass:"pa-0",attrs:{"fluid":""}},[_c('v-row',{attrs:{"wrap":""}},[_c('v-col',{attrs:{"cols":_vm.keyColumns}},[_c('ex-type-input',{attrs:{"read-only":_vm.readOnly,"type":_vm.type.options.key,"registry":_vm.registry,"settings":_vm.settings.sub.key,"value":entry.key},on:{"input":function($event){return _vm.setKey(entryIndex, $event)}}})],1),_c('v-col',{attrs:{"cols":_vm.valueColumns}},[_c('ex-type-input',{attrs:{"read-only":_vm.readOnly,"type":_vm.type.options.value,"registry":_vm.registry,"settings":_vm.settings.sub.value,"value":entry.value},on:{"input":function($event){return _vm.setValue(entryIndex, $event)}}})],1)],1)],1)],1)],1)],1)]})],2)],1)}
-var MapGridvue_type_template_id_09732b03_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGrid.vue?vue&type=template&id=c7f4ff06&
+var MapGridvue_type_template_id_c7f4ff06_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-container',{directives:[{name:"resize",rawName:"v-resize",value:(_vm.updateWidth),expression:"updateWidth"}],ref:"parent",staticClass:"pa-0",attrs:{"fluid":""}},[_c('v-row',[_c('v-col',{staticClass:"pa-0"},[_c('v-list-item',[_c('v-list-item-icon',{staticClass:"ex-cell-top mr-2 mt-6"},[_c('v-btn',{attrs:{"icon":""},on:{"click":_vm.addEntry}},[_c('v-icon',[_vm._v("mdi-plus")])],1)],1),_c('v-list-item-content',{staticClass:"pa-0"},[_vm._v("\n            "+_vm._s(_vm.settings.options.title)+"\n          ")])],1)],1)],1),_c('v-row',[_vm._l((_vm.page),function(entry,entryIndex){return [_c('v-col',{key:entry.id,staticClass:"pa-0",attrs:{"cols":_vm.rowColumns}},[_c('v-list-item',{class:{ 'error white--text': entry.invalid }},[_c('v-list-item-icon',{staticClass:"ex-cell-top mr-2 mt-6"},[_c('v-btn',{attrs:{"icon":""},on:{"click":function($event){return _vm.removeEntry(entryIndex)}}},[_c('v-icon',[_vm._v("mdi-minus")])],1)],1),_c('v-list-item-content',{staticClass:"pa-0"},[_c('v-container',{staticClass:"pa-0",attrs:{"fluid":""}},[_c('v-row',{attrs:{"wrap":""}},[_c('v-col',{attrs:{"cols":_vm.keyColumns}},[_c('ex-type-input',{attrs:{"read-only":_vm.readOnly,"type":_vm.type.options.key,"registry":_vm.registry,"settings":_vm.settings.sub.key,"value":entry.key},on:{"input":function($event){return _vm.setKey(entryIndex, $event)}}})],1),_c('v-col',{attrs:{"cols":_vm.valueColumns}},[_c('ex-type-input',{attrs:{"read-only":_vm.readOnly,"type":_vm.type.options.value,"registry":_vm.registry,"settings":_vm.settings.sub.value,"value":entry.value},on:{"input":function($event){return _vm.setValue(entryIndex, $event)}}})],1)],1)],1)],1)],1)],1)]})],2),_c('v-row',{attrs:{"if":"hasPaging"}},[_c('v-col',[_c('v-pagination',_vm._b({attrs:{"length":_vm.pageCount},model:{value:(_vm.pageIndex),callback:function ($$v) {_vm.pageIndex=$$v},expression:"pageIndex"}},'v-pagination',_vm.pagination,false))],1)],1)],1)}
+var MapGridvue_type_template_id_c7f4ff06_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/runtime/types/map/MapGrid.vue?vue&type=template&id=09732b03&
+// CONCATENATED MODULE: ./src/runtime/types/map/MapGrid.vue?vue&type=template&id=c7f4ff06&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGrid.vue?vue&type=script&lang=ts&
-
 
 
 
@@ -64909,6 +64908,7 @@ var MIN_COLUMN_TO_COLUMNS = [1, 1, 2, 3, 4, 6, 6, 12, 12, 12, 12, 12, 12];
   data: function data() {
     return {
       entries: [],
+      pageIndex: 1,
       width: 1,
       id: 0
     };
@@ -64940,6 +64940,30 @@ var MIN_COLUMN_TO_COLUMNS = [1, 1, 2, 3, 4, 6, 6, 12, 12, 12, 12, 12, 12];
       var minColumns = Math.ceil(this.minRowWidth / this.width * MapGridvue_type_script_lang_ts_GRID_COLUMNS);
       var clamped = Math.max(0, Math.min(minColumns, MapGridvue_type_script_lang_ts_GRID_COLUMNS));
       return MIN_COLUMN_TO_COLUMNS[clamped];
+    },
+    rowCount: function rowCount() {
+      return this.entries.length;
+    },
+    pagination: function pagination() {
+      return this.settings.options.pagination;
+    },
+    hasPaging: function hasPaging() {
+      return !!this.settings.options.paging && !!this.pagination;
+    },
+    pageSize: function pageSize() {
+      return this.settings.options.pageSize || 10;
+    },
+    pageCount: function pageCount() {
+      return Math.ceil(this.rowCount / this.pageSize);
+    },
+    pageStart: function pageStart() {
+      return this.hasPaging ? Math.min(Math.min(this.pageIndex - 1, this.pageCount - 1) * this.pageSize, this.rowCount) : 0;
+    },
+    pageEnd: function pageEnd() {
+      return this.hasPaging ? Math.min(this.pageStart + this.pageSize, this.rowCount) : this.rowCount;
+    },
+    page: function page() {
+      return this.entries.slice(this.pageStart, this.pageEnd);
     }
   },
   watch: {
@@ -64968,13 +64992,15 @@ var MIN_COLUMN_TO_COLUMNS = [1, 1, 2, 3, 4, 6, 6, 12, 12, 12, 12, 12, 12];
       var el = this.$refs.parent;
       this.width = Math.max(1, el.offsetWidth);
     },
-    setValue: function setValue(index, newValue) {
+    setValue: function setValue(pageIndex, newValue) {
+      var index = pageIndex + this.pageStart;
       var entry = this.entries[index];
       this.value.set(entry.key, newValue);
       entry.value = newValue;
       this.update();
     },
-    setKey: function setKey(index, newKey) {
+    setKey: function setKey(pageIndex, newKey) {
+      var index = pageIndex + this.pageStart;
       var entry = this.entries[index];
       this.value.delete(entry.key);
 
@@ -64991,30 +65017,31 @@ var MIN_COLUMN_TO_COLUMNS = [1, 1, 2, 3, 4, 6, 6, 12, 12, 12, 12, 12, 12];
     removeEntry: function () {
       var _removeEntry = Object(asyncToGenerator["a" /* default */])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(index) {
-        var entry;
+      regeneratorRuntime.mark(function _callee(pageIndex) {
+        var index, entry;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                index = pageIndex + this.pageStart;
+                _context.next = 3;
                 return Object(Confirm["c" /* getConfirmation */])();
 
-              case 2:
+              case 3:
                 if (_context.sent) {
-                  _context.next = 4;
+                  _context.next = 5;
                   break;
                 }
 
                 return _context.abrupt("return");
 
-              case 4:
+              case 5:
                 entry = this.entries[index];
                 this.value.delete(entry.key);
                 this.entries.splice(index, 1);
                 this.update();
 
-              case 8:
+              case 9:
               case "end":
                 return _context.stop();
             }
@@ -65064,8 +65091,8 @@ var MIN_COLUMN_TO_COLUMNS = [1, 1, 2, 3, 4, 6, 6, 12, 12, 12, 12, 12, 12];
 
 var MapGrid_component = Object(componentNormalizer["a" /* default */])(
   map_MapGridvue_type_script_lang_ts_,
-  MapGridvue_type_template_id_09732b03_render,
-  MapGridvue_type_template_id_09732b03_staticRenderFns,
+  MapGridvue_type_template_id_c7f4ff06_render,
+  MapGridvue_type_template_id_c7f4ff06_staticRenderFns,
   false,
   null,
   null,
@@ -65085,7 +65112,8 @@ var MapGrid_component = Object(componentNormalizer["a" /* default */])(
 
 
 
-installComponents_default()(MapGrid_component, {VBtn: VBtn["a" /* default */],VCol: VCol["a" /* default */],VContainer: VContainer["a" /* default */],VIcon: VIcon["a" /* default */],VListItem: VListItem["a" /* default */],VListItemContent: VList["a" /* VListItemContent */],VListItemIcon: VListItemIcon["a" /* default */],VRow: VRow["a" /* default */]})
+
+installComponents_default()(MapGrid_component, {VBtn: VBtn["a" /* default */],VCol: VCol["a" /* default */],VContainer: VContainer["a" /* default */],VIcon: VIcon["a" /* default */],VListItem: VListItem["a" /* default */],VListItemContent: VList["a" /* VListItemContent */],VListItemIcon: VListItemIcon["a" /* default */],VPagination: VPagination_VPagination,VRow: VRow["a" /* default */]})
 
 
 /* vuetify-loader */
@@ -65093,12 +65121,12 @@ installComponents_default()(MapGrid_component, {VBtn: VBtn["a" /* default */],VC
 
 installDirectives_default()(MapGrid_component, {Resize: resize["a" /* default */]})
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGridSettings.vue?vue&type=template&id=5d2129d9&
-var MapGridSettingsvue_type_template_id_5d2129d9_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('ex-simple-fields',{attrs:{"fields":_vm.optionFields,"read-only":_vm.readOnly},model:{value:(_vm.computedValue),callback:function ($$v) {_vm.computedValue=$$v},expression:"computedValue"}})}
-var MapGridSettingsvue_type_template_id_5d2129d9_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGridSettings.vue?vue&type=template&id=2a32c2dd&
+var MapGridSettingsvue_type_template_id_2a32c2dd_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('ex-simple-fields',{attrs:{"fields":_vm.optionFields,"read-only":_vm.readOnly},model:{value:(_vm.computedValue),callback:function ($$v) {_vm.computedValue=$$v},expression:"computedValue"}})}
+var MapGridSettingsvue_type_template_id_2a32c2dd_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/runtime/types/map/MapGridSettings.vue?vue&type=template&id=5d2129d9&
+// CONCATENATED MODULE: ./src/runtime/types/map/MapGridSettings.vue?vue&type=template&id=2a32c2dd&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/map/MapGridSettings.vue?vue&type=script&lang=ts&
 
@@ -65117,6 +65145,46 @@ var MapGridSettingsvue_type_script_lang_ts_fields = [{
   type: 'number',
   label: 'Minimum Value Column Width',
   required: true
+}, {
+  name: 'paging',
+  type: 'boolean',
+  label: 'Pagination?',
+  defaultValue: false
+}, {
+  name: 'pageSize',
+  type: 'number',
+  label: 'Page Size',
+  required: true
+}, {
+  name: 'pagination',
+  type: 'object',
+  label: 'Pagination',
+  fields: [{
+    name: 'circle',
+    type: 'boolean',
+    label: 'Circular?'
+  }, {
+    name: 'color',
+    type: 'color',
+    label: 'Color'
+  }, {
+    name: 'totalVisible',
+    type: 'number',
+    label: 'Max Visible'
+  }, {
+    name: 'dark',
+    type: 'boolean',
+    label: 'Dark',
+    defaultValue: false
+  }, {
+    name: 'nextIcon',
+    type: 'icon',
+    label: 'Next Icon'
+  }, {
+    name: 'prevIcon',
+    type: 'icon',
+    label: 'Prev Icon'
+  }]
 }];
 /* harmony default export */ var MapGridSettingsvue_type_script_lang_ts_ = (Object(TypeSettingsBase["a" /* default */])().extend({
   name: 'MapGridSettings',
@@ -65138,8 +65206,8 @@ var MapGridSettingsvue_type_script_lang_ts_fields = [{
 
 var MapGridSettings_component = Object(componentNormalizer["a" /* default */])(
   map_MapGridSettingsvue_type_script_lang_ts_,
-  MapGridSettingsvue_type_template_id_5d2129d9_render,
-  MapGridSettingsvue_type_template_id_5d2129d9_staticRenderFns,
+  MapGridSettingsvue_type_template_id_2a32c2dd_render,
+  MapGridSettingsvue_type_template_id_2a32c2dd_staticRenderFns,
   false,
   null,
   null,
@@ -65165,7 +65233,9 @@ var MapGridInput = {
   getDefaultOptions: function getDefaultOptions() {
     return {
       minKeyWidth: 300,
-      minValueWidth: 300
+      minValueWidth: 300,
+      pageSize: 10,
+      pagination: {}
     };
   },
   getName: function getName(options) {
@@ -65506,7 +65576,6 @@ installComponents_default()(MapEditor_component, {VChip: VChip["a" /* default */
 
 
 
-
 function map_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function map_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { map_ownKeys(source, true).forEach(function (key) { Object(defineProperty["a" /* default */])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { map_ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -65657,15 +65726,33 @@ var MapVisuals = Object(TypeVisuals["a" /* createVisuals */])()({
     var registry = _ref8.registry,
         type = _ref8.type,
         sub = _ref8.sub;
+    var settingsKey = registry.getTypeSettings(type.options.key, 'Key');
+    var settingsValue = registry.getTypeSettings(type.options.value, sub);
+    var complexityKey = registry.getTypeVisualInputComplexity(type.options.key, settingsKey);
+    var complexityValue = registry.getTypeVisualInputComplexity(type.options.value, settingsValue);
+    var complex = complexityKey > 0 || complexityValue > 0;
+    var veryComplex = complexityKey > 1 || complexityValue > 1;
+    var minKeyWidth = complex ? 2000 : 200;
+    var minValueWidth = complex ? 2000 : 200;
+    var pageSize = veryComplex ? 1 : complex ? 5 : 10;
+    var paging = complex;
+    var pagination = complex ? {
+      totalVisible: 10
+    } : {};
     return {
       input: 'grid',
       defaultValue: [],
       options: map_objectSpread({}, MapGridInput.getDefaultOptions(), {}, registry.settingsOverrides, {
-        label: sub + ''
+        title: sub + '',
+        minKeyWidth: minKeyWidth,
+        minValueWidth: minValueWidth,
+        paging: paging,
+        pageSize: pageSize,
+        pagination: pagination
       }),
       sub: {
-        key: registry.getTypeSettings(type.options.key, 'Key'),
-        value: registry.getTypeSettings(type.options.value, sub)
+        key: settingsKey,
+        value: settingsValue
       }
     };
   },
@@ -66639,7 +66726,6 @@ var NumberOptions_component = Object(componentNormalizer["a" /* default */])(
 
 /* harmony default export */ var NumberOptions = (NumberOptions_component.exports);
 // CONCATENATED MODULE: ./src/runtime/types/number/index.ts
-
 
 
 
