@@ -48,6 +48,11 @@ export interface TypeVisuals<
   description: string;
   describe: (options: { registry: Registry, type: T }) => string;
   describeLong: (registry: Registry, type: T, padding: string, tab: string, newline: string) => string;
+  stringify: (options: {
+    value: any,
+    registry: Registry, 
+    type: T,
+  }) => string;
   toString: (options: { 
     value: any, 
     registry: Registry, 

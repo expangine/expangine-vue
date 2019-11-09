@@ -69,7 +69,7 @@
           ></v-checkbox>
         </div>
         <ex-data-string-box
-          class="ma-3"
+          class="ma-3 mt-6"
           max-height="300px"
           quotes
           :registry="registry"

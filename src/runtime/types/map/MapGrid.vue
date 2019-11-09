@@ -24,8 +24,8 @@
               </v-btn>
             </v-list-item-icon>
             <v-list-item-content class="pa-0">
-              <v-container class="pa-0">
-                <v-row>
+              <v-container fluid class="pa-0">
+                <v-row wrap>
                   <v-col :cols="keyColumns">
                     <ex-type-input
                       :read-only="readOnly"
@@ -107,13 +107,23 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
     minRowWidth(): number {
       return this.minKeyWidth + this.minValueWidth;
     },
+    twoLines(): boolean {
+      return this.width < this.minKeyWidth || this.width < this.minValueWidth;
+    },
     keyColumns(): number {
-      return Math.ceil(this.minKeyWidth / (this.minKeyWidth + this.minValueWidth) * GRID_COLUMNS);
+      return this.twoLines
+        ? GRID_COLUMNS
+        : Math.ceil(this.minKeyWidth / (this.minKeyWidth + this.minValueWidth) * GRID_COLUMNS);
     },
     valueColumns(): number {
-      return GRID_COLUMNS - this.keyColumns;
+      return this.twoLines
+        ? GRID_COLUMNS
+        : GRID_COLUMNS - this.keyColumns;
     },
     rowColumns(): number {
+      if (this.twoLines) {
+        return GRID_COLUMNS;
+      }
       const minColumns = Math.ceil(this.minRowWidth / this.width * GRID_COLUMNS);
       const clamped = Math.max(0, Math.min(minColumns, GRID_COLUMNS));
       return MIN_COLUMN_TO_COLUMNS[clamped];

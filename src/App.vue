@@ -522,6 +522,7 @@ import { getPromiser } from './app/Promiser';
 import { Store } from './app/Store';
 import { Trie } from './app/Trie';
 import Registry from './runtime';
+import { SystemEvents } from './app/SystemEvents';
 
 
 
@@ -672,6 +673,8 @@ export default Vue.extend({
     (window as any).Trie = Trie;
     (window as any).home = this;
     (window as any).ex = ex;
+
+    SystemEvents.on('replaceData', this.replaceData);
 
     this.loadExamples();
 
@@ -1197,12 +1200,10 @@ export default Vue.extend({
     async runProgram() 
     {
       const { type, registry, program, data } = this;
-      const useResults = this.useProgramResults;
-      const useResultsLabel = 'Use results as the data for a new program';
 
       try 
       {
-        await getRunProgram({ registry, type, program, data, useResults, useResultsLabel });
+        await getRunProgram({ registry, type, program, data });
       } 
       catch (e) 
       {
@@ -1211,7 +1212,7 @@ export default Vue.extend({
         window.console.log('error in run program', e);
       }
     },
-    async useProgramResults(data: any): Promise<boolean> 
+    async replaceData(eventType: 'replaceData', data: any): Promise<boolean> 
     {
       const { registry, type, history } = this;
 

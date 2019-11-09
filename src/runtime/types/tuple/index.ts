@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, ListType, ExpressionBuilder, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -21,6 +21,13 @@ export const TupleVisuals = createVisuals<TupleSubs>()({
       ? padding + tab + index + ': ' + registry.getTypeDescribeLong(element, tab, newline, padding + tab) + newline
       : '').join('') +
     padding + ']'
+  ,
+  stringify: ({ registry, value, type }) => 
+    '[' +
+      type.options.map((element, index) => 
+        registry.getTypeStringify(element, value[index]),
+      ).join(',') + 
+    ']'
   ,
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     if (!isArray(value)) {

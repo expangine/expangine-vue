@@ -15,6 +15,7 @@ export const DateVisuals = createVisuals()(
   description: 'A date value',
   describe: () => 'Date',
   describeLong: (registry, type, padding) => 'Date',
+  stringify: ({ value }) => `new Date(${value.getTime()})`,
   toString: ({ value, type, process, processInvalid }) => {
     if (!isDate(value)) {
       return processInvalid(value, type);

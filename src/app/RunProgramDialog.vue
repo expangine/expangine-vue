@@ -3,12 +3,6 @@
     <v-card v-if="visible">
       <v-card-title class="headline">
         Execution Results
-        <v-spacer></v-spacer>
-        <v-btn 
-          v-if="useResults"
-          color="accent"
-          @click="tryUseResults"
-        >{{ useResultsLabel }}</v-btn>
       </v-card-title>
       <v-card-text>
         <v-tabs>
@@ -112,16 +106,6 @@ export default Vue.extend({
         .map((part: Part) => `<span class="${getColor(part)}">${part.value}</span>`)
         .join('')
       ;
-    },
-  },
-  methods: {
-    async tryUseResults() {
-      if (this.useResults) {
-        const close = await this.useResults(this.result);
-        if (close) {
-          this.close();
-        }
-      }
     },
   },
 });

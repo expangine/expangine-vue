@@ -7,6 +7,8 @@ import ColorEditor from './ColorEditor.vue';
 import ColorOptions from './ColorOptions.vue';
 
 
+const FORMAT = ColorSpaceRGB.formatMap.bestfit;
+
 export const ColorVisuals = createVisuals()(
 {
   type: ColorType,
@@ -14,6 +16,7 @@ export const ColorVisuals = createVisuals()(
   description: 'A color value',
   describe: () => 'Color',
   describeLong: (registry, type, padding) => 'Color',
+  stringify: ({ value }) => `"${FORMAT.formatter(value)}"`,
   toString: ({ value, type, process, processInvalid }) => {
     if (!isColor(value)) {
       return processInvalid(value, type);
@@ -23,7 +26,7 @@ export const ColorVisuals = createVisuals()(
       return processed;
     }
 
-    return ColorSpaceRGB.formatMap.bestfit.formatter(value);
+    return FORMAT.formatter(value);
   },
   subNodes: () => [],
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {

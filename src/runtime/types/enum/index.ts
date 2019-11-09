@@ -24,6 +24,7 @@ export const EnumVisuals = createVisuals<EnumSubs>()({
     padding + tab + 'value: ' + registry.getTypeDescribeLong(type.options.value, tab, newline, padding + tab) + newline +
     padding + '}'
   ,
+  stringify: ({ registry, type, value }) => registry.getTypeStringify(type.options.value, value),
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => 
     registry.getTypeToString(value, type.options.value, tab, newline, padding, process, processInvalid)
   ,

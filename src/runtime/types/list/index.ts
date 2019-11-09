@@ -23,6 +23,7 @@ export const ListVisuals = createVisuals<ListSubs>()({
   describeLong: (registry, type, padding, tab, newline) => 
     'List of ' + registry.getTypeDescribeLong(type.options.item, tab, newline, padding)
   ,
+  stringify: ({ registry, type, value }) => '[' + value.map((v: any) => registry.getTypeStringify(type.options.item, v)).join(',') + ']',
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     if (!isArray(value)) {
       return processInvalid(value, type);

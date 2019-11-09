@@ -21,6 +21,11 @@ export const ManyVisuals = createVisuals<ManySubs>()({
       : '' ).join('') +
     padding + ']'
   ,
+  stringify: ({ registry, type, value }) => {
+    const found = type.options.find((t) => t.isValid(value));
+
+    return found ? registry.getTypeStringify(found, value) : JSON.stringify(value);
+  },
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     const processed = process(value, type);
     if (isString(processed)) {

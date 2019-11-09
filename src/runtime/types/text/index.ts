@@ -16,6 +16,7 @@ export const TextVisuals = createVisuals()({
   description: 'A text value',
   describe: () => 'Text',
   describeLong: () => 'Text',
+  stringify: ({ value }) => JSON.stringify(value),
   toString: ({ value, type, process, processInvalid }) => {
     if (!isString(value)) {
       return processInvalid(value, type);

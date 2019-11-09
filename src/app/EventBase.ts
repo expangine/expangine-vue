@@ -45,9 +45,14 @@ export class EventBase<E>
     return results;
   }
 
-  public getListeners<K extends keyof E>(event: K): LinkedNode<EventCallback<E, K>> | null;
+  public hasListeners<K extends keyof E>(event: K): boolean
+  {
+    return this.getListeners(event) !== null;
+  }
+
+  public getListeners<K extends keyof E>(event: K, create?: false): LinkedNode<EventCallback<E, K>> | null;
   public getListeners<K extends keyof E>(event: K, create: true): LinkedNode<EventCallback<E, K>>;
-  public getListeners<K extends keyof E>(event: K, create?: true): LinkedNode<EventCallback<E, K>> | null 
+  public getListeners<K extends keyof E>(event: K, create: boolean = true): LinkedNode<EventCallback<E, K>> | null 
   {
     let listeners: LinkedNode<EventCallback<E, K>> | undefined = this.listeners[event];
 

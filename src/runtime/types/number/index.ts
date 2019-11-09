@@ -21,6 +21,7 @@ export const NumberVisuals = createVisuals()({
     (isNumber(type.options.min) ? ' min=' + type.options.min : '') +
     (isNumber(type.options.max) ? ' max=' + type.options.max : '')
   ,
+  stringify: ({ value }) => value.toString(),
   subNodes: () => [],
   toString: ({ value, type, process, processInvalid }) => {
     if (!isNumber(value)) {

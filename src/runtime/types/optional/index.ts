@@ -18,6 +18,13 @@ export const OptionalVisuals = createVisuals<OptionalSubs>()({
   describeLong: (registry, type, padding, tab, newline) => 
     'Optional ' + registry.getTypeDescribeLong(type.options, tab, newline, padding)
   ,
+  stringify: ({ registry, type, value }) => 
+    value === undefined 
+      ? 'undefined'
+      : value === null
+        ? 'null'
+        : registry.getTypeStringify(type.options, value)
+  ,
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     if (value === undefined || value === null) {
       return 'undefined';

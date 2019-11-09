@@ -17,6 +17,7 @@ export const BooleanVisuals = createVisuals()({
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   describe: () => 'Boolean',
   describeLong: (registry, type, padding) => 'Boolean',
+  stringify: ({ value }) => value ? 'true' : 'false',
   toString: ({ value, type, process, processInvalid }) => {
     if (!isBoolean(value)) {
       return processInvalid(value, type);

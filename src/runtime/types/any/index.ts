@@ -13,6 +13,7 @@ export const AnyVisuals = createVisuals()({
   description: 'Any value',
   describe: ({registry, type}) => 'Any value',
   describeLong: (registry, type, padding) => 'Any',
+  stringify: ({ registry, type, value }) => registry.getTypeStringify(registry.defs.describe(value), value),
   toString: ({ value, type, process, processInvalid }) => {
     return process(value, type);
   },

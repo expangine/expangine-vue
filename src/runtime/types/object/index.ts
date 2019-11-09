@@ -23,6 +23,25 @@ export const ObjectVisuals = createVisuals<string>()({
     ).join('') +
     padding + '}'
   ,
+  stringify: ({ registry, type, value }) => {
+    const props: Array<[string, string]> = [];
+
+    for (const prop in type.options.props) {
+      const propType = type.options.props[prop];
+      const propQuote = !prop.match(/^[$\w]+$/);
+
+      if (value[prop] === undefined) {
+        continue;
+      }
+
+      props.push([
+        propQuote ? JSON.stringify(prop) : prop,
+        registry.getTypeStringify(propType, value[prop]),
+      ]);
+    }
+    
+    return '{' + props.map(([p, v]) => p + ':' + v).join(',') + '}';
+  },
   toString: ({ registry, value, type, tab, newline, padding, process, processInvalid }) => {
     if (!isObject(value)) {
       return processInvalid(value, type);

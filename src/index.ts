@@ -17,6 +17,7 @@ import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
 
 import DataString from './app/DataString.vue';
 import DataStringBox from './app/DataStringBox.vue';
+import DataMenu from './app/DataMenu.vue';
 import ChipMenu from './app/ChipMenu.vue';
 import ColorPicker from './app/ColorPicker.vue';
 import DatePicker from './app/DatePicker.vue';
@@ -60,6 +61,7 @@ export * from './app/RunProgram';
 export * from './app/SimpleInput';
 export * from './app/StopWatch';
 export * from './app/Store';
+export * from './app/SystemEvents';
 export * from './app/TestFunction';
 export * from './app/TestOperation';
 export * from './app/Transcoder';
@@ -128,6 +130,7 @@ export default {
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
 
     Vue.component('ex-data-string', DataString);
+    Vue.component('ex-data-menu', DataMenu);
     Vue.component('ex-data-string-box', DataStringBox);
     Vue.component('ex-color-picker', ColorPicker);
     Vue.component('ex-date-picker', DatePicker);
