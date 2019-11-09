@@ -123,12 +123,16 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
         resolve({
           transform: (project) => {
             if (project.type instanceof ObjectType) {
-              Vue.set(project.type.options.popr, settings.property, dataType);
+              Vue.set(project.type.options.props, settings.property, dataType);
               Vue.set((project.settings as TypeSettingsRecord<any, any>).sub, settings.property, dataSettings);
               Vue.set(project.data, settings.property, data);
             }
 
-            return project;
+            return {
+              data: project.data,
+              type: project.type,
+              settings: project.settings,
+            };
           },
         });
       }

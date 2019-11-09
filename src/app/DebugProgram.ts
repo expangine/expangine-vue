@@ -259,10 +259,13 @@ export function debugProgram(step: number, stopAt?: Map<Expression, boolean>): D
 
   const command = debugProvider.getCommand(program);
 
-  try {
+  try 
+  {
     command(data);
-  } catch (e) {
-    // ignore error
+  } 
+  catch (e) 
+  {
+    window.console.log('error in debug', e);
   }
 
   if (stepOut === -1) 

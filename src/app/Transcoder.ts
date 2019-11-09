@@ -77,7 +77,7 @@ export class TranscoderStore<I, O> extends EventBase<TranscoderStoreEvents<I, O>
     }
     catch (e)
     {
-      window.console.log('load error', e);
+      window.console.log('transcoder load error', e);
     }
 
     return this.getDefault();
@@ -105,6 +105,8 @@ export class TranscoderStore<I, O> extends EventBase<TranscoderStoreEvents<I, O>
       {
         await this.save(input);
       }
+
+      window.console.log('transcoder save error', e);
     }
   }
 

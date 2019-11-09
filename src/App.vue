@@ -810,6 +810,8 @@ export default Vue.extend({
       catch (e)
       {
         sendNotification({ message : 'There was an unexpected error: ' + e });
+
+        window.console.log('error in loadable', e);
       }
 
       this.loading--;
@@ -1204,7 +1206,7 @@ export default Vue.extend({
       {
         sendNotification({ message: 'There was an error in your program' });
         
-        window.console.log(e);
+        window.console.log('error in run program', e);
       }
     },
     async useProgramResults(data: any): Promise<boolean> 
@@ -1248,7 +1250,7 @@ export default Vue.extend({
       {
         sendNotification({ message: 'There was an error in your program' });
         
-        window.console.log(e);
+        window.console.log('error in debug program', e);
       }
     },
   },

@@ -292,7 +292,7 @@ export class ProjectHistory extends EventBase<ProjectHistoryEvents>
     } 
     catch (e) 
     {
-      // ignore
+      window.console.log('error in history push', e);
     }
 
     this.pushLast(keys);

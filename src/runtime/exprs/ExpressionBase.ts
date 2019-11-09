@@ -203,7 +203,7 @@ export default function<E extends Expression>()
         return this.registry.getExpressionVisuals(this.value);
       },
       multiline(): boolean {
-        return this.registry.getExpressionMultiline(this.value);
+        return false; // this.registry.getExpressionMultiline(this.value);
       },
       complexity(): number {
         return this.value.getComplexity(this.registry.defs);
