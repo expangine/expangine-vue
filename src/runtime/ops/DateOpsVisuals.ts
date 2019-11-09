@@ -106,7 +106,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.min, {
     name: 'Min Date',
     description: 'Return the min of [value] and [test]',
-    singleline: 'min( {value}, {test} )',
+    singleline: 'min( {value} {test} )',
     comments: {
       value: 'The first date',
       test: 'The second date',
@@ -117,7 +117,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.max, {
     name: 'Max Date',
     description: 'Return the max of [value] and [test]',
-    singleline: 'max( {value}, {test} )',
+    singleline: 'max( {value} {test} )',
     comments: {
       value: 'The first date',
       test: 'The second date',
@@ -192,7 +192,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.endOf, {
     name: 'Change Date to end of Unit of Time',
     description: 'Change [value] to end of [unit] [inclusive]',
-    singleline: 'set {value} to end of {unit}, inclusively? [inclusive]',
+    singleline: 'set {value} to end of {unit} inclusively? [inclusive]',
     comments: {
       value: 'The date value',
       unit: 'The unit of time',
@@ -262,7 +262,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.diff, {
     name: 'Difference between Dates',
     description: 'Difference in [unit] between [value] and [test], absolute value [absolute], and adjust [adjust]',
-    singleline: 'difference in {unit} between {value} and {test}, absolute value {absolute}, and adjusted with {adjust}',
+    singleline: 'difference in {unit} between {value} and {test} absolute value {absolute} and adjusted with {adjust}',
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
@@ -428,7 +428,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.isEndOf, {
     name: 'Is Date at End Of?',
     description: 'Determines whether [value] is end of unit [unit], inclusive [inclusive]',
-    singleline: '{value} is end of {unit}, inclusive {inclusive}',
+    singleline: '{value} is end of {unit} inclusive {inclusive}',
     comments: {
       value: 'The value to evaluate',
       unit: 'The unit of time to use to compare the dates',
@@ -468,6 +468,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asBoolean, {
@@ -478,6 +479,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'true',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asColor, {
@@ -488,6 +490,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'White',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asDate, {
@@ -498,6 +501,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asList, {
@@ -508,6 +512,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asMap, {
@@ -518,6 +523,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asNumber, {
@@ -528,6 +534,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The millisecond timestamp of [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asObject, {
@@ -538,6 +545,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asText, {
@@ -548,6 +556,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to text using the ISO format.',
+    weight: 0.5,
   });
 
   registry.addOperation(DateOps.asTuple, {
@@ -558,6 +567,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

@@ -115,6 +115,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asBoolean, {
@@ -125,6 +126,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asColor, {
@@ -135,6 +137,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'White',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asDate, {
@@ -145,6 +148,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asList, {
@@ -155,6 +159,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asMap, {
@@ -165,6 +170,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asNumber, {
@@ -175,6 +181,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] is true return 1, otherwise 0.',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asObject, {
@@ -185,6 +192,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asText, {
@@ -195,6 +203,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '"true" or "false"',
+    weight: 0.5,
   });
 
   registry.addOperation(BooleanOps.asTuple, {
@@ -205,6 +214,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

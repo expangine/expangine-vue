@@ -39,7 +39,7 @@ export default (registry: Registry) =>
   registry.addOperation(AnyOps.getDefined, {
     name: 'Get Defined',
     description: 'Get defined [value] and call [defined]',
-    singleline: 'if {value} defined, pass it to {defined}',
+    singleline: 'if {value} defined pass it to {defined}',
     comments: {
       value: 'The value to check',
       defined: 'The expression to call with the defined value if it exists',
@@ -53,7 +53,7 @@ export default (registry: Registry) =>
   registry.addOperation(AnyOps.coalesce, {
     name: 'Coalesce',
     description: 'Get first defined value from [a], [b], and optionally [c], [d], and [e]',
-    singleline: 'coalesce( {a}, {b}, {c}, {d}, {e} )',
+    singleline: 'coalesce( {a} {b} {c} {d} {e} )',
     comments: {
       a: 'The first value to check',
       b: 'The first value to check',
@@ -153,6 +153,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asBoolean, {
@@ -163,6 +164,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a true or false. Most values are true, but false values are: null, undefined, zero, false, NaN, and ""',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asColor, {
@@ -173,6 +175,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] convert to a Color if possible, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asDate, {
@@ -183,6 +186,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] convert to a Date if possible, otherwise the current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asList, {
@@ -203,6 +207,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asNumber, {
@@ -213,6 +218,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] convert to a number if possible, otherwise 0.',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asObject, {
@@ -223,6 +229,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asText, {
@@ -233,6 +240,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] convert to a string.',
+    weight: 0.5,
   });
 
   registry.addOperation(AnyOps.asTuple, {
@@ -243,6 +251,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

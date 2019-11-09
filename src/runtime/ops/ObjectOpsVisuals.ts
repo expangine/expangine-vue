@@ -195,6 +195,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asBoolean, {
@@ -205,6 +206,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a boolean property "value" it is returned, otherwise true.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asColor, {
@@ -215,6 +217,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] is a color it is returned. If [value] has a boolean property "value" it is returned, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asList, {
@@ -225,6 +228,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a list property "value" it is returned, otherwise [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asDate, {
@@ -235,6 +239,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a date property "value" it is returned, otherwise the current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asMap, {
@@ -245,6 +250,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a map property "value" it is returned, otherwise a map with a single key-value pair of "value" and [value].',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asNumber, {
@@ -255,6 +261,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a number property "value" it is returned, otherwise 0.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asObject, {
@@ -265,6 +272,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asText, {
@@ -275,6 +283,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a text property "value" it is returned, otherwise [value] in text form.',
+    weight: 0.5,
   });
 
   registry.addOperation(ObjectOps.asTuple, {
@@ -285,6 +294,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If [value] has a date property "value" it is returned, otherwise a tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

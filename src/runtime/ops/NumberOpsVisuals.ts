@@ -184,7 +184,7 @@ export default (registry: Registry) =>
   registry.addOperation(NumberOps.atan2, {
     name: 'Atan 2',
     description: 'Computes angle in radians of vector [x], [y]',
-    singleline: 'and in radians of {x}, {y}',
+    singleline: 'angle in radians of {x} {y}',
     comments: {
       x: 'The x magnitude of the vector',
       y: 'The y magnitude of the vector',
@@ -573,7 +573,7 @@ export default (registry: Registry) =>
   registry.addOperation(NumberOps.toText, {
     name: 'Format Number to Text',
     description: 'Format [value] to text optional with a [prefix] and [suffix], a minimum number of decimal places [minPlaces], a maximum number of decimal places [maxPlaces] or using exponents [useExponnet] and using a [thousandSeparator]',
-    singleline: 'format {value} to text with prefix {prefix}, suffix {suffix}, a minimum number of decimal places {minPlaces}, a maximum number of decimal places {maxPlaces}, using exponents {useExponent}, using the thousand separator {thousandSeparator}',
+    singleline: 'format {value} to text with prefix {prefix} suffix {suffix} a minimum number of decimal places {minPlaces} a maximum number of decimal places {maxPlaces} using exponents {useExponent} using the thousand separator {thousandSeparator}',
     comments: {
       value: 'The number to format as text',
       prefix: 'The prefix of the result',
@@ -782,6 +782,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asBoolean, {
@@ -792,6 +793,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'True if [value] is not zero, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asColor, {
@@ -802,6 +804,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A color taken from the bytes of [value].',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asDate, {
@@ -812,6 +815,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A date using the number as the millisecond timestamp.',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asList, {
@@ -822,6 +826,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asMap, {
@@ -832,6 +837,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asNumber, {
@@ -842,6 +848,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asObject, {
@@ -852,6 +859,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asText, {
@@ -862,6 +870,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [number] formatted as plain text.',
+    weight: 0.5,
   });
 
   registry.addOperation(NumberOps.asTuple, {
@@ -872,6 +881,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

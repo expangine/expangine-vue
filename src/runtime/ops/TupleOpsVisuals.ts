@@ -170,6 +170,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asBoolean, {
@@ -180,6 +181,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first boolean value found in the tuple, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asColor, {
@@ -190,6 +192,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first color value found in the tuple, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asList, {
@@ -200,6 +203,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first list value found in the tuple, otherwise a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asDate, {
@@ -210,6 +214,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first date value found in the tuple, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asMap, {
@@ -220,6 +225,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first map value found in the tuple, otherwise a map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asNumber, {
@@ -230,6 +236,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first number value found in the tuple, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asObject, {
@@ -240,6 +247,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first object value found in the tuple, otherwise an object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asText, {
@@ -250,6 +258,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The first text value found in the tuple, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(TupleOps.asTuple, {
@@ -260,6 +269,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
 };

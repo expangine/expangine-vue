@@ -1,15 +1,16 @@
 
-import { OperationPair, isArray, OperationMapping } from 'expangine-runtime';
+import { OperationPair, OperationMapping } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
+import { Trie } from '@/app/Trie';
 
 
 export function filterOperation(item: any, queryText: string, itemText: string) 
 {
-  if (isArray(item.tokens)) 
+  if (item.tokens instanceof Trie) 
   {
     const queryTokens = getTokens(queryText);
 
-    return queryTokens.some((queryToken) => item.tokens.some((token: string) => token.indexOf(queryToken) !== -1));
+    return getTrieScoreFromList(item.tokens, queryTokens) > 0;
   }
   else 
   {
@@ -27,13 +28,24 @@ export function getTokens(text: string): string[]
   return text.split(/\s+/).map(getToken).filter((token) => !!token);
 }
 
+export function getTrieFromList(tokenList: string[], defaultWeight: number = 1): Trie<number>
+{
+  const tokens = new Trie<number>();
+
+  tokenList.forEach((token) => tokens.set(token, defaultWeight));
+
+  return tokens;
+}
+
 export function getListOption(registry: Registry, value: OperationPair) 
 {
-  const { name: text, description, keywords } = registry.getOperationVisuals(value.op.id);
+  const { name: text, description, keywords, weight } = registry.getOperationVisuals(value.op.id);
 
-  const tokens = getTokens(text)
+  const tokenList = getTokens(text)
     .concat(getTokens(description))
     .concat(keywords ? keywords.map(getToken) : []);
+
+  const tokens = getTrieFromList(tokenList, weight || 1);
 
   return { 
     text,
@@ -53,7 +65,6 @@ export function getMappingListOption(registry: Registry, value: OperationMapping
   return { text, description, tokens, value };
 }
 
-
 export function sortMappingListOption(a: {text: string, value: OperationMapping}, b: {text: string, value: OperationMapping}): number 
 {
   return (a.value.unmapped.length - b.value.unmapped.length) || a.text.localeCompare(b.text);
@@ -66,32 +77,24 @@ export function sortListOption(a: {text: string}, b: {text: string}): number
 
 export function sortListOptionByCount(query: string)
 {
-  const tokens = getTokens(query);
-  const countCache: Record<string, number> = {};
-  const getCount = (otherTokens: string[]): number => 
+  const queryTokens = getTokens(query);
+
+  return (a: {text: string, tokens: Trie<number>}, b: {text: string, tokens: Trie<number>}) => 
   {
-    const key = otherTokens.join(',');
-    if (countCache[key]) 
-    {
-      return countCache[key];
-    }
-
-    let count = 0;
-    for (const currentToken of tokens) 
-    {
-      if (otherTokens.indexOf(currentToken) !== -1) 
-      {
-        count++;
-      }
-    }
-
-    return countCache[key] = count;
+    return getTrieScoreFromList(b.tokens, queryTokens) - getTrieScoreFromList(a.tokens, queryTokens);
   };
+}
 
-  return (a: {text: string, tokens: string[]}, b: {text: string, tokens: string[]}) => 
-  {
-    const d = getCount(b.tokens) - getCount(a.tokens);
+export function getTrieScoreFromList(trie: Trie<number>, textList: string[]): number
+{
+  return textList.reduce((sum, text) => sum + getTrieScore(trie, text), 0);
+}
 
-    return d === 0 ? sortListOption(a, b) : d;
-  };
+export function getTrieScore(trie: Trie<number>, text: string): number
+{
+  let score = 0;
+
+  trie.match(text, 1, 10000, (occurrences, key, amount) => score += 1 / amount * occurrences);
+
+  return score;
 }

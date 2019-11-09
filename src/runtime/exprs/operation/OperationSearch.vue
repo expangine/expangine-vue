@@ -81,7 +81,7 @@ export default ExpressionBase<OperationExpression>().extend({
     returnTypeOperations(): ListOptionsTokenized<OperationPair> {
       return this.requiredType
         ? this.registry.defs
-          .getOperationsWithReturnType(this.requiredType)
+          .getOperationsWithReturnType(this.requiredType, {}, true)
           .map((pair) => getListOption(this.registry, pair))
         : [];
     },

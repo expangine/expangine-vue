@@ -2,6 +2,7 @@ import { PropType } from 'vue';
 import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextType, ColorType, ColorFormat, ColorSpaceRGB, Color } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
+import { Trie } from './app/Trie';
 
 
 export const ComplexityColors = [
@@ -30,7 +31,7 @@ export type ListOptionsTokenized<T = string> = Array<{
   text: string; 
   description?: string; 
   value: T;
-  tokens: string[];
+  tokens: Trie<number>;
 }>;
 
 export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol, Map];

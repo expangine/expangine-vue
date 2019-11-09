@@ -11,6 +11,7 @@ export type OperationVisuals<
   comments: Record<P | O, string>;
   returnComments: string;
   keywords?: string[];
+  weight?: number;
 } & (
   [O] extends [never] ? {} : { defaults: Record<O, string> }
 ) & (

@@ -1108,6 +1108,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asBoolean, {
@@ -1118,6 +1119,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the first item is a boolean it is returned, otherwise true if the [value] is not empty and false if it is.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asColor, {
@@ -1128,6 +1130,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the first item is a color it is returned, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asList, {
@@ -1138,6 +1141,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asDate, {
@@ -1148,6 +1152,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the first item is a date it is returned, otherwise the current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asMap, {
@@ -1158,6 +1163,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map of key-value pairs entries where the "key" is the index of the item and "value" is the item.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asNumber, {
@@ -1168,6 +1174,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the first item is a number it is returned, otherwise the length of the list.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asObject, {
@@ -1178,6 +1185,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asText, {
@@ -1188,6 +1196,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the first item is a text it is returned, otherwise an empty text.',
+    weight: 0.5,
   });
 
   registry.addOperation(ListOps.asTuple, {
@@ -1198,6 +1207,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

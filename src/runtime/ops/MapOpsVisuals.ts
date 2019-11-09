@@ -321,6 +321,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asBoolean, {
@@ -331,6 +332,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a boolean value with key "value" it is returned, otherwise true is returned if the map is not empty and false if the map is empty.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asColor, {
@@ -341,6 +343,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a color value with key "value" it is returned, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asList, {
@@ -351,6 +354,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The list of values from the map.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asDate, {
@@ -361,6 +365,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a date value with key "value" it is returned, otherwise the current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asMap, {
@@ -371,6 +376,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asNumber, {
@@ -381,6 +387,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a number value with key "value" it is returned, otherwise the size of the map.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asObject, {
@@ -391,6 +398,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains an object value with key "value" it is returned, otherwise an object with a single property "value" and [value].',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asText, {
@@ -401,6 +409,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a text value with key "value" it is returned, otherwise an empty text.',
+    weight: 0.5,
   });
 
   registry.addOperation(MapOps.asTuple, {
@@ -411,6 +420,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'If the map contains a tuple value with key "value" it is returned, otherwise a tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

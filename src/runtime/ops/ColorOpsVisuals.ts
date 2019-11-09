@@ -74,7 +74,7 @@ export default (registry: Registry) =>
   registry.addOperation(ColorOps.op, {
     name: 'Generic Color Operation',
     description: 'color operation between [value] and [test] with [r], [g], [b], [a]',
-    singleline: 'operate on {value} and {test} with r={r}, g={g}, b={b}, a={a}',
+    singleline: 'operate on {value} and {test} with r={r} g={g} b={b} a={a}',
     comments: {
       value: 'The first color to operate on',
       test: 'The second color to operate on',
@@ -461,6 +461,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asBoolean, {
@@ -471,6 +472,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'True',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asColor, {
@@ -481,6 +483,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asList, {
@@ -491,6 +494,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asDate, {
@@ -501,6 +505,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asMap, {
@@ -511,6 +516,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value].',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asNumber, {
@@ -521,6 +527,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A number with 4 bytes, 1 for each color component in [value].',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asObject, {
@@ -531,6 +538,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asText, {
@@ -541,6 +549,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The color formatted as text.',
+    weight: 0.5,
   });
 
   registry.addOperation(ColorOps.asTuple, {
@@ -551,6 +560,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };

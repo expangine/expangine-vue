@@ -519,8 +519,9 @@ import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
 import { friendlyList, SimpleFieldOption } from '@/common';
 import { getPromiser } from './app/Promiser';
-import Registry from './runtime';
 import { Store } from './app/Store';
+import { Trie } from './app/Trie';
+import Registry from './runtime';
 
 
 
@@ -668,6 +669,7 @@ export default Vue.extend({
   async mounted() {
     (window as any).registry = Registry;
     (window as any).runtime = LiveRuntime;
+    (window as any).Trie = Trie;
     (window as any).home = this;
     (window as any).ex = ex;
 

@@ -294,7 +294,7 @@ export default (registry: Registry) =>
   registry.addOperation(TextOps.pad, {
     name: 'Pad Text',
     description: 'Pad [value] with [padding] with a [min] and [max] length, optionally [append]ing the [padding] to the end',
-    singleline: 'pad {value} with {padding} to at least {min} characters and no more than {max} characters, optionally appending padding to end {append}',
+    singleline: 'pad {value} with {padding} to at least {min} characters and no more than {max} characters optionally appending padding to end {append}',
     comments: {
       value: 'The text value to pad',
       padding: 'The text to pad at the start of [value] or at the end if [append] is true',
@@ -601,6 +601,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asBoolean, {
@@ -611,6 +612,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'True if text looks like true, t, 1, y, or x, otherwise false.',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asColor, {
@@ -621,6 +623,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A color parsed from the text, otherwise white.',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asDate, {
@@ -631,6 +634,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A date parsed from the text, otherwise the current date & time.',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asList, {
@@ -641,6 +645,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'The [value] converted to a list by returning it as a list with a single item.',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asMap, {
@@ -651,6 +656,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A map with a single key-value pair of "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asNumber, {
@@ -661,6 +667,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A number parsed from text, if none could be 0.',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asObject, {
@@ -671,6 +678,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'An object with a single property "value" and [value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asText, {
@@ -681,6 +689,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: '[value]',
+    weight: 0.5,
   });
 
   registry.addOperation(TextOps.asTuple, {
@@ -691,6 +700,7 @@ export default (registry: Registry) =>
       value: 'The value to cast',
     },
     returnComments: 'A tuple with a single [value] element.',
+    weight: 0.5,
   });
 
 };
