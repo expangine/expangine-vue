@@ -321,47 +321,41 @@
     </v-app-bar>
 
     <v-content>
-      <v-tabs-items v-if="initialized" touchless v-model="mode">
-        <v-tab-item :key="0">
-          <v-container fluid>
-            <ex-type-editor
-              :type="type"
-              :read-only="readOnly"
-              :registry="registry"
-              :settings="settings"
-              @change="handleChange"
-            ></ex-type-editor>
-          </v-container>
-        </v-tab-item>
-        <v-tab-item :key="1">
-          <v-container fluid>
-            <ex-type-input
-              :value="data"
-              :type="type"
-              :read-only="readOnly"
-              :registry="registry"
-              :settings="settings"
-              @input="saveDataDebounce"
-            ></ex-type-input>
-          </v-container>
-        </v-tab-item>
-        <v-tab-item :key="2">
-          <v-container fluid>
-            <ex-expression
-              can-remove
-              :value="program"
-              :context="type"
-              :read-only="readOnly"
-              :registry="registry"
-              :settings="settings"
-              :show-complexity="showComplexity"
-              :highlight="highlightExpressions"
-              @remove="resetProgram"
-              @input="saveProgram"
-            ></ex-expression>
-          </v-container>
-        </v-tab-item>
-      </v-tabs-items>
+      <div v-if="initialized">
+        <v-container fluid v-if="mode === 0">
+          <ex-type-editor
+            :type="type"
+            :read-only="readOnly"
+            :registry="registry"
+            :settings="settings"
+            @change="handleChange"
+          ></ex-type-editor>
+        </v-container>
+        <v-container fluid v-else-if="mode === 1">
+          <ex-type-input
+            :value="data"
+            :type="type"
+            :read-only="readOnly"
+            :registry="registry"
+            :settings="settings"
+            @input="saveDataDebounce"
+          ></ex-type-input>
+        </v-container>
+        <v-container fluid v-else>
+          <ex-expression
+            can-remove
+            :value="program"
+            :context="type"
+            :read-only="readOnly"
+            :registry="registry"
+            :settings="settings"
+            :show-complexity="showComplexity"
+            :highlight="highlightExpressions"
+            @remove="resetProgram"
+            @input="saveProgram"
+          ></ex-expression>
+        </v-container>
+      </div>
       <div v-else class="pa-3">
         <v-skeleton-loader
           type="list-item-avatar-three-line"

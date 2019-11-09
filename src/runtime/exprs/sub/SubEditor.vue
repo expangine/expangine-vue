@@ -44,7 +44,6 @@ export default ExpressionBase<SubExpression>().extend({
     clearValue() {
       this.value.value = NoExpression.instance;
       this.update();
-      window.console.log('clearValue');
     },
     setValue(value: Expression) {
       this.value.value = value;

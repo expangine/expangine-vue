@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber, ObjectType } from 'expangine-runtime';
+import { Type, ListType, isNumber, ObjectType, isFunction } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeSettings } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';

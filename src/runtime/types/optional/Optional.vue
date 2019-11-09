@@ -40,7 +40,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>(P
     hasValue: {
       cache: false,
       get(): boolean {
-        return this.value !== undefined;
+        return this.value !== undefined && this.value !== null;
       },
     },
     innerTypeVisuals(): TypeVisuals {

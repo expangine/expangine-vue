@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber } from 'expangine-runtime';
+import { Type, ListType, isNumber, isFunction } from 'expangine-runtime';
 import { TypeSettings } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';

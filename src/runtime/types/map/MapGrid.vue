@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { MapType, toArray } from 'expangine-runtime';
+import { MapType, toArray, isFunction } from 'expangine-runtime';
 import { getConfirmation } from '../../../app/Confirm';
 import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
