@@ -17,43 +17,44 @@
           <v-tab v-if="showData">Data After Execution</v-tab>
           <v-tab v-if="showData">Data Before Execution</v-tab>
           <v-tab v-if="showData">Data Changes</v-tab>
-          <v-tab-item class="data-container">
-            <pre class="data-box"><!--
-          --><ex-data-string
-              quotes
+          <v-tab-item>
+            <ex-data-string-box
+              max-height="calc(100vh - 300px)"
+              quotes              
               :registry="registry"
               :data="result"
               :type="resultType"
-             ></ex-data-string><!--
-         --></pre>
+            ></ex-data-string-box>
           </v-tab-item>
-          <v-tab-item class="data-container">
-            <pre class="data-box" v-html="rawString"></pre>
+          <v-tab-item>
+            <div class="ex-code-container" style="max-height: calc(100vh - 300px)">
+              <pre class="ex-code" v-html="rawString"></pre>
+            </div>
           </v-tab-item>
-          <v-tab-item v-if="showData" class="data-container">
-            <pre class="data-box"><!--
-          --><ex-data-string
+          <v-tab-item v-if="showData">
+            <ex-data-string-box
+              max-height="calc(100vh - 300px)"
               quotes
               :registry="registry"
               :data="dataAfter"
               :type="type"
               @string="dataAfterString = $event"
-             ></ex-data-string><!--
-         --></pre>
+             ></ex-data-string-box>
           </v-tab-item>
-          <v-tab-item v-if="showData" class="data-container">
-            <pre class="data-box"><!--
-          --><ex-data-string
+          <v-tab-item v-if="showData">
+            <ex-data-string-box
+              max-height="calc(100vh - 300px)"
               quotes
               :registry="registry"
               :data="data"
               :type="type"
               @string="dataString = $event"
-             ></ex-data-string><!--
-         --></pre>
+             ></ex-data-string-box>
           </v-tab-item>
-          <v-tab-item v-if="showData" class="data-container">
-            <pre class="data-box" v-html="diffString"></pre>
+          <v-tab-item v-if="showData">
+            <div class="ex-code-container" style="max-height: calc(100vh - 300px)">
+              <pre class="ex-code" v-html="diffString"></pre>
+            </div>
           </v-tab-item>
         </v-tabs>
       </v-card-text>
@@ -127,26 +128,7 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-.data-container {
-  position: relative;
-  height: calc(100vh - 300px);
-}
-
-.data-box {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: scroll;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  font-weight: normal;
-  color: black;
-  border: 1px solid rgba(0,0,0,0.2);
-  line-height: 1em;
-  font-weight: bold;
+.ex-code {
 
   /deep/ .removed {
     color: #e02618;

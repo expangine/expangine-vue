@@ -68,12 +68,3 @@ export async function getRunProgram(options: Partial<RunProgramOptions> = {}): P
 
   return promise;
 }
-
-function now()
-{
-  return window.performance && window.performance.now
-    ? window.performance.now()
-    : Date.now
-      ? Date.now()
-      : new Date().getTime();
-}

@@ -50,14 +50,31 @@
             </template>
           </tbody>
         </table>
-        <h4>Results</h4>
-        <pre class="data-box ma-3"><!--
-      --><ex-data-string
+        <div class="ex-center-aligned mt-3 px-3">
+          <h4>Results</h4>
+          <v-spacer></v-spacer>
+          <v-btn
+            v-if="!resultAutomatic"
+            icon
+            class="mr-3"
+            color="secondary"
+            @click="updateResult(true)"
+          ><v-icon>mdi-sync</v-icon></v-btn>
+          <v-checkbox
+            hide-details
+            class="mt-0"
+            label="Auto Update"
+            v-model="resultAutomatic"
+            @change="updateResult"
+          ></v-checkbox>
+        </div>
+        <ex-data-string-box
+          class="ma-3"
+          max-height="300px"
           quotes
           :registry="registry"
           :data="result"
-         ></ex-data-string><!--
-     --></pre>
+        ></ex-data-string-box>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -193,7 +210,11 @@ export default Vue.extend({
 
       return context;
     },
-    updateResult() {
+    updateResult(forceUpdate: boolean = false) {
+      if (!this.resultAutomatic && !forceUpdate) {
+        return;
+      }
+
       try {
         this.invalid = false;
 
@@ -208,17 +229,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.data-box {
-  overflow: scroll;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  font-weight: normal;
-  color: black;
-  border: 1px solid rgba(0,0,0,0.2);
-  line-height: 1em;
-  font-weight: bold;
-}
-</style>

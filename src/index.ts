@@ -16,6 +16,7 @@ import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
 
 import DataString from './app/DataString.vue';
+import DataStringBox from './app/DataStringBox.vue';
 import ChipMenu from './app/ChipMenu.vue';
 import ColorPicker from './app/ColorPicker.vue';
 import DatePicker from './app/DatePicker.vue';
@@ -127,6 +128,7 @@ export default {
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
 
     Vue.component('ex-data-string', DataString);
+    Vue.component('ex-data-string-box', DataStringBox);
     Vue.component('ex-color-picker', ColorPicker);
     Vue.component('ex-date-picker', DatePicker);
     Vue.component('ex-simple-fields', SimpleFields);
