@@ -60,12 +60,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as Papa from 'papaparse';
-import { Type, TypeBuilder, objectValues } from 'expangine-runtime';
+import { Type, TypeBuilder, objectValues, ObjectType, ListType } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { exportFile } from './FileExport';
 import { getInput } from './Input';
 import { SystemEvents } from './SystemEvents';
 import { sendNotification } from './Notify';
+import { getPromiser } from './Promiser';
+import { getDataExport } from './DataExport';
+import { isString } from 'util';
 
 
 export default Vue.extend({
@@ -124,73 +127,70 @@ export default Vue.extend({
   },
   methods: {
     async exportJson() {
-      if (this.computedType) {
-        const filename = await getInput({ 
-          title: 'Save as JSON',
-          message: 'Enter a filename (without .json extension)',
-          value: 'json-' + Date.now(),
-          label: 'Filename',
-        });
+      const { computedType } = this;
 
-        if (!filename) {
-          return sendNotification({ message: 'Save as JSON canceled.' });
-        }
+      if (computedType) {
+        SystemEvents.trigger('loading', async () => {
+          const filename = await getInput({ 
+            title: 'Save as JSON',
+            message: 'Enter a filename (without .json extension)',
+            value: 'json-' + Date.now(),
+            label: 'Filename',
+          });
 
-        const name = filename + '.json';
-        const content = JSON.stringify(this.computedType.toJson(this.data));
+          if (!filename) {
+            return sendNotification({ message: 'Save as JSON canceled.' });
+          }
 
-        exportFile({
-          type: 'text/json',
-          name,
-          content,
+          const name = filename + '.json';
+          const content = JSON.stringify(computedType.toJson(this.data));
+
+          exportFile({
+            type: 'text/json',
+            name,
+            content,
+          });
         });
       }
     },
     async exportJs() {
-      if (this.computedType && this.registry) {
-        const filename = await getInput({ 
-          title: 'Save as JS',
-          message: 'Enter a filename (without .js extension)',
-          value: 'js-' + Date.now(),
-          label: 'Filename',
-        });
+      const { computedType, registry } = this;
 
-        if (!filename) {
-          return sendNotification({ message: 'Save as JS canceled.' });
-        }
+      if (computedType && registry) {
+        SystemEvents.trigger('loading', async () => {
+          const filename = await getInput({ 
+            title: 'Save as JS',
+            message: 'Enter a filename (without .js extension)',
+            value: 'js-' + Date.now(),
+            label: 'Filename',
+          });
 
-        const name = filename + '.js';
-        const content = this.registry.getTypeStringify(this.computedType, this.data);
+          if (!filename) {
+            return sendNotification({ message: 'Save as JS canceled.' });
+          }
 
-        exportFile({
-          type: 'text/js',
-          name,
-          content,
+          const name = filename + '.js';
+          const content = registry.getTypeStringify(computedType, this.data);
+
+          exportFile({
+            type: 'text/js',
+            name,
+            content,
+          });
         });
       }
     },
     async exportCsv() {
-      if (this.computedType) {
-        const filename = await getInput({ 
-          title: 'Save as CSV',
-          message: 'Enter a filename (without .csv extension)',
-          value: 'csv-' + Date.now(),
-          label: 'Filename',
-        });
+      SystemEvents.trigger('loading', async () => {
+        const registry = this.registry;
+        const data = this.data as any[];
+        const type = (this.computedType as ListType).options.item as ObjectType;
+        const result = await getDataExport({ registry, data, type });
 
-        if (!filename) {
-          return sendNotification({ message: 'Save as CSV canceled.' });
+        if (isString(result)) {
+          sendNotification({ message: result });
         }
-
-        const name = filename + '.csv';
-        const content = Papa.unparse(this.data as object[]);
-
-        exportFile({
-          type: 'text/csv',
-          name,
-          content,
-        });
-      }
+      });
     },
     exportOverwrite() {
       SystemEvents.trigger('replaceData', this.data);

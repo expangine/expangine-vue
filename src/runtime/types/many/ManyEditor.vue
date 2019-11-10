@@ -51,6 +51,7 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
+import { castExpression } from '../../../common';
 
 
 export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
@@ -78,11 +79,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
 
       const ex = new ExpressionBuilder();
       const destType = this.type.options[0];
-      const cast = `${innerType.getId()}:~${destType.getId()}`;
-      const castOperation = innerType.getOperations()[cast];
-      const castTransform = castOperation
-        ? ex.op(castOperation, { value: ex.get('value') })
-        : destType.getCreateExpression(ex);
+      const castTransform = castExpression(innerType, destType);
       const transform = ex
         .if(destType.getValidateExpression(ex))
         .then(ex.get('value'))

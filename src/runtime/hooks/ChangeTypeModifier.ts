@@ -2,6 +2,7 @@
 import { getBuildType } from '@/app/BuildType';
 import { TypeModifier } from '../types/TypeModifier';
 import { ExpressionBuilder } from 'expangine-runtime';
+import { castExpression } from '@/common';
 
 
 export const ChangeTypeModifier: TypeModifier = 
@@ -26,12 +27,7 @@ export const ChangeTypeModifier: TypeModifier =
         return false;
       }
 
-      const ex = new ExpressionBuilder();
-      const cast = `${type.getId()}:~${chosen.type.getId()}`;
-      const castOperation = type.getOperations()[cast];
-      const transform = castOperation
-        ? ex.op(castOperation, { value: ex.get('value') })
-        : type.getCreateExpression(ex);
+      const transform = castExpression(type, chosen.type);
 
       return {
         ...chosen,

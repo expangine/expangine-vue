@@ -14,6 +14,8 @@ export interface ListObjectTableOptions
   hideRemove?: boolean;
   hideInsert?: boolean;
   hideSort?: boolean;
+  hideExport?: boolean;
+  hideImport?: boolean;
   dark?: boolean;
   dense?: boolean;
   fixedHeader?: boolean;

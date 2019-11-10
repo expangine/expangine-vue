@@ -100,6 +100,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
   name: 'ListList',
   data: () => ({
     pageIndex: 1,
+    changes: 1,
   }),
   computed: {
     hasHeader(): boolean {
@@ -139,7 +140,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       return true;
     },
     rowCount(): number {
-      return this.value.length;
+      return this.changes ? this.value.length : 0;
     },
     pagination(): any {
       return this.settings.options.pagination;
@@ -182,7 +183,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
 
       this.value.splice(index, 1);
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
     canMove(pageIndex: number, dir: number) {
       const index = pageIndex + this.pageStart;
@@ -196,6 +197,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       this.value.splice(from, 1);
       this.value.splice(to, 0, moving);
       this.update();
+      this.changes++;
     },
     move(pageIndex: number, dir: number) {
       this.moveTo(pageIndex, pageIndex + dir + this.pageStart);
@@ -204,7 +206,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       const index = pageIndex + this.pageStart;
       this.value.splice(index, 0, this.itemType.fromJson(this.itemSettings.defaultValue));
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
     setItem(pageIndex: number, item: any) {
       const index = pageIndex + this.pageStart;
@@ -215,7 +217,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
       this.pageIndex = this.pageCount;
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
   },
 });

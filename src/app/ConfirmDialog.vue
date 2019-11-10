@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="300">
+  <v-dialog v-model="visible" max-width="500">
     <v-card>
       <v-card-title 
         class="headline" 
@@ -10,6 +10,7 @@
       ></v-card-text>
       <v-card-actions>
         <v-btn 
+          v-if="confirm"
           color="primary"
           v-html="confirm" 
           @click="handle(true)"

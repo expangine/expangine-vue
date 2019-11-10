@@ -41,6 +41,7 @@ import OperationInfoDialog from './app/OperationInfo.vue';
 
 export * from './app/BuildType';
 export * from './app/Confirm';
+export * from './app/DataExport';
 export * from './app/DataImport';
 export * from './app/DebugProgram';
 export * from './app/DescribeData';

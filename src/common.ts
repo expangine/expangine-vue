@@ -1,8 +1,12 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextType, ColorType, ColorFormat, ColorSpaceRGB, Color } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';
+import { LiveRuntime } from 'expangine-runtime-live';
+
+
+const ex = new ExpressionBuilder();
 
 
 export const ComplexityColors = [
@@ -116,26 +120,9 @@ export function formatDate<O = undefined>(
     return otherwise;
   }
 
-  const y = date.getFullYear();
-  const m = date.getMonth() + 1;
-  const d = date.getDate();
-  
-  let formatted = y + '-' + pad2(m) + '-' + pad2(d);
-
-  if (withTime)
-  { 
-    const h = date.getHours();
-    const i = date.getMinutes();
-
-    formatted += ' ' + pad2(h) + ':' + pad2(i);
-  }
-
-  return formatted;
-}
-
-export function pad2(n: number)
-{
-  return n < 10 ? '0' + n : n;
+  return withTime
+    ? DateFormat.format('Y-MM-DD HH:mm', [date, currentLocale])
+    : DateFormat.format('Y-MM-DD', [date, currentLocale]);
 }
 
 export function asArray<T>(value: T[] | T | null | undefined): T[]
@@ -222,4 +209,47 @@ export function isInPathExpression(expr: Expression): boolean
   return expr.parent 
     && isPathExpression(expr.parent)
     && expr.parent.path.indexOf(expr) !== -1;
+}
+
+const phoneticDistance = LiveRuntime.getCommand(
+  ex.op(TextOps.distance, {
+    value: ex.op(TextOps.metaphone, { value: ex.get('a') }),
+    test: ex.op(TextOps.metaphone, { value: ex.get('b') }),
+  }),
+);
+
+export function findClosestPhonetic(haystack: string[], needle: string): string
+{
+  return haystack.reduce(
+    (closest, field) => {
+      const distance = phoneticDistance({ a: needle, b: field });
+      if (closest.distance === -1 || distance < closest.distance) {
+        closest.distance = distance;
+        closest.text = field;
+      }
+      return closest;
+    }, 
+    { text: '', distance: -1 },
+  ).text;
+}
+
+export function castValue(value: any, valueType: Type, targetType: Type)
+{
+  const transform = castExpression(valueType, targetType, false);
+
+  return transform ? LiveRuntime.run(transform, { value }) : undefined;
+}
+
+export function castExpression(valueType: Type, targetType: Type): Expression;
+export function castExpression(valueType: Type, targetType: Type, createOnMissing: false): Expression | null;
+export function castExpression(valueType: Type, targetType: Type, createOnMissing: boolean = true): Expression
+{
+  const opId = `${valueType.getId()}:~${targetType.getId()}`;
+  const op = valueType.getOperations()[opId];
+
+  return op
+    ? ex.op(op, { value: ex.get('value') })
+    : createOnMissing
+      ? targetType.getCreateExpression(ex)
+      : null as unknown as Expression;
 }

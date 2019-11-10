@@ -34,6 +34,16 @@
                     Save Sort
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item v-if="canExport" @click="exportCsv">
+                  <v-list-item-content>
+                    Export CSV
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="canImport" @click="importCsv">
+                  <v-list-item-content>
+                    Import CSV
+                  </v-list-item-content>
+                </v-list-item>
               </v-list>
             </v-menu>
           </th>
@@ -130,17 +140,25 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber, ObjectType, isFunction } from 'expangine-runtime';
+import * as Papa from 'papaparse';
+import { Type, ListType, isNumber, ObjectType, TypeBuilder, isFunction } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { TypeSettings } from '../TypeVisuals';
-import { getConfirmation } from '../../../app/Confirm';
+import { TypeSettings, TypeSettingsRecord } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
+import { getInput } from '@/app/Input';
+import { sendNotification } from '@/app/Notify';
+import { exportFile } from '@/app/FileExport';
 import ObjectFormField from '../object/ObjectFormField.vue';
 import TypeInputBase from '../TypeInputBase';
+import { getConfirmation } from '@/app/Confirm';
+import { SystemEvents } from '@/app/SystemEvents';
+import { getDataImportMapping } from '@/app/DataImport';
+import { getDataExport } from '@/app/DataExport';
+import { isString } from 'util';
 
 
-export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSubs>(Array).extend({
+export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSubs>(Array).extend({
   name: 'ListObjectTable',
   components: {
     ObjectFormField,
@@ -149,13 +167,14 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     pageIndex: 1,
     sortProp: null as null | string,
     sortDesc: false,
+    changes: 1,
   }),
   computed: {
     itemType(): ObjectType {
       return this.type.options.item as ObjectType;
     },
-    itemSettings(): TypeSettings<any, any> {
-      return this.settings.sub.item;
+    itemSettings(): TypeSettingsRecord<any, any> {
+      return this.settings.sub.item as TypeSettingsRecord<any, any>;
     },
     itemName(): string {
       return this.settings.options.itemName || 'Item';
@@ -165,6 +184,12 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     },
     hasMenu(): boolean {
       return (this.canSort && (this.canSaveSort || this.canCancelSort)) || this.canAdd;
+    },
+    canExport(): boolean {
+      return !this.settings.options.hideExport && this.isCsvType;
+    },
+    canImport(): boolean {
+      return !this.settings.options.hideImport && this.isCsvType;
     },
     canSaveSort(): boolean {
       return !!this.sortProp;
@@ -193,8 +218,28 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       }
       return true;
     },
+    isCsvType(): boolean {
+      return !!this.csvType && this.csvType.acceptsType(this.type);
+    },
+    csvType(): Type | null {
+      if (!this.registry) {
+        return null;
+      }
+
+      const simples = this.registry.defs.getSimpleTypes();
+      const tp = new TypeBuilder();
+
+      return tp.list(
+        tp.object({
+          '*': tp.many(
+            tp.optional(tp.many(...simples)),
+            ...simples,
+          ),
+        },
+      ));
+    },
     rowCount(): number {
-      return this.value.length;
+      return this.changes ? this.value.length : 0;
     },
     columns(): any[] {
       return this.settings.options.columns;
@@ -257,7 +302,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
   watch: {
     value: {
       deep: true,
-      handler: () => { /* nothing */ },
+      handler() { /* ignore */ },
     },
   },
   methods: {
@@ -269,7 +314,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
 
       this.value.splice(index, 1);
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
     hasProp(prop: string): boolean {
       return prop in this.itemType.options.props;
@@ -286,6 +331,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       this.value.splice(from, 1);
       this.value.splice(to, 0, moving);
       this.update();
+      this.changes++;
     },
     move(pageIndex: number, dir: number) {
       this.moveTo(pageIndex, pageIndex + dir + this.pageStart);
@@ -294,7 +340,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       const index = pageIndex + this.pageStart;
       this.value.splice(index, 0, this.itemType.fromJson(this.itemSettings.defaultValue));
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
     setItem(pageIndex: number, item: any) {
       const index = pageIndex + this.pageStart;
@@ -305,7 +351,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
       this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
       this.pageIndex = this.pageCount;
       this.update();
-      this.$forceUpdate();
+      this.changes++;
     },
     getSortingIcon(prop: string) {
       return this.sortProp === prop
@@ -334,6 +380,44 @@ export default TypeInputBase<ListType, ListObjectTableOptions, string[], ListSub
     sortCancel() {
       this.sortProp = null;
       this.sortDesc = false;
+    },
+    exportCsv() {
+      SystemEvents.trigger('loading', async () => {
+        const result = await getDataExport({
+          namePrefix: this.settings.options.title,
+          registry: this.registry,
+          data: this.value,
+          type: this.itemType,
+        });
+
+        if (isString(result)) {
+          sendNotification({ message: result });
+        }
+      });
+    },
+    importCsv() {
+      SystemEvents.trigger('loading', async () => {
+        const result = await getDataImportMapping({
+          registry: this.registry,
+          type: this.itemType,
+          typeSettings: this.itemSettings,
+        });
+
+        if (isString(result)) {
+          return sendNotification({ message: result });
+        }
+
+        switch (result.action) {
+          case 'append':
+            this.value.push(...result.data);
+            break;
+        case 'replace':
+            this.value.splice(0, this.value.length, ...result.data);
+            break;
+        }
+
+        this.update();
+      });
     },
   },
 });

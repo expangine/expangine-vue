@@ -74,6 +74,8 @@ const fields: SimpleFieldSettings<ListObjectTableOptions> = [
   { name: 'hideRemove', type: 'boolean', label: 'Hide Remove', defaultValue: false },
   { name: 'hideInsert', type: 'boolean', label: 'Hide Insert', defaultValue: false },
   { name: 'hideSort', type: 'boolean', label: 'Hide Sort', defaultValue: false },
+  { name: 'hideImport', type: 'boolean', label: 'Hide CSV Import', defaultValue: false },
+  { name: 'hideExport', type: 'boolean', label: 'Hide CSV Export', defaultValue: false },
   { name: 'height', type: 'number', label: 'Max Height' },
   { name: 'fixedHeader', type: 'boolean', label: 'Fixed Header', defaultValue: false },
   { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },

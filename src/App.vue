@@ -515,8 +515,8 @@ import { friendlyList, SimpleFieldOption } from '@/common';
 import { getPromiser } from './app/Promiser';
 import { Store } from './app/Store';
 import { Trie } from './app/Trie';
-import Registry from './runtime';
 import { SystemEvents } from './app/SystemEvents';
+import Registry from './runtime';
 
 
 
@@ -669,6 +669,7 @@ export default Vue.extend({
     (window as any).ex = ex;
 
     SystemEvents.on('replaceData', this.replaceData);
+    SystemEvents.on('loading', this.handleLoading);
 
     this.loadExamples();
 
@@ -795,6 +796,10 @@ export default Vue.extend({
       this.showReturnExpressions = !this.showReturnExpressions;
     },
     // LOADING
+    async handleLoading(eventType: 'loading', loadable: () => Promise<any>)
+    {
+      this.loadable(loadable);
+    },
     async loadable<R = any>(callback: () => R | Promise<R>): Promise<R | undefined>
     {
       let result: R | undefined;

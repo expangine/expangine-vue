@@ -106,6 +106,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
     pageIndex: 1,
     width: 1,
     id: 0,
+    changes: 1,
   }),
   computed: {
     minKeyWidth(): number {
@@ -139,7 +140,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       return MIN_COLUMN_TO_COLUMNS[clamped];
     },
     rowCount(): number {
-      return this.entries.length;
+      return this.changes ? this.entries.length : 0;
     },
     pagination(): any {
       return this.settings.options.pagination;
@@ -215,6 +216,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       this.value.delete(entry.key);
       this.entries.splice(index, 1);
       this.update();
+      this.changes++;
     },
     addEntry() {
       const { key, value } = this.type.options;
@@ -235,6 +237,8 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
         this.value.set(entry.key, entry.value);
         this.update();
       }
+      
+      this.changes++;
     },
   },
 });
