@@ -70,6 +70,10 @@ import TypeSettingsBase from '../TypeSettingsBase';
 
 const fields: SimpleFieldSettings<ListObjectTableOptions> = [
   { name: 'title', type: 'text', label: 'Title', defaultValue: '' },
+  { name: 'itemName', type: 'text', label: 'Item Name', defaultValue: 'Item' },
+  { name: 'hideRemove', type: 'boolean', label: 'Hide Remove', defaultValue: false },
+  { name: 'hideInsert', type: 'boolean', label: 'Hide Insert', defaultValue: false },
+  { name: 'hideSort', type: 'boolean', label: 'Hide Sort', defaultValue: false },
   { name: 'height', type: 'number', label: 'Max Height' },
   { name: 'fixedHeader', type: 'boolean', label: 'Fixed Header', defaultValue: false },
   { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },

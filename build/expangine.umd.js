@@ -63596,12 +63596,12 @@ var ListObjectTable_component = Object(componentNormalizer["a" /* default */])(
 
 installComponents_default()(ListObjectTable_component, {VBtn: VBtn["a" /* default */],VIcon: VIcon["a" /* default */],VList: VList_VList["a" /* default */],VListItem: VListItem["a" /* default */],VListItemContent: VList["a" /* VListItemContent */],VMenu: VMenu["a" /* default */],VPagination: VPagination_VPagination,VSimpleTable: VSimpleTable["a" /* default */]})
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/list/ListObjectTableSettings.vue?vue&type=template&id=ca65a280&
-var ListObjectTableSettingsvue_type_template_id_ca65a280_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-list',[_c('v-list-item',[_c('v-list-item-content',[_c('ex-simple-fields',{attrs:{"fields":_vm.optionFields,"read-only":_vm.readOnly},model:{value:(_vm.computedValue),callback:function ($$v) {_vm.computedValue=$$v},expression:"computedValue"}})],1)],1),_c('v-list-item',[_c('v-list-item-content',[_c('v-simple-table',[_c('thead',[_c('th',[_vm._v("Order")]),_c('th',[_vm._v("Property")]),_c('th',[_vm._v("Label")]),_c('th',[_vm._v("Align")])]),_c('tbody',[_vm._l((_vm.value.columns),function(col,index){return [_c('tr',{key:col.prop},[_c('td',[_c('v-btn',{attrs:{"icon":"","block":"","height":"32"},on:{"click":function($event){return _vm.move(index, -1)}}},[_c('v-icon',[_vm._v("mdi-chevron-up")])],1),_c('v-btn',{attrs:{"icon":"","block":"","height":"32"},on:{"click":function($event){return _vm.move(index, 1)}}},[_c('v-icon',[_vm._v("mdi-chevron-down")])],1)],1),_c('td',[_vm._v("\n                "+_vm._s(col.prop)+"\n              ")]),_c('td',{staticClass:"pa-1"},[_c('v-text-field',{attrs:{"filled":"","solo":"","hide-details":""},on:{"input":_vm.input},model:{value:(col.label),callback:function ($$v) {_vm.$set(col, "label", $$v)},expression:"col.label"}})],1),_c('td',{staticClass:"pa-1"},[_c('v-select',{attrs:{"filled":"","solo":"","hide-details":"","clearable":"","items":_vm.alignments},on:{"input":_vm.input},model:{value:(col.align),callback:function ($$v) {_vm.$set(col, "align", $$v)},expression:"col.align"}})],1)])]})],2)])],1)],1)],1)}
-var ListObjectTableSettingsvue_type_template_id_ca65a280_staticRenderFns = []
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"d680263c-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/list/ListObjectTableSettings.vue?vue&type=template&id=cd26598a&
+var ListObjectTableSettingsvue_type_template_id_cd26598a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-list',[_c('v-list-item',[_c('v-list-item-content',[_c('ex-simple-fields',{attrs:{"fields":_vm.optionFields,"read-only":_vm.readOnly},model:{value:(_vm.computedValue),callback:function ($$v) {_vm.computedValue=$$v},expression:"computedValue"}})],1)],1),_c('v-list-item',[_c('v-list-item-content',[_c('v-simple-table',[_c('thead',[_c('th',[_vm._v("Order")]),_c('th',[_vm._v("Property")]),_c('th',[_vm._v("Label")]),_c('th',[_vm._v("Align")])]),_c('tbody',[_vm._l((_vm.value.columns),function(col,index){return [_c('tr',{key:col.prop},[_c('td',[_c('v-btn',{attrs:{"icon":"","block":"","height":"32"},on:{"click":function($event){return _vm.move(index, -1)}}},[_c('v-icon',[_vm._v("mdi-chevron-up")])],1),_c('v-btn',{attrs:{"icon":"","block":"","height":"32"},on:{"click":function($event){return _vm.move(index, 1)}}},[_c('v-icon',[_vm._v("mdi-chevron-down")])],1)],1),_c('td',[_vm._v("\n                "+_vm._s(col.prop)+"\n              ")]),_c('td',{staticClass:"pa-1"},[_c('v-text-field',{attrs:{"filled":"","solo":"","hide-details":""},on:{"input":_vm.input},model:{value:(col.label),callback:function ($$v) {_vm.$set(col, "label", $$v)},expression:"col.label"}})],1),_c('td',{staticClass:"pa-1"},[_c('v-select',{attrs:{"filled":"","solo":"","hide-details":"","clearable":"","items":_vm.alignments},on:{"input":_vm.input},model:{value:(col.align),callback:function ($$v) {_vm.$set(col, "align", $$v)},expression:"col.align"}})],1)])]})],2)])],1)],1)],1)}
+var ListObjectTableSettingsvue_type_template_id_cd26598a_staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/runtime/types/list/ListObjectTableSettings.vue?vue&type=template&id=ca65a280&
+// CONCATENATED MODULE: ./src/runtime/types/list/ListObjectTableSettings.vue?vue&type=template&id=cd26598a&
 
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/vuetify-loader/lib/loader.js!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/runtime/types/list/ListObjectTableSettings.vue?vue&type=script&lang=ts&
 
@@ -63611,6 +63611,26 @@ var ListObjectTableSettingsvue_type_script_lang_ts_fields = [{
   type: 'text',
   label: 'Title',
   defaultValue: ''
+}, {
+  name: 'itemName',
+  type: 'text',
+  label: 'Item Name',
+  defaultValue: 'Item'
+}, {
+  name: 'hideRemove',
+  type: 'boolean',
+  label: 'Hide Remove',
+  defaultValue: false
+}, {
+  name: 'hideInsert',
+  type: 'boolean',
+  label: 'Hide Insert',
+  defaultValue: false
+}, {
+  name: 'hideSort',
+  type: 'boolean',
+  label: 'Hide Sort',
+  defaultValue: false
 }, {
   name: 'height',
   type: 'number',
@@ -63763,8 +63783,8 @@ var _alignments = [{
 
 var ListObjectTableSettings_component = Object(componentNormalizer["a" /* default */])(
   list_ListObjectTableSettingsvue_type_script_lang_ts_,
-  ListObjectTableSettingsvue_type_template_id_ca65a280_render,
-  ListObjectTableSettingsvue_type_template_id_ca65a280_staticRenderFns,
+  ListObjectTableSettingsvue_type_template_id_cd26598a_render,
+  ListObjectTableSettingsvue_type_template_id_cd26598a_staticRenderFns,
   false,
   null,
   null,
