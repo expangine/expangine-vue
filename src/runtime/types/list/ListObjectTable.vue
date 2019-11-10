@@ -1,6 +1,9 @@
 <template>
   <v-simple-table v-bind="settings.options">
     <template #default>
+      <colgroup>
+        <col style="width: 70px">
+      </colgroup>
       <thead>
         <tr v-if="settings.options.title">
           <td colspan="100%">
