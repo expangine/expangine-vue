@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.d5f86a7dbda6f0a02fe2ad66917b54c4.js"
+  "precache-manifest.1005d9456b72c57c43df5272ae1464af.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "expangine-vue"});
