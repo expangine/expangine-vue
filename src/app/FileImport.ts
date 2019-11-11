@@ -107,10 +107,25 @@ export function getFile(options: FileImportOptions = {}): Promise<FileImportResu
         status: FileImportStatus.NONE_SELECTED,
       });
     }
+
+    finput.remove();
   };
 
   finput.click();
-  finput.remove();
+
+  document.body.onfocus = (e) =>
+  {
+    if (!finput.files || finput.files.length === 0) 
+    {
+      resolve({
+        status: FileImportStatus.NONE_SELECTED,
+      });
+    }
+
+    finput.remove();
+
+    document.body.onfocus = null;
+  };
 
   return promise;
 }

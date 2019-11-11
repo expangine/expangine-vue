@@ -316,7 +316,7 @@
         :indeterminate="isLoading"
         absolute
         bottom
-        color="primary"
+        color="blue darken-1"
       ></v-progress-linear>
     </v-app-bar>
 
@@ -1031,7 +1031,7 @@ export default Vue.extend({
     // EXPORT
     async exportJson() 
     {
-      const exportResult = getProjectExport({
+      const exportResult = await getProjectExport({
         project: this,
         transcoders: this.store,
       });

@@ -37967,52 +37967,76 @@ function getDataImport(_x) {
 function _getDataImport() {
   _getDataImport = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee2(_ref) {
+  regeneratorRuntime.mark(function _callee3(_ref) {
     var registry, type, worker, importResult, _getPromiser, promise, resolve;
 
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             registry = _ref.registry, type = _ref.type, worker = _ref.worker;
-            _context2.next = 3;
+            _context3.next = 3;
             return Object(_FileImport__WEBPACK_IMPORTED_MODULE_8__[/* getFile */ "b"])({
               accept: '.csv'
             });
 
           case 3:
-            importResult = _context2.sent;
+            importResult = _context3.sent;
 
             if (importResult.file) {
-              _context2.next = 6;
+              _context3.next = 6;
               break;
             }
 
-            return _context2.abrupt("return", 'No file selected.');
+            return _context3.abrupt("return", 'No file selected.');
 
           case 6:
             _getPromiser = Object(_Promiser__WEBPACK_IMPORTED_MODULE_9__[/* getPromiser */ "a"])(), promise = _getPromiser.promise, resolve = _getPromiser.resolve;
             papaparse__WEBPACK_IMPORTED_MODULE_6__["parse"](importResult.file, {
               worker: worker,
               header: true,
-              complete: function () {
-                var _complete = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
+              error: function () {
+                var _error2 = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
                 /*#__PURE__*/
-                regeneratorRuntime.mark(function _callee(_ref3) {
-                  var data, meta, fields, settings, dataType, dataSettings, _dataType, _dataSettings;
-
+                regeneratorRuntime.mark(function _callee(_error) {
                   return regeneratorRuntime.wrap(function _callee$(_context) {
                     while (1) {
                       switch (_context.prev = _context.next) {
                         case 0:
+                          resolve(_error.message);
+
+                        case 1:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee);
+                }));
+
+                function error(_x3) {
+                  return _error2.apply(this, arguments);
+                }
+
+                return error;
+              }(),
+              complete: function () {
+                var _complete = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
+                /*#__PURE__*/
+                regeneratorRuntime.mark(function _callee2(_ref3) {
+                  var data, meta, fields, settings, dataType, dataSettings, _dataType, _dataSettings;
+
+                  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    while (1) {
+                      switch (_context2.prev = _context2.next) {
+                        case 0:
                           data = _ref3.data, meta = _ref3.meta;
 
                           if (!meta.aborted) {
-                            _context.next = 3;
+                            _context2.next = 3;
                             break;
                           }
 
-                          return _context.abrupt("return", resolve('There was a problem parsing the CSV.'));
+                          return _context2.abrupt("return", resolve('There was a problem parsing the CSV.'));
 
                         case 3:
                           fields = [{
@@ -38048,7 +38072,7 @@ function _getDataImport() {
                             });
                           }
 
-                          _context.next = 7;
+                          _context2.next = 7;
                           return Object(_SimpleInput__WEBPACK_IMPORTED_MODULE_10__[/* getSimpleInput */ "a"])({
                             value: {
                               columns: {},
@@ -38059,14 +38083,14 @@ function _getDataImport() {
                           });
 
                         case 7:
-                          settings = _context.sent;
+                          settings = _context2.sent;
 
                           if (settings) {
-                            _context.next = 10;
+                            _context2.next = 10;
                             break;
                           }
 
-                          return _context.abrupt("return", resolve('CSV Import canceled.'));
+                          return _context2.abrupt("return", resolve('CSV Import canceled.'));
 
                         case 10:
                           data.forEach(function (row) {
@@ -38116,27 +38140,27 @@ function _getDataImport() {
 
                         case 12:
                         case "end":
-                          return _context.stop();
+                          return _context2.stop();
                       }
                     }
-                  }, _callee);
+                  }, _callee2);
                 }));
 
-                function complete(_x3) {
+                function complete(_x4) {
                   return _complete.apply(this, arguments);
                 }
 
                 return complete;
               }()
             });
-            return _context2.abrupt("return", promise);
+            return _context3.abrupt("return", promise);
 
           case 9:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2);
+    }, _callee3);
   }));
   return _getDataImport.apply(this, arguments);
 }
@@ -38148,57 +38172,81 @@ function getDataImportMapping(_x2) {
 function _getDataImportMapping() {
   _getDataImportMapping = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4(_ref2) {
+  regeneratorRuntime.mark(function _callee6(_ref2) {
     var registry, type, typeSettings, worker, importResult, _getPromiser2, promise, resolve;
 
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+    return regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
             registry = _ref2.registry, type = _ref2.type, typeSettings = _ref2.typeSettings, worker = _ref2.worker;
-            _context4.next = 3;
+            _context6.next = 3;
             return Object(_FileImport__WEBPACK_IMPORTED_MODULE_8__[/* getFile */ "b"])({
               accept: '.csv'
             });
 
           case 3:
-            importResult = _context4.sent;
+            importResult = _context6.sent;
 
             if (importResult.file) {
-              _context4.next = 6;
+              _context6.next = 6;
               break;
             }
 
-            return _context4.abrupt("return", 'No file selected.');
+            return _context6.abrupt("return", 'No file selected.');
 
           case 6:
             _getPromiser2 = Object(_Promiser__WEBPACK_IMPORTED_MODULE_9__[/* getPromiser */ "a"])(), promise = _getPromiser2.promise, resolve = _getPromiser2.resolve;
             papaparse__WEBPACK_IMPORTED_MODULE_6__["parse"](importResult.file, {
               worker: worker,
               header: true,
+              error: function () {
+                var _error4 = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
+                /*#__PURE__*/
+                regeneratorRuntime.mark(function _callee4(_error3) {
+                  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                      switch (_context4.prev = _context4.next) {
+                        case 0:
+                          resolve(_error3.message);
+
+                        case 1:
+                        case "end":
+                          return _context4.stop();
+                      }
+                    }
+                  }, _callee4);
+                }));
+
+                function error(_x5) {
+                  return _error4.apply(this, arguments);
+                }
+
+                return error;
+              }(),
               complete: function () {
                 var _complete2 = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"])(
                 /*#__PURE__*/
-                regeneratorRuntime.mark(function _callee3(_ref4) {
+                regeneratorRuntime.mark(function _callee5(_ref4) {
                   var data, meta, VALUE_NONE, VALUE_DEFAULT, props, settings, errors, warnings, converted, isEmpty, proceed;
-                  return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                  return regeneratorRuntime.wrap(function _callee5$(_context5) {
                     while (1) {
-                      switch (_context3.prev = _context3.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
                           data = _ref4.data, meta = _ref4.meta;
 
                           if (!meta.aborted) {
-                            _context3.next = 3;
+                            _context5.next = 3;
                             break;
                           }
 
-                          return _context3.abrupt("return", resolve('There was a problem parsing the CSV.'));
+                          return _context5.abrupt("return", resolve('There was a problem parsing the CSV.'));
 
                         case 3:
                           VALUE_NONE = '';
                           VALUE_DEFAULT = '$$default$$';
                           props = type.options.props;
-                          _context3.next = 8;
+                          _context5.next = 8;
                           return Object(_SimpleInput__WEBPACK_IMPORTED_MODULE_10__[/* getSimpleInput */ "a"])({
                             value: {
                               action: 'append',
@@ -38246,14 +38294,14 @@ function _getDataImportMapping() {
                           });
 
                         case 8:
-                          settings = _context3.sent;
+                          settings = _context5.sent;
 
                           if (settings) {
-                            _context3.next = 11;
+                            _context5.next = 11;
                             break;
                           }
 
-                          return _context3.abrupt("return", resolve('CSV Import canceled.'));
+                          return _context5.abrupt("return", resolve('CSV Import canceled.'));
 
                         case 11:
                           errors = [];
@@ -38310,11 +38358,11 @@ function _getDataImportMapping() {
                           });
 
                           if (!(errors.length > 0)) {
-                            _context3.next = 22;
+                            _context5.next = 22;
                             break;
                           }
 
-                          _context3.next = 19;
+                          _context5.next = 19;
                           return Object(_Confirm__WEBPACK_IMPORTED_MODULE_12__[/* getConfirmation */ "c"])({
                             title: 'Invalid values were found',
                             message: 'The file contained invalid values that could not be converted to the expected data types.' + '<br><br><strong>Errors:</strong><br>' + '<ul><li>' + errors.join('</li><li>') + '</li></ul>' + (warnings.length === 0 ? '' : '<br><strong>Warnings:</strong><br>' + '<ul><li>' + warnings.join('</li><li>') + '</li></ul>'),
@@ -38323,15 +38371,15 @@ function _getDataImportMapping() {
                           });
 
                         case 19:
-                          return _context3.abrupt("return", resolve('Importing canceled due to invalid values.'));
+                          return _context5.abrupt("return", resolve('Importing canceled due to invalid values.'));
 
                         case 22:
                           if (!(warnings.length > 0)) {
-                            _context3.next = 31;
+                            _context5.next = 31;
                             break;
                           }
 
-                          _context3.next = 25;
+                          _context5.next = 25;
                           return Object(_Confirm__WEBPACK_IMPORTED_MODULE_12__[/* getConfirmation */ "c"])({
                             title: 'Just to let you know...',
                             message: 'The file contained values that had to be converted. Proceed?' + '<br><br><strong>Warnings:</strong><br>' + '<ul><li>' + warnings.join('</li><li>') + '</li></ul>',
@@ -38340,50 +38388,50 @@ function _getDataImportMapping() {
                           });
 
                         case 25:
-                          proceed = _context3.sent;
+                          proceed = _context5.sent;
 
                           if (proceed) {
-                            _context3.next = 28;
+                            _context5.next = 28;
                             break;
                           }
 
-                          return _context3.abrupt("return", resolve('Importing canceled due to invalid values.'));
+                          return _context5.abrupt("return", resolve('Importing canceled due to invalid values.'));
 
                         case 28:
-                          return _context3.abrupt("return", resolve({
+                          return _context5.abrupt("return", resolve({
                             action: settings.action,
                             data: converted
                           }));
 
                         case 31:
-                          return _context3.abrupt("return", resolve({
+                          return _context5.abrupt("return", resolve({
                             action: settings.action,
                             data: converted
                           }));
 
                         case 32:
                         case "end":
-                          return _context3.stop();
+                          return _context5.stop();
                       }
                     }
-                  }, _callee3);
+                  }, _callee5);
                 }));
 
-                function complete(_x4) {
+                function complete(_x6) {
                   return _complete2.apply(this, arguments);
                 }
 
                 return complete;
               }()
             });
-            return _context4.abrupt("return", promise);
+            return _context6.abrupt("return", promise);
 
           case 9:
           case "end":
-            return _context4.stop();
+            return _context6.stop();
         }
       }
-    }, _callee4);
+    }, _callee6);
   }));
   return _getDataImportMapping.apply(this, arguments);
 }
@@ -72919,10 +72967,23 @@ function getFile() {
         status: FileImportStatus.NONE_SELECTED
       });
     }
+
+    finput.remove();
   };
 
   finput.click();
-  finput.remove();
+
+  document.body.onfocus = function (e) {
+    if (!finput.files || finput.files.length === 0) {
+      resolve({
+        status: FileImportStatus.NONE_SELECTED
+      });
+    }
+
+    finput.remove();
+    document.body.onfocus = null;
+  };
+
   return promise;
 }
 

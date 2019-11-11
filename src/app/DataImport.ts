@@ -45,6 +45,11 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
     
     header: true,
 
+    error: async (error) =>
+    {
+      resolve(error.message);
+    },
+
     complete: async ({ data, meta }: { data: any, meta: { fields: string[], aborted: boolean }}) => 
     {
       if (meta.aborted)
@@ -174,6 +179,11 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
     worker,
     
     header: true,
+
+    error: async (error) =>
+    {
+      resolve(error.message);
+    },
 
     complete: async ({ data, meta }: { data: any[], meta: { fields: string[], aborted: boolean }}) => 
     {
