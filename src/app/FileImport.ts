@@ -34,6 +34,7 @@ export function getFile(options: FileImportOptions = {}): Promise<FileImportResu
   finput.type = 'file';
   finput.multiple = true;
   finput.accept = options.accept || '';
+
   finput.onchange = (e) => 
   {
     if (finput.files && finput.files.length > 0) 
@@ -107,25 +108,28 @@ export function getFile(options: FileImportOptions = {}): Promise<FileImportResu
         status: FileImportStatus.NONE_SELECTED,
       });
     }
+  };
 
-    finput.remove();
+  finput.onclick = () =>
+  {
+    document.body.onfocus = () =>
+    {
+      document.body.onfocus = null;
+
+      setTimeout(() => 
+      {
+        if (!finput.files || finput.files.length === 0) 
+        {
+          resolve({
+            status: FileImportStatus.NONE_SELECTED,
+          });
+        }
+
+      }, 1000);
+    };
   };
 
   finput.click();
-
-  document.body.onfocus = (e) =>
-  {
-    if (!finput.files || finput.files.length === 0) 
-    {
-      resolve({
-        status: FileImportStatus.NONE_SELECTED,
-      });
-    }
-
-    finput.remove();
-
-    document.body.onfocus = null;
-  };
 
   return promise;
 }

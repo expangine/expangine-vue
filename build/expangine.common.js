@@ -72967,23 +72967,22 @@ function getFile() {
         status: FileImportStatus.NONE_SELECTED
       });
     }
+  };
 
-    finput.remove();
+  finput.onclick = function () {
+    document.body.onfocus = function () {
+      document.body.onfocus = null;
+      setTimeout(function () {
+        if (!finput.files || finput.files.length === 0) {
+          resolve({
+            status: FileImportStatus.NONE_SELECTED
+          });
+        }
+      }, 1000);
+    };
   };
 
   finput.click();
-
-  document.body.onfocus = function (e) {
-    if (!finput.files || finput.files.length === 0) {
-      resolve({
-        status: FileImportStatus.NONE_SELECTED
-      });
-    }
-
-    finput.remove();
-    document.body.onfocus = null;
-  };
-
   return promise;
 }
 
