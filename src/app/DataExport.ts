@@ -31,18 +31,30 @@ export async function getDataExport({ data, type, registry, namePrefix }: DataEx
     return 'Export CSV canceled.';
   }
 
+  const columnMap: any = {};
+
+  data.forEach((row) =>
+  {
+    for (const prop in row)
+    {
+      columnMap[prop] = true;
+    }
+  });
+
+  const columns: string[] = Object.keys(columnMap);
   const converted: any[] = [];
 
   data.forEach((row) => 
   {
     const convert: any = {};
 
-    for (const prop in row) 
+    for (const prop of columns)
     {
       const value = row[prop];
       const propType = type 
         ? type.options.props[prop] || registry.defs.describe(value)
         : registry.defs.describe(value);
+      const valueType = propType.getExactType(value);
 
       if (value === null || value === undefined)
       {
@@ -54,15 +66,13 @@ export async function getDataExport({ data, type, registry, namePrefix }: DataEx
       }
       else if (isDate(value))
       {
-        const withTime = propType instanceof DateType
-          ? propType.options.withTime
-          : false;
+        const withTime = valueType instanceof DateType && valueType.options.withTime;
 
         convert[prop] = formatDate(value, '', withTime);
       }
       else
       {
-        convert[prop] = castValue(value, propType, TextType.baseType);
+        convert[prop] = castValue(value, valueType, TextType.baseType);
       }
     }
 
@@ -70,7 +80,7 @@ export async function getDataExport({ data, type, registry, namePrefix }: DataEx
   });
 
   const name = filename + '.csv';
-  const content = Papa.unparse(converted);
+  const content = Papa.unparse(converted, { columns });
 
   exportFile({
     type: 'text/csv',

@@ -3214,20 +3214,29 @@ module.exports = differenceInMonths
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getDataExport; });
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("ac6a");
-/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("96cf");
-/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("3b8d");
-/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("369b");
-/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(papaparse__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("bf7e");
-/* harmony import */ var _FileExport__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("b9a8");
-/* harmony import */ var expangine_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("85c5");
-/* harmony import */ var expangine_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(expangine_runtime__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("8049");
-/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("3022");
-/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(util__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var core_js_modules_es7_symbol_async_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("ac4d");
+/* harmony import */ var core_js_modules_es7_symbol_async_iterator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_symbol_async_iterator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("8a81");
+/* harmony import */ var core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_symbol__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("456d");
+/* harmony import */ var core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_object_keys__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("ac6a");
+/* harmony import */ var core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_iterable__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("96cf");
+/* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("3b8d");
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("369b");
+/* harmony import */ var papaparse__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(papaparse__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Input__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("bf7e");
+/* harmony import */ var _FileExport__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("b9a8");
+/* harmony import */ var expangine_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("85c5");
+/* harmony import */ var expangine_runtime__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(expangine_runtime__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("8049");
+/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("3022");
+/* harmony import */ var util__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(util__WEBPACK_IMPORTED_MODULE_11__);
+
+
+
 
 
 
@@ -3242,17 +3251,17 @@ function getDataExport(_x) {
 }
 
 function _getDataExport() {
-  _getDataExport = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"])(
+  _getDataExport = Object(_Users_phil_Documents_GitHub_expangine_vue_node_modules_babel_runtime_corejs2_helpers_esm_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"])(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee(_ref) {
-    var data, type, registry, namePrefix, filename, converted, name, content;
+    var data, type, registry, namePrefix, filename, columnMap, columns, converted, name, content;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             data = _ref.data, type = _ref.type, registry = _ref.registry, namePrefix = _ref.namePrefix;
             _context.next = 3;
-            return Object(_Input__WEBPACK_IMPORTED_MODULE_4__[/* getInput */ "a"])({
+            return Object(_Input__WEBPACK_IMPORTED_MODULE_7__[/* getInput */ "a"])({
               title: 'Export CSV',
               message: 'Enter a filename (without .csv extension)',
               value: (namePrefix || 'csv') + '-' + Date.now(),
@@ -3270,38 +3279,67 @@ function _getDataExport() {
             return _context.abrupt("return", 'Export CSV canceled.');
 
           case 6:
+            columnMap = {};
+            data.forEach(function (row) {
+              for (var prop in row) {
+                columnMap[prop] = true;
+              }
+            });
+            columns = Object.keys(columnMap);
             converted = [];
             data.forEach(function (row) {
               var convert = {};
+              var _iteratorNormalCompletion = true;
+              var _didIteratorError = false;
+              var _iteratorError = undefined;
 
-              for (var prop in row) {
-                var value = row[prop];
-                var propType = type ? type.options.props[prop] || registry.defs.describe(value) : registry.defs.describe(value);
+              try {
+                for (var _iterator = columns[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                  var prop = _step.value;
+                  var value = row[prop];
+                  var propType = type ? type.options.props[prop] || registry.defs.describe(value) : registry.defs.describe(value);
+                  var valueType = propType.getExactType(value);
 
-                if (value === null || value === undefined) {
-                  convert[prop] = '';
-                } else if (Object(expangine_runtime__WEBPACK_IMPORTED_MODULE_6__["isString"])(value)) {
-                  convert[prop] = value;
-                } else if (Object(util__WEBPACK_IMPORTED_MODULE_8__["isDate"])(value)) {
-                  var withTime = propType instanceof expangine_runtime__WEBPACK_IMPORTED_MODULE_6__["DateType"] ? propType.options.withTime : false;
-                  convert[prop] = Object(_common__WEBPACK_IMPORTED_MODULE_7__[/* formatDate */ "g"])(value, '', withTime);
-                } else {
-                  convert[prop] = Object(_common__WEBPACK_IMPORTED_MODULE_7__[/* castValue */ "e"])(value, propType, expangine_runtime__WEBPACK_IMPORTED_MODULE_6__["TextType"].baseType);
+                  if (value === null || value === undefined) {
+                    convert[prop] = '';
+                  } else if (Object(expangine_runtime__WEBPACK_IMPORTED_MODULE_9__["isString"])(value)) {
+                    convert[prop] = value;
+                  } else if (Object(util__WEBPACK_IMPORTED_MODULE_11__["isDate"])(value)) {
+                    var withTime = valueType instanceof expangine_runtime__WEBPACK_IMPORTED_MODULE_9__["DateType"] && valueType.options.withTime;
+                    convert[prop] = Object(_common__WEBPACK_IMPORTED_MODULE_10__[/* formatDate */ "g"])(value, '', withTime);
+                  } else {
+                    convert[prop] = Object(_common__WEBPACK_IMPORTED_MODULE_10__[/* castValue */ "e"])(value, valueType, expangine_runtime__WEBPACK_IMPORTED_MODULE_9__["TextType"].baseType);
+                  }
+                }
+              } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                  }
+                } finally {
+                  if (_didIteratorError) {
+                    throw _iteratorError;
+                  }
                 }
               }
 
               converted.push(convert);
             });
             name = filename + '.csv';
-            content = papaparse__WEBPACK_IMPORTED_MODULE_3__["unparse"](converted);
-            Object(_FileExport__WEBPACK_IMPORTED_MODULE_5__[/* exportFile */ "a"])({
+            content = papaparse__WEBPACK_IMPORTED_MODULE_6__["unparse"](converted, {
+              columns: columns
+            });
+            Object(_FileExport__WEBPACK_IMPORTED_MODULE_8__[/* exportFile */ "a"])({
               type: 'text/csv',
               name: name,
               content: content
             });
             return _context.abrupt("return", true);
 
-          case 12:
+          case 15:
           case "end":
             return _context.stop();
         }
