@@ -96,7 +96,7 @@ export default ExpressionBase<OperationExpression>().extend({
     forTypeOperations(): ListOptionsTokenized<OperationPair> {
       return this.startingValueType
         ? this.registry.defs
-          .getOperationsForType(this.startingValueType)
+          .getOperationsForType(this.startingValueType, true)
           .map((pair) => getListOption(this.registry, pair))
         : [];
     },
