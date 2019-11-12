@@ -21,7 +21,7 @@
 
         <ex-expression-clipboard :registry="registry">
           <template #default="{ copy }">
-            <v-list-item @click="copy(value)">
+            <v-list-item @click="copy(value)" v-if="registry.isValidExpressionCopy(value)">
               <v-list-item-content>
                 <v-list-item-title>
                   Copy {{ visuals.name }}

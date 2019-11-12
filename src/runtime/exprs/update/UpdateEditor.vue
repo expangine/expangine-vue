@@ -1,85 +1,35 @@
 <template>
-  <table v-if="multiline" class="ex-table">
-    <tbody>
-      <tr>
-        <td>
-          <ex-expression-menu
-            v-bind="$props"
-            v-on="$listeners"
-            text="Update"
-            tooltip="Update the variable to the given value"
-          ></ex-expression-menu>
-        </td>
-        <td>
-          <ex-path-editor
-            v-bind="$props"
-            v-on="$listeners"
-            :path="value.path"
-          ></ex-path-editor>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <ex-chip-menu
-            text="To"
-            tooltip="The value to set the above variable to"
-          ></ex-chip-menu>
-        </td>
-        <td>
-          <ex-expression
-            v-bind="$props"
-            :required-type="valueType"
-            :value="value.value"
-            :context="valueContext"
-            @input="setValue"
-            @remove="clearValue"
-          ></ex-expression>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <table v-else class="ex-table">
-    <tbody>
-      <tr>
-        <td>
-          <ex-expression-menu
-            v-bind="$props"
-            v-on="$listeners"
-            text="Update"
-            tooltip="Update the variable to the given value"
-          ></ex-expression-menu>
-        </td>
-        <td class="centered-cell">
-          <span class="d-inline-block pr-3 my-3">
-            <ex-path-editor
-              v-bind="$props"
-              v-on="$listeners"
-              :path="value.path"
-            ></ex-path-editor>
-          </span>
+  <div class="ex-center-aligned pl-3">
 
-          <span class="d-inline-block my-3">
-            <ex-chip-menu
-              class="my-3"
-              text="To"
-              tooltip="The value to set the above variable to"
-            ></ex-chip-menu>
-          </span>
+    <ex-expression-menu
+      v-bind="$props"
+      v-on="$listeners"
+      text="Update"
+      tooltip="Update the variable to the given value"
+    ></ex-expression-menu>
 
-          <span class="d-inline-block my-3">
-            <ex-expression
-              v-bind="$props"
-              :required-type="valueType"
-              :value="value.value"
-              :context="valueContext"
-              @input="setValue"
-              @remove="clearValue"
-            ></ex-expression>
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <ex-path-editor
+      v-bind="$props"
+      v-on="$listeners"
+      class="mr-3"
+      :path="value.path"
+    ></ex-path-editor>
+
+    <ex-chip-menu
+      text="To"
+      tooltip="The value to set the above variable to"
+    ></ex-chip-menu>
+
+    <ex-expression
+      v-bind="$props"
+      :required-type="valueType"
+      :value="value.value"
+      :context="valueContext"
+      @input="setValue"
+      @remove="clearValue"
+    ></ex-expression>
+
+  </div>
 </template>
 
 <script lang="ts">
@@ -114,10 +64,3 @@ export default ExpressionBase<UpdateExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.centered-cell {
-  display: flex;
-  align-items: flex-start;
-}
-</style>

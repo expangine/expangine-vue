@@ -82,7 +82,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       const castTransform = castExpression(innerType, destType);
       const transform = ex
         .if(destType.getValidateExpression(ex))
-        .then(ex.get('value'))
+        .than(ex.get('value'))
         .else(castTransform)
       ;
 
@@ -123,7 +123,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
 
         transform = ex
           .if(ex.not(isValid))
-          .then(event.transform)
+          .than(event.transform)
           .else(ex.get('value'))
         ;
       }

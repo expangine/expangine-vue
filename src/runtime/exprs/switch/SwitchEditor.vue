@@ -190,6 +190,7 @@ export default ExpressionBase<SwitchExpression>().extend({
 
       return registry.defs
         .getOperationsWithReturnType(BooleanType.baseType)
+        .filter((pair) => this.registry.isValidOperation(pair))
         .filter(({ types, op }) => {
           const value = types.params.value 
             ? registry.defs.getOperationInputType(types.params.value, empty) 

@@ -85,8 +85,11 @@ export default Vue.extend({
         return true;
       }
       const existing = this.registry.defs.functions[this.saveAs];
+      if (existing && existing !== this.func) {
+        return true;
+      }
 
-      return existing && existing !== this.func;
+      return !this.registry.isValidFunction(this.saveAs);
     },
     disableSave(): boolean {
       return this.func.options.expression === NoExpression.instance;

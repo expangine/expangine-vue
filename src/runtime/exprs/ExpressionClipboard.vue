@@ -1,6 +1,8 @@
 <template>
   <span>
-    <slot v-bind="{ copied, copiedOptions, copy, paste }"></slot>
+    <template v-if="enabled">
+      <slot v-bind="{ copied, copiedOptions, copy, paste }"></slot>
+    </template>
   </span>
 </template>
 
@@ -35,6 +37,9 @@ export default Vue.extend({
     copied: copyExpressions,
   }),
   computed: {
+    enabled(): boolean {
+      return this.registry.isClipboardEnabled();
+    },
     copiedOptions(): ListOptions<Expression> {
       return this.copied.map((e) => {
         const visual = this.registry.getExpressionVisuals(e);

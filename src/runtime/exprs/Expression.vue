@@ -122,6 +122,8 @@ export default ExpressionBase().extend({
 <style lang="less" scoped>
 .ex-expression {
   display: inline-block;
+  margin-top: 2px;
+  margin-bottom: 2px;
 
   &.multiline {
     display: block;

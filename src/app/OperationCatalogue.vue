@@ -77,6 +77,7 @@ export default Vue.extend({
     },
     items(): ListOptionsTokenized<OperationPair> {
       let items = this.registry.defs.getOperations()
+        .filter((pair) => this.registry.isValidOperation(pair))
         .map((pair) => getListOption(this.registry, pair))
       ;
 

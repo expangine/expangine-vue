@@ -52,7 +52,7 @@ export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().ext
 
         transform = ex
           .if(isValid)
-          .then(event.transform)
+          .than(event.transform)
           .else(ex.get('value'))
         ;
       }

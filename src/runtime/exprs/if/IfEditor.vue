@@ -77,7 +77,7 @@
       </tbody>    
     </template>  
     <tbody>
-      <tr>
+      <tr v-if="showElse">
         <td v-if="sorting"></td>
         <td>
           <ex-chip-menu
@@ -110,6 +110,11 @@ export default ExpressionBase<IfExpression>().extend({
   data: () => ({
     sorting: false,
   }),
+  computed: {
+    showElse(): boolean {
+      return !this.readOnly || this.value.otherwise !== NoExpression.instance;
+    },
+  },
   methods: {
     sortStart() {
       this.sorting = !this.sorting;

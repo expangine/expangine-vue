@@ -1,5 +1,6 @@
 <template>
   <span class="ex-center-aligned pl-3">
+
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -20,31 +21,30 @@
         </v-list-item>
       </template>
     </ex-expression-menu>
+
     <span v-if="readOnly" class="ml-3">{{ value.name }}</span>
+
     <v-select
       v-else
       outlined
       dense
       hide-details
-      class="d-inline-block mx-2"
+      class="function-select d-inline-block mx-2"
       label="Function"
       :items="functions"
       v-model="value.name"
       @change="update"
     ></v-select>
-    <template v-if="func">
-      <template v-for="(paramType, param) in paramTypes">
-        <span :key="param" class="param-span" :style="innerStyle">
 
-          <v-chip 
-            x-small 
-            label 
-            outlined 
-            class="param-label" 
-            @click="toggleParameter(param)"
-          >
+    <span v-if="func" class="function-args ex-expression ex-parenthesis">
+      <template v-for="(paramType, param) in paramTypes">
+        <span :key="param" class="param-span">
+
+          <v-chip label outlined @click="toggleParameter(param)">
             {{ param }}
           </v-chip>
+
+          <span> = </span>
 
           <span v-if="hiddenParameter(param)"
             class="ex-expression ex-parenthesis">
@@ -98,7 +98,7 @@
 
         </span>
       </template>
-    </template>
+    </span>
   </span>
 </template>
 
@@ -130,11 +130,6 @@ export default ExpressionBase<InvokeExpression>().extend({
       return this.func
         ? this.func.options.params.options.props
         : {};
-    },
-    innerStyle(): any {
-      return this.readOnly
-        ? {}
-        : { marginTop: '15px' };
     },
   },
   methods: {
@@ -181,5 +176,14 @@ export default ExpressionBase<InvokeExpression>().extend({
     position: absolute;
     top: -15px;
   }
+}
+
+.function-select {
+  flex: 0 1 250px;
+}
+
+.function-args {
+  flex: 0 1 200px;
+  min-width: fit-content;
 }
 </style>

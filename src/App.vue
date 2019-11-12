@@ -628,7 +628,7 @@ export default Vue.extend({
           decode: (data: any) => {
             const program = this.registry.defs.getExpression(data);
             program.setParent();
-
+            
             return program;
           },
           getDefault: () => NoExpression.instance,
@@ -664,13 +664,12 @@ export default Vue.extend({
   async mounted() {
     (window as any).registry = Registry;
     (window as any).runtime = LiveRuntime;
-    (window as any).Trie = Trie;
     (window as any).home = this;
     (window as any).ex = ex;
 
     SystemEvents.on('replaceData', this.replaceData);
     SystemEvents.on('loading', this.handleLoading);
-
+    
     this.loadExamples();
 
     this.type = await this.store.type.load();

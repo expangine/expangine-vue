@@ -193,7 +193,7 @@ export default function<E extends Expression>()
       inOperation(): boolean {
         return this.value 
           ? this.value.parent instanceof OperationExpression
-            && !this.registry.getExpressionMultiline(this.value.parent)
+            // && !this.registry.getExpressionMultiline(this.value.parent)
           : false;
       },
       inOperationClass(): string {

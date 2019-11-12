@@ -29,185 +29,104 @@
     </template>
   </v-autocomplete>
 
-  <table v-else class="ex-table">
-    <tbody>
-      <tr :style="rowStyle">
-        <td :class="inOperationClass">
-          <ex-expression-menu
-            v-bind="$props"
-            v-on="$listeners"
-            text="Op"
-            :tooltip="operationTooltip">
-            <template #prepend>
-              
-              <v-list-item @click="inspecting = true">
+  <ex-templated v-else :template="operationVisuals.singleline" class="ex-center-aligned">
+    <template #prefix>
+      <ex-expression-menu
+        v-if="!readOnly"
+        v-bind="$props"
+        v-on="$listeners"
+        text="Op"
+        class="mr-1"
+        :tooltip="operationTooltip"
+        :class="inOperationClass">
+        <template #prepend>
+          
+          <v-list-item @click="inspecting = true">
+            <v-list-item-content>
+              <v-list-item-title>
+                Inspect
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Look into the details of this operation
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-menu offset-x open-on-hover class="d-inline" max-height="400" v-if="hasScope">
+            <template #activator="{ on }">
+              <v-list-item v-on="on">
                 <v-list-item-content>
                   <v-list-item-title>
-                    Inspect
+                    Operation Scope
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    Look into the details of this operation
+                    Change the name of the scoped variables
                   </v-list-item-subtitle>
                 </v-list-item-content>
+                <v-list-item-avatar>
+                  <v-icon>mdi-menu-right</v-icon>
+                </v-list-item-avatar>
               </v-list-item>
-
-              <v-menu offset-x open-on-hover class="d-inline" max-height="400" v-if="hasScope">
-                <template #activator="{ on }">
-                  <v-list-item v-on="on">
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Operation Scope
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        Change the name of the scoped variables
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-avatar>
-                      <v-icon>mdi-menu-right</v-icon>
-                    </v-list-item-avatar>
-                  </v-list-item>
-                </template>
-                <v-list>
-                  <template v-for="scopeParam in operation.scope">
-                    <v-list-item :key="scopeParam" @click="changeScope(scopeParam)">
-                      <v-list-item-content>
-                        <v-list-item-title>{{ value.scopeAlias[scopeParam] || scopeParam }}</v-list-item-title>
-                        <v-list-item-subtitle>{{ scopeParam }}</v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-list>
-              </v-menu>
-
-              <v-list-item v-if="!readOnly" @click="changing = true">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    Change
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Change this operation into a similar operation
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item @click="test">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    Test
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Test this operation out
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
             </template>
-          </ex-expression-menu>
+            <v-list>
+              <template v-for="scopeParam in operation.scope">
+                <v-list-item :key="scopeParam" @click="changeScope(scopeParam)">
+                  <v-list-item-content>
+                    <v-list-item-title>{{ value.scopeAlias[scopeParam] || scopeParam }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ scopeParam }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-menu>
 
-          <operation-inspector
-            v-bind="$props"
-            :show.sync="inspecting"
-          ></operation-inspector>
+          <v-list-item v-if="!readOnly" @click="changing = true">
+            <v-list-item-content>
+              <v-list-item-title>
+                Change
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Change this operation into a similar operation
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
 
-        </td>
-        <td v-if="showSingleLine">
-          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle" class="ex-center-aligned">
-            <template #section="{ section }">
-              <span 
-                v-if="hasParameter(section)" 
-                class="param-span"
-                :class="{ 'param-mutates': mutatesParameter(section) }"
-                :style="innerStyle">
+          <v-list-item @click="test">
+            <v-list-item-content>
+              <v-list-item-title>
+                Test
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Test this operation out
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
 
-                <v-tooltip top v-if="!readOnly">
-                  <template #activator="{ on }">
-                    <v-chip x-small label outlined class="param-label" v-on="on" @click="toggleParameter(section)">
-                      {{ section }}
-                    </v-chip>
-                  </template>
-                  <span>
-                    {{ operationVisuals.comments[section] }}
-                    <span v-if="mutatesParameter(section)">
-                      <br><br>This operation changes this value
-                    </span>  
-                  </span>
-                </v-tooltip>
+        </template>
+      </ex-expression-menu>
 
-                <span v-if="hiddenParameter(section)"
-                  class="ex-expression ex-parenthesis">
-                  <v-btn text @click="toggleParameter(section)">
-                    show
-                  </v-btn>
-                </span>
-                <ex-expression
-                  v-else
-                  v-bind="$props"
-                  class="ex-parenthesis"
-                  :value="value.params[section]"
-                  :context="paramContext(section)"
-                  :context-details="paramContextDetails(section)"
-                  :required-type="paramTypes[section]"
-                  @input="setParam(section, $event)"
-                  @remove="setParam(section)"
-                ></ex-expression>
+      <operation-inspector
+        v-bind="$props"
+        :show.sync="inspecting"
+      ></operation-inspector>
 
-              </span>
-
-              <span v-else-if="!readOnly" class="param-span" :style="innerStyle">
-                <v-btn text @click="resetParam(section)">
-                  {{ operationVisuals.defaults[section] || section }}
-                </v-btn>
-              </span>
-
-              <span v-else class="param-span" :style="innerStyle">
-                {{ operationVisuals.defaults[section] || section }}
-              </span>
-
-            </template>
-          </ex-templated>
-        </td>
-        <td v-else>
-          <ex-templated :template="operationVisuals.singleline" :text-style="innerStyle">
-            <template #section="{ section }">
-              <span v-if="hasParameter(section)">
-                <strong>{{ section }}</strong>
-              </span>
-              <span v-else class="param-span" :style="innerStyle">
-                <v-btn text @click="resetParam(section)">
-                  {{ operationVisuals.defaults[section] || section }}
-                </v-btn>
-              </span>
-            </template>
-          </ex-templated>
-        </td>
-      </tr>
-    </tbody>
-    <template v-if="!showSingleLine">
-      <template v-for="(param, name) in value.params">
-        <tbody :key="name">
-          <tr>
-            <td>
-              <ex-chip-menu
-                :text="name"
-                :tooltip="operationVisuals.comments[name]"
-              ></ex-chip-menu>
-            </td>
-            <td>
-              <ex-expression
-                v-bind="$props"
-                :value="param"
-                :context="paramContext(name)"
-                :context-details="paramContextDetails(name)"
-                :required-type="paramTypes[name]"
-                @input="setParam(name, $event)"
-                @remove="setParam(name)"
-              ></ex-expression>
-            </td>
-          </tr>
-        </tbody>
-      </template>
     </template>
-  </table>
+    <template #section="{ section }">
+      <operation-param
+        :expression-props="$props"
+        :name="section"
+        :required-type="paramTypes[section]"
+        :value="value"
+        :context="paramContext(section)"
+        :context-details="paramContextDetails(section)"
+        :operation="operation"
+        :operation-types="operationTypes"
+        :operation-visuals="operationVisuals"
+        :read-only="readOnly"
+        @update="update"
+      ></operation-param>
+    </template>
+  </ex-templated>
 </template>
 
 <script lang="ts">
@@ -218,20 +137,21 @@ import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
 import { filterOperation, getListOption, getMappingListOption, sortMappingListOption } from './helpers';
+import { getTestOperation } from '../../../app/TestOperation';
 import OperationSearch from './OperationSearch.vue';
+import OperationParam from './OperationParam.vue';
 import OperationInspector from './OperationInspector.vue';
 import ExpressionBase from '../ExpressionBase';
-import { getTestOperation } from '../../../app/TestOperation';
 
 
 export default ExpressionBase<OperationExpression>().extend({
   name: 'OperationEditor',
   components: {
     OperationSearch,
+    OperationParam,
     OperationInspector,
   },
   data: () => ({
-    hiddenParams: {} as Record<string, boolean>,
     inspecting: false,
     changing: false,
   }),
@@ -276,24 +196,10 @@ export default ExpressionBase<OperationExpression>().extend({
     },
     changingOptions(): ListOptions<OperationMapping> {
       return this.registry.defs.getOperationsWithMapping(this.value.name, this.paramActuals)
+        .filter((value) => this.registry.isValidOperation({ op: value.to, types: value.toTypes }))
         .map((value) => getMappingListOption(this.registry, value))
         .sort(sortMappingListOption)
       ;
-    },
-    showSingleLine(): boolean {
-      return !!(!this.multiline 
-        && this.operationVisuals
-        && this.operationVisuals.singleline);
-    },
-    innerStyle(): any {
-      return this.readOnly || (!this.multiline && this.operationVisuals.singleline.indexOf('{') === -1)
-        ? {}
-        : { marginTop: '15px' };
-    },
-    rowStyle(): any {
-      return this.readOnly
-        ? { height: 'auto' }
-        : {};
     },
   },
   methods: {
@@ -315,26 +221,7 @@ export default ExpressionBase<OperationExpression>().extend({
       this.changing = false;
       this.update();
     },
-    toggleParameter(name: string) {
-      if (name in this.hiddenParams) {
-        this.$delete(this.hiddenParams, name);
-      } else {
-        this.$set(this.hiddenParams, name, true);
-      }
-    },
-    hiddenParameter(name: string) {
-      return !!this.hiddenParams[name];
-    },
-    hasParameter(name: string): boolean {
-      return !!this.value.params[name];
-    },
-    mutatesParameter(name: string) {
-      return this.operation 
-        ? this.operation.mutates.indexOf(name) !== -1
-        : false;
-    },
     paramContextDetails(name: string): Record<string, string> {
-      const defs = this.registry.defs;
       const op = this.operation;
       const opTypes = this.operationTypes;
       const opVisuals = this.operationVisuals;
@@ -355,7 +242,6 @@ export default ExpressionBase<OperationExpression>().extend({
       return details;
     },
     paramContext(name: string): Type {
-      const defs = this.registry.defs;
       const op = this.operation;
       const opTypes = this.operationTypes;
 
@@ -405,17 +291,6 @@ export default ExpressionBase<OperationExpression>().extend({
 
       return context;
     },
-    resetParam(name: string) {
-      this.setParam(name, NoExpression.instance);
-    },
-    setParam(name: string, expr?: Expression) {
-      if (this.operationTypes && this.operationTypes.optional[name] && !expr) {
-        this.$delete(this.value.params, name);
-      } else {
-        this.$set(this.value.params, name, expr || NoExpression.instance);
-      }
-      this.update();
-    },
     async changeScope(scopeParam: string) {
       const previous = this.value.scopeAlias[scopeParam] || scopeParam;
       const alias = await getInput({ 
@@ -443,31 +318,3 @@ export default ExpressionBase<OperationExpression>().extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.param-span {
-  display: inline-block;
-  position: relative;
-
-  > .param-label {
-    position: absolute;
-    top: -15px;
-  }
-}
-
-.param-group {
-  display: flex;
-
-  > .param-group-end {
-    flex: 0 0 10px;
-  }
-
-  > .param-group-middle {
-    flex: 1 0;
-  }
-}
-
-.param-mutates {
-  background-color: #FFB74D55;
-}
-</style>

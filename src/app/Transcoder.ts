@@ -70,7 +70,7 @@ export class TranscoderStore<I, O> extends EventBase<TranscoderStoreEvents<I, O>
     {
       const loaded = await Store.get(this.key);
 
-      if (loaded)
+      if (loaded !== null && loaded !== undefined)
       {
         return this.parse(loaded);
       }

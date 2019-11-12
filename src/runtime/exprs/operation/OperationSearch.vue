@@ -82,6 +82,7 @@ export default ExpressionBase<OperationExpression>().extend({
       return this.requiredType
         ? this.registry.defs
           .getOperationsWithReturnType(this.requiredType, {}, true)
+          .filter((pair) => this.registry.isValidOperation(pair, this.requiredType, this.startingValueType))
           .map((pair) => getListOption(this.registry, pair))
         : [];
     },
@@ -97,11 +98,13 @@ export default ExpressionBase<OperationExpression>().extend({
       return this.startingValueType
         ? this.registry.defs
           .getOperationsForType(this.startingValueType, true)
+          .filter((pair) => this.registry.isValidOperation(pair, this.requiredType, this.startingValueType))
           .map((pair) => getListOption(this.registry, pair))
         : [];
     },
     allOperations(): ListOptionsTokenized<OperationPair> {
       return this.registry.defs.getOperations()
+        .filter((pair) => this.registry.isValidOperation(pair))
         .map((pair) => getListOption(this.registry, pair))
       ;
     },

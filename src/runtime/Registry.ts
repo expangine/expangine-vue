@@ -1,5 +1,5 @@
 
-import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder } from 'expangine-runtime';
+import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder, ObjectType, OperationPair } from 'expangine-runtime';
 import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
@@ -24,6 +24,18 @@ export class Registry
   public operationMap: Record<string, OperationVisuals>;
   public settingsOverrides: Record<string, any> = {};
 
+  public isValidFunction: (name: string) => boolean;
+  public isValidProperty: (name: string, type: ObjectType) => boolean;
+  public isValidExpressionStart: (visuals: ExpressionVisuals, requiredType: Type | null) => boolean;
+  public isValidExpressionModify: (visuals: ExpressionVisuals, requiredType: Type | null, expr: Expression, exprType: Type | null) => boolean;
+  public isValidExpressionCopy: (expr: Expression) => boolean;
+  public isValidTypeBuildOption: (option: TypeBuildOption, input: TypeBuildInput) => boolean;
+  public isValidTypeBuildWrapperOption: (option: TypeBuilderWrapOption, input: TypeBuildInput) => boolean;
+  public isValidTypeModifyOption: (option: TypeModifyOption, input: TypeModifyInput) => boolean;
+  public isValidTypeHookOption: (option: TypeHookOption, input: TypeHookInput) => boolean;
+  public isValidOperation: (pair: OperationPair, requiredType?: Type | null, startingType?: Type | null) => boolean;
+  public isClipboardEnabled: () => boolean;
+
   public constructor(defs: Definitions)
   {
     this.defs = defs;
@@ -36,6 +48,18 @@ export class Registry
     this.exprMap = obj();
     this.exprs = [];
     this.operationMap = obj();
+
+    this.isValidFunction = () => true;
+    this.isValidProperty = () => true;
+    this.isValidExpressionStart = () => true;
+    this.isValidExpressionModify = () => true;
+    this.isValidTypeBuildOption = () => true;
+    this.isValidTypeBuildWrapperOption = () => true;
+    this.isValidTypeModifyOption = () => true;
+    this.isValidTypeHookOption = () => true;
+    this.isValidExpressionCopy = () => true;
+    this.isClipboardEnabled = () => true;
+    this.isValidOperation = () => true;
   }
 
   public import(importer: (registry: Registry) => any): this
@@ -81,13 +105,17 @@ export class Registry
 
   public getExpressionsStart(requiredType: Type | null): ExpressionVisuals[]
   {
-    return this.exprs.filter((visual) => visual.isStart(requiredType));
+    return this.exprs.filter((visual) => visual.isStart(requiredType) && this.isValidExpressionStart(visual, requiredType));
   }
   
   public getExpressionsModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null)
   {
     return this.exprs
-      .map((visual) => visual.getModifiers(requiredType, expr, exprType, this))
+      .map((visual) => 
+        this.isValidExpressionModify(visual, requiredType, expr, exprType)  
+          ? visual.getModifiers(requiredType, expr, exprType, this)
+          : [],
+      )
       .reduce((prev, next) => next.concat(prev), [])
     ;
   }
@@ -190,7 +218,7 @@ export class Registry
     for (const builder of this.typeBuilders) {
       const option = builder.getOption(input);
 
-      if (option) {
+      if (option && this.isValidTypeBuildOption(option, input)) {
         out.push(option);
       }
     }
@@ -207,7 +235,7 @@ export class Registry
     for (const wrapper of this.typeBuilderWrappers) {
       const option = wrapper.getOption(input);
 
-      if (option) {
+      if (option && this.isValidTypeBuildWrapperOption(option, input)) {
         out.push(option);
       }
     }
@@ -224,7 +252,7 @@ export class Registry
     for (const modifier of this.typeModifiers) {
       const option = modifier.getOption(input);
 
-      if (option) {
+      if (option && this.isValidTypeModifyOption(option, input)) {
         out.push(option);
       }
     }
@@ -241,7 +269,7 @@ export class Registry
     for (const hook of this.typeHooks) {
       const option = hook.getOption(input);
 
-      if (option) {
+      if (option && this.isValidTypeHookOption(option, input)) {
         out.push(option);
       }
     }

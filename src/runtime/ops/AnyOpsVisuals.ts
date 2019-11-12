@@ -53,7 +53,7 @@ export default (registry: Registry) =>
   registry.addOperation(AnyOps.coalesce, {
     name: 'Coalesce',
     description: 'Get first defined value from [a], [b], and optionally [c], [d], and [e]',
-    singleline: 'coalesce( {a} {b} {c} {d} {e} )',
+    singleline: 'coalesce {a} {b} {c} {d} {e}',
     comments: {
       a: 'The first value to check',
       b: 'The first value to check',

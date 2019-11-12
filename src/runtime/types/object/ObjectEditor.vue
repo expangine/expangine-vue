@@ -113,7 +113,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
   }),
   computed: {
     isValidProp(): boolean {
-      return !!(this.addProp && !(this.addProp in this.type.options.props));
+      return !!(this.addProp && !(this.addProp in this.type.options.props) && this.registry.isValidProperty(this.addProp, this.type));
     },
     description(): string {
       return friendlyList(Object.keys(this.type.options.props));
