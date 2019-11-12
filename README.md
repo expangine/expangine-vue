@@ -1,7 +1,7 @@
 # expangine-vue
 A Vue & Vuetify component library for expangine, a visual development framework. 
 
-You can test out the sandbox [here](https://expangine.github.io/expangine-vue/#/), where you can define the structure of your program input, populate the input, and develop the program. 
+You can test out the sandbox [here](http://expangine.com/vue/), where you can define the structure of your program input, populate the input, and develop the program. 
 
 Features of this example:
 - Import / Export your structure, data, program, and functions as JSON.
