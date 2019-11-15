@@ -2,35 +2,110 @@
 
 // tslint:disable: max-classes-per-file
 
-export class Trie<T>
+
+export interface TrieKeyHandler<K> 
+{
+  empty: K;
+  length: (a: K) => number;
+  equals: (a: K, b: K) => boolean;
+  subset: (a: K, start: number, endExclude?: number) => K;
+}
+
+export const TrieKeyStringSensitive: TrieKeyHandler<string> =
+{
+  empty: '',
+  length: (a) => a.length,
+  equals: (a, b) => a === b,
+  subset: (a, start, endExclude) => a.substring(start, endExclude),
+};
+
+export const TrieKeyStringInsensitive: TrieKeyHandler<string> =
+{
+  empty: '',
+  length: (a) => a.length,
+  equals: (a, b) => a.toLowerCase() === b.toLowerCase(),
+  subset: (a, start, endExclude) => a.substring(start, endExclude),
+};
+
+export const TrieKeyArray: TrieKeyHandler<any[]> = 
+{
+  empty: [],
+  length: (a) => a.length,
+  equals: (a, b) => a.length === b.length && !a.some((ae, ai) => ae !== b[ai]),
+  subset: (a, start, end) => a.slice(start, end),
+};
+
+
+export class Trie<T, K = string>
 {
 
-  public root: TrieNode<T>;
-
-  public constructor(initial?: Record<string, T>)
+  public static strings<T>(caseSensitive: boolean = true, initial?: Record<string, T> | Map<string, T>): Trie<T, string>
   {
-    this.root = new TrieNode<T>('');
+    const trie = new Trie<T, string>(caseSensitive ? TrieKeyStringSensitive : TrieKeyStringInsensitive);
 
     if (initial)
     {
-      for (const key in initial)
+      if (initial instanceof Map)
       {
-        this.set(key, initial[key]);
+        for (const [key, value] of initial.entries())
+        {
+          trie.set(key, value);
+        }
+      }
+      else
+      {
+        for (const key in initial)
+        {
+          trie.set(key, initial[key]);
+        }
       }
     }
+
+    return trie;
   }
 
-  public set(key: string, value: T)
+  public static arrays<T, E = any>(initial?: Array<[E[], T]>): Trie<T, E[]>
+  {
+    const trie = new Trie<T, E[]>(TrieKeyArray);
+
+    if (initial)
+    {
+      initial.forEach(([key, value]) => trie.set(key, value));
+    }
+
+    return trie;
+  }
+
+  public root: TrieNode<T, K>;
+  public handler: TrieKeyHandler<K>;
+
+  public constructor(handler: TrieKeyHandler<K>)
+  {
+    this.handler = handler;
+    this.root = new TrieNode<T, K>(handler.empty, handler);
+  }
+
+  public set(key: K, value: T)
   {
     this.root.set(key, value);
   }
 
-  public get(key: string): T | undefined
+  public add(key: K, value: T, add: (value: T, existing: T) => T)
+  {
+    this.root.add(key, value, add);
+  }
+
+  public has(key: K): boolean
+  {
+    return this.root.get(key) !== undefined;
+  }
+
+  public get(key: K): T | undefined
   {
     return this.root.get(key);
   }
 
-  public match(key: string, min: number, max: number, onMatch: (match: T, key: string, amount: number) => any)
+  public match(key: K, min: number, max: number, onMatch: (match: T, key: K, amount: number) => any)
   {
     if (key)
     {
@@ -38,63 +113,129 @@ export class Trie<T>
     }
   }
 
-  public add(key: string, value: T, add: (value: T, existing: T) => T)
+  public startsWith(key: K, include: boolean, onMatch: (match: T, key: K, amount: number) => any)
   {
-    this.root.add(key, value, add);
+    if (key)
+    {
+      this.root.match(key, include ? 1 : 1.000001, 2147483647, onMatch);
+    }
+  }
+
+  public lessThan(key: K, include: boolean, onMatch: (match: T, key: K, amount: number) => any)
+  {
+    if (key)
+    {
+      this.root.match(key, 0, include ? 1 : 0.999999, onMatch);
+    }
+  }
+
+  public each(callback: (value: T, key: K) => any)
+  {
+    this.root.each(callback);
+  }
+
+  public keys(): K[]
+  {
+    const result: K[] = [];
+
+    this.each((value, key) => result.push(key));
+
+    return result;
+  }
+
+  public values(): T[]
+  {
+    const result: T[] = [];
+
+    this.each((value, key) => result.push(value));
+
+    return result;
+  }
+
+  public entries(): Array<[K, T]>
+  {
+    const result: Array<[K, T]> = [];
+
+    this.each((value, key) => result.push([key, value]));
+
+    return result;
   }
 
 }
 
-export class TrieNode<T>
+export class TrieNode<T, K = string>
 {
 
   public value?: T;
-  public key: string;
-  public children: Record<string, TrieNode<T>>;
+  public key: K;
+  public handler: TrieKeyHandler<K>;
+  public children: Map<K, TrieNode<T, K>>;
 
-  public constructor(key: string, value?: T)
+  public constructor(key: K, handler: TrieKeyHandler<K>, value?: T)
   {
-    this.value = value;
     this.key = key;
-    this.children = {};
+    this.handler = handler; 
+    this.value = value;
+    this.children = new Map();
   }
 
-  public set(key: string, value: T)
+  public set(key: K, value: T)
   {
     const node = this.getNode(key, value);
 
     node.value = value;
   }
 
-  public get(key: string): T | undefined
+  public get(key: K): T | undefined
   {
     const node = this.getNode(key);
 
     return node ? node.value : undefined;
   }
 
-  public add(key: string, value: T, add: (value: T, existing: T) => T)
+  public add(key: K, value: T, add: (value: T, existing: T) => T)
   {
     const node = this.getNode(key);
 
-    if (node && node.value) 
+    if (node) 
     {
       node.value = node.value !== undefined ? add(value, node.value) : value;
-    } 
+    }
     else 
     {
       this.getNode(key, value);
     }
   }
 
-  public match(key: string, min: number, max: number, onMatch: (match: T, key: string, amount: number) => any)
+  public each(callback: (value: T, key: K) => any)
   {
-    const minLength = Math.min(key.length, this.key.length);
-    const minMatch = this.key.substring(0, minLength) === key.substring(0, minLength);
+    if (this.value !== undefined)
+    {
+      callback(this.value, this.key);
+    }
+
+    for (const [childKey, child] of this.children.entries())
+    {
+      child.each(callback);
+    }
+  }
+
+  public match(key: K, min: number, max: number, onMatch: (match: T, key: K, amount: number) => any)
+  {
+    const { handler, children } = this;
+
+    const keyLength = handler.length(key);
+    const thisKeyLength = handler.length(this.key);
+
+    const minLength = Math.min(keyLength, thisKeyLength);
+    const minMatch = handler.equals(
+      handler.subset(this.key, 0, minLength),
+      handler.subset(key, 0, minLength),
+    );
     
     if (minMatch)
     {
-      const amount = this.key.length / key.length;
+      const amount = thisKeyLength / keyLength;
 
       if (this.value !== undefined && amount >= min && amount <= max)
       {
@@ -106,12 +247,12 @@ export class TrieNode<T>
         return;
       }
 
-      const start = this.key.length;
+      const start = handler.length(this.key);
 
-      for (let i = start + 1; i <= key.length; i++)
+      for (let i = start + 1; i <= keyLength; i++)
       {
-        const childKeyTest = key.substring(start, i);
-        const child = this.children[childKeyTest];
+        const childKeyTest = handler.subset(key, start, i);
+        const child = children.get(childKeyTest);
 
         if (child)
         {
@@ -121,13 +262,13 @@ export class TrieNode<T>
         }
       }
 
-      const childKey = key.substring(start);
+      const childKey = handler.subset(key, start);
 
-      for (const otherKey in this.children)
+      for (const [otherKey, child] of children.entries())
       {
-        if (otherKey.substring(0, childKey.length) === childKey)
+        if (handler.equals(handler.subset(otherKey, 0, handler.length(childKey)), childKey))
         {
-          this.children[otherKey].match(key, min, max, onMatch);
+          child.match(key, min, max, onMatch);
 
           return;
         }
@@ -135,22 +276,25 @@ export class TrieNode<T>
     }
   }
 
-  protected getNode(key: string): TrieNode<T> | null;
-  protected getNode(key: string, createWithValue: T): TrieNode<T>;
-  protected getNode(key: string, createWithValue?: T): TrieNode<T> | null;
-  protected getNode(key: string, createWithValue?: T): TrieNode<T> | null
+  protected getNode(key: K): TrieNode<T, K> | null;
+  protected getNode(key: K, createWithValue: T): TrieNode<T, K>;
+  protected getNode(key: K, createWithValue?: T): TrieNode<T, K> | null;
+  protected getNode(key: K, createWithValue?: T): TrieNode<T, K> | null
   {
-    if (this.key === key)
+    const { handler, children } = this;
+
+    if (handler.equals(this.key, key))
     {
       return this;
     }
 
-    const start = this.key.length;
+    const keyLength = handler.length(key);
+    const start = handler.length(this.key);
 
-    for (let i = start + 1; i <= key.length; i++)
+    for (let i = start + 1; i <= keyLength; i++)
     {
-      const childKey = key.substring(start, i);
-      const child = this.children[childKey];
+      const childKey = handler.subset(key, start, i);
+      const child = children.get(childKey);
 
       if (child)
       {
@@ -160,25 +304,23 @@ export class TrieNode<T>
 
     if (createWithValue !== undefined)
     {
-      const childKey = key.substring(start);
-      const child = new TrieNode<T>(key, createWithValue);
+      const childKey = handler.subset(key, start);
+      const child = new TrieNode<T, K>(key, handler, createWithValue);
 
-      for (const otherKey in this.children)
+      for (const [otherKey, other] of children)
       {
-        if (otherKey.substring(0, childKey.length) === childKey)
+        if (handler.equals(handler.subset(otherKey, 0, handler.length(childKey)), childKey))
         {
-          const other = this.children[otherKey];
-          const otherChildKey = other.key.substring(key.length);
+          const otherChildKey = handler.subset(other.key, keyLength);
 
-          child.children[otherChildKey] = other;
-
-          delete this.children[otherKey];
+          child.children.set(otherChildKey, other);
+          children.delete(otherKey);
 
           break;
         }
       }
 
-      this.children[childKey] = child;
+      children.set(childKey, child);
 
       return child;
     }

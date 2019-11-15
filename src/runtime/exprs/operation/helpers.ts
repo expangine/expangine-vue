@@ -30,7 +30,7 @@ export function getTokens(text: string): string[]
 
 export function getTrieFromList(tokenList: string[], defaultWeight: number = 1): Trie<number>
 {
-  const tokens = new Trie<number>();
+  const tokens = Trie.strings<number>();
 
   tokenList.forEach((token) => tokens.set(token, defaultWeight));
 
@@ -94,7 +94,7 @@ export function getTrieScore(trie: Trie<number>, text: string): number
 {
   let score = 0;
 
-  trie.match(text, 1, 10000, (occurrences, key, amount) => score += 1 / amount * occurrences);
+  trie.startsWith(text, true, (occurrences, key, amount) => score += 1 / amount * occurrences);
 
   return score;
 }

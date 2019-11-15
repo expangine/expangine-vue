@@ -13674,8 +13674,8 @@ module.exports = distanceInWords
 
 "use strict";
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
-var es6_regexp_match = __webpack_require__("4917");
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.starts-with.js
+var es6_string_starts_with = __webpack_require__("f559");
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__("7f7f");
@@ -13689,6 +13689,27 @@ var es6_regexp_split = __webpack_require__("28a5");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.replace.js
 var es6_regexp_replace = __webpack_require__("a481");
 
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/slicedToArray.js + 3 modules
+var slicedToArray = __webpack_require__("768b");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.symbol.async-iterator.js
+var es7_symbol_async_iterator = __webpack_require__("ac4d");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.symbol.js
+var es6_symbol = __webpack_require__("8a81");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.array.iterator.js
+var es6_array_iterator = __webpack_require__("cadf");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.iterator.js
+var es6_string_iterator = __webpack_require__("5df3");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.map.js
+var es6_map = __webpack_require__("f400");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.match.js
+var es6_regexp_match = __webpack_require__("4917");
+
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/classCallCheck.js
 var classCallCheck = __webpack_require__("d225");
 
@@ -13699,26 +13720,76 @@ var createClass = __webpack_require__("b0b4");
 
 
 
+
+
+
+
+
+
+
 // tslint:disable: max-classes-per-file
+var TrieKeyStringSensitive = {
+  empty: '',
+  length: function length(a) {
+    return a.length;
+  },
+  equals: function equals(a, b) {
+    return a === b;
+  },
+  subset: function subset(a, start, endExclude) {
+    return a.substring(start, endExclude);
+  }
+};
+var TrieKeyStringInsensitive = {
+  empty: '',
+  length: function length(a) {
+    return a.length;
+  },
+  equals: function equals(a, b) {
+    return a.toLowerCase() === b.toLowerCase();
+  },
+  subset: function subset(a, start, endExclude) {
+    return a.substring(start, endExclude);
+  }
+};
+var TrieKeyArray = {
+  empty: [],
+  length: function length(a) {
+    return a.length;
+  },
+  equals: function equals(a, b) {
+    return a.length === b.length && !a.some(function (ae, ai) {
+      return ae !== b[ai];
+    });
+  },
+  subset: function subset(a, start, end) {
+    return a.slice(start, end);
+  }
+};
 var Trie_Trie =
 /*#__PURE__*/
 function () {
-  function Trie(initial) {
+  function Trie(handler) {
     Object(classCallCheck["a" /* default */])(this, Trie);
 
-    this.root = new Trie_TrieNode('');
-
-    if (initial) {
-      for (var key in initial) {
-        this.set(key, initial[key]);
-      }
-    }
+    this.handler = handler;
+    this.root = new Trie_TrieNode(handler.empty, handler);
   }
 
   Object(createClass["a" /* default */])(Trie, [{
     key: "set",
     value: function set(key, value) {
       this.root.set(key, value);
+    }
+  }, {
+    key: "add",
+    value: function add(key, value, _add) {
+      this.root.add(key, value, _add);
+    }
+  }, {
+    key: "has",
+    value: function has(key) {
+      return this.root.get(key) !== undefined;
     }
   }, {
     key: "get",
@@ -13733,9 +13804,111 @@ function () {
       }
     }
   }, {
-    key: "add",
-    value: function add(key, value, _add) {
-      this.root.add(key, value, _add);
+    key: "startsWith",
+    value: function startsWith(key, include, onMatch) {
+      if (key) {
+        this.root.match(key, include ? 1 : 1.000001, 2147483647, onMatch);
+      }
+    }
+  }, {
+    key: "lessThan",
+    value: function lessThan(key, include, onMatch) {
+      if (key) {
+        this.root.match(key, 0, include ? 1 : 0.999999, onMatch);
+      }
+    }
+  }, {
+    key: "each",
+    value: function each(callback) {
+      this.root.each(callback);
+    }
+  }, {
+    key: "keys",
+    value: function keys() {
+      var result = [];
+      this.each(function (value, key) {
+        return result.push(key);
+      });
+      return result;
+    }
+  }, {
+    key: "values",
+    value: function values() {
+      var result = [];
+      this.each(function (value, key) {
+        return result.push(value);
+      });
+      return result;
+    }
+  }, {
+    key: "entries",
+    value: function entries() {
+      var result = [];
+      this.each(function (value, key) {
+        return result.push([key, value]);
+      });
+      return result;
+    }
+  }], [{
+    key: "strings",
+    value: function strings() {
+      var caseSensitive = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      var initial = arguments.length > 1 ? arguments[1] : undefined;
+      var trie = new Trie(caseSensitive ? TrieKeyStringSensitive : TrieKeyStringInsensitive);
+
+      if (initial) {
+        if (initial instanceof Map) {
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = initial.entries()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var _step$value = Object(slicedToArray["a" /* default */])(_step.value, 2),
+                  key = _step$value[0],
+                  value = _step$value[1];
+
+              trie.set(key, value);
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        } else {
+          for (var _key in initial) {
+            trie.set(_key, initial[_key]);
+          }
+        }
+      }
+
+      return trie;
+    }
+  }, {
+    key: "arrays",
+    value: function arrays(initial) {
+      var trie = new Trie(TrieKeyArray);
+
+      if (initial) {
+        initial.forEach(function (_ref) {
+          var _ref2 = Object(slicedToArray["a" /* default */])(_ref, 2),
+              key = _ref2[0],
+              value = _ref2[1];
+
+          return trie.set(key, value);
+        });
+      }
+
+      return trie;
     }
   }]);
 
@@ -13744,12 +13917,13 @@ function () {
 var Trie_TrieNode =
 /*#__PURE__*/
 function () {
-  function TrieNode(key, value) {
+  function TrieNode(key, handler, value) {
     Object(classCallCheck["a" /* default */])(this, TrieNode);
 
-    this.value = value;
     this.key = key;
-    this.children = {};
+    this.handler = handler;
+    this.value = value;
+    this.children = new Map();
   }
 
   Object(createClass["a" /* default */])(TrieNode, [{
@@ -13769,20 +13943,58 @@ function () {
     value: function add(key, value, _add2) {
       var node = this.getNode(key);
 
-      if (node && node.value) {
+      if (node) {
         node.value = node.value !== undefined ? _add2(value, node.value) : value;
       } else {
         this.getNode(key, value);
       }
     }
   }, {
+    key: "each",
+    value: function each(callback) {
+      if (this.value !== undefined) {
+        callback(this.value, this.key);
+      }
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.children.entries()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var _step2$value = Object(slicedToArray["a" /* default */])(_step2.value, 2),
+              childKey = _step2$value[0],
+              child = _step2$value[1];
+
+          child.each(callback);
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+    }
+  }, {
     key: "match",
     value: function match(key, min, max, onMatch) {
-      var minLength = Math.min(key.length, this.key.length);
-      var minMatch = this.key.substring(0, minLength) === key.substring(0, minLength);
+      var handler = this.handler,
+          children = this.children;
+      var keyLength = handler.length(key);
+      var thisKeyLength = handler.length(this.key);
+      var minLength = Math.min(keyLength, thisKeyLength);
+      var minMatch = handler.equals(handler.subset(this.key, 0, minLength), handler.subset(key, 0, minLength));
 
       if (minMatch) {
-        var amount = this.key.length / key.length;
+        var amount = thisKeyLength / keyLength;
 
         if (this.value !== undefined && amount >= min && amount <= max) {
           onMatch(this.value, this.key, amount);
@@ -13792,11 +14004,11 @@ function () {
           return;
         }
 
-        var start = this.key.length;
+        var start = handler.length(this.key);
 
-        for (var i = start + 1; i <= key.length; i++) {
-          var childKeyTest = key.substring(start, i);
-          var child = this.children[childKeyTest];
+        for (var i = start + 1; i <= keyLength; i++) {
+          var childKeyTest = handler.subset(key, start, i);
+          var child = children.get(childKeyTest);
 
           if (child) {
             child.match(key, min, max, onMatch);
@@ -13804,12 +14016,35 @@ function () {
           }
         }
 
-        var childKey = key.substring(start);
+        var childKey = handler.subset(key, start);
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-        for (var otherKey in this.children) {
-          if (otherKey.substring(0, childKey.length) === childKey) {
-            this.children[otherKey].match(key, min, max, onMatch);
-            return;
+        try {
+          for (var _iterator3 = children.entries()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var _step3$value = Object(slicedToArray["a" /* default */])(_step3.value, 2),
+                otherKey = _step3$value[0],
+                _child = _step3$value[1];
+
+            if (handler.equals(handler.subset(otherKey, 0, handler.length(childKey)), childKey)) {
+              _child.match(key, min, max, onMatch);
+
+              return;
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
           }
         }
       }
@@ -13817,15 +14052,19 @@ function () {
   }, {
     key: "getNode",
     value: function getNode(key, createWithValue) {
-      if (this.key === key) {
+      var handler = this.handler,
+          children = this.children;
+
+      if (handler.equals(this.key, key)) {
         return this;
       }
 
-      var start = this.key.length;
+      var keyLength = handler.length(key);
+      var start = handler.length(this.key);
 
-      for (var i = start + 1; i <= key.length; i++) {
-        var childKey = key.substring(start, i);
-        var child = this.children[childKey];
+      for (var i = start + 1; i <= keyLength; i++) {
+        var childKey = handler.subset(key, start, i);
+        var child = children.get(childKey);
 
         if (child) {
           return child.getNode(key, createWithValue);
@@ -13833,22 +14072,46 @@ function () {
       }
 
       if (createWithValue !== undefined) {
-        var _childKey = key.substring(start);
+        var _childKey = handler.subset(key, start);
 
-        var _child = new TrieNode(key, createWithValue);
+        var _child2 = new TrieNode(key, handler, createWithValue);
 
-        for (var otherKey in this.children) {
-          if (otherKey.substring(0, _childKey.length) === _childKey) {
-            var other = this.children[otherKey];
-            var otherChildKey = other.key.substring(key.length);
-            _child.children[otherChildKey] = other;
-            delete this.children[otherKey];
-            break;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var _step4$value = Object(slicedToArray["a" /* default */])(_step4.value, 2),
+                otherKey = _step4$value[0],
+                other = _step4$value[1];
+
+            if (handler.equals(handler.subset(otherKey, 0, handler.length(_childKey)), _childKey)) {
+              var otherChildKey = handler.subset(other.key, keyLength);
+
+              _child2.children.set(otherChildKey, other);
+
+              children.delete(otherKey);
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
           }
         }
 
-        this.children[_childKey] = _child;
-        return _child;
+        children.set(_childKey, _child2);
+        return _child2;
       }
 
       return null;
@@ -13893,7 +14156,7 @@ function getTokens(text) {
 }
 function getTrieFromList(tokenList) {
   var defaultWeight = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var tokens = new Trie_Trie();
+  var tokens = Trie_Trie.strings();
   tokenList.forEach(function (token) {
     return tokens.set(token, defaultWeight);
   });
@@ -13951,7 +14214,7 @@ function getTrieScoreFromList(trie, textList) {
 }
 function getTrieScore(trie, text) {
   var score = 0;
-  trie.match(text, 1, 10000, function (occurrences, key, amount) {
+  trie.startsWith(text, true, function (occurrences, key, amount) {
     return score += 1 / amount * occurrences;
   });
   return score;
