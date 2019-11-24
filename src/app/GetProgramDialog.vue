@@ -47,6 +47,7 @@
         <v-btn 
           color="primary"
           @click="ok"
+          :disabled="isDisabled"
         >{{ confirm }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -72,6 +73,9 @@ export default Vue.extend({
       return this.actualType
         ? this.registry.getTypeDescribeLong(this.actualType, '&nbsp;&nbsp;', '<br>')
         : '';
+    },
+    isDisabled(): boolean {
+      return !this.actualType;
     },
     isInvalid(): boolean {
       const { actualType, expectedType } = this;
