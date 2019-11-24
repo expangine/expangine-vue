@@ -1,6 +1,6 @@
 
 import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues } from 'expangine-runtime';
-import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
+import { createVisuals, TypeSettings, TypeSettingsRecord, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';
@@ -69,6 +69,15 @@ export const ListVisuals = createVisuals<ListSubs>()({
       , 0);
 
       if (complexity === 0) {
+        const propSubs = settings.sub as Record<string, TypeSettingsAny>;
+        for (const prop in propSubs) {
+          const propValue = propSubs[prop];
+          if (propValue.options) {
+            delete propValue.options.label;
+            delete propValue.options.placeholder;
+          }
+        }
+
         return {
           input: 'table',
           defaultValue: [],

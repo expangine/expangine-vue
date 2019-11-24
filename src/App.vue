@@ -10,31 +10,22 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click="exportJson">
-            <v-list-item-icon>
-              <v-icon>mdi-export</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Export</v-list-item-title>
-              <v-list-item-subtitle>Download project as a JSON file.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item @click="importJson">
             <v-list-item-icon>
               <v-icon>mdi-import</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Import</v-list-item-title>
+              <v-list-item-title>Open</v-list-item-title>
               <v-list-item-subtitle>Upload a project JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="importCsv">
+          <v-list-item @click="exportJson">
             <v-list-item-icon>
-              <v-icon>mdi-file-delimited-outline</v-icon>
+              <v-icon>mdi-export</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Import CSV</v-list-item-title>
-              <v-list-item-subtitle>Upload data in a CSV.</v-list-item-subtitle>
+              <v-list-item-title>Save</v-list-item-title>
+              <v-list-item-subtitle>Download project as a JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="saveAsFunction">
@@ -46,13 +37,22 @@
               <v-list-item-subtitle>Save this program as a function.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="importCsv">
+            <v-list-item-icon>
+              <v-icon>mdi-file-delimited-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Import CSV</v-list-item-title>
+              <v-list-item-subtitle>Upload data in a CSV.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item @click="describe">
             <v-list-item-icon>
               <v-icon>mdi-database-search</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Detect</v-list-item-title>
-              <v-list-item-subtitle>Set the type &amp; data based on JSON or JS code.</v-list-item-subtitle>
+              <v-list-item-title>Import JSON / JS</v-list-item-title>
+              <v-list-item-subtitle>Update data from JSON or JS code.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="share">

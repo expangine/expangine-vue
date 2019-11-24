@@ -45,6 +45,8 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
     
     header: true,
 
+    skipEmptyLines: true,
+
     error: async (error) =>
     {
       resolve(error.message);

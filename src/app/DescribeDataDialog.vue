@@ -14,8 +14,9 @@
               solo
               flat
               filled
-              auto-grow
-              rows="16"
+              
+              hide-details
+              height="100%"
               placeholder="Paste your JS code or JSON here"
               v-model="input"
             ></v-textarea>
@@ -147,5 +148,21 @@ export default Vue.extend({
   position: relative;
   height: calc(100vh - 300px);
   overflow: scroll;
+}
+
+.v-textarea {
+  height: 100%;
+
+  /deep/ .v-input__control {
+    height: 100%;
+
+    .v-text-field__slot {
+      overflow: hidden;
+
+      textarea {
+        height: 100%;
+      }
+    }
+  }
 }
 </style>
