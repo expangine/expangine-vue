@@ -64,13 +64,15 @@
 </template>
 
 <script lang="ts">
-import { Type, TupleType, Expression, ExpressionBuilder, ListOps, NullType } from 'expangine-runtime';
+import { Type, TupleType, Expression, ExpressionBuilder, ListOps, NullType, ObjectType } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
+import { getProgram } from '../../../app/GetProgram';
 import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TypeEditorBase from '../TypeEditorBase';
+import { sendNotification } from '../../../app/Notify';
 
 
 export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
@@ -118,6 +120,22 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
         return;
       }
 
+      const result = await getProgram({
+        title: `Add element "${index + 1}"`,
+        message: 'The default value for the new element.',
+        confirm: 'Add',
+        registry: this.registry,
+        context: ObjectType.from({
+          parent: this.type,
+        }),
+        program: this.registry.getTypeCreate(chosen.type),
+        expectedType: chosen.type,
+      });
+
+      if (!result) {
+        return sendNotification({ message: 'Element add canceled.' });
+      }
+
       this.type.options.splice(index + 1, 0, chosen.type);
       this.settings.sub.splice(index + 1, 0, chosen.settings);
 
@@ -126,11 +144,13 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
       const ex = new ExpressionBuilder();
 
       this.change({
-        transform: ex.op(ListOps.insert, {
-          list: ex.get('value'),
-          index: index + 1,
-          item: this.registry.getTypeCreate(chosen.type),
-        }),
+        transform: ex.define({ parent: ex.get('value') },
+          ex.op(ListOps.insert, {
+            list: ex.get('value'),
+            index: index + 1,
+            item: result.program,
+          }),
+        ),
       });
     },
     onChange(index: number, innerType: Type, event: TypeUpdateEvent) {

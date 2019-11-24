@@ -373,6 +373,7 @@
       <ex-edit-function-dialog></ex-edit-function-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
       <ex-test-operation-dialog></ex-test-operation-dialog>
+      <ex-get-program-dialog></ex-get-program-dialog>
       <ex-operation-catalogue-dialog
         :registry="registry"
         :show.sync="showOperations"

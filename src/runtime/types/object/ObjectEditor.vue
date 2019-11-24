@@ -102,6 +102,7 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
 import { getBuildType } from '../../../app/BuildType';
+import { getProgram } from '../../../app/GetProgram';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
 
@@ -130,12 +131,12 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
     },
     async add() {
       const chosen = await getBuildType({
+        title: 'Add Property',
         input: {
           registry: this.registry,
           parent: this.type,
           parentSettings: this.settings,
         },
-        title: 'Add Property',
       });
 
       const propName = this.addProp;
@@ -144,21 +145,39 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         return;
       }
 
+      this.addProp = '';
+
+      const result = await getProgram({
+        title: `Add property "${propName}"`,
+        message: 'The default value for the new property.',
+        confirm: 'Add',
+        registry: this.registry,
+        context: ObjectType.from({
+          parent: this.type,
+        }),
+        program: this.registry.getTypeCreate(chosen.type),
+        expectedType: chosen.type,
+      });
+
+      if (!result) {
+        return sendNotification({ message: 'Property add canceled.' });
+      }
+
       this.$set(this.type.options.props, propName, chosen.type);
       this.$set(this.settings.sub, propName, chosen.settings);
-
-      this.addProp = '';
 
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
       const ex = new ExpressionBuilder();
 
       this.change({
-        transform: ex.op(ObjectOps.set, {
-          object: ex.get('value'),
-          key: propName,
-          value: this.registry.getTypeCreate(chosen.type),
-        }),
+        transform: ex.define({ parent: ex.get('value') },
+          ex.op(ObjectOps.set, {
+            object: ex.get('value'),
+            key: propName,
+            value: result.program,
+          }),
+        ),
       });
     },
     async remove(prop: string) {

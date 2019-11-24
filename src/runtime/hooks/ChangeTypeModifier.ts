@@ -1,8 +1,9 @@
 
-import { getBuildType } from '@/app/BuildType';
-import { TypeModifier } from '../types/TypeModifier';
-import { ExpressionBuilder } from 'expangine-runtime';
+import { ObjectType, NullType } from 'expangine-runtime';
 import { castExpression } from '@/common';
+import { getBuildType } from '@/app/BuildType';
+import { getProgram } from '@/app/GetProgram';
+import { TypeModifier } from '../types/TypeModifier';
 
 
 export const ChangeTypeModifier: TypeModifier = 
@@ -13,25 +14,40 @@ export const ChangeTypeModifier: TypeModifier =
     priority: 10,
     value: async () => {
       const chosen = await getBuildType({ 
+        title: 'Choose New Type',
+        ok: 'Change',
         input: {
           registry,
           parent,
           existingType: type,
           existingSettings: typeSettings,
         },
-        title: 'Choose New Type',
-        ok: 'Change',
       });
 
       if (!chosen) {
         return false;
       }
 
-      const transform = castExpression(type, chosen.type);
+      const result = await getProgram({
+        title: 'Change Type',
+        message: 'The expression that changes the type.',
+        confirm: 'Change',
+        registry,
+        context: ObjectType.from({
+          parent: parent || NullType.baseType,
+          value: type,
+        }),
+        program: castExpression(type, chosen.type),
+        expectedType: chosen.type,
+      });
+
+      if (!result) {
+        return false;
+      }
 
       return {
         ...chosen,
-        transform,
+        transform: result.program,
       };
     },
   }),

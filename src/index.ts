@@ -37,6 +37,7 @@ import TestFunctionDialog from './app/TestFunctionDialog.vue';
 import TestOperationDialog from './app/TestOperationDialog.vue';
 import OperationCatalogueDialog from './app/OperationCatalogue.vue';
 import OperationInfoDialog from './app/OperationInfo.vue';
+import GetProgramDialog from './app/GetProgramDialog.vue';
 
 
 export * from './app/BuildType';
@@ -49,6 +50,7 @@ export * from './app/EditFunction';
 export * from './app/EventBase';
 export * from './app/FileExport';
 export * from './app/FileImport';
+export * from './app/GetProgram';
 export * from './app/Icons';
 export * from './app/Input';
 export * from './app/LinkedNode';
@@ -129,6 +131,7 @@ export default {
     Vue.component('ex-test-operation-dialog', TestOperationDialog);
     Vue.component('ex-operation-catalogue-dialog', OperationCatalogueDialog);
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
+    Vue.component('ex-get-program-dialog', GetProgramDialog);
 
     Vue.component('ex-data-string', DataString);
     Vue.component('ex-data-menu', DataMenu);
