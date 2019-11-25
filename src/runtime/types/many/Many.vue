@@ -30,6 +30,7 @@
         :read-only="readOnly"
         :registry="registry"
         :settings="subTypeSettings"
+        :path="path"
         v-model="computedValue"
       ></ex-type-input>
     </v-list-item-content>
@@ -52,7 +53,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
   }),
   computed: {
     subType(): Type {
-      return this.currentType || this.type.getExactType(this.value) || this.type.options[0];
+      return this.currentType || this.type.getExactType(this.computedValue) || this.type.options[0];
     },
     subTypeIndex(): number {
       return this.type.options.indexOf(this.subType);
@@ -72,12 +73,12 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>(PropTypeAny).
 
       const innerIndex = this.type.options.indexOf(innerType);
       const subSettings = this.settings.sub[innerIndex];
-      const newValue = innerType.isValid(this.value)
-        ? this.value
+      const newValue = innerType.isValid(this.computedValue)
+        ? this.computedValue
         : innerType.fromJson(subSettings.defaultValue);
       
       this.currentType = innerType;
-      this.$emit('input', newValue);
+      this.computedValue = newValue;
       this.$forceUpdate();
     },
   },

@@ -2,10 +2,9 @@
 import * as Papa from 'papaparse';
 import { getInput } from './Input';
 import { exportFile } from './FileExport';
-import { isString, TextType, ObjectType, DateType } from 'expangine-runtime';
+import { isString, TextType, ObjectType, DateType, isDate } from 'expangine-runtime';
 import { castValue, formatDate } from '@/common';
 import { Registry } from '@/runtime/Registry';
-import { isDate } from 'util';
 
 
 export interface DataExportOptions

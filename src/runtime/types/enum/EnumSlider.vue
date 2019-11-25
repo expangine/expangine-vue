@@ -28,10 +28,10 @@ export default TypeInputBase<EnumType, EnumSliderOptions, any, EnumSubs>(PropTyp
   computed: {
     sliderValue: {
       get(): number {
-        return this.values.indexOf(this.value);
+        return this.values.indexOf(this.computedValue);
       },
       set(index: number) {
-        this.input(this.values[index]);
+        this.computedValue = this.values[index];
       },
     },
     entries(): Array<[any, any]> {

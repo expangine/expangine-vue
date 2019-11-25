@@ -60,7 +60,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as Papa from 'papaparse';
-import { Type, TypeBuilder, objectValues, ObjectType, ListType } from 'expangine-runtime';
+import { Type, TypeBuilder, objectValues, ObjectType, ListType, isString } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { exportFile } from './FileExport';
 import { getInput } from './Input';
@@ -68,7 +68,6 @@ import { SystemEvents } from './SystemEvents';
 import { sendNotification } from './Notify';
 import { getPromiser } from './Promiser';
 import { getDataExport } from './DataExport';
-import { isString } from 'util';
 
 
 export default Vue.extend({

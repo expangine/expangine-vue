@@ -65,11 +65,13 @@
         </v-list-item-avatar>
         <v-list-item-content class="list-item">
           <ex-type-input
-            :value="item"
+            :value="item.data"
             :type="itemType"
+            :path="item.path"
+            :data="data"
             :read-only="readOnly"
             :registry="registry"
-            :settings="settings.sub.item"
+            :settings="itemSettings"
             @input="setItem(itemIndex, $event)"
           ></ex-type-input>
         </v-list-item-content>
@@ -128,6 +130,9 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       if (this.settings.options.hideInsert) {
         return false;
       }
+      if (this.data) {
+        return false;
+      }
       return this.canAdd;
     },
     canAdd(): boolean {
@@ -165,13 +170,11 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
         : this.rowCount;
     },
     page(): any[] {
-      return this.value.slice(this.pageStart, this.pageEnd);
-    },
-  },
-  watch: {
-    value: {
-      deep: true,
-      handler: () => { /* nothing */ },
+      const { value, pageStart, pageEnd, path } = this;
+
+      return value.slice(pageStart, pageEnd)
+        .map((data, index) => ({ data, path: path.concat([index + pageStart]) }))
+      ;
     },
   },
   methods: {
@@ -181,15 +184,20 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
         return;
       }
 
-      this.value.splice(index, 1);
-      this.update();
+      if (this.data) {
+        await this.data.remove(this.path.concat([index]));
+        // TODO query
+      } else {
+        this.value.splice(index, 1);
+        this.update();
+      }
       this.changes++;
     },
     canMove(pageIndex: number, dir: number) {
       const index = pageIndex + this.pageStart;
       const next = index + dir;
 
-      return next >= 0 && next < this.rowCount && !this.settings.options.hideSort;
+      return !this.data && next >= 0 && next < this.rowCount && !this.settings.options.hideSort;
     },
     moveTo(pageIndex: number, to: number) {
       const from = pageIndex + this.pageStart;
@@ -208,15 +216,26 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
       this.update();
       this.changes++;
     },
-    setItem(pageIndex: number, item: any) {
+    async setItem(pageIndex: number, item: any) {
       const index = pageIndex + this.pageStart;
-      this.$set(this.value, index, item);
+      if (this.data) {
+        await this.data.set(this.path.concat([index]), item);
+        // TODO query
+      } else {
+        this.$set(this.value, index, item);
+      }
       this.update();
     },
-    addItem() {
-      this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
-      this.pageIndex = this.pageCount;
-      this.update();
+    async addItem() {
+      const item = this.itemType.fromJson(this.itemSettings.defaultValue);
+      if (this.data) {
+        await this.data.add(this.path, item);
+        // TODO query
+      } else {
+        this.value.push(item);
+        this.pageIndex = this.pageCount;
+        this.update();
+      }
       this.changes++;
     },
   },

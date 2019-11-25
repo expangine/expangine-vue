@@ -109,7 +109,9 @@
                 <object-form-field
                   v-if="hasProp(col.prop)"
                   :prop="col.prop"
-                  :value="row"
+                  :path="row.path"
+                  :data="data"
+                  :value="row.data"
                   :type="itemType"
                   :read-only="readOnly"
                   :registry="registry"
@@ -140,8 +142,7 @@
 </template>
 
 <script lang="ts">
-import * as Papa from 'papaparse';
-import { Type, ListType, isNumber, ObjectType, TypeBuilder, isFunction } from 'expangine-runtime';
+import { Type, ListType, isNumber, ObjectType, TypeBuilder, isFunction, isString } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeSettings, TypeSettingsRecord } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
@@ -149,13 +150,12 @@ import { ListObjectTableOptions } from './ListObjectTableTypes';
 import { getInput } from '@/app/Input';
 import { sendNotification } from '@/app/Notify';
 import { exportFile } from '@/app/FileExport';
-import ObjectFormField from '../object/ObjectFormField.vue';
-import TypeInputBase from '../TypeInputBase';
 import { getConfirmation } from '@/app/Confirm';
 import { SystemEvents } from '@/app/SystemEvents';
 import { getDataImportMapping } from '@/app/DataImport';
 import { getDataExport } from '@/app/DataExport';
-import { isString } from 'util';
+import ObjectFormField from '../object/ObjectFormField.vue';
+import TypeInputBase from '../TypeInputBase';
 
 
 export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSubs>(Array).extend({
@@ -208,6 +208,9 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
     },
     canInsert(): boolean {
       if (this.settings.options.hideInsert) {
+        return false;
+      }
+      if (this.data) {
         return false;
       }
       return this.canAdd;
@@ -284,7 +287,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
 
       return (a, b) => command({ value: a[prop], test: b[prop] }) * multiplier;
     },
-    sorted(): any {
+    sorted(): any[] {
       const comparator = this.sortComparator;
 
       if (!comparator) {
@@ -293,16 +296,15 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       
       const sorted = this.value.slice();
       sorted.sort(comparator);
+
       return sorted;
     },
     page(): any[] {
-      return this.sorted.slice(this.pageStart, this.pageEnd);
-    },
-  },
-  watch: {
-    value: {
-      deep: true,
-      handler() { /* ignore */ },
+      const { sorted, pageStart, pageEnd, path } = this;
+
+      return sorted.slice(pageStart, pageEnd)
+        .map((data, index) => ({ data, path: path.concat([index + pageStart]) }))
+      ;
     },
   },
   methods: {
@@ -312,8 +314,13 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
         return;
       }
 
-      this.value.splice(index, 1);
-      this.update();
+      if (this.data) {
+        await this.data.remove(this.path.concat([index]));
+        // TODO query
+      } else {
+        this.value.splice(index, 1);
+        this.update();
+      }
       this.changes++;
     },
     hasProp(prop: string): boolean {
@@ -323,7 +330,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       const index = pageIndex + this.pageStart;
       const next = index + dir;
 
-      return next >= 0 && next < this.rowCount && !this.settings.options.hideSort;
+      return !this.data && next >= 0 && next < this.rowCount && !this.settings.options.hideSort;
     },
     moveTo(pageIndex: number, to: number) {
       const from = pageIndex + this.pageStart;
@@ -342,15 +349,26 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       this.update();
       this.changes++;
     },
-    setItem(pageIndex: number, item: any) {
+    async setItem(pageIndex: number, item: any) {
       const index = pageIndex + this.pageStart;
-      this.$set(this.value, index, item);
+      if (this.data) {
+        await this.data.set(this.path.concat([index]), item);
+        // TODO query
+      } else {
+        this.$set(this.value, index, item);
+      }
       this.update();
     },
-    addItem() {
-      this.value.push(this.itemType.fromJson(this.itemSettings.defaultValue));
-      this.pageIndex = this.pageCount;
-      this.update();
+    async addItem() {
+      const item = this.itemType.fromJson(this.itemSettings.defaultValue);
+      if (this.data) {
+        await this.data.add(this.path, item);
+        // TODO query
+      } else {
+        this.value.push(item);
+        this.pageIndex = this.pageCount;
+        this.update();
+      }
       this.changes++;
     },
     getSortingIcon(prop: string) {
@@ -409,10 +427,29 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
 
         switch (result.action) {
           case 'append':
-            this.value.push(...result.data);
+            if (this.data) {
+              const all: Array<Promise<void>> = [];
+              for (const value of result.data) {
+                all.push(this.data.add(this.path, value));
+              }
+              await Promise.all(all);
+              // TODO query
+            } else {
+              this.value.push(...result.data);
+            }
             break;
         case 'replace':
-            this.value.splice(0, this.value.length, ...result.data);
+            if (this.data) {
+              await this.data.clear(this.path);
+              const all: Array<Promise<void>> = [];
+              for (const value of result.data) {
+                all.push(this.data.add(this.path, value));
+              }
+              await Promise.all(all);
+              // TODO query
+            } else {
+              this.value.splice(0, this.value.length, ...result.data);
+            }
             break;
         }
 

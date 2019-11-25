@@ -50,28 +50,28 @@ export default TypeInputBase<TextType, TextRadioOptions, string>(String).extend(
   computed: {
     radioValue: {
       get(): string {
-        return this.inItemsOrEmpty ? this.value : this.otherId;
+        return this.inItemsOrEmpty ? this.computedValue : this.otherId;
       },
       set(value: string) {
-        this.input(value === this.otherId ? '' : value);
+        this.computedValue = value === this.otherId ? '' : value;
       },
     },
     otherValue: {
       get(): string {
-        return this.inItemsOrEmpty ? '' : this.value;
+        return this.inItemsOrEmpty ? '' : this.computedValue;
       },
       set(value: string) {
-        this.input(value);
+        this.computedValue = value;
       },
     },
     items(): string[] {
       return this.settings.options.items;
     },
     inItemsOrEmpty(): boolean {
-      return this.inItems || this.value === '';
+      return this.inItems || this.computedValue === '';
     },
     inItems(): boolean {
-      return this.items.indexOf(this.value) !== -1;
+      return this.items.indexOf(this.computedValue) !== -1;
     },
     hasHint(): boolean {
       return !this.hideHint;

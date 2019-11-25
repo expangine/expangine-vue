@@ -23,12 +23,12 @@ export default TypeInputBase<ColorType, ColorPickerOptions, Color>(Object as () 
   computed: {
     pickerValue: {
       get(): string {
-        return hexLong.formatter(this.value);
+        return hexLong.formatter(this.computedValue);
       },
       set(value: string) {
         const parsed = hexLong.parser(value);
         if (parsed) {
-          this.input(parsed);
+          this.computedValue = parsed;
         }
       },
     },

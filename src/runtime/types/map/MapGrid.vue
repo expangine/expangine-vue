@@ -43,6 +43,8 @@
                       :registry="registry"
                       :settings="settings.sub.value"
                       :value="entry.value"
+                      :path="valuePath(entry.key)"
+                      :data="data"
                       @input="setValue(entryIndex, $event)"
                     ></ex-type-input>
                   </v-col>
@@ -179,6 +181,9 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
     },
   },
   methods: {
+    valuePath(key: string): Array<string | number> {
+      return this.path.concat([key]);
+    },
     updateWidth() {
       const el = this.$refs.parent as HTMLElement;
       this.width = Math.max(1, el.offsetWidth);
@@ -186,7 +191,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
     setValue(pageIndex: number, newValue: any) {
       const index = pageIndex + this.pageStart;
       const entry = this.entries[index];
-      this.value.set(entry.key, newValue);
+      this.computedValue.set(entry.key, newValue);
       entry.value = newValue;
       this.update();
     },
@@ -194,14 +199,14 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       const index = pageIndex + this.pageStart;
       const entry = this.entries[index];
 
-      this.value.delete(entry.key);
+      this.computedValue.delete(entry.key);
 
-      if (this.value.has(newKey)) {
+      if (this.computedValue.has(newKey)) {
         entry.invalid = true;
       } else {
         entry.invalid = false;
         entry.key = newKey;
-        this.value.set(newKey, entry.value);
+        this.computedValue.set(newKey, entry.value);
       }
 
       this.update();
@@ -213,7 +218,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       }
 
       const entry = this.entries[index];
-      this.value.delete(entry.key);
+      this.computedValue.delete(entry.key);
       this.entries.splice(index, 1);
       this.update();
       this.changes++;
@@ -228,13 +233,13 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
         id: ++this.id,
         key: newKey,
         value: newValue,
-        invalid: this.value.has(newKey),
+        invalid: this.computedValue.has(newKey),
       };
 
       this.entries.push(entry);
 
       if (!entry.invalid) {
-        this.value.set(entry.key, entry.value);
+        this.computedValue.set(entry.key, entry.value);
         this.update();
       }
       

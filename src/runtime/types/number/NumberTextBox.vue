@@ -32,8 +32,8 @@ export default TypeInputBase<NumberType, NumberTextBoxOptions, number | string>(
       const { whole } = this.type.options;
       if (whole) {
         const asInt = Math.floor(this.value as number);
-        if (asInt !== this.value) {
-          this.input(asInt);
+        if (asInt !== this.computedValue) {
+          this.computedValue = asInt;
         }
       }
     },

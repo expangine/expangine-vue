@@ -13,8 +13,10 @@
         >
           <object-form-field
             :prop="col.prop"
-            :value="value"
+            :value="computedValue"
             :type="type"
+            :path="path"
+            :data="data"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
@@ -28,8 +30,10 @@
         >
           <object-form-field
             :prop="prop"
-            :value="value"
+            :value="computedValue"
             :type="type"
+            :path="path"
+            :data="data"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"

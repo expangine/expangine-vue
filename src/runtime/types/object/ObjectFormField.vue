@@ -4,6 +4,8 @@
     :read-only="readOnly"
     :registry="registry"
     :settings="fieldSettings"
+    :path="fieldPath"
+    :data="data"
     v-model="field"
   ></ex-type-input>
 </template>
@@ -52,6 +54,9 @@ export default TypeInputBase<ObjectType, ObjectFormOptions, any, string>(Object)
     },
     fieldType(): Type {
       return this.type.options.props[this.prop];
+    },
+    fieldPath(): Array<string | number> {
+      return this.path.concat([this.prop]);
     },
   },
 });

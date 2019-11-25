@@ -4,6 +4,8 @@
     :read-only="readOnly"
     :registry="registry"
     :settings="fieldSettings"
+    :path="fieldPath"
+    :data="data"
     v-model="field"
   ></ex-type-input>
 </template>
@@ -44,6 +46,9 @@ export default TypeInputBase<TupleType, TupleGridOptions, any, number>(Array).ex
     },
     fieldType(): Type {
       return this.type.options[this.index];
+    },
+    fieldPath(): Array<string | number> {
+      return this.path.concat([this.index]);
     },
   },
 });

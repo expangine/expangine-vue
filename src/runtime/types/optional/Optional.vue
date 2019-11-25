@@ -16,6 +16,8 @@
         :read-only="readOnly"
         :registry="registry"
         :settings="settings.sub.innerType"
+        :path="path"
+        :data="data"
         v-model="computedValue"
       ></ex-type-input>
     </v-list-item-content>

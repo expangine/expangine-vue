@@ -13,11 +13,13 @@
         >
           <tuple-grid-field
             :index="index"
-            :value="value"
+            :value="computedValue"
             :type="type"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
+            :path="path"
+            :data="data"
             @input="update"
           ></tuple-grid-field>
         </v-col>

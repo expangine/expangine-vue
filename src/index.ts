@@ -42,8 +42,10 @@ import GetProgramDialog from './app/GetProgramDialog.vue';
 
 export * from './app/BuildType';
 export * from './app/Confirm';
+export * from './app/Data';
 export * from './app/DataExport';
 export * from './app/DataImport';
+export * from './app/DataLocal';
 export * from './app/DebugProgram';
 export * from './app/DescribeData';
 export * from './app/EditFunction';
