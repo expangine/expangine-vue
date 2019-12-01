@@ -1,5 +1,5 @@
 <template>
-  <div class="ex-center-aligned pl-3">
+  <div class="ex-center-aligned">
 
     <ex-expression-menu
       v-bind="$props"
@@ -23,6 +23,7 @@
 
     <ex-expression
       v-bind="$props"
+      class="ml-3"
       :required-type="valueTypeSimplified"
       :value="value.value"
       :path-settings="valueSettings"

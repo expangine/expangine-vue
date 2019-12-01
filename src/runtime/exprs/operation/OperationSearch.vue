@@ -135,6 +135,17 @@ export default ExpressionBase<OperationExpression>().extend({
         }
       }
 
+      pair.op.scope.forEach((scope) => {
+        let alias = scope;
+        let aliasCount = 0;
+        while (this.hasContextVar(alias)) {
+          alias = scope + ++aliasCount;
+        }
+        if (alias !== scope) {
+          this.$set(this.value.scopeAlias, scope, alias);
+        }
+      });
+
       this.update();
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <span :class="inOperationClass">
+  <span class="pl-0">
 
     <ex-expression-menu
       v-bind="$props"

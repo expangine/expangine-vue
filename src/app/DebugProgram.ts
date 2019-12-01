@@ -153,6 +153,7 @@ export function debugProgram(step: number, stopAt?: Map<Expression, boolean>): D
     returnProperty: LiveRuntime.returnProperty,
     getFunction: (name) => LiveRuntime.getFunction(name),
     getOperation: (id) => LiveRuntime.getOperation(id),
+    getComputed: (id) => LiveRuntime.getComputed(id),
     getOperationScopeDefaults: (id) => LiveRuntime.getOperationScopeDefaults(id),
     getCommand(expr: Expression) 
     {

@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap, SubExpression, ComputedExpression, InvokeExpression } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
@@ -38,8 +38,6 @@ export default function<E extends Expression>()
       highlightShadowColor: string;
       hasValue: boolean;
       isRemovable: boolean;
-      inOperation: boolean;
-      inOperationClass: string;
       visuals: ExpressionVisuals<E>;
       multiline: boolean;
       complexity: number;
@@ -189,15 +187,6 @@ export default function<E extends Expression>()
       },
       isRemovable(): boolean {
         return !this.readOnly && this.canRemove;
-      },
-      inOperation(): boolean {
-        return this.value 
-          ? this.value.parent instanceof OperationExpression
-            // && !this.registry.getExpressionMultiline(this.value.parent)
-          : false;
-      },
-      inOperationClass(): string {
-        return this.inOperation ? 'pl-0' : 'pl-3';
       },
       visuals(): ExpressionVisuals<E> {
         return this.registry.getExpressionVisuals(this.value);

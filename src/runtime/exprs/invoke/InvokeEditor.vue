@@ -1,5 +1,5 @@
 <template>
-  <span class="ex-center-aligned pl-3">
+  <span class="ex-center-aligned">
 
     <ex-expression-menu
       key="menu"
@@ -30,7 +30,6 @@
       dense
       hide-details
       class="function-select d-inline-block mx-2"
-      label="Function"
       :items="functions"
       v-model="value.name"
       @change="update"

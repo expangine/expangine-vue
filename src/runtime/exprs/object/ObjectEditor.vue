@@ -2,7 +2,7 @@
   <table class="ex-table ex-striped">
     <tbody>
       <tr>
-        <td :class="inOperationClass">
+        <td class="pl-0">
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"

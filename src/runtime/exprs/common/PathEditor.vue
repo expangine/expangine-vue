@@ -1,47 +1,38 @@
 <template>
   <span class="ex-center-aligned">
+
     <path-segment
       v-if="hasSegment"
       v-bind="$props"
       :index="0"
       :sub-settings="settings"
-      @input="update"
+      :allow-computed="allowComputed"
+      @input="input"
       @remove="remove"
       @settings="onSettings"
     ></path-segment>
-    <v-menu max-height="400" offset-y v-if="nextSegments.length > 0">
-      <template #activator="{ on }">
-        <v-btn icon v-on="on">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </template>
-      <v-list two-line>
-        <template v-for="(sub, index) in nextSegments">
-          <v-list-item :key="index" @click="addSegment(sub)">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ sub.text }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ sub.description }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle v-if="contextDetails[sub.text]">
-                {{ contextDetails[sub.text] }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-menu>
+
+    <next-menu
+      :type="nextType"
+      :registry="registry"
+      :context-details="contextDetails"
+      :hide="hideNext"
+      :allow-computed="allowComputed"
+      :read-only="readOnly"
+      @segment="addSegment"
+      @computed="addComputed"
+    ></next-menu>
+
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, NoExpression, ExpressionBuilder } from 'expangine-runtime';
-import { TypeSubOption, TypeSettings } from '../../types/TypeVisuals';
+import { Expression, Type, NoExpression, ExpressionBuilder, ComputedExpression, SubExpression } from 'expangine-runtime';
+import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import PathSegment from './PathSegment.vue';
+import NextMenu from '@/app/NextMenu.vue';
 
 
 const ex = new ExpressionBuilder();
@@ -50,6 +41,7 @@ export default ExpressionBase().extend({
   name: 'PathEditor',
   components: {
     PathSegment,
+    NextMenu,
   },
   props: {
     path: {
@@ -59,6 +51,10 @@ export default ExpressionBase().extend({
     root: {
       type: Object as () => Type | null,
       default: null,
+    },
+    allowComputed: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -71,19 +67,14 @@ export default ExpressionBase().extend({
     pathType(): Type | null {
       return this.registry.defs.getPathType(this.path, this.rootType);
     },
-    nextSegments(): TypeSubOption[] {
-      const segments = this.registry.getTypeSubOptions(this.pathType || this.rootType);
-
-      const sorted = segments.slice();
-
-      sorted.sort((a, b) => {
-        const ad = a.key instanceof Type ? 1 : 0;
-        const bd = b.key instanceof Type ? 1 : 0;
-
-        return ad - bd;
-      });
-
-      return sorted;
+    nextType(): Type {
+      return this.pathType || this.rootType;
+    },
+    hideNext(): boolean {
+      return this.value.parent && (
+        this.value.parent instanceof SubExpression || 
+        this.value.parent instanceof ComputedExpression
+      );
     },
   },
   methods: {
@@ -101,6 +92,9 @@ export default ExpressionBase().extend({
       }
 
       this.update();
+    },
+    addComputed(comp: TypeComputedOption) {
+      this.input(new ComputedExpression(this.value, comp.value.id));
     },
   },
 });

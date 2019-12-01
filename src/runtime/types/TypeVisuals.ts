@@ -1,6 +1,6 @@
 
 import { VueConstructor } from 'vue';
-import { Type, TypeClass, Expression, TypeSub } from 'expangine-runtime';
+import { Type, TypeClass, Expression, TypeSub, Computed } from 'expangine-runtime';
 import { Registry } from '../Registry';
 
 
@@ -23,6 +23,14 @@ export interface TypeSubNode
   subType: Type;
   value: any;
   valueType: Type;
+}
+
+export interface TypeComputedOption
+{
+  text: string;
+  description: string;
+  details?: string;
+  value: Computed;
 }
 
 /**

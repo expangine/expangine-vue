@@ -439,6 +439,98 @@ export default (registry: Registry) =>
     returnComments: 'The index of [regex] in [value] or -1 if the expression was not found.',
   });
 
+  registry.addOperation(TextOps.base64, {
+    name: 'Encode to Base 64',
+    description: 'Encode [value] to base64',
+    singleline: 'base64 encode {value}',
+    comments: {
+      value: 'The text value to encode',
+    },
+    returnComments: 'The base64 encoded text.',
+  });
+
+  registry.addOperation(TextOps.unbase64, {
+    name: 'Decode from Base 64',
+    description: 'Decode [value] from base64',
+    singleline: 'base64 decode {value}',
+    comments: {
+      value: 'The text value to decode',
+    },
+    returnComments: 'The base64 decoded text.',
+  });
+
+  registry.addOperation(TextOps.encodeURI, {
+    name: 'Encode URI',
+    description: 'Encode URI [value]',
+    singleline: 'encode uri {value}',
+    comments: {
+      value: 'The text value to encode',
+    },
+    returnComments: 'The URI encoded text.',
+  });
+
+  registry.addOperation(TextOps.decodeURI, {
+    name: 'Decode URI',
+    description: 'Decode URI [value]',
+    singleline: 'decode uri {value}',
+    comments: {
+      value: 'The text value to decode',
+    },
+    returnComments: 'The URI decoded text.',
+  });
+
+  registry.addOperation(TextOps.encodeURIComponent, {
+    name: 'Encode URI Component',
+    description: 'Encode URI Component [value]',
+    singleline: 'encode uri component {value}',
+    comments: {
+      value: 'The text value to encode',
+    },
+    returnComments: 'The URI component encoded text.',
+  });
+
+  registry.addOperation(TextOps.decodeURIComponent, {
+    name: 'Decode URI Component',
+    description: 'Decode URI Component [value]',
+    singleline: 'decode uri component {value}',
+    comments: {
+      value: 'The text value to decode',
+    },
+    returnComments: 'The URI component decoded text.',
+  });
+
+  registry.addOperation(TextOps.md5, {
+    name: 'MD5 hash',
+    description: 'MD5 hash [value]',
+    singleline: 'md5 {value}',
+    comments: {
+      value: 'The text value to hash',
+    },
+    returnComments: 'The 128-bit MD5 hashed text.',
+  });
+
+  registry.addOperation(TextOps.encrypt, {
+    name: 'Encrypt Text using Secret',
+    description: 'encrypt [value] using [secret]',
+    singleline: 'encrypt {value} with secret {secret}',
+    comments: {
+      value: 'The text value to encrypt',
+      secret: 'The secret to use to encrypt the value',
+    },
+    returnComments: 'The value encrypted by the secret.',
+  });
+
+  registry.addOperation(TextOps.decrypt, {
+    name: 'Decrypt Text using Secret',
+    description: 'decrypt [value] using [secret]',
+    singleline: 'decrypt {value} with secret {secret}',
+    comments: {
+      value: 'The text value to decrypt',
+      secret: 'The secret to use to decrypt the value',
+    },
+    returnComments: 'The value decrypted by the secret.',
+  });
+
   registry.addOperation(TextOps.toNumber, {
     name: 'Convert Text to Number',
     description: 'Convert [value] to number, otherwise return [invalidValue]',

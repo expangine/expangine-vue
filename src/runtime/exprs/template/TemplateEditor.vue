@@ -2,7 +2,7 @@
   <table class="ex-table">
     <tbody>
       <tr>
-        <td>
+        <td class="pl-0">
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"
@@ -16,6 +16,7 @@
           </span>
           <v-text-field
             v-else
+            dense
             outlined
             persistent-hint
             hint="Text with {vars} embedded in it that {can} be replaced"
@@ -26,12 +27,13 @@
       </tr>
       <template v-for="(param, name) in value.params">
         <tr :key="name">
-          <td class="pa-0 pl-3">
+          <td class="pa-0">
             <span v-if="readOnly">
               {{ name }}
             </span>
             <v-text-field
               v-else
+              dense
               outlined
               hide-details
               :value="name"

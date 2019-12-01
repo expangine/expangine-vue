@@ -1,5 +1,5 @@
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
-import { SubExpression, NoExpression, Expression, Type, GetExpression } from 'expangine-runtime';
+import { SubExpression, NoExpression, Expression, Type, GetExpression, ComputedExpression } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
 import { ListOptions } from '@/common';
 
@@ -12,7 +12,7 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
   create: () => new SubExpression(NoExpression.instance, []),
   name: 'Sub',
   description: 'A sub-property of a value',
-  describe: ({ registry, expr }) => 'Sub ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' of ' + registry.getExpressionDescribe(expr.value),
+  describe: ({ registry, expr }) => registry.getExpressionDescribe(expr.value) + ' -> ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join(' -> '),
   viewer: SubEditor,
   editor: SubEditor,
   complex: true,
@@ -31,8 +31,9 @@ function getModifiers(requiredType: Type | null, expr: Expression, exprType: Typ
 {
   if (expr instanceof GetExpression 
    || expr instanceof SubExpression
+   || expr instanceof ComputedExpression
    || !exprType
-   || exprType.getSubTypes(registry.defs).length === 0)
+   || (exprType.getSubTypes(registry.defs).length === 0) && registry.defs.getComputedsFor(exprType).length === 0)
   {
     return [];
   }

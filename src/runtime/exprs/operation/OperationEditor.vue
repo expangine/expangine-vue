@@ -38,7 +38,7 @@
         text="Op"
         class="mr-1"
         :tooltip="operationTooltip"
-        :class="inOperationClass">
+        :class="inlineClass">
         <template #prepend>
           
           <v-list-item @click="inspecting = true">
@@ -157,8 +157,8 @@ export default ExpressionBase<OperationExpression>().extend({
   }),
   computed: {
     filterOperation: () => filterOperation,
-    inOperationClass(): string {
-      return (this.readOnly || this.multiline ? '' : 'pr-0 ') + (this.inOperation ? 'pl-0' : 'pl-3') + (this.readOnly && !this.multiline ? ' d-none' : '');
+    inlineClass(): string {
+      return (this.readOnly || this.multiline ? '' : 'pr-0 ') + 'pl-0' + (this.readOnly && !this.multiline ? ' d-none' : '');
     },
     isEmpty(): boolean {
       return !this.value.name;

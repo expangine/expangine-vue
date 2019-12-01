@@ -192,7 +192,7 @@ export default (registry: Registry) =>
   registry.addOperation(DateOps.endOf, {
     name: 'Change Date to end of Unit of Time',
     description: 'Change [value] to end of [unit] [inclusive]',
-    singleline: 'set {value} to end of {unit} inclusively? [inclusive]',
+    singleline: 'set {value} to end of {unit} inclusively? {inclusive}',
     comments: {
       value: 'The date value',
       unit: 'The unit of time',

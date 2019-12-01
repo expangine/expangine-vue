@@ -41,12 +41,15 @@ export default Vue.extend({
       return this.registry.isClipboardEnabled();
     },
     copiedOptions(): ListOptions<Expression> {
-      return this.copied.map((e) => {
-        const visual = this.registry.getExpressionVisuals(e);
+      const registry = this.registry;
+      
+      return this.copied.map((expr) => {
+        const visual = registry.getExpressionVisuals(expr);
+
         return {
           text: visual.name,
-          description: visual.description,
-          value: e,
+          description: visual.describe({ registry, expr }),
+          value: expr,
         };
       });
     },

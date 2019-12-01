@@ -2,6 +2,7 @@ import { ExpressionVisuals } from '../ExpressionVisuals';
 import { OperationExpression, objectReduce } from 'expangine-runtime';
 
 import OperationEditor from './OperationEditor.vue';
+import { templateReplace } from '@/common';
 
 
 const STARTING_PARAM = '$wrapped';
@@ -12,15 +13,12 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   create: (forType) => new OperationExpression('', {}),
   name: 'Operation',
   description: 'Perform an operation',
-  describe: ({ registry, expr }) => registry.getOperationVisuals(expr.name).singleline.split(/[\{\}]/g).map((part, index) => {
-    if (index % 2 === 0) {
-      return part;
-    } else if (expr.params[part]) {
-      return '(' + registry.getExpressionDescribe(expr.params[part]) + ')';
-    } else {
-      return '{' + part + '}';
-    }
-  }).join(''),
+  describe: ({ registry, expr }) => templateReplace(
+    registry.getOperationVisuals(expr.name).singleline,
+    (token) => expr.params[token]
+      ? '(' + registry.getExpressionDescribe(expr.params[token]) + ')'
+      : '{' + token + '}',
+  ),
   viewer: OperationEditor,
   editor: OperationEditor,
   complex: true,

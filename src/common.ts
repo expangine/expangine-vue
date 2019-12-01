@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale, ComputedExpression } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';
@@ -201,7 +201,9 @@ export function renameVariable(startingAt: Expression, from: string, to: string)
 
 export function isPathExpression(expr: Expression): expr is (GetExpression | SetExpression | UpdateExpression) 
 {
-  return expr instanceof GetExpression || expr instanceof SetExpression || expr instanceof UpdateExpression;
+  return expr instanceof GetExpression 
+    || expr instanceof SetExpression 
+    || expr instanceof UpdateExpression;
 }
 
 export function isInPathExpression(expr: Expression): boolean
@@ -231,6 +233,22 @@ export function findClosestPhonetic(haystack: string[], needle: string): string
     }, 
     { text: '', distance: -1 },
   ).text;
+}
+
+export function templateTokens(template: string): string[]
+{
+  return template.split(/[\{\}]/g);
+}
+
+export function templateReplace(template: string, values: (token: string) => string, labels: (label: string) => string = ((x) => x)): string
+{
+  return templateTokens(template)
+    .map((segment, index) => index % 2 === 0
+      ? labels(segment)
+      : values(segment),
+    )
+    .join('')
+  ;
 }
 
 export function castValue(value: any, valueType: Type, targetType: Type)

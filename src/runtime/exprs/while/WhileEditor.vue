@@ -33,7 +33,7 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td class="pt-6px">
           <ex-chip-menu
             text="Do"
             tooltip="Execute this expression while the above expression is true"
@@ -124,3 +124,9 @@ export default ExpressionBase<WhileExpression>().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.pt-6px {
+  padding-top: 6px !important;
+}
+</style>

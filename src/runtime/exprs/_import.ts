@@ -2,6 +2,7 @@
 import { Registry } from '../Registry';
 
 import { GetVisuals } from './get';
+import { ComputedVisuals } from './computed';
 import { ConstantVisuals } from './constant';
 import { SetVisuals } from './set';
 import { SubVisuals } from './sub';
@@ -34,6 +35,7 @@ export default function(registry: Registry)
     .addExpression(SetVisuals)
     .addExpression(UpdateVisuals)
     .addExpression(SubVisuals)
+    .addExpression(ComputedVisuals)
     .addExpression(IfVisuals)
     .addExpression(SwitchVisuals)
     .addExpression(DoVisuals)

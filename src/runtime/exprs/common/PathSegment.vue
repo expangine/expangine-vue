@@ -1,36 +1,24 @@
 <template>
   <span class="path-segment ex-center-aligned">
 
-    <v-menu key="menu" max-height="400" offset-y>
-      <template #activator="{ on }">
-        <v-btn icon v-on="on">
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </template>
-      <v-list two-line>
-        <template v-for="(alt, index) in alternativeSegments">
-          <v-list-item :key="index" @click="changeSegment(alt)">
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ alt.text }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ alt.description }}
-              </v-list-item-subtitle>
-              <v-list-item-subtitle v-if="contextDetails[alt.text]">
-                {{ contextDetails[alt.text] }}
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+    <next-menu
+      :type="nextType"
+      :registry="registry"
+      :context-details="contextDetails"
+      :allow-computed="allowComputed"
+      :read-only="readOnly"
+      @segment="changeSegment"
+      @computed="changeComputed"
+    >
+      <template #append>
         <v-list-item key="remove" @click="removeSegment">
           <v-list-item-content>
             <v-list-item-title>Remove</v-list-item-title>
             <v-list-item-subtitle>Remove this segment and everything after it</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
-      </v-list>
-    </v-menu>
+      </template>
+    </next-menu>
     
     <v-tooltip top :disabled="!segmentRisky">
       <template #activator="{ on }">
@@ -59,6 +47,7 @@
       :index="index + 1"
       :path="path"
       :sub-settings="segmentValueSettings"
+      :allow-computed="allowComputed"
       @settings="onSettings"
     ></path-segment>
 
@@ -67,16 +56,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction } from 'expangine-runtime';
+import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
-import { TypeSubOption, TypeSettings } from '../../types/TypeVisuals';
+import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
+import NextMenu from '@/app/NextMenu.vue';
 
 
 const ex = new ExpressionBuilder();
 
 export default ExpressionBase().extend({
   name: 'PathSegment',
+  components: {
+    NextMenu,
+  },
   props: {
     path: {
       type: Array as () => Expression[],
@@ -92,6 +85,10 @@ export default ExpressionBase().extend({
     },
     subSettings: {
       type: Object as () => TypeSettings<any, string> & TypeSettings<any, number>,
+    },
+    allowComputed: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -155,6 +152,11 @@ export default ExpressionBase().extend({
     previousType(): Type | null {
       return this.registry.defs.getPathType(this.path, this.rootType, this.index);
     },
+    nextType(): Type {
+      return this.index === 0 
+        ? this.rootType
+        : this.previousType || NullType.baseType;
+    },
     alternativeSegments(): TypeSubOption[] {
       const segments = this.index === 0
         ? this.registry.getTypeSubOptions(this.rootType)
@@ -208,6 +210,9 @@ export default ExpressionBase().extend({
       
       this.path.splice(this.index, this.path.length - this.index, segment);
       this.update();
+    },
+    changeComputed(sub: TypeComputedOption) {
+      this.input(new ComputedExpression(new GetExpression(this.path.slice(0, this.index)), sub.value.id));
     },
     removeSegment() {
       this.path.splice(this.index, this.path.length - this.index);

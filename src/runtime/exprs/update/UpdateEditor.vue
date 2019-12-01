@@ -22,6 +22,7 @@
 
     <ex-expression
       v-bind="$props"
+      class="ml-3"
       :required-type="valueType"
       :value="value.value"
       :context="valueContext"

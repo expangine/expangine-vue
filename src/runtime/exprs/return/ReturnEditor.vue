@@ -1,5 +1,6 @@
 <template>
-  <span class="ex-center-aligned pl-3">
+  <span class="ex-center-aligned">
+
     <ex-expression-menu
       key="menu"
       v-bind="$props"
@@ -8,6 +9,7 @@
       tooltip="Exit the expression now, optionally returning a value"
       :can-remove="false"
     ></ex-expression-menu>
+
     <ex-expression
       key="value"
       v-bind="$props"
@@ -17,6 +19,7 @@
       @input="updateValue($event)"
       @remove="updateValue()"
     ></ex-expression>
+    
   </span>
 </template>
 

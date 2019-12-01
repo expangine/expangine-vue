@@ -1,6 +1,6 @@
 
 import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder, ObjectType, OperationPair } from 'expangine-runtime';
-import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode } from './types/TypeVisuals';
+import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode, TypeComputedOption } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
@@ -294,9 +294,36 @@ export class Registry
     return type.getCompareExpression(new ExpressionBuilder());
   }
 
+  public getTypeComputedOptions(type: Type): TypeComputedOption[]
+  {
+    return this.defs.getComputedsFor(type).map((value) => {
+      const op = this.getOperationVisuals(value.op);
+
+      return {
+        value,
+        text: value.id.split(':')[1],
+        description: op.name,
+        /*
+        details: templateReplace(
+          op.singleline,
+          (token) => token === value.value 
+            ? '<strong>this</strong>' 
+            : token in value.params
+              ? '<strong>' + value.params[token] + '</strong>'
+              : token in op.defaults
+                ? '<strong>' + op.defaults[token] + '</strong>'
+                : token,
+        ),
+        */
+      };
+    });
+  }
+
   public getTypeSubOptions(type: Type): TypeSubOption[]
   {
-    return this.getTypeVisuals(type).subOptions(this, type);
+    const visuals = this.getTypeVisuals(type);
+
+    return visuals ? visuals.subOptions(this, type) : [];
   }
 
   public getTypeDescribe(type: Type): string

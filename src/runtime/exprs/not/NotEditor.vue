@@ -1,14 +1,15 @@
 <template>
-  <span class="pl-3 ex-center-aligned">
+  <span class="ex-center-aligned">
+
     <ex-expression-menu
       key="menu"
       v-bind="$props"
       v-on="$listeners"
-      class="mt-3"
       text="Not"
       tooltip="Negates the following expression"
       :can-remove="false"
     ></ex-expression-menu>
+
     <ex-expression
       key="expression"
       v-bind="$props"
@@ -18,6 +19,7 @@
       @input="updateExpression($event)"
       @remove="updateExpression()"
     ></ex-expression>
+
   </span>
 </template>
 

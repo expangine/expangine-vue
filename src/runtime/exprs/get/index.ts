@@ -11,7 +11,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   create: () => new GetExpression([]),
   name: 'Get',
   description: 'Get a data value',
-  describe: ({ registry, expr }) => 'Get ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join('->'),
+  describe: ({ registry, expr }) => 'Get ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join(' -> '),
   viewer: GetViewer,
   editor: GetEditor,
   complex: true,

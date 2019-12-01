@@ -1,18 +1,32 @@
 <template>
   <span>
+
     <slot name="prefix"></slot>
-    <template v-for="(name, index) in parts">
-      <span :key="index" v-if="isText(index)" :style="textStyle" v-html="name" class="mx-1"></span>
-      <span :key="index" v-else>
-        <slot name="section" :section="name">{{ name }}</slot>
+
+    <template v-for="part in parts">
+
+      <span v-if="part.text" 
+        class="mx-1"
+        :key="part.index" 
+        :style="textStyle" 
+        v-html="part.name" 
+      ></span>
+
+      <span v-else-if="part.section"
+        :key="part.index">
+        <slot name="section" :section="part.name">{{ part.name }}</slot>
       </span>
+
     </template>
+
     <slot name="suffix"></slot>
+
   </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { templateTokens } from '@/common';
 
 
 export default Vue.extend({
@@ -27,13 +41,13 @@ export default Vue.extend({
     },
   },
   computed: {
-    parts(): string[] {
-      return this.template.split(/[\{\}]/g);
-    },
-  },
-  methods: {
-    isText(index: number) {
-      return index % 2 === 0;
+    parts(): Array<{ name: string, index: number, text: boolean, section: boolean }> {
+      return templateTokens(this.template).map((name, index) => ({
+        name,
+        index,
+        text: index % 2 === 0 && !!name,
+        section: index % 2 === 1,
+      }));
     },
   },
 });
