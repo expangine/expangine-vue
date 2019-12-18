@@ -13,6 +13,14 @@ export default (registry: Registry) =>
     returnComments: 'An empty text.',
   });
 
+  registry.addOperation(TextOps.uuid, {
+    name: 'Generate UUID',
+    description: 'Create a UUID',
+    singleline: 'uuid',
+    comments: {},
+    returnComments: 'A uuid.',
+  });
+
   registry.addOperation(TextOps.maybe, {
     name: 'Try Text?',
     description: 'If the [value] is text, return the text value, otherwise return undefined',
@@ -683,6 +691,16 @@ export default (registry: Registry) =>
       value: 'The text to evaluate for uppercase',
     },
     returnComments: 'True if [value] is in all uppercase, otherwise false.',
+  });
+
+  registry.addOperation(TextOps.isUuid, {
+    name: 'Is UUID?',
+    description: 'Determines whether [value] is a UUID',
+    singleline: 'is {value} uuid?',
+    comments: {
+      value: 'The text to evaluate for UUID',
+    },
+    returnComments: 'True if [value] looks like a UUID, otherwise falese.',
   });
 
   registry.addOperation(TextOps.asAny, {

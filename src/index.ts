@@ -38,6 +38,7 @@ import TestOperationDialog from './app/TestOperationDialog.vue';
 import OperationCatalogueDialog from './app/OperationCatalogue.vue';
 import OperationInfoDialog from './app/OperationInfo.vue';
 import GetProgramDialog from './app/GetProgramDialog.vue';
+import Validation from './app/Validation.vue';
 
 
 export * from './app/BuildType';
@@ -143,6 +144,7 @@ export default {
     Vue.component('ex-simple-fields', SimpleFields);
     Vue.component('ex-draggable', Draggable);
     Vue.component('ex-templated', Templated);
+    Vue.component('ex-validation', Validation);
 
     Vue.use(VueTimeago, {});
   },

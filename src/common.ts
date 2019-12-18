@@ -175,6 +175,24 @@ export function isSubObject(settings: any): settings is TypeSettings<any, string
   return isObject(settings.sub);
 }
 
+export function isSubMap(superset: Map<any, any>, subset: Map<any, any>): boolean
+{
+  for (const [key, value] of subset)
+  {
+    if (!superset.has(key) || superset.get(key) !== value)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function isMapEqual(a: Map<any, any>, b: Map<any, any>): boolean
+{
+  return isSubMap(a, b) && isSubMap(b, a);
+}
+
 export function isExactType<T extends Type<O>, O = any>(x: Type, y: TypeClass<T, O>): x is T
 {
   return x.constructor === y;

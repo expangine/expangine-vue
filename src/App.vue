@@ -275,6 +275,24 @@
       <v-spacer></v-spacer>
       <v-tooltip bottom>
         <template #activator="{ on }">
+          <v-btn icon @click="viewValidations" v-on="on">
+            <v-badge
+              overlap="overlap"
+              class="align-self-center"
+              :color="validationColor"
+              :value="validations.length > 0"
+            >
+              <template v-slot:badge>
+                <span>{{ validations.length }}</span>
+              </template>
+              <v-icon>{{ validationIcon }}</v-icon>
+            </v-badge>
+          </v-btn>
+        </template>
+        <span>{{ validations.length }} Problems</span>
+      </v-tooltip>
+      <v-tooltip bottom>
+        <template #activator="{ on }">
           <v-btn icon @click="runProgram" v-on="on">
             <v-icon>mdi-play</v-icon>
           </v-btn>
@@ -484,6 +502,26 @@
       </v-navigation-drawer>
     </v-content>
 
+    <v-navigation-drawer
+      app
+      right
+      fixed
+      disable-resize-watcher
+      disable-route-watcher
+      :width="600"
+      :value="validationsVisible"
+      :permanent="validationsVisible"
+    >
+      <template v-for="(validation, index) in validations">
+        <ex-validation
+          :key="index"
+          :validation="validation"
+          :registry="registry"
+          @hover="setHighlightValidation"
+        ></ex-validation>
+      </template>
+    </v-navigation-drawer>
+
   </v-app>
 </template>
 
@@ -491,7 +529,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType } from 'expangine-runtime';
+import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -512,11 +550,12 @@ import { getDataImport } from './app/DataImport';
 import { getSendMail } from './app/SendMail';
 import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
-import { friendlyList, SimpleFieldOption } from '@/common';
+import { friendlyList, SimpleFieldOption, isMapEqual } from '@/common';
 import { getPromiser } from './app/Promiser';
 import { Store } from './app/Store';
 import { Trie } from './app/Trie';
 import { SystemEvents } from './app/SystemEvents';
+import { ValidationHelper } from './app/ValidationHelper';
 import Registry from './runtime';
 
 
@@ -567,6 +606,12 @@ export default Vue.extend({
     dataTimeout: -1,
     loading: 0,
     showOperations: false,
+    validationSeverity: ValidationSeverity.MEDIUM,
+    validations: [] as Validation[],
+    validationsVisible: false,
+    validationHighlight: null as null | Validation,
+    validationSubjectColor: '#E57373',
+    validationParentColor: '#FFCDD2',
     // History
     historyEmpty: true,
     undoEmpty: true,
@@ -657,10 +702,25 @@ export default Vue.extend({
     isDataSaved(): boolean {
       return this.dataTimeout === -1;
     },
+    validationMaxSeverity(): ValidationSeverity {
+      return this.validations.reduce((max, validation) => Math.max(max, validation.severity), ValidationSeverity.LOW);
+    },
+    validationIcon(): string {
+      return ValidationHelper.ICONS[this.validationMaxSeverity];
+    },
+    validationColor(): string {
+      return ValidationHelper.COLORS_BACKGROUND[this.validationMaxSeverity];
+    },
   },
   watch: {
     showReturnExpressions: 'updateHighlightExpressions',
-    program: 'updateHighlightExpressions',
+    program: {
+      immediate: true, 
+      deep: true,
+      handler() {
+        this.updatedProgram();
+      },
+    },
   },
   async mounted() {
     (window as any).registry = Registry;
@@ -789,7 +849,20 @@ export default Vue.extend({
         });
       }
 
-      this.highlightExpressions = highlights;
+      if (this.validationHighlight)
+      {
+        highlights.set(this.validationHighlight.subject, this.validationSubjectColor);
+
+        if (this.validationHighlight.parent)
+        {
+          highlights.set(this.validationHighlight.parent, this.validationParentColor);
+        }
+      }
+
+      if (!isMapEqual(highlights, this.highlightExpressions))
+      {
+        this.highlightExpressions = highlights;
+      }
     },
     toggleShowReturnExpressions() 
     {
@@ -984,6 +1057,8 @@ export default Vue.extend({
 
       this.saveDataPending();
       this.history.save(saving, transform ? 'Type, Settings, and Data change.' : 'Type and Settings change.');
+
+      this.updatedProgram();
     },
     // DESCRIBE
     async describe() 
@@ -1183,14 +1258,33 @@ export default Vue.extend({
       });
     },
     // PROGRAM
+    setHighlightValidation(validation: Validation | null)
+    {
+      this.validationHighlight = validation;
+      this.updateHighlightExpressions();
+    },
+    viewValidations()
+    {
+      if (this.validations.length > 0 || this.validationsVisible)
+      {
+        this.validationsVisible = !this.validationsVisible;
+      }
+    },
+    updatedProgram()
+    {
+      this.validations = this.program
+        .validations(this.registry.defs, this.type)
+        .filter((validation) => validation.severity >= this.validationSeverity)
+      ;
+
+      this.updateHighlightExpressions();
+    },
     saveProgram(program: Expression = NoExpression.instance) 
     {
       program.setParent();
 
       this.saveDataPending();
       this.history.save({ program }, 'Program saved.');
-
-      this.updateHighlightExpressions();
     },
     resetProgram() 
     {
