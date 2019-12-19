@@ -54,6 +54,8 @@ export class ValidationHelper
           return `The operation expression does not have an operation specified.`;
         }
     }
+
+    return 'An unknown error has occurred.';
   }
 
 }
