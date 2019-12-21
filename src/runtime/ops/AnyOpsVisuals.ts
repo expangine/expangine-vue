@@ -254,4 +254,15 @@ export default (registry: Registry) =>
     weight: 0.5,
   });
 
+  registry.addOperation(AnyOps.asSet, {
+    name: 'Cast Any to Set',
+    description: 'Cast [value] to Set',
+    singleline: '{value} as set',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'A set with a single [value] value.',
+    weight: 0.5,
+  });
+
 };

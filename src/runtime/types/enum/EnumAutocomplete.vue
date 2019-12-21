@@ -11,15 +11,15 @@
 </template>
 
 <script lang="ts">
-import { EnumType, toArray } from 'expangine-runtime';
+import { EnumType } from 'expangine-runtime';
 import { EnumAutocompleteOptions } from './EnumAutocompleteTypes';
 import { TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
-import { ListOptions, PropTypeAny } from '../../../common';
+import { ListOptions } from '../../../common';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<EnumType, EnumAutocompleteOptions, any, EnumSubs>(PropTypeAny).extend({
+export default TypeInputBase<EnumType, EnumAutocompleteOptions, any, EnumSubs>().extend({
   name: 'EnumAutocomplete',
   computed: {
     hasHint(): boolean {
@@ -31,7 +31,7 @@ export default TypeInputBase<EnumType, EnumAutocompleteOptions, any, EnumSubs>(P
     items(): ListOptions<any> {
       const constants = this.type.options.constants.entries();
 
-      return toArray(constants).map(([text, value]) => ({ text, value }));
+      return Array.from(constants).map(([text, value]) => ({ text, value }));
     },
   },
 });

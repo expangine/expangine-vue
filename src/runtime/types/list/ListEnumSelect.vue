@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { ListType, toArray, EnumType } from 'expangine-runtime';
+import { ListType, EnumType } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { ListEnumSelectOptions } from './ListEnumSelectTypes';
 import { ListSubs } from './ListTypes';
@@ -38,7 +38,7 @@ export default TypeInputBase<ListType, ListEnumSelectOptions, any[], ListSubs>(A
     items(): ListOptions<any> {
       const constants = this.enumType.options.constants.entries();
 
-      return toArray(constants).map(([text, value]) => ({ text, value }));
+      return Array.from(constants).map(([text, value]) => ({ text, value }));
     },
   },
 });

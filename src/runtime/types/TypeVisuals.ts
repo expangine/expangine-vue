@@ -33,19 +33,6 @@ export interface TypeComputedOption
   value: Computed;
 }
 
-/**
- * sub: x, type: Map, value: Map, simple: false
- *    sub: x, type: Number, value: 4, simple: true
- *    sub: y, type: Number, value: 5, simple: true
- * sub: y, type: List, value: [5, 6], simple: false
- *    sub: 0, type: Number, value: 5, simple: true
- *    sub: 1, type: Number, value: 6, simple: true
- * 
- * 
- * { x: Map[x=>4, y=>5], y: [5, 6] }
- * 
- */
-
 export interface TypeVisuals<
   T extends Type = Type, 
   Subs extends SubsType = unknown, 

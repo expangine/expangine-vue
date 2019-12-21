@@ -38,8 +38,6 @@ export type ListOptionsTokenized<T = string> = Array<{
   tokens: Trie<number>;
 }>;
 
-export const PropTypeAny: PropType<any> = [String, Number, Boolean, Array, Object, Date, Function, Symbol, Map];
-
 export type SimpleTypes = 'text' | 'number' | 'boolean' | 'combo' | 'select' | 'date' | 'color' | 'object' | 'items';
 
 export type SimpleTypeForType<V> =

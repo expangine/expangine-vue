@@ -48,13 +48,12 @@
 import { Type, AnyType, Expression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { AnyOptions } from './AnyTypes';
-import { PropTypeAny } from '../../../common';
 import { TypeSettings, TypeUpdateEvent } from '../TypeVisuals';
 import { getBuildType } from '../../../app/BuildType';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<AnyType, AnyOptions, any>(PropTypeAny).extend({
+export default TypeInputBase<AnyType, AnyOptions, any>().extend({
   name: 'Any',
   data: () => ({
     anyType: null as null | Type,

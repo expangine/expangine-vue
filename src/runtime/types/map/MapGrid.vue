@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { MapType, toArray, isFunction } from 'expangine-runtime';
+import { MapType, isFunction } from 'expangine-runtime';
 import { getConfirmation } from '../../../app/Confirm';
 import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
@@ -175,7 +175,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
       immediate: true,
       handler(map) {
         this.entries = map instanceof Map
-          ? toArray(map.entries()).map(([key, value]) => ({ key, value, invalid: false, id: ++this.id }))
+          ? Array.from(map.entries()).map(([key, value]) => ({ key, value, invalid: false, id: ++this.id }))
           : [];
       },
     },

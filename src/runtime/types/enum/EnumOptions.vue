@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { EnumType, EnumOptions, toArray, Expression, OperationExpression, GetExpression, MapOps, ConstantExpression } from 'expangine-runtime';
+import { EnumType, EnumOptions, Expression, OperationExpression, GetExpression, MapOps, ConstantExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeUpdateEvent, TypeSettings } from '../TypeVisuals';
@@ -116,7 +116,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
     'type.options.constants': {
       immediate: true,
       handler(value: Map<any, any>) {
-        this.constants = toArray(value.entries());
+        this.constants = Array.from(value.entries());
       },
     },
   },

@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { EnumType, toArray } from 'expangine-runtime';
+import { EnumType } from 'expangine-runtime';
 import { EnumSubs } from './EnumTypes';
 import { friendlyList } from '../../../common';
 import TypeEditorBase from '../TypeEditorBase';
@@ -34,7 +34,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
   name: 'EnumEditor',
   computed: {
     description(): string {
-      return friendlyList(toArray(this.type.options.constants.keys()));
+      return friendlyList(Array.from(this.type.options.constants.keys()));
     },
   },
 });

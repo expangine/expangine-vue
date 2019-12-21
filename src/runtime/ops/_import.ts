@@ -9,6 +9,7 @@ import ListOpsVisuals from './ListOpsVisuals';
 import MapOpsVisuals from './MapOpsVisuals';
 import NumberOpsVisuals from './NumberOpsVisuals';
 import ObjectOpsVisuals from './ObjectOpsVisuals';
+import SetOpsVisuals from './SetOpsVisuals';
 import TextOpsVisuals from './TextOpsVisuals';
 import TupleOpsVisuals from './TupleOpsVisuals';
 
@@ -24,6 +25,7 @@ export default function(registry: Registry)
     .import(MapOpsVisuals)
     .import(NumberOpsVisuals)
     .import(ObjectOpsVisuals)
+    .import(SetOpsVisuals)
     .import(TextOpsVisuals)
     .import(TupleOpsVisuals)
   ;

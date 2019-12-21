@@ -1,6 +1,6 @@
 import { Registry } from '../../Registry';
 
-import { ListVisuals, ListBuilder, ListBuilderWrapper } from '.';
+import { ListVisuals, ListBuilder, ListBuilderWrapper, ListModifierFromValue } from '.';
 
 
 export default function(registry: Registry)
@@ -9,5 +9,6 @@ export default function(registry: Registry)
     .addType(ListVisuals)
     .addTypeBuilder(ListBuilder)
     .addTypeBuilderWrapper(ListBuilderWrapper)
+    .addTypeModifier(ListModifierFromValue)
   ;
 }

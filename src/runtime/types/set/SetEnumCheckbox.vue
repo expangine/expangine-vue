@@ -20,7 +20,7 @@
             :error="invalid"
             :label="constant[0]"
             :value="constant[1]"
-            v-model="computedValue"
+            v-model="listValue"
           ></v-checkbox>
         </v-col>
       </template>
@@ -29,30 +29,38 @@
 </template>
 
 <script lang="ts">
-import { ListType, EnumType } from 'expangine-runtime';
+import { SetType, EnumType } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { TypeSettings } from '../TypeVisuals';
-import { ListEnumCheckboxOptions } from './ListEnumCheckboxTypes';
-import { ListSubs } from './ListTypes';
+import { SetEnumCheckboxOptions } from './SetEnumCheckboxTypes';
+import { SetSubs } from './SetTypes';
 import TypeInputBase from '../TypeInputBase';
 
 
 const MIN_INPUT_WIDTH = 1000;
 const GRID_COLUMNS = 12;
 
-export default TypeInputBase<ListType, ListEnumCheckboxOptions, any[], ListSubs>(Array).extend({
-  name: 'ListEnumCheckbox',
+export default TypeInputBase<SetType, SetEnumCheckboxOptions, Set<any>, SetSubs>(Set).extend({
+  name: 'SetEnumCheckbox',
   data: () => ({
     width: 1,
   }),
   computed: {
+    listValue: {
+      get(): any[] {
+        return Array.from(this.computedValue);
+      },
+      set(list: any[]) {
+        this.computedValue = new Set(list);
+      },
+    },
     themeClass(): string {
       return this.settings.options.dark
         ? 'theme--dark'
         : 'theme--light';
     },
     enumType(): EnumType {
-      return this.type.options.item as EnumType;
+      return this.type.options.value as EnumType;
     },
     entries(): Array<[any, any]> {
       return Array.from(this.enumType.options.constants.entries());

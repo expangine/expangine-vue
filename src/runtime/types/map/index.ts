@@ -1,5 +1,5 @@
 
-import { Type, MapType, TextType, ObjectType, ManyType, isString, isMap, toArray} from 'expangine-runtime';
+import { Type, MapType, TextType, ObjectType, ManyType, isString, isMap } from 'expangine-runtime';
 import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals, TypeSubNode } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
@@ -26,7 +26,7 @@ export const MapVisuals = createVisuals<MapSubs>()({
   ,
   stringify: ({ registry, value, type }) => 
     'new Map([' + 
-      toArray((value as Map<any, any>).entries()).map(([k, v]) => 
+      Array.from((value as Map<any, any>).entries()).map(([k, v]) => 
         '[' + 
           registry.getTypeStringify(type.options.key, k) + 
           ',' + 

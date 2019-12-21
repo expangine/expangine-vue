@@ -11,6 +11,7 @@ import MapImport from './map/_import';
 import NumberImport from './number/_import';
 import ObjectImport from './object/_import';
 import OptionalImport from './optional/_import';
+import SetImport from './set/_import';
 import TextImport from './text/_import';
 import TupleImport from './tuple/_import';
 
@@ -28,6 +29,7 @@ export default function(registry: Registry)
     .import(NumberImport)
     .import(ObjectImport)
     .import(OptionalImport)
+    .import(SetImport)
     .import(TextImport)
     .import(TupleImport)
   ;

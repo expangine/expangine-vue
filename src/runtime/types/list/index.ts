@@ -1,5 +1,5 @@
 
-import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues } from 'expangine-runtime';
+import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeSettingsRecord, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -11,8 +11,11 @@ import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import { ListObjectTableInput } from './ListObjectTableTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
-import { initializeSubs } from '@/common';
+import { initializeSubs, castExpression } from '@/common';
 import { ListSubs } from './ListTypes';
+import { TypeModifier } from '../TypeModifier';
+import { getConfirmation } from '@/app/Confirm';
+import { getProgram } from '@/app/GetProgram';
 
 
 export const ListVisuals = createVisuals<ListSubs>()({
@@ -190,4 +193,74 @@ export const ListBuilderWrapper: TypeBuilderWrapper =
       },
     })),
   }),
+};
+
+export const ListModifierFromValue: TypeModifier<ListType> =
+{
+  getOption: ({ registry, type, typeSettings, parent }) => {
+
+    if (!(type instanceof SetType) && !(type instanceof MapType)) {
+      return false;
+    }
+
+    const item = type.options.value;
+    const subSettings = typeSettings.sub
+      ? 'value' in typeSettings.sub
+        ? typeSettings.sub.value
+        : null
+      : null;
+
+    if (!subSettings) {
+      return false;
+    }
+
+    return {
+      text: 'Convert to List',
+      description: 'This type will be converted to a list with the given values',
+      priority: 14,
+      value: async () => {
+        if (!await getConfirmation()) {
+          return false;
+        }
+
+        const newType = ListType.forItem(item);
+
+        const result = await getProgram({
+          title: 'Convert to List',
+          message: 'The expression that changes the type to a list.',
+          confirm: 'Convert',
+          registry,
+          context: ObjectType.from({
+            parent: parent || NullType.baseType,
+            value: type,
+          }),
+          program: castExpression(type, newType),
+          expectedType: newType,
+        });
+
+        if (!result) {
+          return false;
+        }
+
+        const input = typeSettings.input in ListVisuals.inputs
+          ? typeSettings.input
+          : 'list';
+        const options = typeSettings.input in ListVisuals.inputs
+          ? typeSettings.options
+          : ListListInput.getDefaultOptions();
+        const sub = { item: subSettings };
+
+        return {
+          type: newType,
+          settings: {
+            input,
+            defaultValue: [],
+            options,
+            sub,
+          },
+          transform: result.program,
+        };
+      },
+    };
+  },
 };

@@ -1210,4 +1210,15 @@ export default (registry: Registry) =>
     weight: 0.5,
   });
 
+  registry.addOperation(ListOps.asSet, {
+    name: 'Cast List to Set',
+    description: 'Cast [value] to Set',
+    singleline: '{value} as set',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'A set with with all the unique values from [value]',
+    weight: 0.5,
+  });
+
 };

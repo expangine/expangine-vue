@@ -423,4 +423,15 @@ export default (registry: Registry) =>
     weight: 0.5,
   });
 
+  registry.addOperation(MapOps.asSet, {
+    name: 'Cast Map to Set',
+    description: 'Cast [value] to Set',
+    singleline: '{value} as set',
+    comments: {
+      value: 'The value to cast',
+    },
+    returnComments: 'A set the unique values from [value].',
+    weight: 0.5,
+  });
+
 };

@@ -6,7 +6,7 @@ import { TypeVisuals, TypeVisualInput, TypeSettings, SubsType } from './TypeVisu
 import { Registry } from '../Registry';
 
 
-export default function<T extends Type, O, V, S extends SubsType = unknown>(type: PropType<V>)
+export default function<T extends Type, O, V, S extends SubsType = unknown>(type?: PropType<V>)
 {
   return Vue.extend<
     {

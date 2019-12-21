@@ -15,15 +15,15 @@
 </template>
 
 <script lang="ts">
-import { EnumType, toArray } from 'expangine-runtime';
+import { EnumType } from 'expangine-runtime';
 import { EnumSliderOptions } from './EnumSliderTypes';
 import { TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
-import { ListOptions, PropTypeAny } from '../../../common';
+import { ListOptions } from '../../../common';
 import TypeInputBase from '../TypeInputBase';
 
 
-export default TypeInputBase<EnumType, EnumSliderOptions, any, EnumSubs>(PropTypeAny).extend({
+export default TypeInputBase<EnumType, EnumSliderOptions, any, EnumSubs>().extend({
   name: 'EnumSlider',
   computed: {
     sliderValue: {
@@ -35,7 +35,7 @@ export default TypeInputBase<EnumType, EnumSliderOptions, any, EnumSubs>(PropTyp
       },
     },
     entries(): Array<[any, any]> {
-      return toArray(this.type.options.constants.entries());
+      return Array.from(this.type.options.constants.entries());
     },
     keys(): any[] {
       return this.entries.map(([k, v]) => k);
