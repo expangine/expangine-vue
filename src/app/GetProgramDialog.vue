@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline mb-2">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
         {{ title }}
       </v-card-title>
       <v-card-text>
@@ -63,6 +68,12 @@ import { getProgramDialog } from './GetProgram';
 export default Vue.extend({
   data: () => getProgramDialog,
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     hasTabs(): boolean {
       return !this.expectedType;
     },
@@ -84,6 +95,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     cancel() {
       this.close(false);
     },

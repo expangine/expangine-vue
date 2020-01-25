@@ -18,6 +18,7 @@ export interface ValueOptions
   confirm: string;
   unconfirm: string;
   visible: boolean;
+  fullscreen: boolean;
   handle: (confirmed: boolean) => void;
 }
 
@@ -32,6 +33,7 @@ export function getValueDefaults(): ValueOptions {
     confirm: 'Ok',
     unconfirm: 'Cancel',
     visible: false,
+    fullscreen: false,
     handle: () => { /* */ },
   };
 }

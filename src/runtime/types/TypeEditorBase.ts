@@ -21,6 +21,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       change(event?: Partial<TypeUpdateEvent>): void;
       triggerChange(event: TypeUpdateEvent): void;
       isValidType(requiredType: Type | null, type: Type): boolean;
+      setInput(inputId: string): void;
     },
     {
       isRequired: boolean;
@@ -41,6 +42,9 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       hasDefault: boolean;
       hideSubSettings: boolean;
       eventListenersNative: TypeNativeListeners;
+      hasConfigure: boolean;
+      hasInput: boolean;
+      defaultValue: any;
     },
     {
       type: T;
@@ -180,6 +184,21 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       eventListenersNative(): TypeNativeListeners {
         return objectMap(this.eventListeners, (handler) => (event) => handler(event, this.type));
       },
+      hasConfigure(): boolean {
+        return !!this.visuals.options;
+      },
+      hasInput(): boolean {
+        return !!this.settings.input && !this.disableSubSettings && !this.hideSettings;
+      },
+      defaultValue: {
+        get(): any {
+          return this.type.fromJson(this.settings.defaultValue);
+        },
+        set(value: any) {
+          this.settings.defaultValue = this.type.toJson(value);
+          this.update();
+        },
+      },
     },
     methods: {
       update() {
@@ -204,6 +223,21 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
             ? requiredType.isCompatible(type, this.requiredTypeOptions)
             : requiredType.acceptsType(type)
           : true;
+      },
+      setInput(inputId: string) {
+        const prev: any = this.settings.options;
+        const input = this.visuals.inputs[inputId];
+        const next = input.getDefaultOptions();
+  
+        for (const prop in next) {
+          if (prop in prev) {
+            next[prop] = prev[prop];
+          }
+        }
+  
+        this.settings.input = inputId;
+        this.settings.options = next;
+        this.update();
       },
     },
   });

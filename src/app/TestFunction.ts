@@ -14,6 +14,7 @@ export interface TestFunctionOptions
   settings: TypeSettings;
   data: any;
   visible: boolean;
+  fullscreen: boolean;
   registry: Registry;
   close: (save: boolean) => any;
 }
@@ -32,6 +33,7 @@ export function getTestFunctionDefaults(): TestFunctionOptions
     settings: { input: 'form', options: {}, defaultValue: {} },
     data: null,
     visible: false,
+    fullscreen: false,
     registry: null as unknown as Registry,
     close: () => undefined,
   };

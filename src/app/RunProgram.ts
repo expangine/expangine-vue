@@ -17,6 +17,7 @@ export interface RunProgramOptions
   program: Expression;
   elapsedTime: string;
   visible: boolean;
+  fullscreen: boolean;
   registry: Registry;
   close: () => any;
 }
@@ -33,6 +34,7 @@ export function getRunProgramDefaults(): RunProgramOptions
     program: NoExpression.instance,
     elapsedTime: '0',
     visible: false,
+    fullscreen: false,
     registry: null as unknown as Registry,
     close: () => undefined,
   };

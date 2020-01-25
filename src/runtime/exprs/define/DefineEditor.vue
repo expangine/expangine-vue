@@ -2,7 +2,7 @@
   <table class="ex-table ex-striped">
     <tbody>
       <tr>
-        <td class="pl-0">
+        <td class="pl-0 pt-1">
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"
@@ -84,21 +84,21 @@
         </td>
       </tr>
       <tr>
+        <td class="pt-1">
+          <ex-chip-menu
+            text="Then"
+            tooltip="Execute this expression with the available variables"
+          ></ex-chip-menu>
+        </td>
         <td>
-            <ex-chip-menu
-              text="Then"
-              tooltip="Execute this expression with the available variables"
-            ></ex-chip-menu>
-          </td>
-          <td>
-            <ex-expression
-              v-bind="$props"
-              :value="value.body"
-              :context="bodyContext"
-              @input="updateBody($event)"
-              @remove="updateBody()"
-            ></ex-expression>
-          </td>
+          <ex-expression
+            v-bind="$props"
+            :value="value.body"
+            :context="bodyContext"
+            @input="updateBody($event)"
+            @remove="updateBody()"
+          ></ex-expression>
+        </td>
       </tr>
     </tbody>
   </table>

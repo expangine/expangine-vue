@@ -1,10 +1,14 @@
 <template>
-  <v-dialog v-model="visible" max-width="300">
+  <v-dialog v-model="visible" max-width="300" :fullscreen="isFullscreen">
     <v-card>
-      <v-card-title 
-        class="headline" 
-        v-html="title"
-      ></v-card-title>
+      <v-card-title class="headline">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
+        <span v-html="title"></span>
+      </v-card-title>
       <v-card-text 
         v-html="message"
       ></v-card-text>
@@ -40,5 +44,18 @@ import { valueDialog } from './Value';
 
 export default Vue.extend({
   data: () => valueDialog,
+  computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
+  },
+  methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
+  },
 });
 </script>

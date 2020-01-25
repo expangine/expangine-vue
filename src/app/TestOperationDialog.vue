@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
         Test Operation
         <v-chip 
           v-if="visuals.name" 
@@ -99,6 +104,12 @@ import { OperationVisuals } from '../runtime/ops/OperationVisuals';
 export default Vue.extend({
   data: () => testOperationDialog,
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     visuals(): OperationVisuals {
       return this.registry.getOperationVisuals(this.name);
     },
@@ -124,6 +135,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     setConstant(name: string, value: any) {
       const paramExpr = this.params[name];
       if (value === undefined || value === null) {

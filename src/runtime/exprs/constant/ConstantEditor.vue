@@ -47,9 +47,14 @@
       :type="computedType"
     ></ex-data-string>
 
-    <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline" :fullscreen="$vuetify.breakpoint.mdAndDown">
+    <v-dialog v-if="editing" :value="true" persistent max-width="600px" class="d-inline" :fullscreen="isFullscreen">
       <v-card>
         <v-card-title>
+          <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+            <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+            <v-icon v-else>mdi-fullscreen</v-icon>
+          </v-btn>
+          
           <span class="headline">Enter Value</span>
         </v-card-title>
         <v-card-text>
@@ -84,8 +89,15 @@ export default ExpressionBase<ConstantExpression>().extend({
   data: () => ({
     editing: false,
     editValue: null,
+    fullscreen: false,
   }),
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     invalid(): boolean {
       return this.isInvalid(this.value.value);
     },
@@ -122,6 +134,9 @@ export default ExpressionBase<ConstantExpression>().extend({
     },
   },
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     isInvalid(value: any) {
       return !!(this.requiredType && !this.requiredType.isValid(value));
     },

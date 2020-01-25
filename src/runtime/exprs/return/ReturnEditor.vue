@@ -7,6 +7,7 @@
       v-on="$listeners"
       text="Return"
       tooltip="Exit the expression now, optionally returning a value"
+      class="mt-1"
       :can-remove="false"
     ></ex-expression-menu>
 

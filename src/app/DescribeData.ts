@@ -13,6 +13,7 @@ export interface DescribeDataOptions
   input: string;
   removeDescribedRestrictions: boolean;
   visible: boolean;
+  fullscreen: boolean;
   registry: Registry;
   close: (resolve: boolean) => any;
 }
@@ -26,6 +27,7 @@ export function getDescribeDataDefaults(): DescribeDataOptions
     input: '',
     removeDescribedRestrictions: true,
     visible: false,
+    fullscreen: false,
     registry: null as unknown as Registry,
     close: () => undefined,
   };

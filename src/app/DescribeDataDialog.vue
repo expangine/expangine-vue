@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
         Describe Data
       </v-card-title>
       <v-card-text>
@@ -82,6 +87,12 @@ import { LiveRuntime } from 'expangine-runtime-live';
 export default Vue.extend({
   data: () => describeDataDialog,
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     canDetect(): boolean {
       return !!this.input;
     },
@@ -98,6 +109,9 @@ export default Vue.extend({
     },
   }, 
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     determineType() {
       const firstVarRegex = /(var\s+|const\s+|let\s+|)([$a-z_][$a-z_0-9]*)\s*=/gi;
       const firstVarMatch = firstVarRegex.exec(this.input);

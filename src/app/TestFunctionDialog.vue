@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
         {{ title }}
         <v-chip 
           v-if="name" 
@@ -43,7 +48,18 @@ import { getRunProgram } from './RunProgram';
 
 export default Vue.extend({
   data: () => testFunctionDialog,
+  computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
+  },
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     test() {
       getRunProgram({
         registry: this.registry,

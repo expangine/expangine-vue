@@ -1,7 +1,12 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+  <v-dialog v-model="visible" max-width="1000" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline mb-2">
+        <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+          <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+          <v-icon v-else>mdi-fullscreen</v-icon>
+        </v-btn>
+
         Edit Function
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="test">
@@ -80,6 +85,12 @@ import { getTestFunction } from './TestFunction';
 export default Vue.extend({
   data: () => editFunctionDialog,
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     invalidSaveAs(): boolean {
       if (!this.saveAs) {
         return true;
@@ -104,6 +115,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     cancel() {
       this.close(false);
     },

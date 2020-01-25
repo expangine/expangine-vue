@@ -231,12 +231,6 @@ export default TypeEditorBase<Type, any, any>().extend({
     previewing: null,
   }),
   computed: {
-    hasConfigure(): boolean {
-      return !!this.visuals.options;
-    },
-    hasInput(): boolean {
-      return !!this.settings.input && !this.disableSubSettings && !this.hideSettings;
-    },
     modifiableOptions(): ListOptions<TypeModifyHandler> {
       return this.registry.getTypeModifiersFor({
         registry: this.registry,
@@ -253,15 +247,6 @@ export default TypeEditorBase<Type, any, any>().extend({
         this.previewing = value;
       },
     },
-    defaultValue: {
-      get(): any {
-        return this.type.fromJson(this.settings.defaultValue);
-      },
-      set(value: any) {
-        this.settings.defaultValue = this.type.toJson(value);
-        this.update();
-      },
-    },
     requiredTypeString(): string {
       return this.requiredType
         ? this.registry.getTypeDescribeLong(this.requiredType, '  ', '\n')
@@ -269,21 +254,6 @@ export default TypeEditorBase<Type, any, any>().extend({
     },
   },
   methods: {
-    setInput(inputId: string) {
-      const prev = this.settings.options;
-      const input = this.visuals.inputs[inputId];
-      const next = input.getDefaultOptions();
-
-      for (const prop in next) {
-        if (prop in prev) {
-          next[prop] = prev[prop];
-        }
-      }
-
-      this.settings.input = inputId;
-      this.settings.options = next;
-      this.update();
-    },
     async onModify(modifier: TypeModifyOption) {
       const result = await modifier.value();
 

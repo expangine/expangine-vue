@@ -16,6 +16,7 @@ export interface GetProgramOptions
   confirm: string;
   unconfirm: string;
   visible: boolean;
+  fullscreen: boolean;
   close: (confirmed: boolean) => void;
 }
 
@@ -32,6 +33,7 @@ export function getGetProgramDefaults(): GetProgramOptions {
     confirm: 'OK',
     unconfirm: 'Cancel',
     visible: false,
+    fullscreen: false,
     close: () => { /* */ },
   };
 }

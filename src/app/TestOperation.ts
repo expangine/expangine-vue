@@ -16,6 +16,7 @@ export interface TestOperationOptions
   paramsSettings: Record<string, TypeSettingsAny>;
   params: ExpressionMap;
   visible: boolean;
+  fullscreen: boolean;
   resultAutomatic: boolean;
   result: any;
   invalid: boolean;
@@ -37,6 +38,7 @@ export function getTestOperationDefaults(): TestOperationOptions
     resultAutomatic: true,
     result: null,
     visible: false,
+    fullscreen: false,
     invalid: false,
     registry: null as unknown as Registry,
     close: () => undefined,

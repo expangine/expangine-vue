@@ -9,9 +9,14 @@
           <span>{{ designLabel }}</span>
         </v-tooltip>
       </v-btn>
-      <v-dialog v-model="designing" max-width="1000" :fullscreen="$vuetify.breakpoint.mdAndDown">
+      <v-dialog v-model="designing" max-width="1000" :fullscreen="isFullscreen">
         <v-card>
           <v-card-title>
+            <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">
+              <v-icon v-if="fullscreen">mdi-fullscreen-exit</v-icon>
+              <v-icon v-else>mdi-fullscreen</v-icon>
+            </v-btn>
+            
             Design Any Type
           </v-card-title>
           <v-card-text>
@@ -59,8 +64,15 @@ export default TypeInputBase<AnyType, AnyOptions, any>().extend({
     anyType: null as null | Type,
     anySettings: null as null | TypeSettings,
     designing: false,
+    fullscreen: false,
   }),
   computed: {
+    isFullscreen(): boolean {
+      return this.$vuetify.breakpoint.mdAndDown || this.fullscreen;
+    },
+    isFullscreenToggleVisible(): boolean {
+      return !this.$vuetify.breakpoint.mdAndDown;
+    },
     designLabel(): string {
       return this.settings.options.designLabel || 'Design';
     }, 
@@ -79,6 +91,9 @@ export default TypeInputBase<AnyType, AnyOptions, any>().extend({
     },
   }, 
   methods: {
+    toggleFullscreen() {
+      this.fullscreen = !this.fullscreen;
+    },
     async design() {
       if (!this.anyType) {
         const buildType = await getBuildType({ title: 'Choose Any Type' });
