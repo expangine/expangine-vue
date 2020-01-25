@@ -1,5 +1,5 @@
 
-import { Type, NullType } from 'expangine-runtime';
+import { Type, NullType, ObjectType } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { Registry } from '@/runtime/Registry';
@@ -86,6 +86,11 @@ export async function getAnyValue(registry: Registry, givenType?: Type | null)
   if (!givenType)
   {
     throw new Error('No type selected');
+  }
+
+  if (givenType.getId() === ObjectType.id)
+  {
+    return givenType.create();
   }
 
   let value = await getValue({

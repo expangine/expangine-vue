@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType, ColorType, Color, ColorFormat, ColorSpaceRGB } from 'expangine-runtime';
+import { Type, AnyType, TextType, ColorType, Color, ColorFormat, ColorSpaceRGB, isObject } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 
 
