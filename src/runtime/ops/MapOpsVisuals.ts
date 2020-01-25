@@ -13,6 +13,30 @@ export default (registry: Registry) =>
     returnComments: 'A new empty Map',
   });
 
+  registry.addOperation(MapOps.createLike, {
+    name: 'Create Map Like',
+    description: 'Create an empty Map with the same values and key types as another [map]',
+    singleline: 'create map like {map}',
+    comments: {
+      map: 'The map which has value and key types that this map will have',
+    },
+    returnComments: 'A new empty Map',
+  });
+
+  registry.addOperation(MapOps.createFor, {
+    name: 'Create Map For',
+    description: 'Create an empty Map for [value]s and [key]s with given types',
+    singleline: 'create map for values {value} and keys {key}',
+    comments: {
+      value: 'The value which this map will have',
+      key: 'The key which this map will have',
+    },
+    defaults: {
+      key: 'text',
+    },
+    returnComments: 'A new empty Map',
+  });
+
   registry.addOperation(MapOps.maybe, {
     name: 'Try Map?',
     description: 'If the [value] is map, return the map value, otherwise return undefined',

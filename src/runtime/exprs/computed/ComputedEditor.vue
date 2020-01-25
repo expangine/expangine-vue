@@ -46,14 +46,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, ExpressionBuilder, SubExpression, NoExpression, ComputedExpression, NullType } from 'expangine-runtime';
+import { Type, Expression, ExpressionBuilder, SubExpression, NoExpression, ComputedExpression, NullType, Exprs } from 'expangine-runtime';
 import { TypeSubOption, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import NextMenu from '@/app/NextMenu.vue';
 import { getConfirmation } from '../../../app/Confirm';
 
-
-const ex = new ExpressionBuilder();
 
 export default ExpressionBase<ComputedExpression>().extend({
   name: 'ComputedEditor',
@@ -115,8 +113,8 @@ export default ExpressionBase<ComputedExpression>().extend({
     },
     getSegmentExpression(sub: TypeSubOption) {
       return sub.key instanceof Type
-        ? ex.const(this.registry.getTypeVisuals(sub.key).type.baseType.create())
-        : ex.const(sub.key);
+        ? Exprs.const(this.registry.getTypeVisuals(sub.key).type.baseType.create())
+        : Exprs.const(sub.key);
     },
     onRootChange(input: Expression) {
       const parent = this.value.parent;

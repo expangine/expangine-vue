@@ -84,7 +84,7 @@ export const ObjectVisuals = createVisuals<string>()({
     for (const prop in value) {
       nodes.push({
         sub: prop,
-        subType: ObjectType.propType,
+        subType: TextType.baseType,
         value: value[prop],
         valueType: type.options.props[prop],
       });

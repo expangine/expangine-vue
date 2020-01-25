@@ -28,14 +28,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, NoExpression, ExpressionBuilder, ComputedExpression, SubExpression } from 'expangine-runtime';
+import { Expression, Type, NoExpression, ExpressionBuilder, ComputedExpression, SubExpression, Exprs } from 'expangine-runtime';
 import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import PathSegment from './PathSegment.vue';
 import NextMenu from '@/app/NextMenu.vue';
 
 
-const ex = new ExpressionBuilder();
 
 export default ExpressionBase().extend({
   name: 'PathEditor',
@@ -84,10 +83,10 @@ export default ExpressionBase().extend({
     addSegment(sub: TypeSubOption) {
       if (sub.key instanceof Type) {
         const visual = this.registry.getTypeVisuals(sub.key);
-        const segment = ex.const(visual.type.baseType.create());
+        const segment = Exprs.const(visual.type.baseType.create());
         this.path.push(segment);
       } else {
-        const segment = ex.const(sub.key);
+        const segment = Exprs.const(sub.key);
         this.path.push(segment);
       }
 

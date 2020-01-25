@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Type, TupleType, Expression, ExpressionBuilder, ListOps, NullType, ObjectType } from 'expangine-runtime';
+import { Type, TupleType, Expression, ListOps, NullType, ObjectType, Exprs } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
@@ -95,15 +95,13 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubRemove(index, this.type, this.settings);
 
-      const ex = new ExpressionBuilder();
-
       this.change({
-        transform: ex.body(
-          ex.op(ListOps.removeAt, {
-            list: ex.get('value'),
+        transform: Exprs.body(
+          Exprs.op(ListOps.removeAt, {
+            list: Exprs.get('value'),
             index,
           }),
-          ex.get('value'),
+          Exprs.get('value'),
         ),
       });
     },
@@ -141,12 +139,10 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubAdd(index + 1, this.type, this.settings);
 
-      const ex = new ExpressionBuilder();
-
       this.change({
-        transform: ex.define({ parent: ex.get('value') },
-          ex.op(ListOps.insert, {
-            list: ex.get('value'),
+        transform: Exprs.define({ parent: Exprs.get('value') },
+          Exprs.op(ListOps.insert, {
+            list: Exprs.get('value'),
             index: index + 1,
             item: result.program,
           }),
@@ -159,12 +155,10 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
       
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.body(
-          ex.update('value', index)
+        transform = Exprs.body(
+          Exprs.update('value', index)
             .to(event.transform, 'value'),
-          ex.get('value'),
+          Exprs.get('value'),
         );
       }
 

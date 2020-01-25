@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Type, OptionalType, ExpressionBuilder } from 'expangine-runtime';
+import { Type, OptionalType, Exprs } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { OptionalSubs, OptionalOptions } from './OptionalTypes';
 import TypeEditorBase from '../TypeEditorBase';
@@ -47,13 +47,12 @@ export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().ext
       
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-        const isValid = previousType.getValidateExpression(ex);
+        const isValid = previousType.getValidateExpression();
 
-        transform = ex
+        transform = Exprs
           .if(isValid)
           .than(event.transform)
-          .else(ex.get('value'))
+          .else(Exprs.get('value'))
         ;
       }
 

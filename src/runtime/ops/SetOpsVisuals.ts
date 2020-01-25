@@ -13,6 +13,26 @@ export default (registry: Registry) =>
     returnComments: 'A new empty Set',
   });
 
+  registry.addOperation(SetOps.createLike, {
+    name: 'Create Set Like',
+    description: 'Create an empty Set with the same values as another [set]',
+    singleline: 'create set like {set}',
+    comments: {
+      set: 'The set which has values that this set will have',
+    },
+    returnComments: 'A new empty Set',
+  });
+
+  registry.addOperation(SetOps.createFor, {
+    name: 'Create Set For',
+    description: 'Create an empty Set for [value]s with a given type',
+    singleline: 'create set for {value}',
+    comments: {
+      value: 'The values which this set will have',
+    },
+    returnComments: 'A new empty Set',
+  });
+
   registry.addOperation(SetOps.maybe, {
     name: 'Try Set?',
     description: 'If the [value] is set, return the set value, otherwise return undefined',

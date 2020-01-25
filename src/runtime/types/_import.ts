@@ -8,6 +8,7 @@ import EnumImport from './enum/_import';
 import ListImport from './list/_import';
 import ManyImport from './many/_import';
 import MapImport from './map/_import';
+import NullImport from './null/_import';
 import NumberImport from './number/_import';
 import ObjectImport from './object/_import';
 import OptionalImport from './optional/_import';
@@ -26,6 +27,7 @@ export default function(registry: Registry)
     .import(ListImport)
     .import(ManyImport)
     .import(MapImport)
+    .import(NullImport)
     .import(NumberImport)
     .import(ObjectImport)
     .import(OptionalImport)

@@ -56,14 +56,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression } from 'expangine-runtime';
+import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression, Exprs } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import NextMenu from '@/app/NextMenu.vue';
 
-
-const ex = new ExpressionBuilder();
 
 export default ExpressionBase().extend({
   name: 'PathSegment',
@@ -203,9 +201,9 @@ export default ExpressionBase().extend({
       let segment: Expression;
       if (sub.key instanceof Type) {
         const visual = this.registry.getTypeVisuals(sub.key);
-        segment = ex.const(visual.type.baseType.create());
+        segment = Exprs.const(visual.type.baseType.create());
       } else {
-        segment = ex.const(sub.key);
+        segment = Exprs.const(sub.key);
       }
       
       this.path.splice(this.index, this.path.length - this.index, segment);

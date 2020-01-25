@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps } from 'expangine-runtime';
+import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps, Exprs } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { MapSubs } from './MapTypes';
@@ -108,10 +108,8 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.op(MapOps.map, {
-          map: ex.get('value'),
+        transform = Exprs.op(MapOps.map, {
+          map: Exprs.get('value'),
           transformKey: event.transform,
         }, {
           key: 'value',
@@ -127,10 +125,8 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.op(MapOps.map, {
-          map: ex.get('value'),
+        transform = Exprs.op(MapOps.map, {
+          map: Exprs.get('value'),
           transform: event.transform,
         });
       }

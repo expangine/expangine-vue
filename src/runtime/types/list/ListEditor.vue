@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder } from 'expangine-runtime';
+import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder, Exprs } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
@@ -87,10 +87,8 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.op(ListOps.map, {
-          list: ex.get('value'),
+        transform = Exprs.op(ListOps.map, {
+          list: Exprs.get('value'),
           transform: event.transform,
         }, {
           item: 'value',

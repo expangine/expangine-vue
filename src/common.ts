@@ -1,12 +1,10 @@
 import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale, ComputedExpression } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale, ComputedExpression, Exprs } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';
 import { LiveRuntime } from 'expangine-runtime-live';
 
-
-const ex = new ExpressionBuilder();
 
 
 export const ComplexityColors = [
@@ -230,9 +228,9 @@ export function isInPathExpression(expr: Expression): boolean
 }
 
 const phoneticDistance = LiveRuntime.getCommand(
-  ex.op(TextOps.distance, {
-    value: ex.op(TextOps.metaphone, { value: ex.get('a') }),
-    test: ex.op(TextOps.metaphone, { value: ex.get('b') }),
+  Exprs.op(TextOps.distance, {
+    value: Exprs.op(TextOps.metaphone, { value: Exprs.get('a') }),
+    test: Exprs.op(TextOps.metaphone, { value: Exprs.get('b') }),
   }),
 );
 
@@ -282,8 +280,8 @@ export function castExpression(valueType: Type, targetType: Type, createOnMissin
   const op = valueType.getOperations()[opId];
 
   return op
-    ? ex.op(op, { value: ex.get('value') })
+    ? Exprs.op(op, { value: Exprs.get('value') })
     : createOnMissing
-      ? targetType.getCreateExpression(ex)
+      ? targetType.getCreateExpression()
       : null as unknown as Expression;
 }

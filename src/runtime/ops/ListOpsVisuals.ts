@@ -13,6 +13,26 @@ export default (registry: Registry) =>
     returnComments: '[]',
   });
 
+  registry.addOperation(ListOps.createLike, {
+    name: 'Create List Like',
+    description: 'Create an empty List with the same items as another [list]',
+    singleline: 'create list like {list}',
+    comments: {
+      list: 'The list which has items that this list will have',
+    },
+    returnComments: '[]',
+  });
+
+  registry.addOperation(ListOps.createFor, {
+    name: 'Create List For',
+    description: 'Create an empty List for [item]s with a given type',
+    singleline: 'create list for {item}',
+    comments: {
+      item: 'The item which this list will have',
+    },
+    returnComments: '[]',
+  });
+
   registry.addOperation(ListOps.maybe, {
     name: 'Try List?',
     description: 'If the [value] is list, return the list value, otherwise return undefined',
@@ -174,6 +194,16 @@ export default (registry: Registry) =>
       index: 'The index of the current item',
     },
     returnComments: 'The list of items removed from the list.',
+  });
+
+  registry.addOperation(ListOps.clear, {
+    name: 'Clear List',
+    description: 'Removes all items from [list]',
+    singleline: 'clear {list}',
+    comments: {
+      list: 'The list to clear all items from',
+    },
+    returnComments: 'The cleared list.',
   });
 
   registry.addOperation(ListOps.contains, {

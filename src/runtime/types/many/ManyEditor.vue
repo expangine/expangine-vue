@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ManyType, NullType, Expression, ExpressionBuilder } from 'expangine-runtime';
+import { Type, ManyType, NullType, Expression, Exprs } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
@@ -77,12 +77,11 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
 
       const { type, settings } = this;
 
-      const ex = new ExpressionBuilder();
       const destType = this.type.options[0];
       const castTransform = castExpression(innerType, destType);
-      const transform = ex
-        .if(destType.getValidateExpression(ex))
-        .than(ex.get('value'))
+      const transform = Exprs
+        .if(destType.getValidateExpression())
+        .than(Exprs.get('value'))
         .else(castTransform)
       ;
 
@@ -118,13 +117,12 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-        const isValid = this.type.getValidateExpression(ex);
+        const isValid = this.type.getValidateExpression();
 
-        transform = ex
-          .if(ex.not(isValid))
+        transform = Exprs
+          .if(Exprs.not(isValid))
           .than(event.transform)
-          .else(ex.get('value'))
+          .else(Exprs.get('value'))
         ;
       }
 

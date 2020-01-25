@@ -1,5 +1,5 @@
 
-import { OperationGeneric, OperationTypes, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction, ExpressionBuilder, NoExpression, OptionalType, ObjectType, Type } from 'expangine-runtime';
+import { OperationGeneric, OperationTypes, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction, ExpressionBuilder, NoExpression, OptionalType, ObjectType, Type, Exprs } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettingsAny } from '@/runtime/types/TypeVisuals';
@@ -66,7 +66,6 @@ export async function getTestOperation(options: Partial<TestOperationOptions> = 
     return promise;
   }
 
-  const ex = new ExpressionBuilder();
   const params: ExpressionMap = {};
   const constants: TypeMap = {};
   const settings: Record<string, TypeSettingsAny> = {};
@@ -84,12 +83,12 @@ export async function getTestOperation(options: Partial<TestOperationOptions> = 
         }
         constants[key] = detected;
         settings[key] = registry.getTypeSettings(detected);
-        params[key] = detected.isOptional() ? ex.noop() : ex.const(detected.create());
+        params[key] = detected.isOptional() ? Exprs.noop() : Exprs.const(detected.create());
       } else {
-        params[key] = ex.noop();
+        params[key] = Exprs.noop();
       }
     } else {
-      params[key] = ex.noop();
+      params[key] = Exprs.noop();
     }
   });
 

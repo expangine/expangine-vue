@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Type, SetType, SetOptions, isNumber, Expression, SetOps, ExpressionBuilder } from 'expangine-runtime';
+import { Type, SetType, SetOptions, isNumber, Expression, SetOps, Exprs } from 'expangine-runtime';
 import { SimpleFieldSettings } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { SetSubs } from './SetTypes';
@@ -73,10 +73,8 @@ export default TypeEditorBase<SetType, any, SetSubs>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.op(SetOps.map, {
-          set: ex.get('value'),
+        transform = Exprs.op(SetOps.map, {
+          set: Exprs.get('value'),
           transform: event.transform,
         }, {
           value: 'value',

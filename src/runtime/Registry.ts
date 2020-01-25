@@ -281,17 +281,17 @@ export class Registry
 
   public getTypeCreate(type: Type): Expression
   {
-    return type.getCreateExpression(new ExpressionBuilder());
+    return type.getCreateExpression();
   }
 
   public getTypeValid(type: Type): Expression
   {
-    return type.getValidateExpression(new ExpressionBuilder());
+    return type.getValidateExpression();
   }
 
   public getTypeCompare(type: Type): Expression
   {
-    return type.getCompareExpression(new ExpressionBuilder());
+    return type.getCompareExpression();
   }
 
   public getTypeComputedOptions(type: Type): TypeComputedOption[]

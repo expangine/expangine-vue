@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { ObjectType, ExpressionBuilder, ObjectOps, Expression } from 'expangine-runtime';
+import { ObjectType, ObjectOps, Expression, Exprs } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { getConfirmation } from '../../../app/Confirm';
 import { getInput } from '../../../app/Input';
@@ -168,12 +168,10 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
-      const ex = new ExpressionBuilder();
-
       this.change({
-        transform: ex.define({ parent: ex.get('value') },
-          ex.op(ObjectOps.set, {
-            object: ex.get('value'),
+        transform: Exprs.define({ parent: Exprs.get('value') },
+          Exprs.op(ObjectOps.set, {
+            object: Exprs.get('value'),
             key: propName,
             value: result.program,
           }),
@@ -190,15 +188,13 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$delete(this.type.options.props, prop);
       this.$delete(this.settings.sub, prop);
 
-      const ex = new ExpressionBuilder();
-
       this.change({
-        transform: ex.body(
-          ex.op(ObjectOps.delete, {
-            object: ex.get('value'),
+        transform: Exprs.body(
+          Exprs.op(ObjectOps.delete, {
+            object: Exprs.get('value'),
             key: prop,
           }),
-          ex.get('value'),
+          Exprs.get('value'),
         ),
       });
     },
@@ -233,20 +229,18 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       sendNotification({ message: `${prop} renamed to ${newProp}` });
 
-      const ex = new ExpressionBuilder();
-
       this.change({
-        transform: ex.body(
-          ex.op(ObjectOps.set, {
-            object: ex.get('value'),
+        transform: Exprs.body(
+          Exprs.op(ObjectOps.set, {
+            object: Exprs.get('value'),
             key: newProp,
-            value: ex.get('value', prop),
+            value: Exprs.get('value', prop),
           }),
-          ex.op(ObjectOps.delete, {
-            object: ex.get('value'),
+          Exprs.op(ObjectOps.delete, {
+            object: Exprs.get('value'),
             key: prop,
           }),
-          ex.get('value'),
+          Exprs.get('value'),
         ),
       });
     },
@@ -256,12 +250,10 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       let transform;
       if (event.transform) {
-        const ex = new ExpressionBuilder();
-
-        transform = ex.body(
-          ex.update('value', prop)
+        transform = Exprs.body(
+          Exprs.update('value', prop)
             .to(event.transform, 'value'),
-          ex.get('value'),
+          Exprs.get('value'),
         );
       }
 

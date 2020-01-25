@@ -107,6 +107,28 @@ export default (registry: Registry) =>
     returnComments: 'True if [value] is false, otherwise false.',
   });
 
+  registry.addOperation(BooleanOps.isEqual, {
+    name: 'Booleans Equal?',
+    description: 'Determines whether [value] is equal to [test]',
+    singleline: '{value} equals {test}',
+    comments: {
+      value: 'The first value to compare',
+      test: 'The second value to compare',
+    },
+    returnComments: 'True if [value] equals [test], otherwise false.',
+  });
+
+  registry.addOperation(BooleanOps.isNotEqual, {
+    name: 'Booleans Not Equal?',
+    description: 'Determines whether [value] is not equal to [test]',
+    singleline: '{value} not equal to {test}',
+    comments: {
+      value: 'The first value to compare',
+      test: 'The second value to compare',
+    },
+    returnComments: 'True if [value] is not equal to [test], otherwise false.',
+  });
+
   registry.addOperation(BooleanOps.asAny, {
     name: 'Cast Boolean to Any',
     description: 'Cast [value] to Any',
