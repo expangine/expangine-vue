@@ -1,5 +1,4 @@
-import { PropType } from 'vue';
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, ExpressionBuilder, TextOps, DateFormat, currentLocale, ComputedExpression, Exprs } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextOps, DateFormat, currentLocale, Exprs } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';
@@ -192,6 +191,13 @@ export function isMapEqual(a: Map<any, any>, b: Map<any, any>): boolean
 export function isExactType<T extends Type<O>, O = any>(x: Type, y: TypeClass<T, O>): x is T
 {
   return x.constructor === y;
+}
+
+export function getRandomNumber(a: number, b: number, whole: boolean): number
+{
+  return whole
+    ? Math.floor((b - a + 1) * Math.random()) + a
+    : (b - a) * Math.random() + a;
 }
 
 export function renameVariable(startingAt: Expression, from: string, to: string)

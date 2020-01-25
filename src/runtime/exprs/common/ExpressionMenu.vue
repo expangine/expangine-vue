@@ -244,7 +244,7 @@ export default ExpressionBase().extend({
   methods: {
     async changeTo(visuals: ExpressionVisuals) {
       if (await getConfirmation()) {
-        this.input(visuals.create(this.requiredType, this.context));
+        this.input(visuals.create(this.requiredType, this.context, this.registry));
       }
     },
     async modify(value: ExpressionModifierCallback) {

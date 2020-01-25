@@ -10,7 +10,7 @@ import { ConfirmOptions } from '@/app/Confirm';
 export interface ExpressionVisuals<E extends Expression = any> 
 {
   expr: ExpressionClass<E>;
-  create: (forType: Type | null, context: Type | null) => E;
+  create: (forType: Type | null, context: Type | null, registry: Registry) => E;
   name: string;
   description: string;
   describe: (options: { registry: Registry, expr: E }) => string;

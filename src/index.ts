@@ -38,7 +38,9 @@ import TestOperationDialog from './app/TestOperationDialog.vue';
 import OperationCatalogueDialog from './app/OperationCatalogue.vue';
 import OperationInfoDialog from './app/OperationInfo.vue';
 import GetProgramDialog from './app/GetProgramDialog.vue';
+import ValueDialog from './app/ValueDialog.vue';
 import Validation from './app/Validation.vue';
+
 
 
 export * from './app/BuildType';
@@ -71,6 +73,7 @@ export * from './app/SystemEvents';
 export * from './app/TestFunction';
 export * from './app/TestOperation';
 export * from './app/Transcoder';
+export * from './app/Value';
 
 export { default as registry } from './runtime';
 export * from './runtime/Registry';
@@ -135,6 +138,7 @@ export default {
     Vue.component('ex-operation-catalogue-dialog', OperationCatalogueDialog);
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
     Vue.component('ex-get-program-dialog', GetProgramDialog);
+    Vue.component('ex-value-dialog', ValueDialog);
 
     Vue.component('ex-data-string', DataString);
     Vue.component('ex-data-menu', DataMenu);

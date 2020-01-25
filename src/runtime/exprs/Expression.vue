@@ -113,7 +113,7 @@ export default ExpressionBase().extend({
   },
   methods: {
     startWith(visuals: ExpressionVisuals) {
-      this.input(visuals.create(this.requiredType, this.context));
+      this.input(visuals.create(this.requiredType, this.context, this.registry));
     },
   },
 });
