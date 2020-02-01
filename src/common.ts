@@ -15,11 +15,14 @@ export const ComplexityColors = [
   '#BDBDBD',
 ];
 
-export type ListOptions<T = string> = Array<{ 
+export type ListOptions<T = string> = Array<ListOption<T>>;
+
+export interface ListOption<T = string>
+{ 
   text: string; 
   description?: string; 
   value: T;
-}>;
+}
 
 export type ListOptionsPriority<T = string> = Array<{ 
   text: string; 
@@ -257,7 +260,7 @@ export function findClosestPhonetic(haystack: string[], needle: string): string
 
 export function templateTokens(template: string): string[]
 {
-  return template.split(/[\{\}]/g);
+  return template ? template.split(/[\{\}]/g) : [];
 }
 
 export function templateReplace(template: string, values: (token: string) => string, labels: (label: string) => string = ((x) => x)): string

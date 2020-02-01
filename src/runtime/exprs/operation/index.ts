@@ -13,12 +13,18 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   create: (forType) => new OperationExpression('', {}),
   name: 'Operation',
   description: 'Perform an operation',
-  describe: ({ registry, expr }) => templateReplace(
-    registry.getOperationVisuals(expr.name).singleline,
-    (token) => expr.params[token]
-      ? '(' + registry.getExpressionDescribe(expr.params[token]) + ')'
-      : '{' + token + '}',
-  ),
+  describe: ({ registry, expr }) => {
+    const op = registry.getOperationVisuals(expr.name);
+
+    return templateReplace(
+      op.singleline,
+      (token) => expr.params[token]
+        ? '(' + registry.getExpressionDescribe(expr.params[token]) + ')'
+        : op.defaults[token]
+          ? op.defaults[token]
+          : '{' + token + '}',
+    );
+  },
   viewer: OperationEditor,
   editor: OperationEditor,
   complex: true,

@@ -46,6 +46,15 @@
   border-bottom: 1px solid #e02618;
 }
 
+.ex-table-fixed {
+
+  &, /deep/ table {
+    width: 100%;
+    border-spacing: 0px;
+    table-layout: fixed;
+  }
+}
+
 .ex-table {
   width: 100%;
   border-spacing: 0px;

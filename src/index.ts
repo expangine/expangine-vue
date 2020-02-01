@@ -28,6 +28,10 @@ import ConfirmDialog from './app/ConfirmDialog.vue';
 import DebugProgramDialog from './app/DebugProgramDialog.vue';
 import DescribeDataDialog from './app/DescribeDataDialog.vue';
 import EditFunctionDialog from './app/EditFunctionDialog.vue';
+import EditAliasedDialog from './app/EditAliasedDialog.vue';
+import EditTypeIndexDialog from './app/EditTypeIndexDialog.vue';
+import EditTypeTranscoderDialog from './app/EditTypeTranscoderDialog.vue';
+import EditRelationDialog from './app/EditRelationDialog.vue';
 import InputDialog from './app/InputDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import ProjectHistoryList from './app/ProjectHistoryList.vue';
@@ -43,6 +47,7 @@ import Validation from './app/Validation.vue';
 
 
 
+export * from './app/Aliased';
 export * from './app/BuildType';
 export * from './app/Confirm';
 export * from './app/Data';
@@ -52,6 +57,10 @@ export * from './app/DataLocal';
 export * from './app/DebugProgram';
 export * from './app/DescribeData';
 export * from './app/EditFunction';
+export * from './app/EditAliased';
+export * from './app/EditTypeIndex';
+export * from './app/EditTypeTranscoder';
+export * from './app/EditRelation';
 export * from './app/EventBase';
 export * from './app/FileExport';
 export * from './app/FileImport';
@@ -128,6 +137,10 @@ export default {
     Vue.component('ex-debug-program-dialog', DebugProgramDialog);
     Vue.component('ex-describe-data-dialog', DescribeDataDialog);
     Vue.component('ex-edit-function-dialog', EditFunctionDialog);
+    Vue.component('ex-edit-aliased-dialog', EditAliasedDialog);
+    Vue.component('ex-edit-type-index-dialog', EditTypeIndexDialog);
+    Vue.component('ex-edit-type-transcoder-dialog', EditTypeTranscoderDialog);
+    Vue.component('ex-edit-relation-dialog', EditRelationDialog);
     Vue.component('ex-input-dialog', InputDialog);
     Vue.component('ex-simple-input-dialog', SimpleInputDialog);
     Vue.component('ex-notify-dialog', NotifyDialog);

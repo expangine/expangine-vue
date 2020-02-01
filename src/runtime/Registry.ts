@@ -1,5 +1,5 @@
 
-import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder, ObjectType, OperationPair } from 'expangine-runtime';
+import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder, ObjectType, OperationPair, TypeStorage } from 'expangine-runtime';
 import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode, TypeComputedOption } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
@@ -24,6 +24,9 @@ export class Registry
   public operationMap: Record<string, OperationVisuals>;
   public settingsOverrides: Record<string, any> = {};
 
+  public typeSettings: Record<string, TypeSettings>;
+  public typeData: Record<string, any[]>;
+
   public isValidFunction: (name: string) => boolean;
   public isValidProperty: (name: string, type: ObjectType) => boolean;
   public isValidExpressionStart: (visuals: ExpressionVisuals, requiredType: Type | null) => boolean;
@@ -45,6 +48,8 @@ export class Registry
     this.typeBuilderWrappers = [];
     this.typeModifiers = [];
     this.typeHooks = [];
+    this.typeSettings = obj();
+    this.typeData = obj();
     this.exprMap = obj();
     this.exprs = [];
     this.operationMap = obj();

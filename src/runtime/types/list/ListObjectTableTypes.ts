@@ -1,5 +1,5 @@
 
-import { ListType, ObjectType } from 'expangine-runtime';
+import { ListType, ObjectType, AliasedType } from 'expangine-runtime';
 import { TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { ListSubs } from './ListTypes';
 import ListObjectTable from './ListObjectTable.vue';
@@ -45,7 +45,7 @@ export const ListObjectTableInput: TypeVisualInput<ListType, ListObjectTableOpti
   input: ListObjectTable,
   settings: ListObjectTableSettings,
   getComplexity: () => 2,
-  isVisible: (type) => isExactType(type.options.item, ObjectType),
+  isVisible: (type) => isExactType(type.options.item, ObjectType) || type.options.item instanceof AliasedType,
   getDefaultOptions: () => ({
     columns: [],
     pageSize: 10,

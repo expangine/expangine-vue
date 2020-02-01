@@ -10,7 +10,7 @@ export type EventCallback<
   R = EventTypeResult<E, K>  
 > = (type: K, ...payload: A) => R;
 
-export type EventDefinition<A extends any[] = any[], R = any> = (...args: A) => R;
+export type EventDefinition<A extends any[], R> = (...args: A) => R;
 
 export type EventCallbackMap<E> = 
 {

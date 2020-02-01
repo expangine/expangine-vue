@@ -1,6 +1,6 @@
 
 import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType } from 'expangine-runtime';
-import { createVisuals, TypeSettings, TypeSettingsRecord, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
+import { createVisuals, TypeSettings, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { ListListInput } from './ListListTypes';

@@ -1,5 +1,6 @@
 import { Registry } from '../Registry';
 
+import AliasedImport from './aliased/_import';
 import AnyImport from './any/_import';
 import BooleanImport from './boolean/_import';
 import ColorImport from './color/_import';
@@ -19,6 +20,7 @@ import TupleImport from './tuple/_import';
 export default function(registry: Registry)
 {
   registry
+    .import(AliasedImport)
     .import(AnyImport)
     .import(BooleanImport)
     .import(ColorImport)

@@ -25,6 +25,8 @@ export async function getProjectExport({ project, transcoders }: ProjectExportOp
       data: true,
       program: true,
       functions: true,
+      aliased: true,
+      relations: true,
       compressed: false,
     },
     fields: [
@@ -35,6 +37,8 @@ export async function getProjectExport({ project, transcoders }: ProjectExportOp
       { name: 'data', type: 'boolean', label: 'Data', required: true },
       { name: 'program', type: 'boolean', label: 'Program', required: true },
       { name: 'functions', type: 'boolean', label: 'Functions', required: true, details: friendlyList(objectValues(project.functions, (f, name) => name)) },
+      { name: 'aliased', type: 'boolean', label: 'Types', required: true, details: friendlyList(objectValues(project.aliased, (f, name) => name)) },
+      { name: 'relations', type: 'boolean', label: 'Relations', required: true, details: friendlyList(objectValues(project.relations, (f, name) => name)) },
       { name: 'compressed', type: 'boolean', label: 'Compress' },
     ],
   });
@@ -63,6 +67,15 @@ export async function getProjectExport({ project, transcoders }: ProjectExportOp
   }
   if (settings.functions) {
     exporting.functions = transcoders.functions.encode(project.functions);
+  }
+  if (settings.aliased) {
+    exporting.aliased = transcoders.aliased.encode(project.aliased);
+    exporting.aliasedSettings = transcoders.aliasedSettings.encode(project.aliasedSettings);
+    exporting.aliasedData = transcoders.aliasedData.encode(project.aliasedData);
+    exporting.storage = transcoders.storage.encode(project.storage);
+  }
+  if (settings.relations) {
+    exporting.relations = transcoders.relations.encode(project.relations);
   }
 
   const exported = settings.compressed

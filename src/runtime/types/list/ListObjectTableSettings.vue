@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { ListType, ObjectType } from 'expangine-runtime';
+import { ListType, ObjectType, AliasedType } from 'expangine-runtime';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
 import { SimpleFieldSettings, ListOptions } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
@@ -104,6 +104,11 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
   computed: {
     optionFields: () => fields,
     alignments: () => alignments,
+    itemType(): ObjectType {
+      return this.type.options.item instanceof AliasedType
+        ? this.type.options.item.getType() as ObjectType
+        : this.type.options.item as ObjectType;
+    },
   },
   watch: {
     'value.columns': {
@@ -128,7 +133,7 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
     addMissingColumns() {
       let changed = false;
       const { columns } = this.value;
-      const type = this.type.options.item as ObjectType;
+      const type = this.itemType;
 
       for (const prop in type.options.props) {
         const columnIndex = columns.findIndex((c) => c.prop === prop);

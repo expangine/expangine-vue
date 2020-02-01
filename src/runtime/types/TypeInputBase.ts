@@ -35,7 +35,7 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
       registry: Registry;
       settings: TypeSettings<O, S>;
       data: Data | null;
-      path: Array<string  | number>;
+      path: Array<string | number>;
     }
   >({
     props: {

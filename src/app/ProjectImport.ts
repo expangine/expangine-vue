@@ -3,7 +3,8 @@ import { Type, ObjectType, objectValues, FunctionType, AnyType, ReturnExpression
 import { SimpleFieldOption } from '@/common';
 import { getSimpleInput } from './SimpleInput';
 import { Registry } from '@/runtime/Registry';
-import { ProjectTranscoders, ProjectType, ProjectTransformer } from './Project';
+import { ProjectTranscoders, ProjectType, ProjectTransformer, Project } from './Project';
+import { Transcoder } from './Transcoder';
 
 
 export interface ProjectImportOptions
@@ -32,6 +33,8 @@ interface ProjectPromptValue
   program: 'ignore' | 'saveas' | 'replace';
   programFunctionName: string;
   functions: 'ignore' | 'mergeReplace' | 'mergeIgnore' | 'replace';
+  aliased: 'ignore' | 'mergeReplace' | 'mergeIgnore' | 'replace';
+  relations: 'ignore' | 'mergeReplace' | 'mergeIgnore' | 'replace';
 }
 
 export async function getProjectImport({ imported, accept, customize, registry, type, transcoders }: ProjectImportOptions): Promise<ProjectImportResult | string>
@@ -49,6 +52,8 @@ export async function getProjectImport({ imported, accept, customize, registry, 
     program: 'ignore',
     programFunctionName: 'imported_function',
     functions: 'ignore',
+    aliased: 'ignore',
+    relations: 'ignore',
   };
 
   if (accept.metadata && imported.metadata) 
@@ -130,6 +135,28 @@ export async function getProjectImport({ imported, accept, customize, registry, 
     ]};
   }
 
+  if (accept.aliased && imported.aliased) 
+  {
+    value.aliased = 'replace';
+    fields.aliased = { name: 'aliased', type: 'select', label: 'Types', required: true, items: [
+      { text: 'Replace types', value: 'replace' },
+      { text: 'Merge types, replace existing', value: 'mergeReplace' },
+      { text: 'Merge types, ignore existing', value: 'mergeIgnore' },
+      { text: 'Ignore types', value: 'ignore' },
+    ]};
+
+    if (accept.relations && imported.relations) 
+    {
+      value.relations = 'replace';
+      fields.relations = { name: 'relations', type: 'select', label: 'Relations', required: true, items: [
+        { text: 'Replace types', value: 'replace' },
+        { text: 'Merge types, replace existing', value: 'mergeReplace' },
+        { text: 'Merge types, ignore existing', value: 'mergeIgnore' },
+        { text: 'Ignore types', value: 'ignore' },
+      ]};
+    }
+  }
+
   if (customize) 
   {
     const newValue = await getSimpleInput<any>({
@@ -181,6 +208,18 @@ export async function getProjectImport({ imported, accept, customize, registry, 
   {
     importing.push('functions');
   }
+  if (value.aliased !== 'ignore') 
+  {
+    importing.push('aliased');
+    importing.push('aliasedData');
+    importing.push('aliasedSettings');
+    importing.push('storage');
+
+    if (value.relations !== 'ignore')
+    {
+      importing.push('relations');
+    }
+  }
 
   const transform: ProjectTransformer = {
     type: (x) => x.type,
@@ -188,6 +227,11 @@ export async function getProjectImport({ imported, accept, customize, registry, 
     data: (x) => x.data,
     program: (x) => x.program,
     functions: (x) => x.functions,
+    aliased: (x) => x.aliased,
+    aliasedSettings: (x) => x.aliasedSettings,
+    aliasedData: (x) => x.aliasedData,
+    storage: (x) => x.storage,
+    relations: (x) => x.relations,
     metadata: (x) => x.metadata,
   };
 
@@ -247,28 +291,50 @@ export async function getProjectImport({ imported, accept, customize, registry, 
       transform.functions = () => transcoders.functions.decode(imported.functions);
       break;
     case 'mergeReplace':
-      const mergeReplace = transcoders.functions.decode(imported.functions);
-      transform.functions = (project) => {
-        for (const functionName in mergeReplace) {
-          Vue.set(project.functions, functionName, mergeReplace[functionName]);
-        }
-        return project.functions;
-      };
+      transform.functions = handleMergeReplace(transcoders.functions, imported.functions, 'functions');
       break;
     case 'mergeIgnore':
-      const mergeIgnore = transcoders.functions.decode(imported.functions);
-      transform.functions = (project) => {
-        for (const functionName in mergeIgnore) {
-          if (!project.functions[functionName]) {
-            Vue.set(project.functions, functionName, mergeIgnore[functionName]);
-          }
-        }
-        return project.functions;
-      };
+      transform.functions = handleMergeIgnore(transcoders.functions, imported.functions, 'functions');
       break;
   }
 
-  switch (value.program) {
+  switch (value.aliased) 
+  {
+    case 'replace':
+      transform.aliased = () => transcoders.aliased.decode(imported.aliased);
+      transform.aliasedSettings = () => transcoders.aliasedSettings.decode(imported.aliasedSettings);
+      transform.aliasedData = () => transcoders.aliasedData.decode(imported.aliasedData);
+      transform.storage = () => transcoders.storage.decode(imported.storage);
+      break;
+    case 'mergeReplace':
+      transform.aliased = handleMergeReplace(transcoders.aliased, imported.aliased, 'aliased');
+      transform.aliasedSettings = handleMergeReplace(transcoders.aliasedSettings, imported.aliasedSettings, 'aliasedSettings');
+      transform.aliasedData = handleMergeReplace(transcoders.aliasedData, imported.aliasedData, 'aliasedData');
+      transform.storage = handleMergeReplace(transcoders.storage, imported.storage, 'storage');
+      break;
+    case 'mergeIgnore':
+      transform.aliased = handleMergeIgnore(transcoders.aliased, imported.aliased, 'aliased');
+      transform.aliasedSettings = handleMergeIgnore(transcoders.aliasedSettings, imported.aliasedSettings, 'aliasedSettings');
+      transform.aliasedData = handleMergeIgnore(transcoders.aliasedData, imported.aliasedData, 'aliasedData');
+      transform.storage = handleMergeIgnore(transcoders.storage, imported.storage, 'storage');
+      break;
+  }
+
+  switch (value.relations) 
+  {
+    case 'replace':
+      transform.relations = () => transcoders.relations.decode(imported.relations);
+      break;
+    case 'mergeReplace':
+      transform.relations = handleMergeReplace(transcoders.relations, imported.relations, 'relations');
+      break;
+    case 'mergeIgnore':
+      transform.relations = handleMergeIgnore(transcoders.relations, imported.relations, 'relations');
+      break;
+  }
+
+  switch (value.program) 
+  {
     case 'replace':
       transform.program = () => transcoders.program.decode(imported.program);
       break;
@@ -296,9 +362,51 @@ export async function getProjectImport({ imported, accept, customize, registry, 
       break;
   }
 
-  if (value.metadata) {
+  if (value.metadata) 
+  {
     transform.metadata = () => transcoders.metadata.decode(imported.metadata);
   }
 
   return { importing, transform };
+}
+
+function handleMergeReplace<I, K extends ProjectType, O = any>(
+  transcoder: Transcoder<Record<string, I>, O>,
+  output: O,
+  projectKey: keyof Project,
+): (project: Project) => Project[K] 
+{
+  const mergeReplace = transcoder.decode(output);
+
+  return (project: Project) => 
+  {
+    for (const name in mergeReplace) 
+    {
+      Vue.set(project[projectKey], name, mergeReplace[name]);
+    }
+
+    return project[projectKey];
+  };
+}
+
+function handleMergeIgnore<I, K extends ProjectType, O = any>(
+  transcoder: Transcoder<Record<string, I>, O>,
+  output: O,
+  projectKey: K,
+): (project: Project) => Project[K] 
+{
+  const mergeIgnore = transcoder.decode(output);
+
+  return (project: Project) => 
+  {
+    for (const name in mergeIgnore) 
+    {
+      if (!project[projectKey][name]) 
+      {
+        Vue.set(project[projectKey], name, mergeIgnore[name]);
+      }
+    }
+
+    return project[projectKey];
+  };
 }

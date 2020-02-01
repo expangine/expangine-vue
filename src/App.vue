@@ -272,6 +272,71 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <v-menu offset-y>
+        <template #activator="{ on }">
+          <v-btn text v-on="on">
+            Types
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item key="new" @click="addType">
+            <v-list-item-content>
+              <v-list-item-title>Add</v-list-item-title>
+              <v-list-item-subtitle>Create a new re-usable type.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <template v-for="(func, name) in aliased">
+            <v-list-item :key="name" @click="editType(name)">
+              <v-list-item-content>
+                <v-list-item-title>{{ name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-divider></v-divider>
+          <v-list-item key="clear" @click="clearTypes">
+            <v-list-item-content>
+              <v-list-item-title>Clear</v-list-item-title>
+              <v-list-item-subtitle>Remove all user-defined types.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
+      <v-menu offset-y>
+        <template #activator="{ on }">
+          <v-btn text v-on="on">
+            Relations
+            <v-icon>mdi-menu-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item key="new" @click="addRelation">
+            <v-list-item-content>
+              <v-list-item-title>Add</v-list-item-title>
+              <v-list-item-subtitle>Create a new relation between types.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <template v-for="(relation, name) in relations">
+            <v-list-item :key="name" @click="editRelation(name)">
+              <v-list-item-content>
+                <v-list-item-title>{{ name }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-divider></v-divider>
+          <v-list-item key="clear" @click="clearRelations">
+            <v-list-item-content>
+              <v-list-item-title>Clear</v-list-item-title>
+              <v-list-item-subtitle>Remove all relations.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
       <v-spacer></v-spacer>
       <v-tooltip bottom>
         <template #activator="{ on }">
@@ -393,6 +458,12 @@
       <ex-test-operation-dialog></ex-test-operation-dialog>
       <ex-get-program-dialog></ex-get-program-dialog>
       <ex-value-dialog></ex-value-dialog>
+      <ex-edit-type-index-dialog></ex-edit-type-index-dialog>
+      <ex-edit-type-transcoder-dialog></ex-edit-type-transcoder-dialog>
+      <ex-edit-relation-dialog></ex-edit-relation-dialog>
+      <ex-edit-aliased-dialog
+        @saved="handleSaveType"
+      ></ex-edit-aliased-dialog>
       <ex-operation-catalogue-dialog
         :registry="registry"
         :show.sync="showOperations"
@@ -530,7 +601,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity } from 'expangine-runtime';
+import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, TypeStorage, TypeRelation, TypeStorageOptions, RelationOptions, Relation, objectToArray } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -557,6 +628,9 @@ import { Store } from './app/Store';
 import { Trie } from './app/Trie';
 import { SystemEvents } from './app/SystemEvents';
 import { ValidationHelper } from './app/ValidationHelper';
+import { getEditAliased } from './app/EditAliased';
+import { getEditRelation } from './app/EditRelation';
+import { addType } from './app/Aliased';
 import Registry from './runtime';
 
 
@@ -637,6 +711,49 @@ export default Vue.extend({
         this.registry.defs.functions = LiveRuntime.defs.functions = value;
       },
     },
+    aliased: {
+      get(): Record<string, ObjectType> {
+        return this.registry.defs.aliased;
+      },
+      set(value: Record<string, ObjectType>) {
+        this.registry.defs.aliased = value;
+        objectEach(value, (type, name) => {
+          Vue.set(this.registry.defs.parsers, name, () => type);
+        });
+      },
+    },
+    aliasedData: {
+      get(): Record<string, any[]> {
+        return this.registry.typeData;
+      },
+      set(value: Record<string, any[]>) {
+        this.registry.typeData = value;
+      },
+    },
+    aliasedSettings: {
+      get(): Record<string, TypeSettings> {
+        return this.registry.typeSettings;
+      },
+      set(value: Record<string, TypeSettings>) {
+        this.registry.typeSettings = value;
+      },
+    },
+    storage: {
+      get(): Record<string, TypeStorage> {
+        return this.registry.defs.storage;
+      },
+      set(value: Record<string, TypeStorage>) {
+        this.registry.defs.storage = value;
+      },
+    },
+    relations: {
+      get(): Record<string, Relation> {
+        return this.registry.defs.relations;
+      },
+      set(value: Record<string, Relation>) {
+        this.registry.defs.relations = value;
+      },
+    },
     history(): ProjectHistory {
       window.console.log('history created');
 
@@ -698,6 +815,36 @@ export default Vue.extend({
           getDefault: () => this.registry.defs.functions,
           canSave,
         }),
+        aliased: newStore('aliased', {
+          encode: (value: Record<string, ObjectType>) => objectMap(value, (aliased) => aliased.encode()),
+          decode: (data: any) => objectMap(data, (objectData) => this.registry.defs.getType(objectData) as ObjectType),
+          getDefault: () => this.registry.defs.aliased,
+          canSave,
+        }),
+        aliasedData: newStore('aliasedData', {
+          encode: (value: Record<string, any[]>) => objectMap(value, (aliased) => AnyType.baseType.toJson(aliased)),
+          decode: (data: any) => objectMap(data, (objectData) => AnyType.baseType.fromJson(objectData)),
+          getDefault: () => this.registry.typeData,
+          canSave,
+        }),
+        aliasedSettings: newStore('aliasedSettings', {
+          encode: (value: Record<string, TypeSettings>) => copy(value),
+          decode: (data: any) => copy(data),
+          getDefault: () => this.registry.typeSettings,
+          canSave,
+        }),
+        storage: newStore('storage', {
+          encode: (value: Record<string, TypeStorage>) => objectMap(value, (storage) => storage.encode()),
+          decode: (data: Record<string, TypeStorageOptions>) => objectMap(data, (storageData) => new TypeStorage(storageData, this.registry.defs)),
+          getDefault: () => this.registry.defs.storage,
+          canSave,
+        }),
+        relations: newStore('relations', {
+          encode: (value: Record<string, Relation>) => objectMap(value, (relation) => relation.encode()),
+          decode: (data: Record<string, RelationOptions>) => objectMap(data, (relationData) => new Relation(this.registry.defs, relationData)),
+          getDefault: () => this.registry.defs.relations,
+          canSave,
+        }),
       };
     },
     isDataSaved(): boolean {
@@ -734,22 +881,36 @@ export default Vue.extend({
     
     this.loadExamples();
 
+    this.aliased = await this.store.aliased.load();
     this.type = await this.store.type.load();
     this.settings = await this.store.settings.load();
     this.data = await this.store.data.load();
     this.program = await this.store.program.load();
     this.functions = await this.store.functions.load();
+    this.aliasedData = await this.store.aliasedData.load();
+    this.aliasedSettings = await this.store.aliasedSettings.load();
+    this.storage = await this.store.storage.load();
+    this.relations = await this.store.relations.load();
     this.metadata = await this.store.metadata.load();
     
     this.history.resetLast();
 
     this.initialized = true;
 
+    for (const name in this.aliased) {
+      addType(this.registry, name);
+    }
+
     this.store.type.on('saveError', this.onSaveError);
     this.store.settings.on('saveError', this.onSaveError);
     this.store.data.on('saveError', this.onSaveError);
     this.store.program.on('saveError', this.onSaveError);
     this.store.functions.on('saveError', this.onSaveError);
+    this.store.aliased.on('saveError', this.onSaveError);
+    this.store.aliasedData.on('saveError', this.onSaveError);
+    this.store.aliasedSettings.on('saveError', this.onSaveError);
+    this.store.storage.on('saveError', this.onSaveError);
+    this.store.relations.on('saveError', this.onSaveError);
     this.store.metadata.on('saveError', this.onSaveError);
     this.history.redosTranscoder.on('saveError', this.onSaveError);
     this.history.undosTranscoder.on('saveError', this.onSaveError);
@@ -960,6 +1121,11 @@ export default Vue.extend({
         data: this.store.data.encode(this.data),
         program: this.store.program.encode(this.program),
         functions: this.store.functions.encode(this.functions),
+        aliased: this.store.aliased.encode(this.aliased),
+        aliasedSettings: this.store.aliasedSettings.encode(this.aliasedSettings),
+        aliasedData: this.store.aliasedData.encode(this.aliasedData),
+        relations: this.store.relations.encode(this.relations),
+        storage: this.store.storage.encode(this.storage),
       });
 
       getSendMail({
@@ -967,6 +1133,96 @@ export default Vue.extend({
         subject: 'I would like to share my Expangine project with you',
         body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into ${location.href}.\n\n\n${exported}`,
       });
+    },
+    // RELATIONS
+    async addRelation()
+    {
+      const { registry } = this;
+      const result = await getEditRelation({ registry });
+
+      if (result) 
+      {
+        this.saveDataPending();
+        this.history.save({ relations: this.relations }, `Relation ${result.name} created.`);
+      }
+    },
+    async editRelation(name: string)
+    {
+      const { registry } = this;
+      const result = await getEditRelation({ registry, name });
+
+      if (result)
+      {
+        this.saveDataPending();
+        this.history.save({ relations: this.relations }, `Relation ${result.name} saved.`);
+      }
+    },
+    async clearRelations() 
+    {
+      if (await getConfirmation()) 
+      {
+        const relationsCleared = friendlyList(objectValues(this.relations, (_, name) => name));
+
+        this.saveDataPending();
+        this.history.save({ relations: {} }, `Relations cleared: ${relationsCleared}`);
+      }
+    },
+    // ALIASED
+    handleSaveType(options: { saveAs: string, type: Type, settings: TypeSettings, data: any[], storage: TypeStorage, relations: TypeRelation[] })
+    {
+      const { aliasedData, aliasedSettings, storage } = this;
+      const saving: Partial<Project> = {};
+
+      if (options.settings) {
+        Vue.set(this.registry.typeSettings, options.saveAs, options.settings);
+        saving.aliasedData = aliasedData;
+      }
+
+      if (options.data) {
+        Vue.set(this.registry.typeData, options.saveAs, options.data);
+        saving.aliasedSettings = aliasedSettings;
+      }
+
+      if (options.storage) {
+        Vue.set(this.registry.defs.storage, options.saveAs, options.storage);
+        saving.storage = storage;
+      }
+
+      this.saveDataPending();
+      this.history.save(saving, 'Type Settings & Storage saved.');
+    },
+    async addType()
+    {
+      const { registry } = this;
+      const type = ObjectType.from();
+      const result = await getEditAliased({ registry, type });
+
+      if (result) 
+      {
+        this.saveDataPending();
+        this.history.save({ aliased: this.aliased }, `Type ${result.name} created.`);
+      }
+    },
+    async editType(name: string)
+    {
+      const { registry } = this;
+      const result = await getEditAliased({ registry, name });
+
+      if (result)
+      {
+        this.saveDataPending();
+        this.history.save({ aliased: this.aliased }, `Type ${result.name} saved.`);
+      }
+    },
+    async clearTypes() 
+    {
+      if (await getConfirmation()) 
+      {
+        const typesCleared = friendlyList(objectValues(this.aliased, (_, name) => name));
+
+        this.saveDataPending();
+        this.history.save({ aliased: {} }, `Types cleared: ${typesCleared}`);
+      }
     },
     // FUNCTIONS
     async addFunction() 
@@ -1088,6 +1344,7 @@ export default Vue.extend({
       }
 
       this.saveDataPending();
+
       this.history.save({
         type: built.type,
         settings: built.settings,
@@ -1170,7 +1427,7 @@ export default Vue.extend({
       const importResult = await getProjectImport({
         imported,
         customize,
-        accept: { type: true, settings: true, data: true, program: true, functions: true, metadata: true },  
+        accept: { type: true, settings: true, data: true, program: true, functions: true, metadata: true, aliased: true, aliasedSettings: true, aliasedData: true, relations: true, storage: true },
         type,
         registry,
         transcoders,
