@@ -40,6 +40,7 @@
               :type="type"
               :registry="registry"
               :settings="settings"
+              @change="handleChange"
             ></ex-type-editor>
           </v-tab-item>
           <v-tab-item>
@@ -256,7 +257,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, ObjectType, Types, TypeStorage, TypeStoragePrimaryType, TypeIndex, objectEach, TypeStorageTranscoder, Expression, objectToArray, TypeRelation, ListType } from 'expangine-runtime';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { LiveRuntime } from 'expangine-runtime-live';
+import { TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
 import { getEditTypeIndex } from './EditTypeIndex';
 import { getEditTypeTranscoder } from './EditTypeTranscoder';
 import { getEditRelation, getRelationKindText } from './EditRelation';
@@ -462,6 +464,22 @@ export default Vue.extend({
       } else {
         this.save();
       }
+    },
+    handleChange(event: TypeUpdateEvent) {
+      const { type, settings, transform } = event;
+      
+      if (transform instanceof Expression && this.data)
+      {
+        const cmd = LiveRuntime.getCommand(transform);
+
+        for (let i = 0; i < this.data.length; i++)
+        {
+          this.data[i] = cmd({ value: this.data[i] });
+        }
+      }
+
+      this.type = type as ObjectType;
+      this.settings = settings;
     },
   },
 });
