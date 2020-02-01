@@ -16,12 +16,10 @@ export const AliasedVisuals = createVisuals()({
   description: 'Custom type',
   describe: ({registry, type}) => type.options,
   describeLong: (registry, type, padding) => type.options,
-  stringify: ({ registry, type, value }) => type.options,
-  toString: ({ value, type, process, processInvalid }) => {
-    return process(value, type);
-  },
-  subNodes: () => [],
-  subOptions: (registry, type) => [],
+  stringify: ({ registry, type, value }) => registry.getTypeStringify(type.getType(), value),
+  toString: ({ value, type, process, registry, processInvalid, tab, newline, padding }) => registry.getTypeToString(value, type.getType(), tab, newline, padding, process, processInvalid ),
+  subNodes: ({ value, type, registry }) => registry.getTypeSubNodes(value, type.getType()),
+  subOptions: (registry, type) => registry.getTypeSubOptions(type.getType()),
   subSettings: (registry, type, settings, sub) => null,
   settingsFor: ({ registry, type }) => ({
     input: 'aliased',
