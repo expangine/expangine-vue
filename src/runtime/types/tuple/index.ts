@@ -210,7 +210,7 @@ export const TupleModifierFromObject: TypeModifier<TupleType> =
 
     return {
       text: 'Convert to Tuple',
-      description: friendlyList(names),
+      description: names.length ? friendlyList(names) : 'An empty tuple',
       priority: 14,
       value: async () => (initializeSubs(registry, {
         type: new TupleType(values),

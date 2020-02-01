@@ -182,7 +182,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
 
     return {
       text: 'Convert to Object',
-      description: friendlyList(names),
+      description: names.length ? friendlyList(names) : 'An empty object',
       priority: 15,
       value: async () => {
         if (!await getConfirmation()) {

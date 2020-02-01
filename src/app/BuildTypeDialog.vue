@@ -27,7 +27,7 @@
             </v-list-item>
           </template>
         </v-select>
-        <v-select
+        <v-autocomplete
           solo
           filled
           return-object
@@ -54,7 +54,7 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-        </v-select>
+        </v-autocomplete>
         <v-switch
           inset
           hide-details

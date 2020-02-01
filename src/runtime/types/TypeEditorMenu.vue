@@ -255,6 +255,8 @@ export default TypeEditorBase<Type, any, any>().extend({
   },
   methods: {
     async onModify(modifier: TypeModifyOption) {
+      this.editing = false;
+      
       const result = await modifier.value();
 
       if (result) {
