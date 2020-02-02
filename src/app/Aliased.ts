@@ -21,6 +21,11 @@ export function renameType(registry: Registry, name: string, newName: string)
 
 export function addType(registry: Registry, name: string)
 {
+  if (name in typeBuilders)
+  {
+    return;
+  }
+
   const builder: TypeBuilder = {
     getOption: () => ({
       text: name,
@@ -36,6 +41,8 @@ export function addType(registry: Registry, name: string)
       }),
     }),
   };
+
+  typeBuilders[name] = builder;
 
   registry.addTypeBuilder(builder);
 }

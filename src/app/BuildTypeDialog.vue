@@ -31,8 +31,10 @@
           solo
           filled
           return-object
+          auto-select-first
           placeholder="- Select Type -"
           :hint="hint"
+          :autofocus="visible"
           :persistent-hint="persistentHint"
           :value-comparator="compareStrict"
           :items="options"

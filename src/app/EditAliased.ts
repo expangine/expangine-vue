@@ -58,19 +58,19 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
   const { name, registry } = editAliasedDialog;
   const { defs } = registry;
 
-  const type = name && name in defs.aliased
+  const foundType = name && name in defs.aliased
     ? defs.aliased[name]
     : editAliasedDialog.type;
   
   let saved = false;
 
-  editAliasedDialog.type = type;
+  editAliasedDialog.type = foundType;
   editAliasedDialog.saveAs = name;
   editAliasedDialog.settings = name in registry.typeSettings
     ? registry.typeSettings[name]
-    : registry.getTypeSettingsValidFor(type, editAliasedDialog.settings)
+    : registry.getTypeSettingsValidFor(foundType, editAliasedDialog.settings)
       ? editAliasedDialog.settings
-      : registry.getTypeSettings(type);
+      : registry.getTypeSettings(foundType);
   editAliasedDialog.storage = registry.defs.storage[name] || null;
   editAliasedDialog.data = name in registry.typeData
     ? registry.typeData[name]
@@ -80,7 +80,7 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
   editAliasedDialog.visible = true;
   editAliasedDialog.save = () => 
   {
-    const { name: savedAs, saveAs, storage, relations } = editAliasedDialog;
+    const { name: savedAs, saveAs, storage, type } = editAliasedDialog;
     
     if (saveAs) 
     {

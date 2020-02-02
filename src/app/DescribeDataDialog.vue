@@ -19,7 +19,6 @@
               solo
               flat
               filled
-              
               hide-details
               height="100%"
               placeholder="Paste your JS code or JSON here"

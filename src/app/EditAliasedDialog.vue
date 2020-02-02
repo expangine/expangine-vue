@@ -478,6 +478,10 @@ export default Vue.extend({
         }
       }
 
+      if (this.type === this.registry.defs.aliased[this.name]) {
+        Vue.set(this.registry.defs.aliased, this.name, type);
+      }
+
       this.type = type as ObjectType;
       this.settings = settings;
     },
