@@ -584,6 +584,9 @@
       :value="validationsVisible"
       :permanent="validationsVisible"
     >
+      <v-btn icon absolute right @click="viewValidations">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
       <template v-for="(validation, index) in validations">
         <ex-validation
           :key="index"
