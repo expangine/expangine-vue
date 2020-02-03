@@ -17,6 +17,7 @@ import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
 
 import DataString from './app/DataString.vue';
 import DataStringBox from './app/DataStringBox.vue';
+import TypeStringBox from './app/TypeStringBox.vue';
 import DataMenu from './app/DataMenu.vue';
 import ChipMenu from './app/ChipMenu.vue';
 import ColorPicker from './app/ColorPicker.vue';
@@ -163,6 +164,7 @@ export default {
     Vue.component('ex-data-string', DataString);
     Vue.component('ex-data-menu', DataMenu);
     Vue.component('ex-data-string-box', DataStringBox);
+    Vue.component('ex-type-string-box', TypeStringBox);
     Vue.component('ex-color-picker', ColorPicker);
     Vue.component('ex-date-picker', DatePicker);
     Vue.component('ex-simple-fields', SimpleFields);

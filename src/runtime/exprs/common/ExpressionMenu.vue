@@ -155,11 +155,17 @@
             <v-row>
               <v-col v-if="requiredType">
                 <h4>Expected Type</h4>
-                <code class="d-block pa-2" v-html="requiredTypeDescription"></code>
+                <ex-type-string-box
+                  :type="requiredType"
+                  :registry="registry"
+                ></ex-type-string-box>
               </v-col>
               <v-col v-if="computedType">
                 <h4>Actual Type</h4>
-                <code class="d-block pa-2" v-html="computedTypeDescription"></code>
+                <ex-type-string-box
+                  :type="computedType"
+                  :registry="registry"
+                ></ex-type-string-box>
               </v-col>
             </v-row>
           </v-container>
@@ -236,16 +242,6 @@ export default ExpressionBase().extend({
     },
     modifiers(): ListOptions<ExpressionModifierCallback> {
       return this.registry.getExpressionsModifiers(this.requiredType, this.value, this.computedType);
-    },
-    requiredTypeDescription(): string {
-      return this.requiredType
-        ? this.registry.getTypeDescribeLong(this.requiredType, '&nbsp;&nbsp;', '<br>')
-        : '';
-    },
-    computedTypeDescription(): string {
-      return this.computedType
-        ? this.registry.getTypeDescribeLong(this.computedType, '&nbsp;&nbsp;', '<br>')
-        : '';
     },
   },
   methods: {

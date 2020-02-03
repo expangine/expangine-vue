@@ -30,10 +30,11 @@
             ></ex-expression>
           </v-tab-item>
           <v-tab-item>
-            <code 
-              class="d-block pa-2 ma-1 ex-scrollable" 
-              v-html="actualTypeDescribed"
-            ></code>
+            <ex-type-string-box
+              class="ma-1 ex-scrollable"
+              :type="actualType"
+              :registry="registry"
+            ></ex-type-string-box>
           </v-tab-item>
         </v-tabs>
         <ex-expression
