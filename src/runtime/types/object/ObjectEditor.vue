@@ -155,7 +155,9 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
         context: ObjectType.from({
           parent: this.type,
         }),
-        program: this.registry.getTypeCreate(chosen.type),
+        program: chosen.transform
+          ? chosen.transform
+          : this.registry.getTypeCreate(chosen.type),
         expectedType: chosen.type,
       });
 

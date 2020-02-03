@@ -5,6 +5,7 @@ import { ChangeTypeModifier } from './ChangeTypeModifier';
 import { CopyModifier, PasteBuilder } from './ClipboardHooks';
 import { DefaultWrapper } from './DefaultWrapper';
 import { MigrationModifier } from './MigrationModifier';
+import { ImportBuilder } from './ImportBuilder';
 
 
 export default function(registry: Registry)
@@ -15,5 +16,6 @@ export default function(registry: Registry)
     .addTypeModifier(CopyModifier)
     .addTypeBuilderWrapper(DefaultWrapper)
     .addTypeModifier(MigrationModifier)
+    .addTypeBuilder(ImportBuilder)
   ;
 }
