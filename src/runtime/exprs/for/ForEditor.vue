@@ -2,62 +2,77 @@
   <table class="ex-table">
     <tbody>
       <tr>
-        <td>
-          <ex-expression-menu 
-            v-bind="$props"
-            v-on="$listeners"
-            tooltip="The starting value in the For loop"
-            :text="textStart"
-          >
-            <template #prepend>
-              <v-list-item v-if="!readOnly" @click="toggleConfigure">
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ configureLabel }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle>
-                    Change the counter variable, break variable or max iterations
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-          </ex-expression-menu>
+        <td class="py-1 pl-0">
+          <div class="ex-center-aligned float-right">
+            <ex-expression-menu 
+              v-bind="$props"
+              v-on="$listeners"
+              text="For"
+              tooltip="The starting value in the For loop"
+            >
+              <template #prepend>
+                <v-list-item v-if="!readOnly" @click="toggleConfigure">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ configureLabel }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Change the counter variable, break variable or max iterations
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </ex-expression-menu>
+          </div>
         </td>
-        <td>
-          <ex-expression
-            v-bind="$props"
-            :value="value.start"
-            :required-type="variableType"
-            @input="updateStart($event)"
-            @remove="updateStart()"
-          ></ex-expression>
+        <td class="py-1 pr-3">
+          <div class="ex-center-aligned">
+            
+            <v-chip label outlined>
+              {{ value.variable }}
+            </v-chip>
+
+            <span class="ml-2 mr-1"> = </span>
+
+            <span class="ex-expression ex-parenthesis">
+              <ex-expression
+                v-bind="$props"
+                :value="value.start"
+                :required-type="variableType"
+                @input="updateStart($event)"
+                @remove="updateStart()"
+              ></ex-expression>
+            </span>
+
+            <span class="mr-2">, while </span>
+
+            <v-chip label outlined>
+              {{ value.variable }}
+            </v-chip>
+
+            <span class="ml-2 mr-1"> &lt; </span>
+
+            <span class="ex-expression ex-parenthesis">
+              <ex-expression
+                v-bind="$props"
+                :value="value.end"
+                :required-type="variableType"
+                @input="updateEnd($event)"
+                @remove="updateEnd()"
+              ></ex-expression>
+            </span>
+
+          </div>
         </td>
       </tr>
       <tr>
-        <td>
-          <ex-chip-menu
-            tooltip="The ending value in the For loop (exclusive)"
-            :text="textEnd"
-          ></ex-chip-menu>
-        </td>
-        <td>
-          <ex-expression
-            v-bind="$props"
-            :value="value.end"
-            :required-type="variableType"
-            @input="updateEnd($event)"
-            @remove="updateEnd()"
-          ></ex-expression>
-        </td>
-      </tr>
-      <tr>
-        <td>
+        <td class="py-1 pl-0">
           <ex-chip-menu
             text="Do"
             tooltip="Execute this expression between the range of Start and End"
           ></ex-chip-menu>
         </td>
-        <td>
+        <td class="py-0">
           <ex-expression
             v-bind="$props"
             :value="value.body"
