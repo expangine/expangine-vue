@@ -594,6 +594,34 @@ export default (registry: Registry) =>
     returnComments: 'Formats [value] as text.',
   });
 
+  registry.addOperation(NumberOps.toPercent, {
+    name: 'Format Number to Percent',
+    description: 'Format [value] to percent (multiplying it by 100), a minimum number of decimal places [minPlaces], a maximum number of decimal places [maxPlaces], and using a [thousandSeparator]',
+    singleline: 'format {value} to percent a minimum number of decimal places {minPlaces} a maximum number of decimal places {maxPlaces} using the thousand separator {thousandSeparator}',
+    comments: {
+      value: 'The number to format as text',
+      minPlaces: 'The minimum number of decimal places to return',
+      maxPlaces: 'The maximum number of decimal places to return',
+      thousandSeparator: 'The thousand separator to use for values over 999',
+    },
+    defaults: {
+      minPlaces: 'any',
+      maxPlaces: 'any',
+      thousandSeparator: 'no',
+    },
+    returnComments: 'Formats [value] as percent.',
+  });
+
+  registry.addOperation(NumberOps.fromPercent, {
+    name: 'Parse Percent from Text',
+    description: 'Parse percent from [value]',
+    singleline: '{value}% to number / 100',
+    comments: {
+      value: 'The number to format as text',
+    },
+    returnComments: 'Parse [value] as percent.',
+  });
+
   registry.addOperation(NumberOps.isValid, {
     name: 'Is Number?',
     description: 'Determines whether [value] is a valid value for Number',
