@@ -48,7 +48,7 @@ import ValueDialog from './app/ValueDialog.vue';
 import Validation from './app/Validation.vue';
 import ChildFilter from './app/ChildFilter.vue';
 
-import { FocusOnVisible } from './app/FocusOnVisible';
+import { FocusOnVisible, FocusOnCreate, FocusOnChange } from './app/Focus';
 
 
 
@@ -173,6 +173,8 @@ export default {
     Vue.component('ex-validation', Validation);
 
     Vue.directive('focus-on-visible', FocusOnVisible);
+    Vue.directive('focus-on-create', FocusOnCreate);
+    Vue.directive('focus-on-change', FocusOnChange);
 
     Vue.use(VueTimeago, {});
   },

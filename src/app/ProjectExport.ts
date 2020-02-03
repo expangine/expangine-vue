@@ -18,7 +18,9 @@ export async function getProjectExport({ project, transcoders }: ProjectExportOp
     confirm: 'Export',
     unconfirm: 'Cancel',
     value: {
-      name: 'export-' + Date.now(),
+      name: project.metadata && project.metadata.title
+        ? project.metadata.title + '-' + Date.now()
+        : 'export-' + Date.now(),
       metadata: true,
       type: true,
       settings: true,

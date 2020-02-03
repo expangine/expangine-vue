@@ -63,6 +63,7 @@
             :value="value.value"
             :type="inputType"
             :settings="inputSettings"
+            v-focus-on-visible="[editing, 'input, select, textarea']"
             v-model="editValue"
           ></ex-type-input>
         </v-card-text>

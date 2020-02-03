@@ -32,7 +32,7 @@
   >
     <v-menu max-height="400">
       <template #activator="{ on }">
-        <v-btn text v-on="on" :color="statusColor">
+        <v-btn text :color="statusColor" v-on="on" v-focus-on-create>
           <v-icon>mdi-plus</v-icon>
           Expression
         </v-btn>

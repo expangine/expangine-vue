@@ -83,6 +83,7 @@
               hide-details
               placeholder="Name"
               v-model="addProp"
+              v-focus-on-change="[propChange, 'input']"
             ></v-text-field>
           </td>
           <td class="ex-cell-top pa-3">
@@ -112,6 +113,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
   name: 'ObjectEditor',
   data: () => ({
     addProp: '',
+    propChange: 1,
   }),
   computed: {
     isValidProp(): boolean {
@@ -184,6 +186,8 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
       this.change(changeEvent);
+      
+      this.propChange++;
     },
     async remove(prop: string) {
       if (!await getConfirmation({ message: `Remove ${prop}?`})) {
@@ -204,6 +208,8 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
           Exprs.get('value'),
         ),
       });
+
+      this.propChange++;
     },
     async rename(prop: string) {
       const newProp = await getInput({ 

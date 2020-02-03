@@ -470,7 +470,7 @@
         :show.sync="showOperations"
       ></ex-operation-catalogue-dialog>
 
-      <v-dialog v-model="metadataEditing" max-width="800"  :fullscreen="$vuetify.breakpoint.mdAndDown">
+      <v-dialog v-model="metadataEditing" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
           <v-card-title class="headline">
             Program Information

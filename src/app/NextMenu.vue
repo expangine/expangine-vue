@@ -1,7 +1,7 @@
 <template>
   <v-menu v-if="visible" v-bind="menuProps">
     <template #activator="{ on }">
-      <v-btn icon v-on="on">
+      <v-btn icon v-on="on" v-focus-on-change.last="[changes, 'self']">
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
@@ -79,6 +79,10 @@ export default Vue.extend({
     menuProps: {
       type: Object,
       default: () => ({ maxHeight: 400, offsetY: true }),
+    },
+    changes: {
+      type: Number,
+      default: 0,
     },
   },
   computed: {

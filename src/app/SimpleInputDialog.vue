@@ -9,7 +9,7 @@
         v-if="message"
         v-html="message"
       ></v-card-text>
-      <v-card-text v-focus-on-visible="[visible, 'input, textarea, select']">
+      <v-card-text v-focus-on-visible="[focusFirst, 'input, textarea, select']">
         <ex-simple-fields
           :value="value"
           :fields="fields"
@@ -19,6 +19,7 @@
         <v-btn 
           color="secondary"
           v-html="unconfirm" 
+          v-focus-on-visible="[focusConfirm, 'self']"
           @click="handle(false)"
         ></v-btn>
         <v-spacer></v-spacer>
@@ -39,5 +40,13 @@ import { simpleInputDialog } from './SimpleInput';
 
 export default Vue.extend({
   data: () => simpleInputDialog,
+  computed: {
+    focusFirst(): boolean {
+      return this.visible && this.focus === 'first';
+    },
+    focusConfirm(): boolean {
+      return this.visible && this.focus === 'confirm';
+    },
+  },
 });
 </script>

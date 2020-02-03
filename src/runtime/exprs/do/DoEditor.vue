@@ -62,6 +62,7 @@
               outlined
               hide-details
               v-model="value.breakVariable"
+              v-focus-on-create="'input'"
               @input="update"
             ></v-text-field>
           </td>

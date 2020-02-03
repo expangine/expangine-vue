@@ -21,6 +21,7 @@
             persistent-hint
             hint="Text with {vars} embedded in it that {can} be replaced"
             v-model="value.template"
+            v-focus-on-create="'input'"
             @blur="addDefinedVars"
           ></v-text-field>
         </td>

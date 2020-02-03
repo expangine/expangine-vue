@@ -9,6 +9,7 @@ export interface SimpleInputOptions<T = any>
   message: string;
   value: T;
   fields: SimpleFieldSettings<T>;
+  focus: 'first' | 'confirm';
   confirm: string;
   unconfirm: string;
   visible: boolean;
@@ -22,6 +23,7 @@ export function getSimpleInputDefaults<T = any>(): SimpleInputOptions<T> {
     message: '',
     value: null as unknown as T,
     fields: [],
+    focus: 'first',
     confirm: 'Ok',
     unconfirm: 'Cancel',
     visible: false,

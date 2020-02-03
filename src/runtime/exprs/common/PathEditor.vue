@@ -19,6 +19,7 @@
       :hide="hideNext"
       :allow-computed="allowComputed"
       :read-only="readOnly"
+      :changes="nextChanges"
       @segment="addSegment"
       @computed="addComputed"
     ></next-menu>
@@ -56,6 +57,9 @@ export default ExpressionBase().extend({
       default: false,
     },
   },
+  data: () => ({
+    nextChanges: 1,
+  }),
   computed: {
     hasSegment(): boolean {
       return this.path.length > 0;
@@ -91,9 +95,11 @@ export default ExpressionBase().extend({
       }
 
       this.update();
+      this.nextChanges++;
     },
     addComputed(comp: TypeComputedOption) {
       this.input(new ComputedExpression(this.value, comp.value.id));
+      this.nextChanges++;
     },
   },
 });

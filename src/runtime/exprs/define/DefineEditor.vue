@@ -64,6 +64,7 @@
                       class="mr-2"
                       :error="isVarInvalid(index)"
                       :value="pair[0]"
+                      v-focus-on-create="'input'"
                       @change="changeVar(index, $event)"
                     ></v-text-field>
                   </td>

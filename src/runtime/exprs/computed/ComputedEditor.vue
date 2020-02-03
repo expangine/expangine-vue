@@ -37,6 +37,7 @@
       :context-details="contextDetails"
       :hide="hideNext"
       :read-only="readOnly"
+      :changes="nextChanges"
       @segment="addSegment"
       @computed="addComputed"
     ></next-menu>
@@ -58,6 +59,9 @@ export default ExpressionBase<ComputedExpression>().extend({
   components: {
     NextMenu,
   },
+  data: () => ({
+    nextChanges: 1,
+  }),
   computed: {
     name(): string {
       return this.value.name.split(':')[1] || this.value.name;
@@ -97,19 +101,24 @@ export default ExpressionBase<ComputedExpression>().extend({
         this.value.expression = value;
         this.update();
       }
+      this.nextChanges++;
     },
     addSegment(sub: TypeSubOption) {
       this.input(new SubExpression(this.value, [this.getSegmentExpression(sub)]));
+      this.nextChanges++;
     },
     changeSegment(sub: TypeSubOption) {
       this.input(new SubExpression(this.value.expression, [this.getSegmentExpression(sub)]));
+      this.nextChanges++;
     },
     addComputed(comp: TypeComputedOption) {
       this.input(new ComputedExpression(this.value, comp.value.id));
+      this.nextChanges++;
     },
     changeComputed(comp: TypeComputedOption) {
       this.value.name = comp.value.id;
       this.update();
+      this.nextChanges++;
     },
     getSegmentExpression(sub: TypeSubOption) {
       return sub.key instanceof Type

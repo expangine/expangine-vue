@@ -32,6 +32,7 @@
       class="function-select d-inline-block mx-2"
       :items="functions"
       v-model="value.name"
+      v-focus-on-create="'input'"
       @change="update"
     ></v-select>
 
