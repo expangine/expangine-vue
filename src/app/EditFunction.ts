@@ -13,6 +13,7 @@ export interface EditFunctionOptions
   func: FunctionType;
   requiredParamsType: Type;
   settings: TypeSettings;
+  readOnly: boolean;
   visible: boolean;
   fullscreen: boolean;
   registry: Registry;
@@ -31,6 +32,7 @@ export function getEditFunctionDefaults(): EditFunctionOptions
     }),
     requiredParamsType: ObjectType.baseType,
     settings: null as unknown as TypeSettings,
+    readOnly: false,
     visible: false,
     fullscreen: false,
     registry: null as unknown as Registry,

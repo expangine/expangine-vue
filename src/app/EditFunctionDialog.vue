@@ -8,6 +8,14 @@
         </v-btn>
 
         Edit Function
+
+        <v-switch
+          hide-details
+          class="mt-0 ml-4"
+          label="Read Only"
+          v-model="readOnly"
+        ></v-switch>
+
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="test">
           Test
@@ -43,6 +51,7 @@
               :context="func.options.params"
               :registry="registry"
               :settings="settings"
+              :read-only="readOnly"
               @input="onProgramChange"
             ></ex-expression>
           </v-tab-item>

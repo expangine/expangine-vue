@@ -13,7 +13,7 @@
         ></ex-expression>
       </span>
     </template>
-    <v-menu>
+    <v-menu v-if="!readOnly">
       <template #activator="{ on }">
         <v-btn icon v-on="on">
           <v-icon>mdi-plus</v-icon>

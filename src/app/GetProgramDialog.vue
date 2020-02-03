@@ -9,6 +9,13 @@
 
         {{ title }}
 
+        <v-switch
+          hide-details
+          class="mt-0 ml-4"
+          label="Read Only"
+          v-model="readOnly"
+        ></v-switch>
+
         <v-btn 
           right
           absolute
@@ -27,6 +34,7 @@
               :context="context"
               :registry="registry"
               :required-type="expectedType"
+              :read-only="readOnly"
             ></ex-expression>
           </v-tab-item>
           <v-tab-item>
@@ -43,6 +51,7 @@
           :context="context"
           :registry="registry"
           :required-type="expectedType"
+          :read-only="readOnly"
         ></ex-expression>
       </v-card-text>
       <v-card-actions>

@@ -8,6 +8,7 @@
         </v-btn>
 
         {{ title }}
+
         <v-chip 
           v-if="name" 
           label 
