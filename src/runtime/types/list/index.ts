@@ -1,5 +1,5 @@
 
-import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType } from 'expangine-runtime';
+import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType, isNumber } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -49,10 +49,14 @@ export const ListVisuals = createVisuals<ListSubs>()({
   subOptions: (registry, type) => type.getSubTypes(registry.defs).map(({ key, value }) => {
     const text = key === 'length'
       ? 'length'
-      : '[ index ]';
+      : isNumber(key)
+        ? `[ ${key} ]`
+        : '[ index ]';
     const description = key === 'length'
       ? 'The number of items in the list'
-      : registry.getTypeDescribeLong(type.options.item, '', '  ') + ' at a given index';
+      : isNumber(key)
+        ? registry.getTypeDescribeLong(type.options.item, '', '  ')
+        : registry.getTypeDescribeLong(type.options.item, '', '  ') + ' at a given index';
 
     return { key, value, text, description };
   }),

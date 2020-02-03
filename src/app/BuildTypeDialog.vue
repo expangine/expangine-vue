@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="300">
+  <v-dialog persistent v-model="visible" max-width="300">
     <v-card>
       <v-card-title 
         class="headline" 
@@ -34,7 +34,6 @@
           auto-select-first
           placeholder="- Select Type -"
           :hint="hint"
-          :autofocus="visible"
           :persistent-hint="persistentHint"
           :value-comparator="compareStrict"
           :items="options"

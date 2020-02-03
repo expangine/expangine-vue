@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="300" :fullscreen="isFullscreen">
+  <v-dialog persistent v-model="visible" max-width="300" :fullscreen="isFullscreen">
     <v-card>
       <v-card-title class="headline">
         <v-btn icon v-if="isFullscreenToggleVisible" @click="toggleFullscreen">

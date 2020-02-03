@@ -55,15 +55,17 @@
                         </v-list-item-avatar>
                       </v-list-item>
                     </template>
-                    <v-list>
-                      <template v-for="op in alternativeOperations">
-                        <v-list-item :key="op.value" @click="updateOperation(op.value)" :input-value="op.value === value.op">
-                          <v-list-item-content>
-                            <v-list-item-title>{{ op.text }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ op.description }}</v-list-item-subtitle>
-                          </v-list-item-content>
-                        </v-list-item>
-                      </template>
+                    <v-list class="pt-0">
+                      <ex-child-filter>
+                        <template v-for="op in alternativeOperations">
+                          <v-list-item :key="op.value" @click="updateOperation(op.value)" :input-value="op.value === value.op">
+                            <v-list-item-content>
+                              <v-list-item-title>{{ op.text }}</v-list-item-title>
+                              <v-list-item-subtitle>{{ op.description }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </template>
+                      </ex-child-filter>
                     </v-list>
                   </v-menu>
                 </template>

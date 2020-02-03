@@ -2,137 +2,144 @@
   <span class="d-inline-block">
     
     <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
-      <v-list subheader>
+      <v-list subheader class="pt-0">
+        <ex-child-filter>
 
-        <v-subheader>Info</v-subheader>
+          <v-subheader>Info</v-subheader>
 
-        <v-list-item v-if="hasTypeInformation" @click="showTypeInformation = true">
-          <v-list-item-content>
-            <v-list-item-title>
-              Type Information
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              The expression's expected and actual type
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <slot name="prepend"></slot>
-
-        <ex-expression-clipboard :registry="registry">
-          <template #default="{ copy }">
-            <v-list-item @click="copy(value)" v-if="registry.isValidExpressionCopy(value)">
-              <v-list-item-content>
-                <v-list-item-title>
-                  Copy {{ visuals.name }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  Add this expression to the clipboard
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </ex-expression-clipboard>
-
-        <template v-if="canTransform">
-
-          <v-divider></v-divider>
-          <v-subheader>Transform</v-subheader>
-
-          <template v-for="expr in modifiers">
-            <v-list-item :key="expr.text" @click="modify(expr.value)">
-              <v-list-item-content>
-                <v-list-item-title>{{ expr.text }}</v-list-item-title>
-                <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-
-        </template>
-
-        <template v-if="canChange">
-
-          <v-divider></v-divider>
-          <v-subheader>Change</v-subheader>
-
-          <v-list-item v-if="isRemovable" @click="requestRemove">
-            <v-list-item-content class="red--text darken-4">
+          <v-list-item v-if="hasTypeInformation" @click="showTypeInformation = true">
+            <v-list-item-content>
               <v-list-item-title>
-                Remove {{ visuals.name }}
+                Type Information
               </v-list-item-title>
               <v-list-item-subtitle>
-                The entire expression will be removed
+                The expression's expected and actual type
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
 
-          <v-menu max-height="400" offset-x open-on-hover class="d-inline">
-            <template #activator="{ on }">
-              <v-list-item v-on="on">
-                <v-list-item-content class="red--text darken-4">
+          <slot name="prepend"></slot>
+
+          <ex-expression-clipboard :registry="registry">
+            <template #default="{ copy }">
+              <v-list-item @click="copy(value)" v-if="registry.isValidExpressionCopy(value)">
+                <v-list-item-content>
                   <v-list-item-title>
-                    Replace with...
+                    Copy {{ visuals.name }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    The entire expression will be replaced with a new one
+                    Add this expression to the clipboard
                   </v-list-item-subtitle>
                 </v-list-item-content>
-                <v-list-item-avatar>
-                  <v-icon>mdi-menu-right</v-icon>
-                </v-list-item-avatar>
               </v-list-item>
             </template>
-            <v-list>
-              <template v-for="expr in starters">
-                <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
-                  <v-list-item-content>
-                    <v-list-item-title>{{ expr.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+          </ex-expression-clipboard>
+
+          <template v-if="canTransform">
+
+            <v-divider></v-divider>
+            <v-subheader>Transform</v-subheader>
+
+            <template v-for="expr in modifiers">
+              <v-list-item :key="expr.text" @click="modify(expr.value)">
+                <v-list-item-content>
+                  <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+
+          </template>
+
+          <template v-if="canChange">
+
+            <v-divider></v-divider>
+            <v-subheader>Change</v-subheader>
+
+            <v-list-item v-if="isRemovable" @click="requestRemove">
+              <v-list-item-content class="red--text darken-4">
+                <v-list-item-title>
+                  Remove {{ visuals.name }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  The entire expression will be removed
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
+            <v-menu max-height="400" offset-x open-on-hover class="d-inline">
+              <template #activator="{ on }">
+                <v-list-item v-on="on">
+                  <v-list-item-content class="red--text darken-4">
+                    <v-list-item-title>
+                      Replace with...
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      The entire expression will be replaced with a new one
+                    </v-list-item-subtitle>
                   </v-list-item-content>
+                  <v-list-item-avatar>
+                    <v-icon>mdi-menu-right</v-icon>
+                  </v-list-item-avatar>
                 </v-list-item>
               </template>
-            </v-list>
-          </v-menu>
-
-          <ex-expression-clipboard 
-            :registry="registry" 
-            :context="context" 
-            :required-type="requiredType" 
-            @pasted="input">
-            <template #default="{ copiedOptions, paste }">
-              <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
-                <template #activator="{ on }">
-                  <v-list-item v-on="on">
-                    <v-list-item-content class="red--text darken-4">
-                      <v-list-item-title>
-                        Paste...
-                      </v-list-item-title>
-                      <v-list-item-subtitle>
-                        The entire expression will be replaced with one from the clipboard
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-avatar>
-                      <v-icon>mdi-menu-right</v-icon>
-                    </v-list-item-avatar>
-                  </v-list-item>
-                </template>
-                <v-list>
-                  <template v-for="(expr, index) in copiedOptions">
-                    <v-list-item :key="index" @click="paste(expr.value)">
+              <v-list class="pt-0">
+                <ex-child-filter>
+                  <template v-for="expr in starters">
+                    <v-list-item :key="expr.expr.id" @click="changeTo(expr)">
                       <v-list-item-content>
-                        <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                        <v-list-item-title>{{ expr.name }}</v-list-item-title>
                         <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                   </template>
-                </v-list>
-              </v-menu>
-            </template>
-          </ex-expression-clipboard>
+                </ex-child-filter>
+              </v-list>
+            </v-menu>
 
-        </template>
-        
-        <slot name="append"></slot>
+            <ex-expression-clipboard 
+              :registry="registry" 
+              :context="context" 
+              :required-type="requiredType" 
+              @pasted="input">
+              <template #default="{ copiedOptions, paste }">
+                <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
+                  <template #activator="{ on }">
+                    <v-list-item v-on="on">
+                      <v-list-item-content class="red--text darken-4">
+                        <v-list-item-title>
+                          Paste...
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          The entire expression will be replaced with one from the clipboard
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-avatar>
+                        <v-icon>mdi-menu-right</v-icon>
+                      </v-list-item-avatar>
+                    </v-list-item>
+                  </template>
+                  <v-list class="pt-0">
+                    <ex-child-filter>
+                      <template v-for="(expr, index) in copiedOptions">
+                        <v-list-item :key="index" @click="paste(expr.value)">
+                          <v-list-item-content>
+                            <v-list-item-title>{{ expr.text }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </template>
+                    </ex-child-filter>
+                  </v-list>
+                </v-menu>
+              </template>
+            </ex-expression-clipboard>
+
+          </template>
+          
+          <slot name="append"></slot>
+
+        </ex-child-filter>
 
       </v-list>
 

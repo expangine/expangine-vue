@@ -44,6 +44,7 @@ import OperationInfoDialog from './app/OperationInfo.vue';
 import GetProgramDialog from './app/GetProgramDialog.vue';
 import ValueDialog from './app/ValueDialog.vue';
 import Validation from './app/Validation.vue';
+import ChildFilter from './app/ChildFilter.vue';
 
 
 
@@ -131,6 +132,7 @@ export default {
     Vue.component('ex-expression-menu', ExpressionMenu);
     Vue.component('ex-expression-clipboard', ExpressionClipboard);
     Vue.component('ex-chip-menu', ChipMenu);
+    Vue.component('ex-child-filter', ChildFilter);
 
     Vue.component('ex-build-type-dialog', BuildTypeDialog);
     Vue.component('ex-confirm-dialog', ConfirmDialog);

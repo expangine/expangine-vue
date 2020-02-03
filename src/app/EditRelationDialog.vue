@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="600" :fullscreen="isFullscreen">
+  <v-dialog persistent v-model="visible" max-width="600" :fullscreen="isFullscreen">
     <v-card v-if="visible">
       <v-card-title class="headline mb-2">
         {{ title }}
