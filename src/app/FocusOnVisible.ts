@@ -3,19 +3,20 @@ import { DirectiveOptions } from 'vue';
 
 
 const VISIBILITY_ANIMATION_TIME = 300;
+type VisibleElement = HTMLElement & { _visible: boolean };
 
 export const FocusOnVisible: DirectiveOptions = {
   bind(el, binding) {
-    handleFocus(el, binding.value);
+    handleFocus(el as VisibleElement, binding.value);
   },
   update(el, binding) {
-    handleFocus(el, binding.value);
+    handleFocus(el as VisibleElement, binding.value);
   },
 };
 
-function handleFocus(el: HTMLElement, [visible, query]: [boolean, string]) 
-{    
-  if (visible) 
+function handleFocus(el: VisibleElement, [visible, query]: [boolean, string]) 
+{
+  if (visible && visible !== el._visible) 
   {
     setTimeout(() => 
     {
@@ -23,7 +24,7 @@ function handleFocus(el: HTMLElement, [visible, query]: [boolean, string])
         ? el
         : el.querySelector(query);
 
-      if (found instanceof HTMLElement) 
+      if (found instanceof HTMLElement && document.activeElement !== found) 
       {
         found.focus();
 
@@ -34,4 +35,6 @@ function handleFocus(el: HTMLElement, [visible, query]: [boolean, string])
       }
     }, VISIBILITY_ANIMATION_TIME);    
   }
+
+  el._visible = visible;
 }
