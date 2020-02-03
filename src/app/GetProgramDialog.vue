@@ -8,6 +8,13 @@
         </v-btn>
 
         {{ title }}
+
+        <v-btn 
+          right
+          absolute
+          color="secondary"
+          @click="test"
+        >Test</v-btn>
       </v-card-title>
       <v-card-text>
         <p v-if="message" v-html="message"></p>
@@ -63,6 +70,7 @@
 import Vue from 'vue';
 import { Type } from 'expangine-runtime';
 import { getProgramDialog } from './GetProgram';
+import { getTestProgram } from './TestProgram';
 
 
 export default Vue.extend({
@@ -103,6 +111,15 @@ export default Vue.extend({
     },
     ok() {
       this.close(true);
+    },
+    async test() {
+      const { registry, program, context: inputType } = this;
+
+      await getTestProgram({
+        registry, 
+        program,
+        inputType,
+      });
     },
   },
 });

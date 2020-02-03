@@ -456,6 +456,7 @@
       <ex-edit-function-dialog></ex-edit-function-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
       <ex-test-operation-dialog></ex-test-operation-dialog>
+      <ex-test-program-dialog></ex-test-program-dialog>
       <ex-get-program-dialog></ex-get-program-dialog>
       <ex-value-dialog></ex-value-dialog>
       <ex-edit-type-index-dialog></ex-edit-type-index-dialog>

@@ -39,6 +39,7 @@ import RunProgramDialog from './app/RunProgramDialog.vue';
 import SimpleInputDialog from './app/SimpleInputDialog.vue';
 import TestFunctionDialog from './app/TestFunctionDialog.vue';
 import TestOperationDialog from './app/TestOperationDialog.vue';
+import TestProgramDialog from './app/TestProgramDialog.vue';
 import OperationCatalogueDialog from './app/OperationCatalogue.vue';
 import OperationInfoDialog from './app/OperationInfo.vue';
 import GetProgramDialog from './app/GetProgramDialog.vue';
@@ -82,6 +83,7 @@ export * from './app/Store';
 export * from './app/SystemEvents';
 export * from './app/TestFunction';
 export * from './app/TestOperation';
+export * from './app/TestProgram';
 export * from './app/Transcoder';
 export * from './app/Value';
 
@@ -150,6 +152,7 @@ export default {
     Vue.component('ex-run-program-dialog', RunProgramDialog);
     Vue.component('ex-test-function-dialog', TestFunctionDialog);
     Vue.component('ex-test-operation-dialog', TestOperationDialog);
+    Vue.component('ex-test-program-dialog', TestProgramDialog);
     Vue.component('ex-operation-catalogue-dialog', OperationCatalogueDialog);
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
     Vue.component('ex-get-program-dialog', GetProgramDialog);
