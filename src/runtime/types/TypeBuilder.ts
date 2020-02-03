@@ -11,6 +11,7 @@ export interface TypeBuildInput
   parentSettings?: TypeSettings;
   existingType?: Type;
   existingSettings?: TypeSettings;
+  noTransform?: boolean;
 }
 
 export type TypeBuildHandler = () => Promise<TypeUpdateEvent | false>;

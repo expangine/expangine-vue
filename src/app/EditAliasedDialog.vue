@@ -41,6 +41,7 @@
               :type="type"
               :registry="registry"
               :settings="settings"
+              :no-transform="withoutData"
               @change="handleChange"
             ></ex-type-editor>
           </v-tab-item>
@@ -335,6 +336,9 @@ export default Vue.extend({
       return !this.storage
         || !this.storage.getPrimary();
     },
+    withoutData(): boolean {
+      return !this.data || this.data.length === 0;
+    },
     disableRelations(): boolean {
       return !this.storage
         || !this.storage.getPrimary();
@@ -469,7 +473,7 @@ export default Vue.extend({
     handleChange(event: TypeUpdateEvent) {
       const { type, settings, transform } = event;
       
-      if (transform instanceof Expression && this.data)
+      if (transform instanceof Expression && this.data && this.data.length)
       {
         const cmd = LiveRuntime.getCommand(transform);
 

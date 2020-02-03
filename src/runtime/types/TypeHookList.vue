@@ -44,6 +44,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    noTransform: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     hasHooks(): boolean {

@@ -57,6 +57,7 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
       settings: TypeSettings<O, S>;
       hideSettings: boolean;
       disableSubSettings: boolean;
+      noTransform: boolean;
       eventListeners: TypeEventListeners;
     }
   >({
@@ -97,6 +98,10 @@ export default function <T extends Type, O, S extends SubsType = unknown>()
         default: false,
       },
       disableSubSettings: {
+        type: Boolean,
+        default: false,
+      },
+      noTransform: {
         type: Boolean,
         default: false,
       },

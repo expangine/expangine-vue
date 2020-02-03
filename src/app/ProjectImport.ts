@@ -149,10 +149,10 @@ export async function getProjectImport({ imported, accept, customize, registry, 
     {
       value.relations = 'replace';
       fields.relations = { name: 'relations', type: 'select', label: 'Relations', required: true, items: [
-        { text: 'Replace types', value: 'replace' },
-        { text: 'Merge types, replace existing', value: 'mergeReplace' },
-        { text: 'Merge types, ignore existing', value: 'mergeIgnore' },
-        { text: 'Ignore types', value: 'ignore' },
+        { text: 'Replace relations', value: 'replace' },
+        { text: 'Merge relations, replace existing', value: 'mergeReplace' },
+        { text: 'Merge relations, ignore existing', value: 'mergeIgnore' },
+        { text: 'Ignore relations', value: 'ignore' },
       ]};
     }
   }

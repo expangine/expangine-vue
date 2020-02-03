@@ -31,6 +31,7 @@
             :type="type.options.key"
             :type-settings="settings.sub.key"
             :read-only="readOnly"
+            :no-transform="noTransform"
           ></ex-type-hook-list>
         </v-menu>
       </v-list-item-avatar>
@@ -60,6 +61,7 @@
             :type="type.options.value"
             :type-settings="settings.sub.value"
             :read-only="readOnly"
+            :no-transform="noTransform"
           ></ex-type-hook-list>
         </v-menu>
       </v-list-item-avatar>

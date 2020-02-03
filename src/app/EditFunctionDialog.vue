@@ -29,6 +29,7 @@
           <v-tab-item class="data-container">
             <ex-type-editor
               hide-settings
+              no-transform
               :type="func.options.params"
               :required-type="requiredParamsType"
               :registry="registry"

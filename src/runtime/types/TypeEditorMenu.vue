@@ -240,6 +240,7 @@ export default TypeEditorBase<Type, any, any>().extend({
         parent: this.parent,
         type: this.type,
         typeSettings: this.settings,
+        noTransform: this.noTransform,
       });
     },
     previewValue: {

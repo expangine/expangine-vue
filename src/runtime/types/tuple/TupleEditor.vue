@@ -43,6 +43,7 @@
               :type="innerType"
               :type-settings="settings.sub[index]"
               :read-only="readOnly"
+              :no-transform="noTransform"
             ></ex-type-hook-list>
           </v-menu>
         </v-list-item-avatar>
@@ -118,20 +119,32 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
         return;
       }
 
-      const result = await getProgram({
-        title: `Add element "${index + 1}"`,
-        message: 'The default value for the new element.',
-        confirm: 'Add',
-        registry: this.registry,
-        context: ObjectType.from({
-          parent: this.type,
-        }),
-        program: this.registry.getTypeCreate(chosen.type),
-        expectedType: chosen.type,
-      });
+      const updateEvent: Partial<TypeUpdateEvent> = {};
 
-      if (!result) {
-        return sendNotification({ message: 'Element add canceled.' });
+      if (!this.noTransform) {
+        const result = await getProgram({
+          title: `Add element "${index + 1}"`,
+          message: 'The default value for the new element.',
+          confirm: 'Add',
+          registry: this.registry,
+          context: ObjectType.from({
+            parent: this.type,
+          }),
+          program: this.registry.getTypeCreate(chosen.type),
+          expectedType: chosen.type,
+        });
+
+        if (!result) {
+          return sendNotification({ message: 'Element add canceled.' });
+        }
+
+        updateEvent.transform = Exprs.define({ parent: Exprs.get('value') },
+          Exprs.op(ListOps.insert, {
+            list: Exprs.get('value'),
+            index: index + 1,
+            item: result.program,
+          }),
+        );
       }
 
       this.type.options.splice(index + 1, 0, chosen.type);
@@ -139,15 +152,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubAdd(index + 1, this.type, this.settings);
 
-      this.change({
-        transform: Exprs.define({ parent: Exprs.get('value') },
-          Exprs.op(ListOps.insert, {
-            list: Exprs.get('value'),
-            index: index + 1,
-            item: result.program,
-          }),
-        ),
-      });
+      this.change(updateEvent);
     },
     onChange(index: number, innerType: Type, event: TypeUpdateEvent) {
       this.$set(this.type.options, index, event.type);

@@ -1,6 +1,6 @@
 
 import { SetType, TextType, isString, ObjectType, objectReduce, NumberType, isSet, ListType, ListOps, ExpressionBuilder, NullType, MapType } from 'expangine-runtime';
-import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
+import { createVisuals, TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { SetListInput } from './SetListTypes';
@@ -149,7 +149,7 @@ export const SetBuilderWrapper: TypeBuilderWrapper =
 
 export const SetModifierFromSimpleList: TypeModifier<SetType> =
 {
-  getOption: ({ registry, type, typeSettings, parent }) => {
+  getOption: ({ registry, type, typeSettings, parent, noTransform }) => {
 
     if (!(type instanceof ListType) && !(type instanceof MapType)) {
       return false;
@@ -181,23 +181,6 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
 
         const newType = SetType.forItem(item);
 
-        const result = await getProgram({
-          title: 'Convert to Set',
-          message: 'The expression that changes the type to a set.',
-          confirm: 'Convert',
-          registry,
-          context: ObjectType.from({
-            parent: parent || NullType.baseType,
-            value: type,
-          }),
-          program: castExpression(type, newType),
-          expectedType: newType,
-        });
-
-        if (!result) {
-          return false;
-        }
-
         const input = typeSettings.input in SetVisuals.inputs
           ? typeSettings.input
           : 'list';
@@ -206,7 +189,7 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
           : SetListInput.getDefaultOptions();
         const sub = { value: subSettings };
 
-        return {
+        const updateEvent: TypeUpdateEvent = {
           type: newType,
           settings: {
             input,
@@ -214,8 +197,30 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
             options,
             sub,
           },
-          transform: result.program,
         };
+
+        if (!noTransform) {
+          const result = await getProgram({
+            title: 'Convert to Set',
+            message: 'The expression that changes the type to a set.',
+            confirm: 'Convert',
+            registry,
+            context: ObjectType.from({
+              parent: parent || NullType.baseType,
+              value: type,
+            }),
+            program: castExpression(type, newType),
+            expectedType: newType,
+          });
+  
+          if (!result) {
+            return false;
+          }
+
+          updateEvent.transform = result.program;
+        }
+
+        return updateEvent;
       },
     };
   },

@@ -56,6 +56,7 @@
                   :type="propType"
                   :type-settings="settings.sub[prop]"
                   :read-only="readOnly"
+                  :no-transform="noTransform"
                 ></ex-type-hook-list>
               </v-menu>
             </td>
@@ -147,38 +148,42 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       this.addProp = '';
 
-      const result = await getProgram({
-        title: `Add property "${propName}"`,
-        message: 'The default value for the new property.',
-        confirm: 'Add',
-        registry: this.registry,
-        context: ObjectType.from({
-          parent: this.type,
-        }),
-        program: chosen.transform
-          ? chosen.transform
-          : this.registry.getTypeCreate(chosen.type),
-        expectedType: chosen.type,
-      });
+      const changeEvent: Partial<TypeUpdateEvent> = {};
 
-      if (!result) {
-        return sendNotification({ message: 'Property add canceled.' });
-      }
+      if (!this.noTransform) {
+        const result = await getProgram({
+          title: `Add property "${propName}"`,
+          message: 'The default value for the new property.',
+          confirm: 'Add',
+          registry: this.registry,
+          context: ObjectType.from({
+            parent: this.type,
+          }),
+          program: chosen.transform
+            ? chosen.transform
+            : this.registry.getTypeCreate(chosen.type),
+          expectedType: chosen.type,
+        });
 
-      this.$set(this.type.options.props, propName, chosen.type);
-      this.$set(this.settings.sub, propName, chosen.settings);
+        if (!result) {
+          return sendNotification({ message: 'Property add canceled.' });
+        }
 
-      this.inputSelected.onSubAdd(propName, this.type, this.settings);
-
-      this.change({
-        transform: Exprs.define({ parent: Exprs.get('value') },
+        changeEvent.transform = Exprs.define({ parent: Exprs.get('value') },
           Exprs.op(ObjectOps.set, {
             object: Exprs.get('value'),
             key: propName,
             value: result.program,
           }),
-        ),
-      });
+        );
+      }
+      
+      this.$set(this.type.options.props, propName, chosen.type);
+      this.$set(this.settings.sub, propName, chosen.settings);
+
+      this.inputSelected.onSubAdd(propName, this.type, this.settings);
+
+      this.change(changeEvent);
     },
     async remove(prop: string) {
       if (!await getConfirmation({ message: `Remove ${prop}?`})) {

@@ -10,6 +10,7 @@ export interface TypeModifyInput
   parent?: Type;
   type: Type;
   typeSettings: TypeSettings;
+  noTransform?: boolean;
 }
 
 export type TypeModifyHandler<T extends Type = Type> = () => Promise<TypeUpdateEvent | false>;

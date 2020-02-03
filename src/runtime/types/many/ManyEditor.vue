@@ -24,6 +24,7 @@
               :type="innerType"
               :type-settings="settings.sub[index]"
               :read-only="readOnly"
+              :no-transform="noTransform"
             ></ex-type-hook-list>
           </v-menu>
         </v-list-item-avatar>
