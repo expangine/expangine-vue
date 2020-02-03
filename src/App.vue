@@ -921,6 +921,8 @@ export default Vue.extend({
 
     this.updateHistoryData();
     this.history.on('change', this.updateHistoryData);
+
+    this.updatedProgram();
   },  
   methods: {
     // SAVE ERROR
