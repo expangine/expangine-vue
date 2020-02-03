@@ -22,6 +22,7 @@
               hide-details
               height="100%"
               placeholder="Paste your JS code or JSON here"
+              v-focus-on-visible="[visible, 'textarea']"
               v-model="input"
             ></v-textarea>
           </v-tab-item>

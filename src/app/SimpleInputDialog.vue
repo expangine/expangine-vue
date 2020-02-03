@@ -9,7 +9,7 @@
         v-if="message"
         v-html="message"
       ></v-card-text>
-      <v-card-text>
+      <v-card-text v-focus-on-visible="[visible, 'input, textarea, select']">
         <ex-simple-fields
           :value="value"
           :fields="fields"

@@ -9,6 +9,7 @@
     :label="searchLabel"
     :items="searchItems"
     :search-input.sync="query"
+    v-focus-on-visible="[true, 'input']"
     @input="chooseOperation"
     @click:append="cancel">
     <template #item="{ item }">

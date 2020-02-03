@@ -38,6 +38,7 @@
           :value-comparator="compareStrict"
           :items="options"
           :multiple="isMultiple"
+          v-focus-on-visible="[visible, 'input']"
           v-model="types"
         >
           <template #item="{ item, on, attrs }">

@@ -12,7 +12,7 @@
       <v-card-text 
         v-html="message"
       ></v-card-text>
-      <v-card-text>
+      <v-card-text v-focus-on-visible="[visible, 'input, textarea, select']">
         <ex-type-input
           :type="type"
           :registry="registry"

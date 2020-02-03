@@ -20,6 +20,7 @@
           :value="data"
           :type="params"
           :settings="settings"
+           v-focus-on-visible="[visible, 'input, textarea, select']"
         ></ex-type-input>
       </v-card-text>
       <v-card-actions>

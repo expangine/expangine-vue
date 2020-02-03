@@ -17,6 +17,7 @@
           :type="inputType"
           :settings="inputSettings"
           :value="input"
+          v-focus-on-visible="[visible, 'input, textarea, select']"
           @input="setInput"
         ></ex-type-input>
 

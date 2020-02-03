@@ -19,6 +19,7 @@
           hide-details
           label="Save As"
           :error="invalidSaveAs"
+          v-focus-on-visible="[visible, 'input']"
           v-model="saveAs"
         ></v-text-field>
 

@@ -47,6 +47,8 @@ import ValueDialog from './app/ValueDialog.vue';
 import Validation from './app/Validation.vue';
 import ChildFilter from './app/ChildFilter.vue';
 
+import { FocusOnVisible } from './app/FocusOnVisible';
+
 
 
 export * from './app/Aliased';
@@ -167,6 +169,8 @@ export default {
     Vue.component('ex-draggable', Draggable);
     Vue.component('ex-templated', Templated);
     Vue.component('ex-validation', Validation);
+
+    Vue.directive('focus-on-visible', FocusOnVisible);
 
     Vue.use(VueTimeago, {});
   },

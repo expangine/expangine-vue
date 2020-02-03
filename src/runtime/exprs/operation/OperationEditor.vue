@@ -16,6 +16,7 @@
     :menu-props="{ maxWidth: 400 }"
     :items="changingOptions"
     :filter="filterOperation"
+    v-focus-on-visible="[true, 'input']"
     @input="mapOperation"
     @click:append="changing = false">
     <template #item="{ item }">

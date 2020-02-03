@@ -12,6 +12,7 @@
         <v-text-field
           outlined
           :label="label"
+          v-focus-on-visible="[visible, 'input']"
           v-model="value"
         ></v-text-field>
       </v-card-text>

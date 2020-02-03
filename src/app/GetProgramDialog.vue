@@ -60,6 +60,7 @@
           color="primary"
           @click="ok"
           :disabled="isDisabled"
+          v-focus-on-visible="[visible, 'self']"
         >{{ confirm }}</v-btn>
       </v-card-actions>
     </v-card>

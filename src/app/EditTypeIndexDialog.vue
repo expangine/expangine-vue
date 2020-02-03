@@ -12,6 +12,7 @@
           :hint="nameHint"
           :error="invalidName"
           :disabled="propsOnly"
+          v-focus-on-visible="[visible, 'input']"
           v-model="index.name"
         ></v-text-field>
 

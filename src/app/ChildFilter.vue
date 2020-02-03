@@ -45,8 +45,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    handleFocus(entries: IntersectionObserverEntry[]) {
-      if (entries[0].isIntersecting) {
+    handleFocus(entries: IntersectionObserverEntry[], observer: IntersectionObserver, isIntersecting: boolean) {
+      if (isIntersecting) {
         if (!this.intersecting) {
           const filter = this.$refs.filter as Vue;
           const filterInput = filter.$el.querySelector('input') as HTMLInputElement;

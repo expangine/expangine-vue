@@ -11,6 +11,7 @@
           hide-details
           class="mt-3"
           label="Filter Operations"
+          v-focus-on-visible="[visible, 'input']"
           v-model="query"
         ></v-text-field>
 

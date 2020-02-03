@@ -15,6 +15,7 @@
                 label="Name"
                 :hint="hintName"
                 :error="invalidName"
+                v-focus-on-visible="[visible, 'input']"
                 v-model="relationData.name"
               ></v-text-field>
             </v-col>

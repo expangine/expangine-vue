@@ -13,6 +13,7 @@
           v-if="confirm"
           color="primary"
           v-html="confirm" 
+          v-focus-on-visible="[visible, 'self']"
           @click="handle(true)"
         ></v-btn>
         <v-spacer></v-spacer>
