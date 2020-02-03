@@ -25,13 +25,20 @@
       </span>
     </div>
     <div v-if="hasSubs && open" class="pl-4">
-      <template v-for="(sub, subIndex) in subs">
-        <debug-node
-          :key="subIndex"
-          :node="sub"
-          :registry="registry"
-        ></debug-node>
+      <template v-for="(group, groupIndex) in subsGroups">
+        <div :key="groupIndex">
+          <template v-for="(sub, subIndex) in group">
+            <debug-node
+              :key="subIndex"
+              :node="sub"
+              :registry="registry"
+            ></debug-node>
+          </template>
+        </div>
       </template>
+      <div v-if="hasMore">
+        <v-btn small block text @click="addMore">Show More</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -54,14 +61,22 @@ export default Vue.extend({
       type: Object as () => Registry,
       required: true,
     },
+    groupSize: {
+      type: Number,
+      default: 10,
+    },
   },
   data: () => ({
     open: false,
     subString: '?',
+    subsGroups: [] as TypeSubNode[][],
   }),
   computed: {
     subs(): TypeSubNode[] {
       return this.registry.getTypeSubNodes(this.node.value, this.node.valueType);
+    },
+    hasMore(): boolean {
+      return this.subsGroups.length * this.groupSize < this.subs.length;
     },
     hasSubs(): boolean {
       return this.subs.length > 0;
@@ -70,9 +85,28 @@ export default Vue.extend({
       return this.registry.getTypeVisuals(this.node.valueType).name;
     },
   },
+  watch: {
+    subs: {
+      immediate: true,
+      handler() {
+        const count = this.subsGroups.length;
+        const size = this.groupSize;
+        const offset = count * size;
+
+        this.subsGroups = [this.subs.slice(offset, offset + size)];
+      },
+    },
+  },
   methods: {
     toggle() {
       this.open = !this.open;
+    },
+    addMore() {
+      const count = this.subsGroups.length;
+      const size = this.groupSize;
+      const offset = count * size;
+
+      this.subsGroups.push(this.subs.slice(offset, offset + size));
     },
   },
 });
