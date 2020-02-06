@@ -64,7 +64,7 @@
                       class="mr-2"
                       :error="isVarInvalid(index)"
                       :value="pair[0]"
-                      v-focus-on-create="'input'"
+                      v-focus-on-create.last="'input'"
                       @change="changeVar(index, $event)"
                     ></v-text-field>
                   </td>
@@ -123,7 +123,15 @@ export default ExpressionBase<DefineExpression>().extend({
       return this.getContextAt(this.value.define.length);
     },
   },
+  mounted() {
+    this.addIfEmpty();
+  },
   methods: {
+    addIfEmpty(): void {
+      if (this.value.define.length === 0) {
+        this.value.define.push(['', NoExpression.instance]);
+      }
+    },
     toggleSort(): void {
       this.sorting = !this.sorting;
     },
