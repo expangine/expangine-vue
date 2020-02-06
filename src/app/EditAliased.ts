@@ -84,7 +84,9 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
     
     if (saveAs) 
     {
-      if (savedAs !== saveAs && defs.aliased[savedAs]) 
+      const renamed = savedAs !== saveAs && defs.aliased[savedAs];
+
+      if (renamed) 
       {
         Vue.delete(defs.aliased, savedAs);      
         Vue.delete(defs.storage, savedAs);
@@ -97,10 +99,6 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
 
         renameType(registry, saveAs, savedAs);
       }
-      else
-      {
-        addType(registry, saveAs);
-      }
 
       Vue.set(defs.aliased, saveAs, type);
       Vue.set(defs.parsers, saveAs, () => type);
@@ -110,6 +108,11 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
       if (storage)
       {
         Vue.set(defs.storage, saveAs, storage);
+      }
+
+      if (!renamed)
+      {
+        addType(registry, saveAs);
       }
 
       saved = true;

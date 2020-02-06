@@ -32,7 +32,7 @@ export function addType(registry: Registry, name: string)
 {
   removeType(registry, name);
 
-  const aliased = registry.defs.getType(name);
+  const aliased = registry.defs.aliased[name];
 
   const builder: TypeBuilder = {
     getOption: () => ({
