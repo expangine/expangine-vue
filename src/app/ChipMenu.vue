@@ -1,13 +1,15 @@
 <template>
-  <v-menu max-height="400">
+  <v-menu max-height="400" ref="menu">
     <template #activator="ma">
       <v-tooltip top open-delay="1000">
         <template #activator="ta">
           <v-chip 
             :color="color" 
             :dark="dark"
+            tabindex="0"
             v-on="{ ...ta.on, ...ma.on }"
             v-html="text"
+            @keydown.enter="openMenu"
           ></v-chip>
         </template>
         <span v-html="tooltip"></span>
@@ -39,6 +41,15 @@ export default Vue.extend({
     dark: {
       type: Boolean,
       default: false,
+    },
+  },
+  methods: {
+    openMenu() {
+      const menu = this.$refs.menu as any;
+
+      if (menu) {
+        menu.isActive = true;
+      }
     },
   },
 });
