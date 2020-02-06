@@ -4,14 +4,18 @@
     <v-btn absolute fab top right small color="primary" @click="copy">
       <v-icon small>mdi-content-copy</v-icon>
     </v-btn>
+    <v-btn v-if="canView" absolute fab bottom right small color="secondary" @click="view">
+      <v-icon small>mdi-pencil</v-icon>
+    </v-btn>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type } from 'expangine-runtime';
+import { Type, AliasedType } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { CopyModifier } from '../runtime/hooks/ClipboardHooks';
+import { getEditAliased } from './EditAliased';
 
 
 export default Vue.extend({
@@ -31,6 +35,9 @@ export default Vue.extend({
         ? this.registry.getTypeDescribeLong(this.type, '&nbsp;&nbsp;', '<br>')
         : '';
     },
+    canView(): boolean {
+      return this.type instanceof AliasedType;
+    },
   },
   methods: {
     async copy() {
@@ -48,6 +55,16 @@ export default Vue.extend({
           await option.value();
         }
       }      
+    },
+    async view() {
+      const { type, registry } = this;
+
+      if (type instanceof AliasedType) {
+        await getEditAliased({
+          name: type.options,
+          registry,
+        });
+      }
     },
   },
 });
