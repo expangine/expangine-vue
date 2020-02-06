@@ -1,7 +1,7 @@
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { SubExpression, NoExpression, Expression, Type, GetExpression, ComputedExpression } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
-import { ListOptions } from '@/common';
+import { ListOptionsPriority } from '@/common';
 
 import SubEditor from './SubEditor.vue';
 
@@ -27,7 +27,7 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
   getModifiers,
 };
 
-function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptions<ExpressionModifierCallback>
+function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptionsPriority<ExpressionModifierCallback>
 {
   if (expr instanceof GetExpression 
    || expr instanceof SubExpression
@@ -41,6 +41,7 @@ function getModifiers(requiredType: Type | null, expr: Expression, exprType: Typ
   return [{
     text: 'Sub Property',
     description: 'Get a sub property of the current value',
+    priority: 6,
     value: () => new SubExpression(expr, []),
   }];
 }

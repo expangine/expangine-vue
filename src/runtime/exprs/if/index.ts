@@ -33,6 +33,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
     ? [{
         text: 'Add Else If',
         description: 'Adds a new condition & body at the end of the If',
+        priority: 1,
         value: () => expr.elseif(NoExpression.instance),
       }]
     : []

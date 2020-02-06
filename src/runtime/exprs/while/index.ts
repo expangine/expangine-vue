@@ -21,6 +21,7 @@ export const WhileVisuals: ExpressionVisuals<WhileExpression> =
     ? [{
         text: 'Convert to While',
         description: 'A while checks a condition and while true executes an expression',
+        priority: 7,
         value: () => new WhileExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
       }]
     : []

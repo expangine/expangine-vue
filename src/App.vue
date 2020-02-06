@@ -241,7 +241,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-menu offset-y>
+      <v-menu offset-y max-height="400">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Functions
@@ -273,7 +273,7 @@
         </v-list>
       </v-menu>
 
-      <v-menu offset-y>
+      <v-menu offset-y max-height="400">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Types
@@ -305,7 +305,7 @@
         </v-list>
       </v-menu>
 
-      <v-menu offset-y>
+      <v-menu offset-y max-height="400">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Relations
@@ -1536,12 +1536,15 @@ export default Vue.extend({
     },
     updatedProgram()
     {
-      this.validations = this.program
-        .validations(this.registry.defs, this.type)
-        .filter((validation) => validation.severity >= this.validationSeverity)
-      ;
+      if (this.initialized)
+      {
+        this.validations = this.program
+          .validations(this.registry.defs, this.type)
+          .filter((validation) => validation.severity >= this.validationSeverity)
+        ;
 
-      this.updateHighlightExpressions();
+        this.updateHighlightExpressions();
+      }
     },
     saveProgram(program: Expression = NoExpression.instance) 
     {

@@ -122,6 +122,7 @@ export class Registry
           : [],
       )
       .reduce((prev, next) => next.concat(prev), [])
+      .sort((a, b) => a.priority - b.priority)
     ;
   }
 

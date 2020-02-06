@@ -24,6 +24,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
     ? [{
         text: 'Transform to Get',
         description: 'Get the current value',
+        priority: 9,
         value: () => new GetExpression(expr.path),
       }]
     : []

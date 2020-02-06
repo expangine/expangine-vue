@@ -42,6 +42,7 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
       : requiredType
         ? 'Perform an operation to return the desired type'
         : 'Perform an operation',
+    priority: 3,
     value: () => new OperationExpression('', { [STARTING_PARAM]: expr }),
   }],
 };

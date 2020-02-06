@@ -1,6 +1,6 @@
 import { Expression, DefineExpression, NoExpression, GetExpression, ConstantExpression, Type } from 'expangine-runtime';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
-import { ListOptions, friendlyList } from '@/common';
+import { friendlyList, ListOptionsPriority } from '@/common';
 import { Registry } from '@/runtime/Registry';
 
 import DefineEditor from './DefineEditor.vue';
@@ -24,15 +24,16 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
 
 type ExpressionNamePair = [string, Expression];
 
-function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptions<ExpressionModifierCallback>
+function getModifiers(requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry): ListOptionsPriority<ExpressionModifierCallback>
 {
-  const options: ListOptions<ExpressionModifierCallback> = [];
+  const options: ListOptionsPriority<ExpressionModifierCallback> = [];
 
   const { define, before } = getDefineAndBefore(expr);
 
   options.push({
     text: 'Cache Result',
     description: 'Store the result of the expression in a variable in a new define expression inserted here',
+    priority: 11,
     value: () => {
       return new DefineExpression([['temp', expr]], NoExpression.instance);
     },
@@ -43,6 +44,7 @@ function getModifiers(requiredType: Type | null, expr: Expression, exprType: Typ
     options.push({
       text: 'Add as Define Variable',
       description: 'Add this expression to the define expression as a variable',
+      priority: 10,
       value: {
         options: {
           message: 'If this expression references scoped variables, this action will mess up those references.',

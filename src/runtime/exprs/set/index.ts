@@ -24,6 +24,7 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
     ? [{ 
         text: 'Transform to Set', 
         description: 'Set the current value to a new value',
+        priority: 9,
         value: () => new SetExpression(expr.path, NoExpression.instance),
       }]
     : []

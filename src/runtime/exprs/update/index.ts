@@ -24,6 +24,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
     ? [{ 
         text: 'Transform to Update', 
         description: 'Returns true if value is applied, otherwise false', 
+        priority: 9,
         value: () => new UpdateExpression(expr.path, expr instanceof SetExpression ? expr.value : NoExpression.instance),
       }]
     : []

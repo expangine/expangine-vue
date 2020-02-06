@@ -25,6 +25,7 @@ export const AndVisuals: ExpressionVisuals<AndExpression> =
     ? [{
         text: 'And',
         description: 'Add another condition to the And expression',
+        priority: 1,
         value: () => {
           if (expr.parent instanceof AndExpression) {
             expr.parent.expressions.push(NoExpression.instance);
@@ -35,6 +36,7 @@ export const AndVisuals: ExpressionVisuals<AndExpression> =
     : [{
         text: 'And',
         description: 'Create an And expression with the (current) AND (another)',
+        priority: 4.5,
         value: () => new AndExpression([expr, NoExpression.instance]),
       }]
   ,

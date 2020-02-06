@@ -24,11 +24,13 @@ export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
       ? [{
           text: 'Remove Return',
           description: 'Remove the return expression',
+          priority: 1,
           value: () => expr.value,
         }]
       : [{
           text: 'Return',
           description: 'Return this expression as the function result',
+          priority: 7,
           value: () => new ReturnExpression(expr),
         }]
   ,

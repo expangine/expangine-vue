@@ -1,7 +1,7 @@
 
 import { VueConstructor } from 'vue';
 import { Expression, Type, ExpressionClass } from 'expangine-runtime';
-import { ListOptions } from '@/common';
+import { ListOptionsPriority } from '@/common';
 import { Registry } from '../Registry';
 import { ConfirmOptions } from '@/app/Confirm';
 
@@ -27,7 +27,7 @@ export type ExpressionStarter =
   (requiredType: Type | null) => boolean;
 
 export type ExpressionModifier = 
-  (requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry) => ListOptions<ExpressionModifierCallback>;
+  (requiredType: Type | null, expr: Expression, exprType: Type | null, registry: Registry) => ListOptionsPriority<ExpressionModifierCallback>;
 
 export type ExpressionModifierCallback = 
   (() => Expression | null) | 

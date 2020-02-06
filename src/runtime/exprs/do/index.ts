@@ -21,6 +21,7 @@ export const DoVisuals: ExpressionVisuals<DoExpression> =
     ? [{
         text: 'Convert to Do',
         description: 'A Do executes the expression and continues if the condition is true',
+        priority: 1,
         value: () => new DoExpression(expr.condition, expr.body, expr.breakVariable, expr.maxIterations),
       }]
     : [],

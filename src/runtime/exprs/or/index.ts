@@ -25,6 +25,7 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
     ? [{
         text: 'Or',
         description: 'Add another condition to the Or expression',
+        priority: 5,
         value: () => {
           if (expr.parent instanceof OrExpression) {
             expr.parent.expressions.push(NoExpression.instance);
@@ -35,6 +36,7 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
     : [{
         text: 'Or',
         description: 'Create an Or expression with the (current) AND (another)',
+        priority: 5,
         value: () => new OrExpression([expr, NoExpression.instance]),
       }]
   ,

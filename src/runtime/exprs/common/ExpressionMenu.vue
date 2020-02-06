@@ -56,6 +56,17 @@
             <v-divider></v-divider>
             <v-subheader>Change</v-subheader>
 
+            <v-list-item @click="createFunction">
+              <v-list-item-content>
+                <v-list-item-title>
+                  Create Function
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  Create a new function that returns this {{ visuals.name }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+
             <v-list-item v-if="isRemovable" @click="requestRemove">
               <v-list-item-content class="red--text darken-4">
                 <v-list-item-title>
@@ -178,11 +189,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, Exprs, objectMap, Types } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
+import { sendNotification } from '../../../app/Notify';
+import { getEditFunction } from '../../../app/EditFunction';
 
 
 export default ExpressionBase().extend({
@@ -245,6 +258,60 @@ export default ExpressionBase().extend({
     },
   },
   methods: {
+    async createFunction() {
+      const { value, context, registry } = this;
+
+      if (!(context instanceof ObjectType)) {
+        await sendNotification({
+          message: 'The context to an expression must be an object to create a function here.',
+        });
+
+        return false;
+      }
+
+      const input: TypeMap = {};
+      let setTopLevel = false;
+
+      value.traverse(new Traverser((expr) => {
+        if (expr instanceof SetExpression || expr instanceof UpdateExpression) {
+          if (expr.path.length === 1) {
+            const first = expr.path[0];
+            if (first instanceof ConstantExpression && first.value in context.options.props) {
+              setTopLevel = true;
+            }
+          }
+        }
+        if (expr instanceof SetExpression || expr instanceof UpdateExpression || expr instanceof GetExpression) {
+          const first = expr.path[0];
+          if (first instanceof ConstantExpression && first.value in context.options.props) {
+            input[first.value] = context.options.props[first.value];
+          }
+        }
+      }));
+
+      if (setTopLevel) {
+        await sendNotification({
+          message: 'You cannot create a function where a sub-expression directly sets a variable in the current context.',
+        });
+
+        return false;
+      }
+
+      const result = await getEditFunction({
+        registry,
+        func: Types.func(
+          this.computedTypeRaw ? this.computedTypeRaw.clone() : Types.any(),
+          input,
+          () => Exprs.return(value),
+        ),
+      });
+
+      if (result) {
+        const args = objectMap(input, (_, name) => Exprs.get(name));
+
+        this.input(Exprs.invoke(result.name, args));
+      }
+    },
     async changeTo(visuals: ExpressionVisuals) {
       if (await getConfirmation()) {
         this.input(visuals.create(this.requiredType, this.context, this.registry));
