@@ -52,12 +52,28 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
       resolve(error.message);
     },
 
-    complete: async ({ data, meta }: { data: any, meta: { fields: string[], aborted: boolean }}) => 
+    complete: async ({ data, meta }: { data: any[], meta: { fields: string[], aborted: boolean }}) => 
     {
       if (meta.aborted)
       {
         return resolve('There was a problem parsing the CSV.');
       }
+
+      data = data.filter((row: any) => 
+      {
+        let hasValue = false;
+
+        for (const prop in row) 
+        {
+          if (row[prop]) 
+          {
+            hasValue = true;
+            break;
+          }
+        }
+
+        return hasValue;
+      });
 
       const fields: SimpleFieldOption[] = [
         { name: 'property', type: 'text', label: 'Property', details: 'The property to store the CSV data in.' },
