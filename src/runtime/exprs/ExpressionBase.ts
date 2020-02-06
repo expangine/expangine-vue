@@ -146,11 +146,12 @@ export default function<E extends Expression>()
           return false;
         }
 
-        if (!this.computedTypeRaw) {
+        if (!this.computedTypeRaw || !this.computedType) {
           return true;
         }
 
-        return !this.requiredType.acceptsType(this.computedTypeRaw);
+        return !this.requiredType.acceptsType(this.computedTypeRaw) && 
+               !this.requiredType.acceptsType(this.computedType);
       },
       highlighted(): boolean {
         return !!(this.highlight && this.highlight.has(this.value));

@@ -2,7 +2,15 @@
   <span class="ex-center-aligned">
     <template v-for="(condition, index) in value.expressions">
       <span :key="index" class="ex-center-aligned">
-        <span v-if="index > 0" class="ex-divider">OR</span>
+        <span v-if="index > 0">
+          <ex-expression-menu
+            v-bind="$props"
+            text="Or"
+            tooltip="Return true if any of the conditions are true"
+            @remove="remove"
+            @input="input"
+          ></ex-expression-menu>
+        </span>
         <ex-expression
           v-bind="$props"
           class="ex-inside ex-parenthesis"
