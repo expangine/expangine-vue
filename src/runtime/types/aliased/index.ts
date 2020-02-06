@@ -1,5 +1,5 @@
 
-import { AliasedType, ObjectType, copy, objectToArray } from 'expangine-runtime';
+import { AliasedType, ObjectType, copy, objectToArray, objectValues } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { AliasedInput } from './AliasedTypes';
 import { TypeModifier } from '../TypeModifier';
@@ -15,7 +15,19 @@ export const AliasedVisuals = createVisuals()({
   name: 'Custom Type',
   description: 'Custom type',
   describe: ({registry, type}) => type.options,
-  describeLong: (registry, type, padding) => type.options,
+  describeLong: (registry, type, padding, tab, newline) => {
+    const aliased = type.getType() as ObjectType;
+
+    return aliased instanceof ObjectType
+      ? type.options + ' {' + newline +
+        objectValues(aliased.options.props, (propType, prop) => 
+          propType
+            ? padding + tab + prop + ': ' + registry.getTypeDescribeLong(propType, tab, newline, padding + tab) + newline
+            : '',
+        ).join('') +
+        padding + '}'
+      : type.options;
+  },
   stringify: ({ registry, type, value }) => registry.getTypeStringify(type.getType(), value),
   toString: ({ value, type, process, registry, processInvalid, tab, newline, padding }) => registry.getTypeToString(value, type.getType(), tab, newline, padding, process, processInvalid ),
   subNodes: ({ value, type, registry }) => registry.getTypeSubNodes(value, type.getType()),

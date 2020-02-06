@@ -69,6 +69,16 @@ export default (registry: Registry) =>
     returnComments: 'The first non-null non-undefined argument',
   });
 
+  registry.addOperation(AnyOps.require, {
+    name: 'Make Optional Required',
+    description: 'Makes [value] required if an optional value is given. If the value is not defined an error might be thrown.',
+    singleline: 'require {value}',
+    comments: {
+      value: 'The value to change from optional to non-optional',
+    },
+    returnComments: 'The non-optional result',
+  });
+
   registry.addOperation(AnyOps.isValid, {
     name: 'Is Any?',
     description: 'Determines whether [value] is a valid value for Any',

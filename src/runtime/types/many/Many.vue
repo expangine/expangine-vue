@@ -13,18 +13,18 @@
           </v-btn>
         </template>
         <v-list>
-          <template v-for="innerType in type.options">
+          <template v-for="(innerType, index) in type.options">
             <v-list-item 
-              :key="innerType.getId()" 
+              :key="index" 
               :disabled="isDisabledType(innerType)"
               @click="changeType(innerType)">
-              Change to {{ registry.getTypeVisuals(innerType).name }}
+              Change to {{ getTypeName(innerType) }}
             </v-list-item>
           </template>
         </v-list>
       </v-menu>
     </v-list-item-avatar>
-    <v-list-item-content class="pa-1">
+    <v-list-item-content class="pa-1" v-if="showInput">
       <ex-type-input
         :type="subType"
         :read-only="readOnly"
@@ -38,11 +38,12 @@
 </template>
 
 <script lang="ts">
-import { Type, ManyType } from 'expangine-runtime';
+import { Type, ManyType, EnumType } from 'expangine-runtime';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeSettings } from '../TypeVisuals';
 import { ManyOptions, ManySubs } from './ManyTypes';
 import TypeInputBase from '../TypeInputBase';
+import { friendlyList } from '../../../common';
 
 
 export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
@@ -60,10 +61,29 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
     subTypeSettings(): TypeSettings<any, any> {
       return this.settings.sub[this.subTypeIndex];
     },
+    showInput(): boolean {
+      return !!this.subType && !!this.subTypeSettings;
+    },
   },
   methods: {
     isDisabledType(innerType: Type) {
       return innerType === this.subType;
+    },
+    getTypeName(innerType: Type) {
+      if (innerType instanceof EnumType) {
+        const keys = Array.from(innerType.options.constants.values());
+        let matchesAliased = true;
+        for (const key of keys) {
+          if (!this.registry.defs.aliased[key]) {
+            matchesAliased = false;
+          }
+        }
+        if (matchesAliased && keys.length > 0) {
+          return friendlyList(keys);
+        }
+      }
+
+      return this.registry.getTypeVisuals(innerType).name;
     },
     async changeType(innerType: Type) {
       if (!await getConfirmation()) {

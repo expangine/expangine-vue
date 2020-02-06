@@ -1,6 +1,7 @@
 
 import { Registry } from '../Registry';
 
+import AliasedOpsVisuals from './AliasedOpsVisuals';
 import AnyOpsVisuals from './AnyOpsVisuals';
 import BooleanOpsVisuals from './BooleanOpsVisuals';
 import ColorOpsVisuals from './ColorOpsVisuals';
@@ -17,6 +18,7 @@ import TupleOpsVisuals from './TupleOpsVisuals';
 export default function(registry: Registry)
 {
   registry
+    .import(AliasedOpsVisuals)
     .import(AnyOpsVisuals)
     .import(BooleanOpsVisuals)
     .import(ColorOpsVisuals)

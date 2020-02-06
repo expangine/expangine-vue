@@ -37,7 +37,9 @@ export const EnumVisuals = createVisuals<EnumSubs>()({
   },
   settingsFor: ({ registry, type, sub }) => ({ 
     input: 'autocomplete', 
-    defaultValue: registry.getTypeSettings(type.options.value).defaultValue, 
+    defaultValue: type.options.value.isOptional()
+      ? null
+      : type.options.constants.values().next().value || null, 
     options: { ...EnumAutocompleteInput.getDefaultOptions(), ...registry.settingsOverrides, label: sub + '' }, 
     sub: { 
       key: registry.getTypeSettings(type.options.key, 'Key'), 
