@@ -32,6 +32,26 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item v-if="canShowElse" @click="toggleElse">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Add Else
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      If none of the If conditions are true, do Else
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="canHideElse" @click="toggleElse">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Hide Else
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      If none of the If conditions are true, do Else
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
               </template>
             </ex-expression-menu>
             <ex-chip-menu
@@ -109,15 +129,25 @@ export default ExpressionBase<IfExpression>().extend({
   name: 'IfEditor',
   data: () => ({
     sorting: false,
+    showingElse: false,
   }),
   computed: {
     showElse(): boolean {
-      return !this.readOnly || this.value.otherwise !== NoExpression.instance;
+      return this.showingElse || this.value.otherwise !== NoExpression.instance;
+    },
+    canShowElse(): boolean {
+      return this.value.otherwise === NoExpression.instance && !this.showingElse;
+    },
+    canHideElse(): boolean {
+      return this.value.otherwise === NoExpression.instance && this.showingElse;
     },
   },
   methods: {
     sortStart() {
       this.sorting = !this.sorting;
+    },
+    toggleElse() {
+      this.showingElse = !this.showingElse;
     },
     updateCondition(index: number, condition?: Expression) {
       this.$set(this.value.cases[index], 0, condition || NoExpression.instance);
