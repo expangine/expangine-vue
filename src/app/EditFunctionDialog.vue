@@ -153,7 +153,7 @@ export default Vue.extend({
 <style lang="less" scoped>
 .data-container {
   position: relative;
-  height: calc(100vh - 350px);
+  height: inherit;
   overflow: scroll;
 }
 </style>

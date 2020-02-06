@@ -3,7 +3,7 @@
     
     <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
       <v-list subheader class="pt-0">
-        <ex-child-filter>
+        <ex-child-filter @keydown.native="menuRight">
 
           <v-subheader>Info</v-subheader>
 
@@ -69,7 +69,7 @@
 
             <v-menu max-height="400" offset-x open-on-hover class="d-inline">
               <template #activator="{ on }">
-                <v-list-item v-on="on">
+                <v-list-item v-on="on" ref="replace">
                   <v-list-item-content class="red--text darken-4">
                     <v-list-item-title>
                       Replace with...
@@ -105,7 +105,7 @@
               <template #default="{ copiedOptions, paste }">
                 <v-menu v-if="copiedOptions.length" max-height="400" offset-x open-on-hover class="d-inline">
                   <template #activator="{ on }">
-                    <v-list-item v-on="on">
+                    <v-list-item v-on="on" ref="paste">
                       <v-list-item-content class="red--text darken-4">
                         <v-list-item-title>
                           Paste...
@@ -262,6 +262,20 @@ export default ExpressionBase().extend({
         const result = callback();
         if (result) {
           this.input(result);
+        }
+      }
+    },
+    menuRight(ev: KeyboardEvent) {
+      if (ev.keyCode === 39) {
+        for (const refName in this.$refs) {
+          const ref = this.$refs[refName] as any;
+
+          if (ref && 
+            ref.$parent && 
+            ref.$parent.mouseEnterHandler &&
+            ref.$el.classList.contains('v-list-item--highlighted')) {
+            ref.$parent.mouseEnterHandler();
+          }
         }
       }
     },
