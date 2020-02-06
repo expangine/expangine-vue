@@ -1227,7 +1227,7 @@ export default Vue.extend({
         const typesCleared = friendlyList(objectValues(this.aliased, (_, name) => name));
 
         this.saveDataPending();
-        this.history.save({ aliased: {} }, `Types cleared: ${typesCleared}`);
+        this.history.save({ aliased: {}, aliasedSettings: {}, aliasedData: {} }, `Types cleared: ${typesCleared}`);
       }
     },
     // FUNCTIONS

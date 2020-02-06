@@ -310,6 +310,22 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
         return resolve('There was a problem parsing the CSV.');
       }
 
+      data = data.filter((row: any) => 
+      {
+        let hasValue = false;
+
+        for (const prop in row) 
+        {
+          if (row[prop]) 
+          {
+            hasValue = true;
+            break;
+          }
+        }
+
+        return hasValue;
+      });
+
       const VALUE_NONE = '';
       const VALUE_DEFAULT = '$$default$$';
 

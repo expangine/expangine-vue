@@ -196,7 +196,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       return !this.settings.options.hideSort;
     },
     hasMenu(): boolean {
-      return (this.canSort && (this.canSaveSort || this.canCancelSort)) || this.canAdd;
+      return (this.canSort && (this.canSaveSort || this.canCancelSort)) || this.canAdd || this.canImport || this.canExport;
     },
     canExport(): boolean {
       return !this.settings.options.hideExport && this.isCsvType;

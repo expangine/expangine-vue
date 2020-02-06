@@ -172,7 +172,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.removeAt, {
     name: 'Remove Item At',
     description: 'Removes item at [index] from [list]',
-    singleline: 'remove item at {index} from {list}',
+    singleline: 'from {list} remove item at {index}',
     comments: {
       list: 'The list to remove from',
       index: 'The index of the item to remove',
@@ -183,7 +183,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.removeWhere, {
     name: 'Remove Items Where',
     description: 'Removes items from [list] that meet criteria [where]',
-    singleline: 'remove items {where} from {list}',
+    singleline: 'from {list} remove items where {where}',
     comments: {
       list: 'The list to remove from',
       where: 'The condition that must be true for an item to be removed',

@@ -224,6 +224,16 @@ export default (registry: Registry) =>
     returnComments: 'An object with a property for each key in the map.',
   });
 
+  registry.addOperation(MapOps.fromPlainObject, {
+    name: 'Object to Map',
+    description: 'Convert [object] to a map',
+    singleline: '{object} to map',
+    comments: {
+      object: 'The object to convert to a map',
+    },
+    returnComments: 'A map with a key and value for each property in the object.',
+  });
+
   registry.addOperation(MapOps.isValid, {
     name: 'Is Map?',
     description: 'Determines whether [value] is a valid value for Map',
