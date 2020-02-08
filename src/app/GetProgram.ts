@@ -2,6 +2,7 @@
 import { getPromiser } from './Promiser';
 import { Expression, Type, NoExpression, ObjectType } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
+import { getMultipleDialoger } from './MultipleDialog';
 
 export interface GetProgramOptions
 {
@@ -42,35 +43,44 @@ export function getGetProgramDefaults(): GetProgramOptions {
 
 export const getProgramDialog = getGetProgramDefaults();
 
+export const getProgramMultiplier = getMultipleDialoger(getProgramDialog);
+
 export type GetProgramResult = { program: Expression, returnType: Type | null } | false;
 
 export async function getProgram(options: Partial<GetProgramOptions> = {}): Promise<GetProgramResult> 
 {
   const { resolve, promise } = getPromiser<GetProgramResult>();
 
-  Object.assign(getProgramDialog, getGetProgramDefaults());
-  Object.assign(getProgramDialog, options);
+  getProgramMultiplier.open(() => 
+  {
+    Object.assign(getProgramDialog, getGetProgramDefaults());
+    Object.assign(getProgramDialog, options);
 
-  getProgramDialog.visible = true;
-  getProgramDialog.close = (confirmed: boolean) => {
-    const { program, registry, context, expectedType, removeDescribedRestrictions } = getProgramDialog;
+    getProgramDialog.close = (confirmed: boolean) => 
+    {
+      const { program, registry, context, expectedType, removeDescribedRestrictions } = getProgramDialog;
 
-    getProgramDialog.visible = false;
+      if (!confirmed) 
+      {
+        resolve(false);
+      } 
+      else 
+      {
+        const returnType = expectedType
+          ? expectedType
+          : program.getType(registry.defs, context);
 
-    if (!confirmed) {
-      resolve(false);
-    } else {
-      const returnType = expectedType
-        ? expectedType
-        : program.getType(registry.defs, context);
+        if (returnType && !expectedType && removeDescribedRestrictions) {
+          returnType.removeDescribedRestrictions();
+        }
 
-      if (returnType && !expectedType && removeDescribedRestrictions) {
-        returnType.removeDescribedRestrictions();
+        resolve({ program, returnType });
       }
 
-      resolve({ program, returnType });
-    }
-  };
+      getProgramMultiplier.close();
+    };
+  });
+  
 
   return promise;
 }

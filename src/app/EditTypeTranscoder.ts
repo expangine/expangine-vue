@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { TypeStorage, Types, TypeStorageTranscoder, Exprs } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface EditTypeTranscoderOptions
@@ -34,48 +35,52 @@ export function getEditTypeTranscoderDefaults(): EditTypeTranscoderOptions {
 
 export const editTypeTranscoderDialog = getEditTypeTranscoderDefaults();
 
+export const editTypeTranscoderMultiplier = getMultipleDialoger(editTypeTranscoderDialog);
+
 export async function getEditTypeTranscoder(options: Partial<EditTypeTranscoderOptions> = {}): Promise<TypeStorageTranscoder | false> 
 {
   const { resolve, promise } = getPromiser<TypeStorageTranscoder | false>();
 
-  Object.assign(editTypeTranscoderDialog, getEditTypeTranscoderDefaults());
-  Object.assign(editTypeTranscoderDialog, options);
-
-  const { property, storage } = editTypeTranscoderDialog;
-  const existing = property && property in storage.transcoders;
-
-  if (existing)
+  editTypeTranscoderMultiplier.open(() => 
   {
-    editTypeTranscoderDialog.transcoder = storage.transcoders[property];
-  }
-  else
-  {
-    editTypeTranscoderDialog.transcoder.encodedType = storage.getDecodeExpected(property);
-  }
+    Object.assign(editTypeTranscoderDialog, getEditTypeTranscoderDefaults());
+    Object.assign(editTypeTranscoderDialog, options);
 
-  Vue.set(storage.transcoders, property, editTypeTranscoderDialog.transcoder);
+    const { property, storage } = editTypeTranscoderDialog;
+    const existing = property && property in storage.transcoders;
 
-  editTypeTranscoderDialog.visible = true;
-  editTypeTranscoderDialog.handle = (confirm) => 
-  {
-    const { transcoder } = editTypeTranscoderDialog;
-    
-    if (confirm)
+    if (existing)
     {
-      resolve(transcoder);
+      editTypeTranscoderDialog.transcoder = storage.transcoders[property];
     }
     else
     {
-      if (!existing)
-      {
-        Vue.delete(storage.transcoders, property);
-      }
-
-      resolve(false);
+      editTypeTranscoderDialog.transcoder.encodedType = storage.getDecodeExpected(property);
     }
 
-    editTypeTranscoderDialog.visible = false;
-  };
+    Vue.set(storage.transcoders, property, editTypeTranscoderDialog.transcoder);
+
+    editTypeTranscoderDialog.handle = (confirm) => 
+    {
+      const { transcoder } = editTypeTranscoderDialog;
+      
+      if (confirm)
+      {
+        resolve(transcoder);
+      }
+      else
+      {
+        if (!existing)
+        {
+          Vue.delete(storage.transcoders, property);
+        }
+
+        resolve(false);
+      }
+
+      editTypeTranscoderMultiplier.close();
+    };
+  });
 
   return promise;
 }

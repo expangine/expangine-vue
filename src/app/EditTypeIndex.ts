@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { TypeStorage, ObjectType, TypeIndex, TypeStoragePrimaryType, Type, Types } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface EditTypeIndexOptions
@@ -47,69 +48,73 @@ export function getEditTypeIndexDefaults(): EditTypeIndexOptions {
 
 export const editTypeIndexDialog = getEditTypeIndexDefaults();
 
+export const editTypeIndexMultiplier = getMultipleDialoger(editTypeIndexDialog);
+
 export async function getEditTypeIndex(options: Partial<EditTypeIndexOptions> = {}): Promise<TypeIndex | false> 
 {
   const { resolve, promise } = getPromiser<TypeIndex | false>();
 
-  Object.assign(editTypeIndexDialog, getEditTypeIndexDefaults());
-  Object.assign(editTypeIndexDialog, options);
-
-  const { name, storage } = editTypeIndexDialog;
-
-  // If a name is given and points to an index in storage, get that index.
-  if (name && storage && name in storage.indexes)
+  editTypeIndexMultiplier.open(() => 
   {
-    editTypeIndexDialog.index = storage.indexes[name];
-  }
+    Object.assign(editTypeIndexDialog, getEditTypeIndexDefaults());
+    Object.assign(editTypeIndexDialog, options);
 
-  // If no name is given but a named index is given, copy it over.
-  if (!name && editTypeIndexDialog.index.name)
-  {
-    editTypeIndexDialog.name = editTypeIndexDialog.index.name;
-  }
+    const { name, storage } = editTypeIndexDialog;
 
-  // If the index is a user defined primary key, only allow props to change.
-  if (editTypeIndexDialog.index.primary && storage && storage.primaryType !== TypeStoragePrimaryType.GIVEN)
-  {
-    editTypeIndexDialog.propsOnly = true;
-  }
-  
-  editTypeIndexDialog.visible = true;
-  editTypeIndexDialog.handle = (cnofirm) => 
-  {
-    const { name: savedAs, index } = editTypeIndexDialog;
-    
-    if (cnofirm && index.name)
+    // If a name is given and points to an index in storage, get that index.
+    if (name && storage && name in storage.indexes)
     {
-      if (storage)
+      editTypeIndexDialog.index = storage.indexes[name];
+    }
+
+    // If no name is given but a named index is given, copy it over.
+    if (!name && editTypeIndexDialog.index.name)
+    {
+      editTypeIndexDialog.name = editTypeIndexDialog.index.name;
+    }
+
+    // If the index is a user defined primary key, only allow props to change.
+    if (editTypeIndexDialog.index.primary && storage && storage.primaryType !== TypeStoragePrimaryType.GIVEN)
+    {
+      editTypeIndexDialog.propsOnly = true;
+    }
+    
+    editTypeIndexDialog.handle = (cnofirm) => 
+    {
+      const { name: savedAs, index } = editTypeIndexDialog;
+      
+      if (cnofirm && index.name)
       {
-        if (savedAs && savedAs !== index.name)
+        if (storage)
         {
-          Vue.delete(storage.indexes, savedAs);
+          if (savedAs && savedAs !== index.name)
+          {
+            Vue.delete(storage.indexes, savedAs);
+          }
+
+          Vue.set(storage.indexes, index.name, index);
+        }
+        
+        if (!index.unique)
+        {
+          delete index.unique;
         }
 
-        Vue.set(storage.indexes, index.name, index);
+        if (!index.primary)
+        {
+          delete index.primary;
+        }
+
+        resolve(index);
       }
-      
-      if (!index.unique)
+      else
       {
-        delete index.unique;
+        resolve(false);
       }
 
-      if (!index.primary)
-      {
-        delete index.primary;
-      }
-
-      resolve(index);
-    }
-    else
-    {
-      resolve(false);
-    }
-
-    editTypeIndexDialog.visible = false;
-  };
+      editTypeIndexMultiplier.close();
+    };
+  });
 
   return promise;
 }

@@ -1,6 +1,7 @@
 
 import { getPromiser } from './Promiser';
 import { SimpleFieldSettings } from '@/common';
+import { getMultipleDialoger } from './MultipleDialog';
 
 export interface SimpleInputOptions<T = any>
 {
@@ -33,18 +34,24 @@ export function getSimpleInputDefaults<T = any>(): SimpleInputOptions<T> {
 
 export const simpleInputDialog = getSimpleInputDefaults();
 
+export const simpleInputMultiplier = getMultipleDialoger(simpleInputDialog);
+
 export async function getSimpleInput<T = any>(options: Partial<SimpleInputOptions<T>> = {}): Promise<T | null> 
 {
   const { resolve, promise } = getPromiser<T | null>();
 
-  Object.assign(simpleInputDialog, getSimpleInputDefaults());
-  Object.assign(simpleInputDialog, options);
+  simpleInputMultiplier.open(() =>
+  {
+    Object.assign(simpleInputDialog, getSimpleInputDefaults());
+    Object.assign(simpleInputDialog, options);
 
-  simpleInputDialog.visible = true;
-  simpleInputDialog.handle = (confirmed: boolean) => {
-    simpleInputDialog.visible = false;
-    confirmed ? resolve(simpleInputDialog.value) : resolve(null);
-  };
+    simpleInputDialog.handle = (confirmed: boolean) => 
+    {
+      confirmed ? resolve(simpleInputDialog.value) : resolve(null);
+
+      simpleInputMultiplier.close();
+    };
+  });
 
   return promise;
 }

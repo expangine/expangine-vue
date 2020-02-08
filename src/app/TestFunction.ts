@@ -3,6 +3,7 @@ import { FunctionType, AnyType, ObjectType, NoExpression } from 'expangine-runti
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface TestFunctionOptions
@@ -41,6 +42,8 @@ export function getTestFunctionDefaults(): TestFunctionOptions
 
 export const testFunctionDialog = getTestFunctionDefaults();
 
+export const testFunctionMultiplier = getMultipleDialoger(testFunctionDialog);
+
 export type TestFunctionResult = void;
 
 
@@ -48,22 +51,26 @@ export async function getTestFunction(options: Partial<TestFunctionOptions> = {}
 {
   const { resolve, promise } = getPromiser<TestFunctionResult>();
 
-  Object.assign(testFunctionDialog, getTestFunctionDefaults());
-  Object.assign(testFunctionDialog, options);
+  testFunctionMultiplier.open(() =>
+  {
+    Object.assign(testFunctionDialog, getTestFunctionDefaults());
+    Object.assign(testFunctionDialog, options);
 
-  const { registry, name } = testFunctionDialog;
+    const { registry, name } = testFunctionDialog;
 
-  testFunctionDialog.func = name ? registry.defs.getFunction(name) : testFunctionDialog.func;
-  testFunctionDialog.func.setParent();
-  testFunctionDialog.params = testFunctionDialog.func.options.params;
-  testFunctionDialog.settings = registry.getTypeSettings(testFunctionDialog.params);
-  testFunctionDialog.data = testFunctionDialog.params.create(); 
-  testFunctionDialog.visible = true;
+    testFunctionDialog.func = name ? registry.defs.getFunction(name) : testFunctionDialog.func;
+    testFunctionDialog.func.setParent();
+    testFunctionDialog.params = testFunctionDialog.func.options.params;
+    testFunctionDialog.settings = registry.getTypeSettings(testFunctionDialog.params);
+    testFunctionDialog.data = testFunctionDialog.params.create(); 
 
-  testFunctionDialog.close = (save) => {
-    resolve();
-    testFunctionDialog.visible = false;
-  };
+    testFunctionDialog.close = (save) => 
+    {
+      resolve();
+
+      testFunctionMultiplier.close();
+    };
+  });
 
   return promise;
 }

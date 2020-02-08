@@ -3,6 +3,7 @@ import { OperationGeneric, OperationTypes, ExpressionMap, TypeMap, objectEach, i
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettingsAny } from '@/runtime/types/TypeVisuals';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface TestOperationOptions
@@ -47,6 +48,8 @@ export function getTestOperationDefaults(): TestOperationOptions
 
 export const testOperationDialog = getTestOperationDefaults();
 
+export const testOperationMultiplier = getMultipleDialoger(testOperationDialog);
+
 export type TestOperationResult = any;
 
 
@@ -54,58 +57,64 @@ export async function getTestOperation(options: Partial<TestOperationOptions> = 
 {
   const { resolve, promise } = getPromiser<TestOperationResult>();
 
-  Object.assign(testOperationDialog, getTestOperationDefaults());
-  Object.assign(testOperationDialog, options);
+  testOperationMultiplier.open(() =>
+  {
+    Object.assign(testOperationDialog, getTestOperationDefaults());
+    Object.assign(testOperationDialog, options);
 
-  const { registry, name } = testOperationDialog;
+    const { registry, name } = testOperationDialog;
 
-  const op = registry.defs.getOperation(name);
-  const types = registry.defs.getOperationTypes(name);
+    const op = registry.defs.getOperation(name);
+    const types = registry.defs.getOperationTypes(name);
 
-  if (!op || !types) {
-    resolve();
+    if (!op || !types) 
+    {
+      resolve();
 
-    return promise;
-  }
+      return false;
+    }
 
-  const params: ExpressionMap = {};
-  const constants: TypeMap = {};
-  const settings: Record<string, TypeSettingsAny> = {};
-  const combined = {
-    ...types.params,
-    ...types.optional,
-  };
+    const params: ExpressionMap = {};
+    const constants: TypeMap = {};
+    const settings: Record<string, TypeSettingsAny> = {};
+    const combined = {
+      ...types.params,
+      ...types.optional,
+    };
 
-  objectEach(combined, (typeInput, key) => {
-    if (!isOperationTypeFunction(typeInput) && op.hasScope.indexOf(key) === -1) {
-      let detected = registry.defs.getOperationInputType(typeInput);
-      if (detected) {
-        if (!detected.isOptional() && op.optional.indexOf(key) !== -1) {
-          detected = OptionalType.for(detected);
+    objectEach(combined, (typeInput, key) => {
+      if (!isOperationTypeFunction(typeInput) && op.hasScope.indexOf(key) === -1) {
+        let detected = registry.defs.getOperationInputType(typeInput);
+        if (detected) {
+          if (!detected.isOptional() && op.optional.indexOf(key) !== -1) {
+            detected = OptionalType.for(detected);
+          }
+          constants[key] = detected;
+          settings[key] = registry.getTypeSettings(detected);
+          params[key] = detected.isOptional() ? Exprs.noop() : Exprs.const(detected.create());
+        } else {
+          params[key] = Exprs.noop();
         }
-        constants[key] = detected;
-        settings[key] = registry.getTypeSettings(detected);
-        params[key] = detected.isOptional() ? Exprs.noop() : Exprs.const(detected.create());
       } else {
         params[key] = Exprs.noop();
       }
-    } else {
-      params[key] = Exprs.noop();
-    }
+    });
+
+    testOperationDialog.op = op;
+    testOperationDialog.paramNames = op.params.concat(op.optional);
+    testOperationDialog.paramsConstant = constants;
+    testOperationDialog.paramsSettings = settings;
+    testOperationDialog.params = params;
+    testOperationDialog.types = types;
+
+    testOperationDialog.close = (save) => 
+    {
+      resolve();
+
+      testOperationMultiplier.close();
+    };
   });
-
-  testOperationDialog.op = op;
-  testOperationDialog.paramNames = op.params.concat(op.optional);
-  testOperationDialog.paramsConstant = constants;
-  testOperationDialog.paramsSettings = settings;
-  testOperationDialog.params = params;
-  testOperationDialog.types = types;
-  testOperationDialog.visible = true;
-
-  testOperationDialog.close = (save) => {
-    resolve();
-    testOperationDialog.visible = false;
-  };
+  
 
   return promise;
 }

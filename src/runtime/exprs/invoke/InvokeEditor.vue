@@ -19,6 +19,16 @@
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="edit">
+          <v-list-item-content>
+            <v-list-item-title>
+              Edit
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              Edit this function
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
       </template>
     </ex-expression-menu>
 
@@ -108,6 +118,7 @@ import { TypeMap, Expression, ChainExpression, InvokeExpression, ExpressionBuild
 import ExpressionBase from '../ExpressionBase';
 import { ListOptions } from '../../../common';
 import { getTestFunction } from '../../../app/TestFunction';
+import { getEditFunction } from '../../../app/EditFunction';
 
 
 export default ExpressionBase<InvokeExpression>().extend({
@@ -162,6 +173,12 @@ export default ExpressionBase<InvokeExpression>().extend({
       const name = this.value.name;
 
       getTestFunction({ registry, name });
+    },
+    edit() {
+      const registry = this.registry;
+      const name = this.value.name;
+
+      getEditFunction({ registry, name });
     },
   },
 });

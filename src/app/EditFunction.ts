@@ -4,6 +4,7 @@ import { Type, FunctionType, AnyType, ObjectType, NoExpression } from 'expangine
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface EditFunctionOptions
@@ -42,6 +43,8 @@ export function getEditFunctionDefaults(): EditFunctionOptions
 
 export const editFunctionDialog = getEditFunctionDefaults();
 
+export const editFunctionMultiplier = getMultipleDialoger(editFunctionDialog);
+
 export type EditFunctionResult = { name: string, function: FunctionType } | false;
 
 
@@ -49,36 +52,44 @@ export async function getEditFunction(options: Partial<EditFunctionOptions> = {}
 {
   const { resolve, promise } = getPromiser<EditFunctionResult>();
 
-  Object.assign(editFunctionDialog, getEditFunctionDefaults());
-  Object.assign(editFunctionDialog, options);
+  editFunctionMultiplier.open(() =>
+  {
+    Object.assign(editFunctionDialog, getEditFunctionDefaults());
+    Object.assign(editFunctionDialog, options);
 
-  const { registry, name } = editFunctionDialog;
+    const { registry, name } = editFunctionDialog;
 
-  editFunctionDialog.saveAs = name;
-  editFunctionDialog.func = name ? registry.defs.getFunction(name) : editFunctionDialog.func;
-  editFunctionDialog.settings = registry.getTypeSettings(editFunctionDialog.func.options.params);
-  editFunctionDialog.visible = true;
-  editFunctionDialog.func.setParent();
+    editFunctionDialog.saveAs = name;
+    editFunctionDialog.func = name ? registry.defs.getFunction(name) : editFunctionDialog.func;
+    editFunctionDialog.settings = registry.getTypeSettings(editFunctionDialog.func.options.params);
+    editFunctionDialog.func.setParent();
 
-  editFunctionDialog.close = (save) => {
-    const { saveAs, func } = editFunctionDialog;
-    if (save && saveAs) {
-      const returnType = func.options.expression.getType(registry.defs, func.options.params);
+    editFunctionDialog.close = (save) => 
+    {
+      const { saveAs, func } = editFunctionDialog;
 
-      func.options.returnType = returnType || new AnyType({ });
+      if (save && saveAs) 
+      {
+        const returnType = func.options.expression.getType(registry.defs, func.options.params);
 
-      Vue.delete(registry.defs.functions, name);
-      Vue.set(registry.defs.functions, saveAs, func);
+        func.options.returnType = returnType || new AnyType({ });
 
-      resolve({
-        name: saveAs,
-        function: func,
-      });
-    } else {
-      resolve(false);
-    }
-    editFunctionDialog.visible = false;
-  };
+        Vue.delete(registry.defs.functions, name);
+        Vue.set(registry.defs.functions, saveAs, func);
+
+        resolve({
+          name: saveAs,
+          function: func,
+        });
+      } 
+      else 
+      {
+        resolve(false);
+      }
+
+      editFunctionMultiplier.close();
+    };
+  });
 
   return promise;
 }

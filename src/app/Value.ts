@@ -5,6 +5,7 @@ import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { Registry } from '@/runtime/Registry';
 import { getRandomNumber } from '@/common';
 import { getBuildType } from './BuildType';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface ValueOptions
@@ -40,30 +41,36 @@ export function getValueDefaults(): ValueOptions {
 
 export const valueDialog = getValueDefaults();
 
+export const valueMultiplier = getMultipleDialoger(valueDialog);
+
 export async function getValue(options: Partial<ValueOptions> = {}): Promise<any | null> 
 {
   const { resolve, promise } = getPromiser<string | null>();
 
-  Object.assign(valueDialog, getValueDefaults());
-  Object.assign(valueDialog, options);
-
-  const { registry, type, settings, value } = valueDialog;
-  
-  if (!registry.getTypeSettingsValidFor(type, settings)) 
+  valueMultiplier.open(() => 
   {
-    valueDialog.settings = registry.getTypeSettings(type);
-  }
+    Object.assign(valueDialog, getValueDefaults());
+    Object.assign(valueDialog, options);
 
-  if (!type.isValid(value))
-  {
-    valueDialog.value = type.create();
-  }
+    const { registry, type, settings, value } = valueDialog;
+    
+    if (!registry.getTypeSettingsValidFor(type, settings)) 
+    {
+      valueDialog.settings = registry.getTypeSettings(type);
+    }
 
-  valueDialog.visible = true;
-  valueDialog.handle = (confirmed: boolean) => {
-    valueDialog.visible = false;
-    confirmed ? resolve(valueDialog.value) : resolve(null);
-  };
+    if (!type.isValid(value))
+    {
+      valueDialog.value = type.create();
+    }
+
+    valueDialog.handle = (confirmed: boolean) => 
+    {
+      confirmed ? resolve(valueDialog.value) : resolve(null);
+
+      valueMultiplier.close();
+    };
+  });
 
   return promise;
 }

@@ -1,5 +1,6 @@
 
 import { getPromiser } from './Promiser';
+import { getMultipleDialoger } from './MultipleDialog';
 
 export interface InputOptions
 {
@@ -28,18 +29,24 @@ export function getInputDefaults(): InputOptions {
 
 export const inputDialog = getInputDefaults();
 
+export const inputMultiplier = getMultipleDialoger(inputDialog);
+
 export async function getInput(options: Partial<InputOptions> = {}): Promise<string | null> 
 {
   const { resolve, promise } = getPromiser<string | null>();
 
-  Object.assign(inputDialog, getInputDefaults());
-  Object.assign(inputDialog, options);
+  inputMultiplier.open(() =>
+  {
+    Object.assign(inputDialog, getInputDefaults());
+    Object.assign(inputDialog, options);
 
-  inputDialog.visible = true;
-  inputDialog.handle = (confirmed: boolean) => {
-    inputDialog.visible = false;
-    confirmed ? resolve(inputDialog.value) : resolve(null);
-  };
+    inputDialog.handle = (confirmed: boolean) => 
+    {
+      confirmed ? resolve(inputDialog.value) : resolve(null);
+
+      inputMultiplier.close();
+    };
+  });
 
   return promise;
 }

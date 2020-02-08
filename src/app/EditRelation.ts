@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { Relation, RelationKind, MapInput, Types, Type, TypePropPair, Definitions, objectFromProps } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface RelationData
@@ -74,70 +75,74 @@ export function getEditRelationDefaults(): EditRelationOptions {
 
 export const editRelationDialog = getEditRelationDefaults();
 
+export const editRelationMultiplier = getMultipleDialoger(editRelationDialog);
+
 export async function getEditRelation(options: Partial<EditRelationOptions> = {}): Promise<Relation | false> 
 {
   const { resolve, promise } = getPromiser<Relation | false>();
 
-  Object.assign(editRelationDialog, getEditRelationDefaults());
-  Object.assign(editRelationDialog, options);
-
-  const { name, registry } = editRelationDialog;
-  const relations = registry.defs.relations;
-
-  // If a name is given and points to a relation, get that relation.
-  if (name && !editRelationDialog.relation)
+  editRelationMultiplier.open(() => 
   {
-    editRelationDialog.relation = relations[name];
-  }
+    Object.assign(editRelationDialog, getEditRelationDefaults());
+    Object.assign(editRelationDialog, options);
 
-  // If no name is given but a named relation is given, copy it over.
-  if (!name && editRelationDialog.relation)
-  {
-    editRelationDialog.name = editRelationDialog.relation.name;
-  }
+    const { name, registry } = editRelationDialog;
+    const relations = registry.defs.relations;
 
-  // Set relation data if relation given.
-  if (editRelationDialog.relation)
-  {
-    editRelationDialog.relationData = getRelationData(editRelationDialog.relation);
-    editRelationDialog.kind = editRelationDialog.relation.kind;
-  }
-  else if (editRelationDialog.typeName)
-  {
-    editRelationDialog.relationData.one = 
-    editRelationDialog.relationData.hasOne = editRelationDialog.typeName;
-  }
-
-  editRelationDialog.visible = true;
-  editRelationDialog.handle = (confirm) => 
-  {
-    const { name: savedAs, relationData, kind } = editRelationDialog;
-    
-    if (confirm && kind !== null)
+    // If a name is given and points to a relation, get that relation.
+    if (name && !editRelationDialog.relation)
     {
-      const relation = getRelationFromData(kind, registry.defs, relationData);
-
-      if (!relation)
-      {
-        return resolve(false);
-      }
-
-      if (savedAs && savedAs !== relation.name)
-      {
-        Vue.delete(relations, savedAs);
-      }
-
-      Vue.set(relations, relation.name, relation);
-
-      resolve(relation);
-    }
-    else
-    {
-      resolve(false);
+      editRelationDialog.relation = relations[name];
     }
 
-    editRelationDialog.visible = false;
-  };
+    // If no name is given but a named relation is given, copy it over.
+    if (!name && editRelationDialog.relation)
+    {
+      editRelationDialog.name = editRelationDialog.relation.name;
+    }
+
+    // Set relation data if relation given.
+    if (editRelationDialog.relation)
+    {
+      editRelationDialog.relationData = getRelationData(editRelationDialog.relation);
+      editRelationDialog.kind = editRelationDialog.relation.kind;
+    }
+    else if (editRelationDialog.typeName)
+    {
+      editRelationDialog.relationData.one = 
+      editRelationDialog.relationData.hasOne = editRelationDialog.typeName;
+    }
+
+    editRelationDialog.handle = (confirm) => 
+    {
+      const { name: savedAs, relationData, kind } = editRelationDialog;
+      
+      if (confirm && kind !== null)
+      {
+        const relation = getRelationFromData(kind, registry.defs, relationData);
+
+        if (!relation)
+        {
+          return resolve(false);
+        }
+
+        if (savedAs && savedAs !== relation.name)
+        {
+          Vue.delete(relations, savedAs);
+        }
+
+        Vue.set(relations, relation.name, relation);
+
+        resolve(relation);
+      }
+      else
+      {
+        resolve(false);
+      }
+
+      editRelationMultiplier.close();
+    };
+  });
 
   return promise;
 }

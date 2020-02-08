@@ -3,6 +3,7 @@ import { Expression, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettingsAny } from '@/runtime/types/TypeVisuals';
+import { getMultipleDialoger } from './MultipleDialog';
 
 
 export interface TestProgramOptions
@@ -41,6 +42,8 @@ export function getTestProgramDefaults(): TestProgramOptions
 
 export const testProgramDialog = getTestProgramDefaults();
 
+export const testProgramMultiplier = getMultipleDialoger(testProgramDialog);
+
 export type TestProgramResult = any;
 
 
@@ -48,16 +51,20 @@ export async function getTestProgram(options: Partial<TestProgramOptions> = {}):
 {
   const { resolve, promise } = getPromiser<TestProgramResult>();
 
-  Object.assign(testProgramDialog, getTestProgramDefaults());
-  Object.assign(testProgramDialog, options);
+  testProgramMultiplier.open(() => 
+  {
+    Object.assign(testProgramDialog, getTestProgramDefaults());
+    Object.assign(testProgramDialog, options);
 
-  testProgramDialog.input = testProgramDialog.inputType.create();
-  testProgramDialog.visible = true;
+    testProgramDialog.input = testProgramDialog.inputType.create();
 
-  testProgramDialog.close = (save) => {
-    resolve();
-    testProgramDialog.visible = false;
-  };
+    testProgramDialog.close = (save) => 
+    {
+      resolve();
+
+      testProgramMultiplier.close();
+    };
+  });
 
   return promise;
 }
