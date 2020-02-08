@@ -21,7 +21,17 @@
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item @click="toggleSort">
+                <v-list-item v-if="isEmpty" @click="removeDefine">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Remove Define
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                      Replace the Define with the expression in the Then
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="hasVariables" @click="toggleSort">
                   <v-list-item-content>
                     <v-list-item-title>
                       Toggle Sort
@@ -122,11 +132,20 @@ export default ExpressionBase<DefineExpression>().extend({
     bodyContext(): Type {
       return this.getContextAt(this.value.define.length);
     },
+    isEmpty(): boolean {
+      return this.value.define.length === 0;
+    },
+    hasVariables(): boolean {
+      return this.value.define.length > 1;
+    },
   },
   mounted() {
     this.addIfEmpty();
   },
   methods: {
+    removeDefine(): void {
+      this.input(this.value.body);
+    },
     addIfEmpty(): void {
       if (this.value.define.length === 0) {
         this.value.define.push(['', NoExpression.instance]);
