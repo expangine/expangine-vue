@@ -319,3 +319,17 @@ export default ExpressionBase<OperationExpression>().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+@hover-color: rgba(2255,255,100,0.45);
+
+.ex-center-aligned {
+  /deep/ .templated-text:hover {
+    background-color: @hover-color;
+
+    & ~ .templated-text {
+      background-color: @hover-color;
+    }
+  }
+}
+</style>

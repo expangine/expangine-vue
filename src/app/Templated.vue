@@ -6,7 +6,7 @@
     <template v-for="part in parts">
 
       <span v-if="part.text" 
-        class="mx-1"
+        class="mx-1 templated-text"
         :key="part.index" 
         :style="textStyle" 
         v-html="part.name" 
