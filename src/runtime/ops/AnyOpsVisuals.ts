@@ -56,10 +56,10 @@ export default (registry: Registry) =>
     singleline: 'coalesce {a} {b} {c} {d} {e}',
     comments: {
       a: 'The first value to check',
-      b: 'The first value to check',
-      c: 'The first value to check',
-      d: 'The first value to check',
-      e: 'The first value to check',
+      b: 'The second value to check',
+      c: 'The third value to check',
+      d: 'The fourth value to check',
+      e: 'The fifth value to check',
     },
     defaults: {
       c: 'none',
@@ -77,6 +77,19 @@ export default (registry: Registry) =>
       value: 'The value to change from optional to non-optional',
     },
     returnComments: 'The non-optional result',
+  });
+
+  registry.addOperation(AnyOps.ternary, {
+    name: 'Ternary',
+    description: 'If [condition] then [truthy] else [falsy]',
+    singleline: 'if {condition} then {truthy} else {falsy}',
+    comments: {
+      condition: 'The condition that determines whether [truthy] or [falsy] is returned',
+      truthy: 'The value to return if the condition is true',
+      falsy: 'The value to return if the condition is false',
+    },
+    returnComments: 'The non-optional result',
+    keywords: ['iif', 'if', 'iff', '?:'],
   });
 
   registry.addOperation(AnyOps.isValid, {
