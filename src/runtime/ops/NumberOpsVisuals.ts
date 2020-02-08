@@ -801,6 +801,18 @@ export default (registry: Registry) =>
     returnComments: 'True if [value] / [by] results in no remainder, otherwise false.',
   });
 
+  registry.addOperation(NumberOps.bitCompare, {
+    name: 'Bit Comparison',
+    description: 'Determines whether [value] ',
+    singleline: 'bits in {value} {method} {test}',
+    comments: {
+      value: 'The number to to compare against',
+      method: 'The comparison method to use',
+      test: 'The number to compare with',
+    },
+    returnComments: 'True or false.',
+    keywords: ['bits'],
+  });
 
   registry.addOperation(NumberOps.asAny, {
     name: 'Cast Number to Any',
