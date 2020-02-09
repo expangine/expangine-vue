@@ -55,7 +55,7 @@
                         </v-list-item-avatar>
                       </v-list-item>
                     </template>
-                    <v-list class="pt-0">
+                    <v-list class="py-0">
                       <ex-child-filter>
                         <template v-for="op in alternativeOperations">
                           <v-list-item :key="op.value" @click="updateOperation(op.value)" :input-value="op.value === value.op">

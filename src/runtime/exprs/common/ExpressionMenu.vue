@@ -2,7 +2,7 @@
   <span class="d-inline-block">
     
     <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
-      <v-list subheader class="pt-0">
+      <v-list subheader class="py-0">
         <ex-child-filter @keydown.native="menuRight">
 
           <v-subheader>Info</v-subheader>

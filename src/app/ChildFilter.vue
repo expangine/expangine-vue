@@ -4,8 +4,8 @@
       ref="filter"
       solo
       hide-details
-      label="Filter"
-      append-icon="mdi-filter"
+      :label="label"
+      :append-icon="appendIcon"
       autocomplete="new-password"
       v-model="filter"
     ></v-text-field>
@@ -25,6 +25,14 @@ export default Vue.extend({
     childClass: {
       type: String,
       default: 'v-list-item',
+    },
+    label: {
+      type: String,
+      default: 'Filter',
+    },
+    appendIcon: {
+      type: String,
+      default: 'mdi-filter',
     },
   },
   data: () => ({

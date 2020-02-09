@@ -37,7 +37,7 @@
           Expression
         </v-btn>
       </template>
-      <v-list class="pt-0">
+      <v-list class="py-0">
         <ex-child-filter>
 
           <template v-for="expr in starters">

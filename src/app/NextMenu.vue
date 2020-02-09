@@ -5,7 +5,7 @@
         <v-icon>{{ icon }}</v-icon>
       </v-btn>
     </template>
-    <v-list two-line class="pt-0">
+    <v-list two-line class="py-0">
       <ex-child-filter>
         <slot name="prepend"></slot>
         <template v-for="(sub, index) in nextSegments">

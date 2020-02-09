@@ -248,28 +248,30 @@
             <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item key="new" @click="addFunction">
-            <v-list-item-content>
-              <v-list-item-title>Add</v-list-item-title>
-              <v-list-item-subtitle>Create a new re-usable function.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <template v-for="(func, name) in functions">
-            <v-list-item :key="name" @click="editFunction(name)">
+        <v-list class="py-0">
+          <ex-child-filter>
+            <v-list-item key="new" @click="addFunction">
               <v-list-item-content>
-                <v-list-item-title>{{ name }}</v-list-item-title>
+                <v-list-item-title>Add</v-list-item-title>
+                <v-list-item-subtitle>Create a new re-usable function.</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-          </template>
-          <v-divider></v-divider>
-          <v-list-item key="clear" @click="clearFunctions">
-            <v-list-item-content>
-              <v-list-item-title>Clear</v-list-item-title>
-              <v-list-item-subtitle>Remove all user-defined functions.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+            <v-divider></v-divider>
+            <template v-for="(func, name) in functions">
+              <v-list-item :key="name" @click="editFunction(name)">
+                <v-list-item-content>
+                  <v-list-item-title>{{ name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-divider></v-divider>
+            <v-list-item key="clear" @click="clearFunctions">
+              <v-list-item-content>
+                <v-list-item-title>Clear</v-list-item-title>
+                <v-list-item-subtitle>Remove all user-defined functions.</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </ex-child-filter>
         </v-list>
       </v-menu>
 
@@ -280,28 +282,30 @@
             <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item key="new" @click="addType">
-            <v-list-item-content>
-              <v-list-item-title>Add</v-list-item-title>
-              <v-list-item-subtitle>Create a new re-usable type.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <template v-for="(func, name) in aliased">
-            <v-list-item :key="name" @click="editType(name)">
+        <v-list class="py-0">
+          <ex-child-filter>
+            <v-list-item key="new" @click="addType">
               <v-list-item-content>
-                <v-list-item-title>{{ name }}</v-list-item-title>
+                <v-list-item-title>Add</v-list-item-title>
+                <v-list-item-subtitle>Create a new re-usable type.</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-          </template>
-          <v-divider></v-divider>
-          <v-list-item key="clear" @click="clearTypes">
-            <v-list-item-content>
-              <v-list-item-title>Clear</v-list-item-title>
-              <v-list-item-subtitle>Remove all user-defined types.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+            <v-divider></v-divider>
+            <template v-for="(func, name) in aliased">
+              <v-list-item :key="name" @click="editType(name)">
+                <v-list-item-content>
+                  <v-list-item-title>{{ name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-divider></v-divider>
+            <v-list-item key="clear" @click="clearTypes">
+              <v-list-item-content>
+                <v-list-item-title>Clear</v-list-item-title>
+                <v-list-item-subtitle>Remove all user-defined types.</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </ex-child-filter>
         </v-list>
       </v-menu>
 
@@ -312,28 +316,30 @@
             <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </template>
-        <v-list>
-          <v-list-item key="new" @click="addRelation">
-            <v-list-item-content>
-              <v-list-item-title>Add</v-list-item-title>
-              <v-list-item-subtitle>Create a new relation between types.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <template v-for="(relation, name) in relations">
-            <v-list-item :key="name" @click="editRelation(name)">
+        <v-list class="py-0">
+          <ex-child-filter>
+            <v-list-item key="new" @click="addRelation">
               <v-list-item-content>
-                <v-list-item-title>{{ name }}</v-list-item-title>
+                <v-list-item-title>Add</v-list-item-title>
+                <v-list-item-subtitle>Create a new relation between types.</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-          </template>
-          <v-divider></v-divider>
-          <v-list-item key="clear" @click="clearRelations">
-            <v-list-item-content>
-              <v-list-item-title>Clear</v-list-item-title>
-              <v-list-item-subtitle>Remove all relations.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+            <v-divider></v-divider>
+            <template v-for="(relation, name) in relations">
+              <v-list-item :key="name" @click="editRelation(name)">
+                <v-list-item-content>
+                  <v-list-item-title>{{ name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-divider></v-divider>
+            <v-list-item key="clear" @click="clearRelations">
+              <v-list-item-content>
+                <v-list-item-title>Clear</v-list-item-title>
+                <v-list-item-subtitle>Remove all relations.</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </ex-child-filter>
         </v-list>
       </v-menu>
 

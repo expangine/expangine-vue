@@ -9,7 +9,7 @@
       </v-btn>
     </template>
     
-    <v-list subheader class="pt-0">
+    <v-list subheader class="py-0">
       <ex-child-filter>
 
         <v-subheader v-if="invalid">Info</v-subheader>
