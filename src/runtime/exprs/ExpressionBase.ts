@@ -48,6 +48,7 @@ export default function<E extends Expression>()
       value: E;
       context: Type;
       contextDetails: Record<string, string>;
+      data: any;
       readOnly: boolean;
       registry: Registry;
       settings: TypeSettings | null;
@@ -72,6 +73,9 @@ export default function<E extends Expression>()
       contextDetails: {
         type: Object as () => Record<string, string>,
         default: () => ({}),
+      },
+      data: {
+        default: null,
       },
       readOnly: {
         type: Boolean,

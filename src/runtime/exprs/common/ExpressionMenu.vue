@@ -45,6 +45,17 @@
             </template>
           </ex-expression-clipboard>
 
+          <v-list-item @click="getAll" v-if="data">
+            <v-list-item-content>
+              <v-list-item-title>
+                Run Program Here
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Calculates all results of this expression with the current data
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
           <template v-if="canTransform">
 
             <v-divider></v-divider>
@@ -199,13 +210,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, ChainExpression, Exprs, objectMap, Types } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, copy } from 'expangine-runtime';
+import { LiveContext, LiveResult, LiveRuntime } from 'expangine-runtime-live';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { getConfirmation } from '../../../app/Confirm';
-import ExpressionBase from '../ExpressionBase';
 import { sendNotification } from '../../../app/Notify';
 import { getEditFunction } from '../../../app/EditFunction';
+import { getDisplayData } from '../../../app/DisplayData';
+import ExpressionBase from '../ExpressionBase';
 
 
 export default ExpressionBase().extend({
@@ -347,6 +360,79 @@ export default ExpressionBase().extend({
         if (result) {
           this.input(result);
         }
+      }
+    },
+    async getAll() {
+      const registry = this.registry;
+      const data = copy(this.data);
+      const results: Map<string, [any, number]> = new Map();
+      const resultType = this.computedTypeRaw;
+      const capture: Expression = this.value;
+      let root: Expression = capture;
+
+      if (!resultType || data === null) {
+        return;
+      }
+
+      while (root.parent) {
+        root = root.parent;
+      }
+
+      const interceptProvider: CommandProvider<LiveContext, LiveResult> = 
+      {
+        returnProperty: LiveRuntime.returnProperty,
+        getFunction: (name) => LiveRuntime.getFunction(name),
+        getOperation: (id) => LiveRuntime.getOperation(id),
+        getComputed: (id) => LiveRuntime.getComputed(id),
+        getOperationScopeDefaults: (id) => LiveRuntime.getOperationScopeDefaults(id),
+        getCommand(expr: Expression) 
+        {
+          const run = LiveRuntime.getCommand(expr, interceptProvider);
+
+          if (expr === capture)
+          {
+            return (context: LiveContext) => 
+            {
+              const result = run(context);
+              const resultJson = resultType.toJson(result);
+              const resultCopy = resultType.fromJson(resultJson);
+              const resultKey = JSON.stringify(resultJson);
+              const resultPair = results.get(resultKey);
+
+              if (!resultPair)
+              {
+                results.set(resultKey, [resultCopy, 1]);
+              }
+              else
+              {
+                resultPair[1]++;
+              }
+
+              return result;
+            };
+          }
+
+          return run;
+        },
+      };
+
+      const command = interceptProvider.getCommand(root);
+
+      try 
+      {
+        command(data);
+
+        getDisplayData({
+          registry,
+          data: Array.from(results.values()).map(([result, times]) => ({
+            result,
+            times,
+          })),
+        });
+      } 
+      catch (e) 
+      {
+        window.console.log('error in getAll', e);
       }
     },
     menuRight(ev: KeyboardEvent) {

@@ -435,6 +435,7 @@
             can-remove
             :value="program"
             :context="type"
+            :data="data"
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
@@ -459,6 +460,7 @@
       <ex-simple-input-dialog></ex-simple-input-dialog>
       <ex-debug-program-dialog></ex-debug-program-dialog>
       <ex-describe-data-dialog></ex-describe-data-dialog>
+      <ex-display-data-dialog></ex-display-data-dialog>
       <ex-edit-function-dialog></ex-edit-function-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
       <ex-test-operation-dialog></ex-test-operation-dialog>
