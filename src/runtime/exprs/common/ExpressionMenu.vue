@@ -22,13 +22,23 @@
 
           <ex-expression-clipboard :registry="registry">
             <template #default="{ copy }">
-              <v-list-item @click="copy(value)" v-if="registry.isValidExpressionCopy(value)">
+              <v-list-item @click="copy(value)" v-if="canCopy">
                 <v-list-item-content>
                   <v-list-item-title>
                     Copy {{ visuals.name }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     Add this expression to the clipboard
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item @click="copy(value.parent)" v-if="canCopyChain">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Copy Expression Chain
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Add the expression list to the clipboard
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -189,7 +199,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, Exprs, objectMap, Types } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, ChainExpression, Exprs, objectMap, Types } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { getConfirmation } from '../../../app/Confirm';
@@ -255,6 +265,13 @@ export default ExpressionBase().extend({
     },
     modifiers(): ListOptions<ExpressionModifierCallback> {
       return this.registry.getExpressionsModifiers(this.requiredType, this.value, this.computedType);
+    },
+    canCopy(): boolean {
+      return this.registry.isValidExpressionCopy(this.value);
+    },
+    canCopyChain(): boolean {
+      return this.value.parent instanceof ChainExpression
+        && this.registry.isValidExpressionCopy(this.value.parent);
     },
   },
   methods: {
