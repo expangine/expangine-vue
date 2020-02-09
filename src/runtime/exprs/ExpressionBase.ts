@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, OperationExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap, SubExpression, ComputedExpression, InvokeExpression } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
 import { Registry } from '../Registry';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';

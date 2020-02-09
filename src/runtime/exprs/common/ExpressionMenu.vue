@@ -56,6 +56,17 @@
             </v-list-item-content>
           </v-list-item>
 
+          <v-list-item @click="edit" v-if="!readOnly">
+            <v-list-item-content>
+              <v-list-item-title>
+                Edit
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Edit this expression in a dialog
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
           <template v-if="canTransform">
 
             <v-divider></v-divider>
@@ -218,6 +229,7 @@ import { getConfirmation } from '../../../app/Confirm';
 import { sendNotification } from '../../../app/Notify';
 import { getEditFunction } from '../../../app/EditFunction';
 import { getDisplayData } from '../../../app/DisplayData';
+import { getProgram } from '../../../app/GetProgram';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -361,6 +373,26 @@ export default ExpressionBase().extend({
           this.input(result);
         }
       }
+    },
+    async edit() {
+      const { registry, context, value: program, requiredType: expectedType } = this;
+
+      const result = await getProgram({
+        title: 'Edit Expression',
+        registry,
+        context,
+        program,
+        expectedType,
+        programLabel: 'Expression',
+        confirm: 'Replace',
+      });
+
+      if (!result)
+      {
+        return await sendNotification({ message: 'Edit Expression canceled.' });
+      }
+
+      this.input(result.program);
     },
     async getAll() {
       const registry = this.registry;
