@@ -34,7 +34,7 @@
 
     <span v-if="readOnly" class="ml-3">{{ value.name }}</span>
 
-    <v-select
+    <v-autocomplete
       v-else
       outlined
       dense
@@ -44,7 +44,7 @@
       v-model="value.name"
       v-focus-on-create="'input'"
       @change="update"
-    ></v-select>
+    ></v-autocomplete>
 
     <span v-if="func" class="function-args ex-expression ex-parenthesis">
       <template v-for="(paramType, param) in paramTypes">
@@ -193,10 +193,6 @@ export default ExpressionBase<InvokeExpression>().extend({
     position: absolute;
     top: -15px;
   }
-}
-
-.function-select {
-  flex: 0 1 250px;
 }
 
 .function-args {
