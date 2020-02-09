@@ -97,7 +97,7 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>New Project</v-list-item-title>
-              <v-list-item-subtitle>Clears everything except your functions.</v-list-item-subtitle>
+              <v-list-item-subtitle>You can clear out or reuse any existing work.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -1337,27 +1337,78 @@ export default Vue.extend({
     // RESET
     async reset() 
     {
-      if (!await getConfirmation({ title: 'New Program', message: 'This will erase your design, data, program, and program information. Are you sure?' })) 
+      const resetting = await getSimpleInput({
+        title: 'New Project',
+        value: {
+          main: 'all' as 'all' | 'data' | 'program',
+          functions: true,
+          types: true,
+          metadata: true,
+        },
+        fields: [
+          { name: 'main', type: 'select', label: 'Reset', required: true, items: [
+            { text: 'Design, Data & Program', value: 'all' },
+            { text: 'Data Only', value: 'data' },
+            { text: 'Program Only', value: 'program' },
+          ]},
+          { name: 'functions', type: 'boolean', label: 'Functions?' },
+          { name: 'types', type: 'boolean', label: 'Types & Relations?' },
+          { name: 'metadata', type: 'boolean', label: 'Program Information?' },
+        ],
+      });
+
+      if (!resetting)
       {
-        return;
+        return await sendNotification({ message: 'Reset canceled.' });
       }
 
-      const built = await this.getDefaultTypes();
+      const resetProject: Partial<Project> = {};
 
-      if (!built) 
+      switch (resetting.main)
       {
-        return;
+        case 'data':
+          resetProject.data = this.type.fromJson(copy(this.settings.defaultValue));
+          break;
+        case 'program':
+          resetProject.program = this.store.program.getDefault();
+          break;
+        case 'all':
+          const built = await this.getDefaultTypes();
+
+          if (!built) 
+          {
+            return await sendNotification({ message: 'Reset canceled.' });
+          }
+
+          resetProject.type = built.type;
+          resetProject.settings = built.settings;
+          resetProject.data = built.type.fromJson(copy(built.settings.defaultValue));
+          resetProject.program = this.store.program.getDefault();
+          break;
+      }
+
+      if (resetting.functions)
+      {
+        resetProject.functions = {};
+      }
+
+      if (resetting.types)
+      {
+        resetProject.aliased = {};
+        resetProject.aliasedSettings = {};
+        resetProject.aliasedData = {};
+        resetProject.relations = {};
+        resetProject.storage = {};
+      }
+
+      if (resetting.metadata)
+      {
+        resetProject.metadata = this.store.metadata.getDefault();
       }
 
       this.saveDataPending();
 
-      this.history.save({
-        type: built.type,
-        settings: built.settings,
-        data: this.store.data.getDefault(),
-        metadata: this.store.metadata.getDefault(),
-        program: this.store.program.getDefault(),
-      }, 'Project reset.');
+      this.history.save(resetProject, 'Project reset.');
     },
     async getDefaultTypes(): Promise<TypeUpdateEvent | false> 
     {
