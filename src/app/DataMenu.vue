@@ -184,14 +184,15 @@ export default Vue.extend({
       SystemEvents.trigger('loading', async () => 
       {
         const paths = this.getCsvExportPaths();
-        let path = paths[0];
+        let selected = paths.slice();
 
         if (paths.length > 1) 
         { 
           const chosen = await getSimpleInput({
-            value: { path },
+            title: 'Export CSV',
+            value: { path: selected as any },
             fields: [
-              { name: 'path', type: 'select', label: 'Choose what you want to export', required: true, 
+              { name: 'path', type: 'combo', label: 'Choose what you want to export', required: true, 
                 items: paths.map((value) => ({
                   text: value.join(' > '),
                   value,
@@ -205,25 +206,34 @@ export default Vue.extend({
             return sendNotification({ message: 'Export CSV canceled.' });
           }
 
-          path = chosen.path;
+          selected = chosen.path;
         }
         
         const registry = this.registry;
-        let data = this.data as any;
-        let listType = this.computedType;
 
-        for (const segment of path)
+        for (const path of selected)
         {
-          listType = (listType as ObjectType).options.props[segment];
-          data = data[segment];
-        }
+          let data = this.data as any;
+          let listType = this.computedType;
 
-        const itemType = (listType as ListType).options.item as ObjectType;
-        const result = await getDataExport({ registry, data, type: itemType });
+          for (const segment of path)
+          {
+            listType = (listType as ObjectType).options.props[segment];
+            data = data[segment];
+          }
 
-        if (isString(result)) 
-        {
-          sendNotification({ message: result });
+          const itemType = (listType as ListType).options.item as ObjectType;
+          const result = await getDataExport({ 
+            registry, 
+            data, 
+            type: itemType,
+            namePrefix: path.join('-'),
+          });
+
+          if (isString(result)) 
+          {
+            sendNotification({ message: result });
+          }
         }
       });
     },
