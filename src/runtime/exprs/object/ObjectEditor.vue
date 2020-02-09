@@ -40,6 +40,7 @@
                       append-outer-icon="mdi-equal"
                       :error="isPropertyInvalid(prop)"
                       :value="prop"
+                      v-focus-on-create.last="'input'"
                       @change="changeProperty(prop, $event)"
                     ></v-text-field>
                   </td>
@@ -72,6 +73,9 @@ import ExpressionBase from '../ExpressionBase';
 
 export default ExpressionBase<ObjectExpression>().extend({
   name: 'ObjectEditor',
+  mounted() {
+    this.addIfEmpty();
+  },
   methods: {
     addProperty(): void {
       this.$set(this.value.props, this.getNextPropertyName(), NoExpression.instance);
@@ -88,6 +92,11 @@ export default ExpressionBase<ObjectExpression>().extend({
         }
       }
       return next;
+    },
+    addIfEmpty(): void {
+      if (Object.keys(this.value.props).length === 0) {
+        this.addProperty();
+      }
     },
     hasProperty(name: string) {
       return !!(this.value && this.value.props && this.value.props[name]);
