@@ -37,7 +37,7 @@
         <v-list-item-content>
           <v-list-item-title>Save as CSV</v-list-item-title>
           <v-list-item-subtitle>
-            Posssible when the results are an array of simple objects
+            Posssible when the results contains an array of simple objects
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -60,7 +60,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as Papa from 'papaparse';
-import { Type, TypeBuilder, objectValues, ObjectType, ListType, isString } from 'expangine-runtime';
+import { Type, TypeBuilder, objectValues, ObjectType, ListType, isString, objectEach } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { exportFile } from './FileExport';
 import { getInput } from './Input';
@@ -68,6 +68,7 @@ import { SystemEvents } from './SystemEvents';
 import { sendNotification } from './Notify';
 import { getPromiser } from './Promiser';
 import { getDataExport } from './DataExport';
+import { getSimpleInput } from './SimpleInput';
 
 
 export default Vue.extend({
@@ -118,7 +119,7 @@ export default Vue.extend({
       return !!this.computedType;
     },
     canExportCsv(): boolean {
-      return !!(this.csvType && this.computedType && this.csvType.acceptsType(this.computedType));
+      return this.getCsvExportPaths().length > 0;
     },
     canExportOverwrite(): boolean {
       return SystemEvents.hasListeners('replaceData');
@@ -180,16 +181,85 @@ export default Vue.extend({
       }
     },
     async exportCsv() {
-      SystemEvents.trigger('loading', async () => {
-        const registry = this.registry;
-        const data = this.data as any[];
-        const type = (this.computedType as ListType).options.item as ObjectType;
-        const result = await getDataExport({ registry, data, type });
+      SystemEvents.trigger('loading', async () => 
+      {
+        const paths = this.getCsvExportPaths();
+        let path = paths[0];
 
-        if (isString(result)) {
+        if (paths.length > 1) 
+        { 
+          const chosen = await getSimpleInput({
+            value: { path },
+            fields: [
+              { name: 'path', type: 'select', label: 'Choose what you want to export', required: true, 
+                items: paths.map((value) => ({
+                  text: value.join(' > '),
+                  value,
+                })),
+              },
+            ],
+          });
+
+          if (!chosen)
+          {
+            return sendNotification({ message: 'Export CSV canceled.' });
+          }
+
+          path = chosen.path;
+        }
+        
+        const registry = this.registry;
+        let data = this.data as any;
+        let listType = this.computedType;
+
+        for (const segment of path)
+        {
+          listType = (listType as ObjectType).options.props[segment];
+          data = data[segment];
+        }
+
+        const itemType = (listType as ListType).options.item as ObjectType;
+        const result = await getDataExport({ registry, data, type: itemType });
+
+        if (isString(result)) 
+        {
           sendNotification({ message: result });
         }
       });
+    },
+    getCsvExportPaths(): string[][] {
+      const { csvType, computedType } = this;
+
+      if (!csvType || !computedType) {
+        return [];
+      }
+
+      if (csvType.acceptsType(computedType)) {
+        return [[]];
+      }
+
+      const paths: string[][] = [];
+      const types = [{ path: [] as string[], type: computedType }];
+
+      while (types.length) {
+        const next = types.pop();
+        if (next) {
+          const { type, path } = next;
+
+          if (type instanceof ObjectType) {
+            objectEach((type as ObjectType).options.props, (propType, prop) => {
+              types.push({
+                type: propType,
+                path: path.slice().concat(prop),
+              });
+            });
+          } else if (csvType.acceptsType(type)) {
+            paths.push(path);
+          }
+        }
+      }
+
+      return paths;
     },
     exportOverwrite() {
       SystemEvents.trigger('replaceData', this.data);

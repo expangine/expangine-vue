@@ -50,7 +50,7 @@ export type SimpleTypeForType<V> =
 : V extends Date
     ? 'date'
 : V extends string[]
-    ? 'combo'
+    ? 'combo' | 'select'
 : V extends ListOptions<any>
     ? 'items'
 : V extends object
