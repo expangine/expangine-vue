@@ -67,7 +67,18 @@
       </tr>
       <tr>
         <td class="py-1 pl-0">
+          <ex-expression-menu
+            v-if="hasChain"
+            v-bind="$props"
+            :value="value.body"
+            :context="bodyContext"
+            text="Do"
+            tooltip="Execute this expression between the range of Start and End"
+            @input="updateBody($event)"
+            @remove="updateBody()"
+          ></ex-expression-menu>
           <ex-chip-menu
+            v-else
             text="Do"
             tooltip="Execute this expression between the range of Start and End"
           ></ex-chip-menu>
@@ -139,7 +150,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ForExpression, Expression, NoExpression, BooleanType, NumberType } from 'expangine-runtime';
+import { Type, ForExpression, Expression, NoExpression, BooleanType, NumberType, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -165,6 +176,9 @@ export default ExpressionBase<ForExpression>().extend({
     },
     textEnd(): string {
       return `While ${this.value.variable} <`;
+    },
+    hasChain(): boolean {
+      return this.value.body instanceof ChainExpression;
     },
   },
   methods: {

@@ -33,8 +33,19 @@
         </td>
       </tr>
       <tr>
-        <td class="pt-6px">
+        <td class="pt-1">
+          <ex-expression-menu
+            v-if="hasChain"
+            v-bind="$props"
+            :value="value.body"
+            :context="bodyContext"
+            text="Do"
+            tooltip="Execute this expression while the above expression is true"
+            @input="updateBody($event)"
+            @remove="updateBody()"
+          ></ex-expression-menu>
           <ex-chip-menu
+            v-else
             text="Do"
             tooltip="Execute this expression while the above expression is true"
           ></ex-chip-menu>
@@ -90,7 +101,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, WhileExpression, Expression, NoExpression, BooleanType } from 'expangine-runtime';
+import { Type, WhileExpression, Expression, NoExpression, BooleanType, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -107,6 +118,9 @@ export default ExpressionBase<WhileExpression>().extend({
       return this.configuring
         ? 'Hide While Options'
         : 'Show While Options';
+    },
+    hasChain(): boolean {
+      return this.value.body instanceof ChainExpression;
     },
   },
   methods: {

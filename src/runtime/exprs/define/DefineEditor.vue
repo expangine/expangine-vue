@@ -96,7 +96,18 @@
       </tr>
       <tr>
         <td class="pt-1">
+          <ex-expression-menu
+            v-if="hasChain"
+            v-bind="$props"
+            :value="value.body"
+            :context="bodyContext"
+            text="Then"
+            tooltip="Execute this expression with the available variables"
+            @input="updateBody($event)"
+            @remove="updateBody()"
+          ></ex-expression-menu>
           <ex-chip-menu
+            v-else
             text="Then"
             tooltip="Execute this expression with the available variables"
           ></ex-chip-menu>
@@ -117,7 +128,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression } from 'expangine-runtime';
+import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, ChainExpression } from 'expangine-runtime';
 import { obj, renameVariable } from '@/common';
 import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
@@ -137,6 +148,9 @@ export default ExpressionBase<DefineExpression>().extend({
     },
     hasVariables(): boolean {
       return this.value.define.length > 1;
+    },
+    hasChain(): boolean {
+      return this.value.body instanceof ChainExpression;
     },
   },
   mounted() {

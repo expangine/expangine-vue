@@ -80,7 +80,17 @@
         <tr>
           <td v-if="sorting"></td>
           <td>
+            <ex-expression-menu
+              v-if="isChain(group[1])"
+              v-bind="$props"
+              :value="group[1]"
+              text="Then"
+              tooltip="Execute this expression if the condition above is true"
+              @input="updateBody(index, $event)"
+              @remove="updateBody(index)"
+            ></ex-expression-menu>
             <ex-chip-menu
+              v-else
               text="Then"
               tooltip="Execute this expression if the condition above is true"
             ></ex-chip-menu>
@@ -100,7 +110,17 @@
       <tr v-if="showElse">
         <td v-if="sorting"></td>
         <td>
+          <ex-expression-menu
+            v-if="isChain(value.otherwise)"
+            v-bind="$props"
+            :value="value.otherwise"
+            text="Else"
+            tooltip="If none of the conditions above are true, execute this expression"
+            @input="updateElse($event)"
+            @remove="updateElse()"
+          ></ex-expression-menu>
           <ex-chip-menu
+            v-else
             text="Else"
             tooltip="If none of the conditions above are true, execute this expression"
           ></ex-chip-menu>
@@ -120,7 +140,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { IfExpression, Expression, NoExpression } from 'expangine-runtime';
+import { IfExpression, Expression, NoExpression, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
 
@@ -164,6 +184,9 @@ export default ExpressionBase<IfExpression>().extend({
     updateElse(otherwise?: Expression) {
       this.value.otherwise = otherwise || NoExpression.instance;
       this.update();
+    },
+    isChain(expr: Expression) {
+      return expr instanceof ChainExpression;
     },
     async removeGroup(index: number) {
       if (await getConfirmation()) {

@@ -128,7 +128,17 @@
         <tr>
           <td v-if="sorting"></td>
           <td>
+            <ex-expression-menu
+              v-if="isChain(group[1])"
+              v-bind="$props"
+              :value="group[1]"
+              text="Then"
+              tooltip="Execute this expression if the value above equals the switch value"
+              @input="updateBody(caseIndex, $event)"
+              @remove="updateBody(caseIndex)"
+            ></ex-expression-menu>
             <ex-chip-menu
+              v-else
               text="Then"
               tooltip="Execute this expression if the value above equals the switch value"
             ></ex-chip-menu>
@@ -148,7 +158,17 @@
       <tr>
         <td v-if="sorting"></td>
         <td>
+          <ex-expression-menu
+            v-if="isChain(value.defaultCase)"
+            v-bind="$props"
+            :value="value.defaultCase"
+            text="Else"
+            tooltip="If none of the values match, execute this expression"
+            @input="updateDefaultCase($event)"
+            @remove="updateDefaultCase()"
+          ></ex-expression-menu>
           <ex-chip-menu
+            v-else
             text="Else"
             tooltip="If none of the values match, execute this expression"
           ></ex-chip-menu>
@@ -168,7 +188,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, SwitchExpression, Expression, NoExpression, OperationPair, BooleanType } from 'expangine-runtime';
+import { Type, SwitchExpression, Expression, NoExpression, OperationPair, BooleanType, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
 import { ListOptions } from '../../../common';
@@ -247,6 +267,9 @@ export default ExpressionBase<SwitchExpression>().extend({
     updateDefaultCase(otherwise?: Expression) {
       this.value.defaultCase = otherwise || NoExpression.instance;
       this.update();
+    },
+    isChain(expr: Expression) {
+      return expr instanceof ChainExpression;
     },
     async removeCase(index: number) {
       if (await getConfirmation()) {
