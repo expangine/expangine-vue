@@ -14,7 +14,7 @@ export const WhileVisuals: ExpressionVisuals<WhileExpression> =
   viewer: WhileEditor,
   editor: WhileEditor,
   complex: true,
-  isMultiline: () => true,
+  isMultiline: () => false, // true,
   getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.body),
   isStart: () => true,
   getModifiers: (type, expr) => expr instanceof DoExpression

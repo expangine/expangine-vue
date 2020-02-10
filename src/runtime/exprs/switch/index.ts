@@ -21,7 +21,7 @@ export const SwitchVisuals: ExpressionVisuals<SwitchExpression> =
   viewer: SwitchEditor,
   editor: SwitchEditor,
   complex: true,
-  isMultiline: () => true,
+  isMultiline: () => false, // true,
   getReturnExpressions: (registry, expr) => {
     const returns: Expression[] = [];
 

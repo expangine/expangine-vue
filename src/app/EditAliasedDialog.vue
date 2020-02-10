@@ -79,6 +79,17 @@
                       v-model="storage.key"
                     ></ex-expression>
                   </div>
+
+                  <div v-if="definesDescribe" class="mt-3">
+                    <h5>A short description of a given instance</h5>
+                    <ex-expression
+                      :context="describeContext"
+                      :registry="registry"
+                      :settings="settings"
+                      :required-type="describeReturnType"
+                      v-model="storage.describe"
+                    ></ex-expression>
+                  </div>
                 </v-tab-item>
                 <v-tab-item>
                   <v-simple-table class="ex-table-fixed">
@@ -281,6 +292,17 @@ export default Vue.extend({
     },
     keyReturnType(): Type {
       return Types.many(Types.text(), Types.number());
+    },
+    definesDescribe(): boolean {
+      return !!this.storage;
+    },
+    describeContext(): Type {
+      return this.storage
+        ? this.storage.getDescribeContext()
+        : Types.null();
+    },
+    describeReturnType(): Type {
+      return Types.text();
     },
     indices(): TypeIndex[] {
       const indices: TypeIndex[] = [];

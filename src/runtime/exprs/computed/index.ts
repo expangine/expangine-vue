@@ -14,9 +14,7 @@ export const ComputedVisuals: ExpressionVisuals<ComputedExpression> =
   viewer: ComputedEditor,
   editor: ComputedEditor,
   complex: false,
-  isMultiline: (registry, expr) => 
-    registry.getExpressionMultiline(expr.expression)
-  ,
+  isMultiline: (registry, expr) => false, // registry.getExpressionMultiline(expr.expression),
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers: () => [],

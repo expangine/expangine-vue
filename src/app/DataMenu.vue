@@ -244,7 +244,7 @@ export default Vue.extend({
         return [];
       }
 
-      if (csvType.acceptsType(computedType)) {
+      if (csvType.isCompatible(computedType)) {
         return [[]];
       }
 
@@ -263,7 +263,7 @@ export default Vue.extend({
                 path: path.slice().concat(prop),
               });
             });
-          } else if (csvType.acceptsType(type)) {
+          } else if (csvType.isCompatible(type)) {
             paths.push(path);
           }
         }

@@ -14,11 +14,10 @@ export const OrVisuals: ExpressionVisuals<OrExpression> =
   viewer: OrEditor,
   editor: OrEditor,
   complex: true,
-  isMultiline: (registry, expr) => 
-    expr.expressions.some((e) => 
-      registry.getExpressionMultiline(e),
-    )
-  ,
+  isMultiline: (registry, expr) => false,
+    // expr.expressions.some((e) => 
+    //  registry.getExpressionMultiline(e),
+    // ),
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers: (requiredType, expr) => expr.parent instanceof OrExpression

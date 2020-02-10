@@ -18,7 +18,7 @@ export const DefineVisuals: ExpressionVisuals<DefineExpression> =
   complex: true,
   getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.body),
   isStart: () => true,
-  isMultiline: () => true,
+  isMultiline: () => false, // true,
   getModifiers,
 };
 

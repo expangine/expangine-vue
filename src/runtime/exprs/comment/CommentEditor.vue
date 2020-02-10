@@ -71,11 +71,7 @@ export default ExpressionBase<CommentExpression>().extend({
 
 .comment {
   background-color: rgba(127,0,127,0.1);
-}
-
-.ex-center-aligned {
-  width: calc(100vw - 85px);
-  overflow: scroll;
+  min-height: 32px;
 }
 
 .v-textarea {

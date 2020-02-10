@@ -14,7 +14,7 @@ export const ChainVisuals: ExpressionVisuals<ChainExpression> =
   viewer: ChainEditor,
   editor: ChainEditor,
   complex: true,
-  isMultiline: () => true,
+  isMultiline: () => false, // true
   isStart: () => false,
   getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.chain[expr.chain.length - 1]),
   getModifiers: (type, expr) => expr instanceof ChainExpression

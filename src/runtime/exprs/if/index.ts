@@ -14,7 +14,7 @@ export const IfVisuals: ExpressionVisuals<IfExpression> =
   viewer: IfEditor,
   editor: IfEditor,
   complex: true,
-  isMultiline: () => true,
+  isMultiline: () => false, // true,
   getReturnExpressions: (registry, expr) => {
     const returns: Expression[] = [];
 

@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber, ObjectType, TypeBuilder, isFunction, isString, AliasedType } from 'expangine-runtime';
+import { Type, ListType, isNumber, ObjectType, Types, isFunction, isString, AliasedType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeSettings, TypeSettingsRecord } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
@@ -235,7 +235,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       return true;
     },
     isCsvType(): boolean {
-      return !!this.csvType && this.csvType.acceptsType(this.type);
+      return !!this.csvType && this.csvType.isCompatible(this.type);
     },
     csvType(): Type | null {
       if (!this.registry) {
@@ -243,12 +243,13 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       }
 
       const simples = this.registry.defs.getSimpleTypes();
-      const tp = new TypeBuilder();
-
-      return tp.list(
-        tp.object({
-          '*': tp.many(
-            tp.optional(tp.many(...simples)),
+      const simplesEnum = Types.enum(Types.many(...simples), Types.any());
+      
+      return Types.list(
+        Types.object({
+          '*': Types.many(
+            Types.optional(Types.many(simplesEnum, ...simples)),
+            simplesEnum,
             ...simples,
           ),
         },

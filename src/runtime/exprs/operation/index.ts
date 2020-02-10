@@ -28,11 +28,10 @@ export const OperationVisuals: ExpressionVisuals<OperationExpression> =
   viewer: OperationEditor,
   editor: OperationEditor,
   complex: true,
-  isMultiline: (registry, expr) => 
-    objectReduce(expr.params, (paramExpr, param, oneOf) => 
-        (oneOf || registry.getExpressionMultiline(paramExpr)
-    ), false as boolean)
-  ,
+  isMultiline: (registry, expr) => false,
+    // objectReduce(expr.params, (paramExpr, param, oneOf) => 
+    //    (oneOf || registry.getExpressionMultiline(paramExpr)
+    // ), false as boolean),
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: (requiredType, expr, exprType) => [{

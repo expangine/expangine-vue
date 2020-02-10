@@ -15,9 +15,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
   viewer: GetViewer,
   editor: GetEditor,
   complex: true,
-  isMultiline: (registry, expr) => expr.path.some((e) => 
-    registry.getExpressionMultiline(e),
-  ),
+  isMultiline: (registry, expr) => false, // expr.path.some((e) =>  registry.getExpressionMultiline(e)),
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => true,
   getModifiers: (type, expr) => expr instanceof SetExpression || expr instanceof UpdateExpression

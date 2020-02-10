@@ -15,7 +15,7 @@ export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
   viewer: ReturnEditor,
   editor: ReturnEditor,
   complex: false,
-  isMultiline: () => true,
+  isMultiline: () => false, // true,
   getReturnExpressions: (registry, expr) => registry.getExpressionReturns(expr.value),
   isStart: () => true,
   getModifiers: (requiredType, expr) => requiredType

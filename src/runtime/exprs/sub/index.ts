@@ -16,12 +16,11 @@ export const SubVisuals: ExpressionVisuals<SubExpression> =
   viewer: SubEditor,
   editor: SubEditor,
   complex: true,
-  isMultiline: (registry, expr) => 
-    registry.getExpressionMultiline(expr.value) || 
-    expr.path.some((e) => 
-      registry.getExpressionMultiline(e),
-    )
-  ,
+  isMultiline: (registry, expr) => false,
+    // registry.getExpressionMultiline(expr.value) || 
+    // expr.path.some((e) => 
+    //  registry.getExpressionMultiline(e),
+    // ),
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
   getModifiers,
