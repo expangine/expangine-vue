@@ -13,6 +13,12 @@ export type ExpressionEventListeners = Record<string, (event: Event, expression:
 
 export type ExpressionNativeListeners = Record<string, EventListener>;
 
+export interface ExpressionDisplayOptions
+{
+  compact: boolean;
+  color: string;
+  error: string;
+}
 
 export default function<E extends Expression>()
 {
@@ -59,6 +65,7 @@ export default function<E extends Expression>()
       mutates: boolean;
       canRemove: boolean;
       eventListeners: ExpressionEventListeners;
+      displayOptions: ExpressionDisplayOptions;
     }
   >({
     props: {
@@ -116,6 +123,21 @@ export default function<E extends Expression>()
       eventListeners: {
         type: Object as () => ExpressionEventListeners,
         default: () => ({}),
+      },
+      displayOptions: {
+        type: Object as () => ExpressionDisplayOptions,
+        default: () => ({
+          compact: false,
+          color: 'primary',
+          error: 'error',
+        }),
+        validator: (options) => {
+          options.compact = !!options.compact;
+          options.color = options.color || 'primary';
+          options.error = options.error || 'error';
+
+          return true;
+        },
       },
     },
     computed: {

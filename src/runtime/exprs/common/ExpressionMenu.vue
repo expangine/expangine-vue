@@ -244,10 +244,6 @@ export default ExpressionBase().extend({
       type: String,
       required: true,
     },
-    color: {
-      type: String,
-      default: 'primary',
-    },
     invalidOverride: {
       type: Boolean,
       default: null,
@@ -271,7 +267,7 @@ export default ExpressionBase().extend({
       return !this.readOnly;
     },
     statusColor(): string {
-      return this.isInvalid ? 'error' : this.color;
+      return this.isInvalid ? this.displayOptions.error : this.displayOptions.color;
     },
     statusDark(): boolean {
       return this.isInvalid;

@@ -2,7 +2,7 @@
   <span 
     v-if="hasValue && visuals" 
     class="ex-expression" 
-    :class="{ multiline }" 
+    :class="{ multiline, compact }" 
     :style="highlightStyle"
     v-on="eventListenersNative"
   >
@@ -112,7 +112,10 @@ export default ExpressionBase().extend({
       return this.registry.getExpressionsStart(this.requiredType);
     },
     statusColor(): string {
-      return this.invalid ? 'error' : 'primary';
+      return this.invalid ? this.displayOptions.error : this.displayOptions.color;
+    },
+    compact(): boolean {
+      return this.displayOptions.compact;
     },
   },
   methods: {
@@ -136,6 +139,31 @@ export default ExpressionBase().extend({
     
     &:hover {
       background-color: #FFB74D;
+    }
+  }
+
+  &.compact {
+    /deep/ .v-chip {
+      font-size: 12px;
+      height: 24px;
+    }
+
+    /deep/ .v-input__slot {
+      min-height: 32px !important;
+    }
+
+    /deep/ .v-btn {
+      width: 24px;
+      height: 24px;
+    }
+
+    /deep/ .ex-table > tbody > tr > td:nth-child(1) {
+      padding: 8px;
+    }
+    
+    /deep/ .param-span {
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
   }
 
