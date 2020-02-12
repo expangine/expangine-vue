@@ -9,8 +9,11 @@ import { Registry } from '@/runtime/Registry';
 import { SimpleFieldOption, findClosestPhonetic, castValue, friendlyList } from '@/common';
 import { Project } from './Project';
 import { Type, ObjectType, objectValues, objectMap } from 'expangine-runtime';
-import { TypeSettingsRecord } from '@/runtime/types/TypeVisuals';
+import { TypeSettingsRecord, TypeDataImportMatch } from '@/runtime/types/TypeVisuals';
 import { getConfirmation } from './Confirm';
+import { getProgram } from './GetProgram';
+import { sendNotification } from './Notify';
+import { LiveRuntime } from 'expangine-runtime-live';
 
 
 
@@ -137,20 +140,23 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
 
       const itemType = (dataType as ListType).options.item as ObjectType;
       const options: SimpleFieldOption[] = [];
-      const answers: Record<string, DataImportSuggestedType | null | boolean> = {};
+      const answers: Record<string, TypeDataImportMatch | null | boolean> = {};
       const props: TypeMap = itemType.options.props;
 
       for (const prop in props)
       {
-        const suggested = getDataImportSuggestedType(data, prop);
-
+        const values = getColumnValues(data, prop);
+        const suggested = registry.getDataImportMatches(values);
+        
         options.push({
           name: prop,
           type: 'select',
           label: prop,
           required: true,
           items: suggested.map((suggestion) => ({
-            text: suggestion.type.text,
+            text: suggestion.optional
+              ? `${suggestion.type.text} (optional)`
+              : suggestion.type.text,
             hint: suggestion.type.description,
             value: suggestion,
           })),
@@ -298,6 +304,8 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
     
     header: true,
 
+    skipEmptyLines: true,
+
     error: async (error) =>
     {
       resolve(error.message);
@@ -328,9 +336,11 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
 
       const VALUE_NONE = '';
       const VALUE_DEFAULT = '$$default$$';
+      const VALUE_DYNAMIC = '$$dynamic$$';
 
       const props = type.options.props;
       const settings = await getSimpleInput({
+        message: 'Each property in the object has a dropdown. Select which column from the imported data will be placed in each property.',
         value: {
           action: 'append' as 'append' | 'replace',
           mappings: objectMap(props, (propType, prop) => findClosestPhonetic(meta.fields, prop)),
@@ -346,18 +356,33 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
               type: 'select',
               label: prop,
               required: true,
+              getError(value, values) {
+                if (meta.fields.indexOf(value) === -1) {
+                  return '';
+                }
+                for (const valueProp in props) {
+                  if (valueProp === prop) {
+                    break;
+                  }
+                  if (values[valueProp] === value) {
+                    return 'There are multiple properties mapped to this column.';
+                  }
+                }
+                return '';
+              },
               items: ([] as Array<{ text: string, value: string }>).concat(
                 (propType.isOptional() 
                   ? [{ text: 'No Value', value: VALUE_NONE }] 
                   : []
                 ),
                 [{ text: 'Default Value', value: VALUE_DEFAULT }],
+                [{ text: 'Dynamic Value', value: VALUE_DYNAMIC }],
                 meta.fields.map((column) => ({
                   text: `Column "${column}"`,
                   value: column,
                 })),
               ),
-            })),
+            } as SimpleFieldOption)),
           },
         ],
       });
@@ -374,12 +399,13 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
       const isEmpty = (value: any, expectedType: Type) => {
         return value === null || value === undefined || (value === '' && !expectedType.acceptsType(TextType.baseType));
       };
-      
-      data.forEach((row, rowIndex) => 
+
+      for (let rowIndex = 0; rowIndex < data.length; rowIndex++)
       {
+        const row = data[rowIndex];
         const convert: any = {};
 
-        objectEach(type.options.props, (propType, prop) => 
+        objectEach(props, (propType, prop) => 
         {
           const mapping = settings.mappings[prop];
 
@@ -391,6 +417,9 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
 
             case VALUE_DEFAULT:
               convert[prop] = propType.fromJson(typeSettings.sub[prop].defaultValue);
+              break;
+
+            case VALUE_DYNAMIC:
               break;
 
             default:
@@ -435,7 +464,34 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
         });
 
         converted.push(convert);
-      });
+      }
+
+      for (const prop in props)
+      {
+        const mapping = settings.mappings[prop];
+
+        if (mapping === VALUE_DYNAMIC)
+        {
+          const programResult = await getProgram({
+            title: 'Dynamic Value',
+            registry,
+            context: type,
+            expectedType: props[prop],
+          });
+
+          if (!programResult)
+          {
+            return await sendNotification(({ message: 'CSV Import canceled.' }));
+          }
+
+          const cmd = LiveRuntime.getCommand(programResult.program);
+
+          for (const row of data)
+          {
+            row[prop] = cmd(row);
+          }
+        }
+      }
 
       if (errors.length > 0) 
       {
@@ -493,202 +549,8 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
   return promise;
 }
 
-export interface DataImportType
-{
-  text: string;
-  description?: string;
-  allowsEmpty?: boolean;
-  is(x: string): boolean;
-  parse(x: string): any;
-  typeOf(unique: string[]): Type;
-}
-
-export interface DataImportSuggestedType
-{
-  type: DataImportType;
-  optional: boolean;
-  duplicates: boolean;
-  unique: string[];
-}
-
-export const dataImportTypes: DataImportType[] = 
-[
-  {
-    text: 'Percent',
-    description: 'The value is divided by 100',
-    is: isPercent,
-    parse: toPercent,
-    typeOf: () => Types.number(),
-  },
-  {
-    text: 'Boolean',
-    is: isBoolean,
-    parse: toBoolean,
-    allowsEmpty: true,
-    typeOf: () => Types.bool(),
-  },
-  {
-    text: 'Number',
-    is: isNumber,
-    parse: toNumber,
-    typeOf: () => Types.number(),
-  },
-  {
-    text: 'Whole Number',
-    is: (x) => isNumber(x) && isWhole(toNumber(x)),
-    parse: toNumber,
-    typeOf: () => Types.number(undefined, undefined, true),
-  },
-  { 
-    text: 'Date',
-    is: isDate,
-    parse: toDate,
-    typeOf: () => Types.date(),
-  },
-  {
-    text: 'Text',
-    is: () => true,
-    parse: (x) => x,
-    allowsEmpty: true,
-    typeOf: () => Types.text(),
-  },
-];
-
-export const dataImportBooleans: Record<string, boolean> = 
-{
-  '0': false, 
-  '1': true,
-  'y': true, 
-  'yes': true, 
-  'n': false, 
-  'no': false, 
-  '': false, 
-  'x': true,
-  'f': false,
-  't': true,
-  'false': false,
-  'true': true,
-  'on': true,
-  'off': false,
-};
-
-export function getDataImportSuggestedType(data: any[], column: string): DataImportSuggestedType[]
-{
-  const values = getColumnValues(data, column);
-
-  const counts: Record<string, number> = {};
-  const map: Record<string, boolean> = {};
-  let empty = 0;
-  let duplicates = 0;
-
-  for (const dataType of dataImportTypes)
-  {
-    counts[dataType.text] = 0;
-  }
-
-  for (const value of values)
-  {
-    if (value === '')
-    {
-      empty++;
-    }
-    else 
-    {
-      if (map[value])
-      {
-        duplicates++;
-      }
-
-      map[value] = true;
-
-      for (const dataType of dataImportTypes)
-      {
-        if (dataType.is(value))
-        {
-          counts[dataType.text]++;
-        }
-      }
-    }
-  }
-  
-  const nonEmpty = data.length - empty;
-  const matches: DataImportSuggestedType[] = [];
-  const unique: string[] = Object.keys(map);
-
-  for (const dataType of dataImportTypes)
-  {
-    if (counts[dataType.text] === nonEmpty)
-    {
-      matches.push({
-        type: dataType,
-        optional: dataType.allowsEmpty ? false : empty > 0,
-        duplicates: duplicates > 0,
-        unique,
-      });
-    }
-  }
-
-  return matches;
-}
-
 export function getColumnValues(data: any[], column: string)
 {
   return data.map((row) => row[column] || '');
 }
 
-const SEPARATOR_NUMBER = 1.5;
-const SEPARATOR_OFFSET = 3;
-
-function getDecimalSeparator() 
-{
-  return SEPARATOR_NUMBER.toLocaleString().substring(1, SEPARATOR_OFFSET - 1);
-}
-
-function getThousandSeparator() 
-{
-  return getDecimalSeparator() === '.' ? ',' : '.';
-}
-
-function isPercent(x: string): boolean
-{
-  return x.indexOf('%') === x.length - 1
-    && isFinite(toPercent(x));
-}
-
-function toPercent(x: string): number
-{
-  return toNumber(x) / 100;
-}
-
-function isNumber(x: string): boolean
-{
-  return isFinite(toNumber(x));
-}
-
-function toNumber(x: string): number
-{
-  return Number(x
-    .replace(getThousandSeparator(), '')
-    .replace(/[\%\$\s]/g, ''),
-  );
-}
-
-function isBoolean(x: string): boolean
-{
-  return x.toLowerCase() in dataImportBooleans;
-}
-
-function toBoolean(x: string): boolean
-{
-  return dataImportBooleans[x.toLowerCase()];
-}
-
-function isDate(x: string): boolean
-{
-  return !isFinite(Number(x)) && isFinite(toDate(x).getTime());
-}
-
-function toDate(x: string): Date
-{
-  return parse(x) || new Date(Number.NaN);
-}

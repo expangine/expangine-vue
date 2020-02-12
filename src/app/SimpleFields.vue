@@ -7,8 +7,9 @@
           filled
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
@@ -24,8 +25,9 @@
           deletable-chips
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :items="field.items"
           :clearable="!field.required && !readOnly"
           :label="field.label"
@@ -38,8 +40,9 @@
           filled
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :items="field.items"
           :clearable="!field.required && !readOnly"
           :label="field.label"
@@ -53,8 +56,9 @@
           type="number"
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
@@ -70,8 +74,9 @@
             label: field.label, 
             prependInnerIcon: 'mdi-calendar',
             hideDetails: hideDetails(field, fieldIndex),
-            hint: field.details,
-            persistentHint: !!field.details
+            hint: getDetails(field),
+            persistentHint: !!getDetails(field),
+            error: !!getError(field)
           }"
           :value="value[field.name]"
           @input="setField(field, $event)"
@@ -87,8 +92,9 @@
             label: field.label,
             appendIcon: 'mdi-format-color-fill',
             hideDetails: hideDetails(field, fieldIndex),
-            hint: field.details,
-            persistentHint: !!field.details,
+            hint: getDetails(field),
+            persistentHint: !!getDetails(field),
+            error: !!getError(field)
           }"
           :value="value[field.name]"
           @input="setField(field, $event)"
@@ -100,8 +106,9 @@
           :items="icons"
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :clearable="!field.required && !readOnly"
           :label="field.label"
           :value="value[field.name]"
@@ -135,10 +142,12 @@
         </v-list-item-content>
         <v-checkbox
           v-else-if="field.type === 'boolean'"
+          class="mt-2 mb-3"
           :readonly="readOnly"
           :hide-details="hideDetails(field, fieldIndex)"
-          :hint="field.details"
-          :persistent-hint="!!field.details"
+          :hint="getDetails(field)"
+          :persistent-hint="!!getDetails(field)"
+          :error="!!getError(field)"
           :label="field.label"
           :input-value="value[field.name]"
           @change="setField(field, $event)"
@@ -235,11 +244,24 @@ export default Vue.extend({
     icons: () => Icons,
   },
   methods: {
-    hideDetails(field: SimpleFieldOption, index: number) {
+    hideDetails(field: SimpleFieldOption, index: number): boolean {
       const next = this.fields[index + 1];
-      return !field.details && (!next || next.type === 'boolean');
+      return !this.getDetails(field) && (!next || next.type === 'boolean');
     },
-    toNumber(value: any) {
+    getDetails(field: SimpleFieldOption): string {
+      const error = this.getError(field);
+      return error || field.details || '';
+    },
+    getError(field: SimpleFieldOption): string {
+      if (field.getError) {
+        const error = field.getError(this.value[field.name], this.value);
+        if (error) {
+          return error;
+        }
+      }
+      return '';
+    },
+    toNumber(value: any): number | undefined {
       const parsed = parseFloat(value);
       return isFinite(parsed) ? parsed : undefined;
     },

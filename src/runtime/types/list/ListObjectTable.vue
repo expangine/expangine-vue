@@ -44,6 +44,11 @@
                     Import CSV
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item v-if="canClear" @click="clear">
+                  <v-list-item-content>
+                    Clear
+                  </v-list-item-content>
+                </v-list-item>
               </v-list>
             </v-menu>
           </th>
@@ -234,6 +239,9 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       }
       return true;
     },
+    canClear(): boolean {
+      return !this.readOnly;
+    },
     isCsvType(): boolean {
       return !!this.csvType && this.csvType.isCompatible(this.type);
     },
@@ -322,6 +330,20 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
     },
   },
   methods: {
+    async clear() {
+      if (!await getConfirmation()) {
+        return;
+      }
+
+      if (this.data) {
+        this.data.clear(this.path);
+        // TODO query
+      } else {
+        this.value.splice(0, this.value.length);
+        this.update();
+      }
+      this.changes++;
+    },
     async removeAt(pageIndex: number) {
       const index = pageIndex + this.pageStart;
       if (!await getConfirmation()) {

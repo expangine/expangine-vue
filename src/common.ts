@@ -67,6 +67,7 @@ export interface SimpleFieldOption<N = string, T = SimpleTypes, V = any>
   details?: string;
   fields?: SimpleFieldSettings<any>;
   defaultValue?: V;
+  getError?: (value: V, values: any) => string;
   valueType?: 'text' | 'number';
 }
 

@@ -139,3 +139,22 @@ export interface TypeUpdateEvent
   settings: TypeSettingsAny;
   transform?: Expression;
 }
+
+export interface TypeDataImport
+{
+  text: string;
+  priority: number;
+  description?: string;
+  allowsEmpty?: boolean;
+  is(x: any): boolean;
+  parse(x: any): any;
+  typeOf(unique: string[]): Type;
+}
+
+export interface TypeDataImportMatch
+{
+  type: TypeDataImport;
+  optional: boolean;
+  duplicates: boolean;
+  unique: any[];
+}

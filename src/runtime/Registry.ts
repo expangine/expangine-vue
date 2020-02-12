@@ -1,6 +1,6 @@
 
-import { Type, Definitions, Expression, TypeSub, Operation, ExpressionBuilder, ObjectType, OperationPair, TypeStorage } from 'expangine-runtime';
-import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode, TypeComputedOption } from './types/TypeVisuals';
+import { Type, Definitions, Expression, TypeSub, Operation, ObjectType, OperationPair } from 'expangine-runtime';
+import { TypeVisuals, TypeSubOption, TypeSettings, TypeSubNode, TypeComputedOption, TypeDataImport, TypeDataImportMatch } from './types/TypeVisuals';
 import { obj } from '@/common';
 import { TypeBuilder, TypeBuildInput, TypeBuilderWrapper, TypeBuildOption, TypeBuilderWrapOption } from './types/TypeBuilder';
 import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeModifier';
@@ -23,6 +23,7 @@ export class Registry
   public exprs: ExpressionVisuals[];
   public operationMap: Record<string, OperationVisuals>;
   public settingsOverrides: Record<string, any> = {};
+  public dataImportTypes: TypeDataImport[];
 
   public typeSettings: Record<string, TypeSettings>;
   public typeData: Record<string, any[]>;
@@ -53,6 +54,7 @@ export class Registry
     this.exprMap = obj();
     this.exprs = [];
     this.operationMap = obj();
+    this.dataImportTypes = [];
 
     this.isValidFunction = () => true;
     this.isValidProperty = () => true;
@@ -72,6 +74,67 @@ export class Registry
     importer(this);
 
     return this;
+  }
+
+  public addDataImportType(dataImportType: TypeDataImport)
+  {
+    this.dataImportTypes.push(dataImportType);
+    this.dataImportTypes.sort((a, b) => a.priority - b.priority);
+
+    return this;
+  }
+
+  public getDataImportMatches(values: any[]): TypeDataImportMatch[]
+  {
+    const types = this.dataImportTypes;
+    const counts = types.map(() => 0);
+    const map: Map<any, boolean> = new Map();
+    let empty = 0;
+    let duplicates = 0;
+
+    for (const value of values)
+    {
+      if (value === '' || value === null || value === undefined)
+      {
+        empty++;
+      }
+      else 
+      {
+        if (map.get(value))
+        {
+          duplicates++;
+        }
+
+        map.set(value, true);
+
+        for (let i = 0; i < types.length; i++)
+        {
+          if (types[i].is(value))
+          {
+            counts[i]++;
+          }
+        }
+      }
+    }
+    
+    const nonEmpty = values.length - empty;
+    const unique = Array.from(map.keys());
+    const matches: TypeDataImportMatch[] = [];
+
+    for (let i = 0; i < types.length; i++)
+    {
+      if (counts[i] === nonEmpty)
+      {
+        matches.push({
+          type: types[i],
+          optional: types[i].allowsEmpty ? false : empty > 0,
+          duplicates: duplicates > 0,
+          unique,
+        });
+      }
+    }
+
+    return matches;
   }
 
   public addOperation<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, visuals: OperationVisuals<P, O, S>): this
