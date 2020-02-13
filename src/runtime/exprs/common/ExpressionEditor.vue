@@ -181,8 +181,6 @@ import { ListOptions, isMapEqual } from '@/common';
 import ExpressionBase, { ExpressionDisplayOptions } from '../ExpressionBase';
 
 
-// TODO goto clicked validations
-
 export default ExpressionBase().extend({
   name: 'ex-expression-editor',
   props: {

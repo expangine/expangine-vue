@@ -401,7 +401,6 @@
             :registry="registry"
             :settings="settings"
             :show-complexity="showComplexity"
-            :highlight="highlightExpressions"
             @remove="resetProgram"
             @input="saveProgram"
           ></ex-expression-editor>

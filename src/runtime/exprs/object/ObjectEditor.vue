@@ -20,14 +20,33 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="hasProperties" @click="toggleSort">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Toggle Sort
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Re-order the properties with dragging
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </template>
           </ex-expression-menu>
         </td>
         <td>
-          <table class="ex-table" :class="{ 'ex-read-only': readOnly }">
+          <ex-draggable class="ex-table" 
+            tag="table" 
+            ghost-class="ex-ghost"
+            handle=".ex-sorting-handle" 
+            :class="{ 'ex-three': sorting, 'ex-read-only': readOnly }"
+            v-model="keys"
+          >
             <template v-for="(value, prop) in value.props">
               <tbody :key="prop">
                 <tr>
+                  <td v-if="sorting">
+                    <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
+                  </td>
                   <td class="var-name py-2">
                     <span v-if="readOnly">
                       {{ prop }} =
@@ -56,7 +75,7 @@
                 </tr>
               </tbody>
             </template>
-          </table>
+          </ex-draggable>
         </td>
       </tr>
     </tbody>
@@ -73,6 +92,27 @@ import ExpressionBase from '../ExpressionBase';
 
 export default ExpressionBase<ObjectExpression>().extend({
   name: 'ObjectEditor',
+  data: () => ({
+    sorting: false,
+  }),
+  computed: {
+    keys: {
+      get(): string[] {
+        return Object.keys(this.value.props);  
+      },
+      set(keys: string[]) {
+        const props: ExpressionMap = obj();
+        for (const key of keys) {
+          props[key] = this.value.props[key];
+        }
+        this.value.props = props;
+        this.update();
+      },
+    },
+    hasProperties(): boolean {
+      return this.keys.length > 1;
+    },
+  },
   mounted() {
     this.addIfEmpty();
   },
@@ -97,6 +137,9 @@ export default ExpressionBase<ObjectExpression>().extend({
       if (Object.keys(this.value.props).length === 0) {
         this.addProperty();
       }
+    },
+    toggleSort() {
+      this.sorting = !this.sorting;
     },
     hasProperty(name: string) {
       return !!(this.value && this.value.props && this.value.props[name]);
