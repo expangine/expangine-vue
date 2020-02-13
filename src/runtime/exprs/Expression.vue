@@ -152,7 +152,7 @@ export default ExpressionBase().extend({
       min-height: 32px !important;
     }
 
-    /deep/ .v-btn {
+    /deep/ .v-btn.v-btn--icon {
       width: 24px;
       height: 24px;
     }

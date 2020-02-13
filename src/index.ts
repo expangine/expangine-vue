@@ -13,6 +13,7 @@ import Expression from './runtime/exprs/Expression.vue';
 import PathEditor from './runtime/exprs/common/PathEditor.vue';
 import PathViewer from './runtime/exprs/common/PathViewer.vue';
 import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
+import ExpressionEditor from './runtime/exprs/common/ExpressionEditor.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
 
 import DataString from './app/DataString.vue';
@@ -137,6 +138,7 @@ export default {
     Vue.component('ex-path-editor', PathEditor);
     Vue.component('ex-path-viewer', PathViewer);
     Vue.component('ex-expression-menu', ExpressionMenu);
+    Vue.component('ex-expression-editor', ExpressionEditor);
     Vue.component('ex-expression-clipboard', ExpressionClipboard);
     Vue.component('ex-chip-menu', ChipMenu);
     Vue.component('ex-child-filter', ChildFilter);

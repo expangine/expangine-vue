@@ -9,13 +9,6 @@
 
         {{ title }}
 
-        <v-switch
-          hide-details
-          class="mt-0 ml-4"
-          label="Read Only"
-          v-model="readOnly"
-        ></v-switch>
-
         <v-btn 
           right
           absolute
@@ -29,13 +22,12 @@
           <v-tab>{{ programLabel }}</v-tab>
           <v-tab>Return Type</v-tab>
           <v-tab-item>
-            <ex-expression
+            <ex-expression-editor
               v-model="program"
               :context="context"
               :registry="registry"
               :required-type="expectedType"
-              :read-only="readOnly"
-            ></ex-expression>
+            ></ex-expression-editor>
           </v-tab-item>
           <v-tab-item>
             <ex-type-string-box
@@ -45,14 +37,13 @@
             ></ex-type-string-box>
           </v-tab-item>
         </v-tabs>
-        <ex-expression
+        <ex-expression-editor
           v-else
           v-model="program"
           :context="context"
           :registry="registry"
           :required-type="expectedType"
-          :read-only="readOnly"
-        ></ex-expression>
+        ></ex-expression-editor>
       </v-card-text>
       <v-card-actions>
         <v-btn 

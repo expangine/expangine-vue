@@ -10,7 +10,7 @@
     <template v-for="(expr, index) in value.chain">
       <tbody :key="index">
         <tr>
-          <td>
+          <td :style="{ display: editable ? '' : 'none' }">
             <v-icon class="ex-sorting-handle">mdi-drag-horizontal</v-icon>
           </td>
           <td>
@@ -26,7 +26,7 @@
         </tr>
       </tbody>
     </template>
-    <tbody v-if="!readOnly">
+    <tbody v-if="editable">
       <tr>
         <td></td>
         <td>
@@ -52,6 +52,9 @@ export default ExpressionBase<ChainExpression>().extend({
   computed: {
     noop(): Expression {
       return NoExpression.instance;
+    },
+    editable(): boolean {
+      return !this.readOnly;
     },
   },
   methods: {

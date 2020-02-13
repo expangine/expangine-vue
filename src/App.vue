@@ -206,30 +206,6 @@
               <v-list-item-subtitle>See what the tool looks like in read-only mode.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="toggleComplexity">
-            <v-list-item-action>
-              <v-checkbox
-                color="#FFE0B2"
-                :input-value="showComplexity"
-              ></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Show Complexity</v-list-item-title>
-              <v-list-item-subtitle>See the performance complexity for each expression in the program.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="toggleShowReturnExpressions">
-            <v-list-item-action>
-              <v-checkbox
-                :color="showReturnColor"
-                :input-value="showReturnExpressions"
-              ></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Show Return Expressions</v-list-item-title>
-              <v-list-item-subtitle>See which expressions define the program return type.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item @click="showExamples = true">
             <v-list-item-icon>
               <v-icon>mdi-lightbulb-on</v-icon>
@@ -344,24 +320,7 @@
       </v-menu>
 
       <v-spacer></v-spacer>
-      <v-tooltip bottom>
-        <template #activator="{ on }">
-          <v-btn icon @click="viewValidations" v-on="on">
-            <v-badge
-              overlap="overlap"
-              class="align-self-center"
-              :color="validationColor"
-              :value="validations.length > 0"
-            >
-              <template v-slot:badge>
-                <span>{{ validations.length }}</span>
-              </template>
-              <v-icon>{{ validationIcon }}</v-icon>
-            </v-badge>
-          </v-btn>
-        </template>
-        <span>{{ validations.length }} Problems</span>
-      </v-tooltip>
+      
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="runProgram" v-on="on">
@@ -431,7 +390,9 @@
           ></ex-type-input>
         </v-container>
         <v-container fluid v-else>
-          <ex-expression
+          <ex-expression-editor
+            vertical
+            sticky
             can-remove
             :value="program"
             :context="type"
@@ -443,7 +404,7 @@
             :highlight="highlightExpressions"
             @remove="resetProgram"
             @input="saveProgram"
-          ></ex-expression>
+          ></ex-expression-editor>
         </v-container>
       </div>
       <div v-else class="pa-3">
@@ -582,30 +543,6 @@
         ></ex-project-history-list>
       </v-navigation-drawer>
     </v-content>
-
-    <v-navigation-drawer
-      app
-      right
-      fixed
-      disable-resize-watcher
-      disable-route-watcher
-      :width="600"
-      :value="validationsVisible"
-      :permanent="validationsVisible"
-    >
-      <v-btn icon absolute right @click="viewValidations">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <template v-for="(validation, index) in validations">
-        <ex-validation
-          :key="index"
-          :validation="validation"
-          :registry="registry"
-          @hover="setHighlightValidation"
-        ></ex-validation>
-      </template>
-    </v-navigation-drawer>
-
   </v-app>
 </template>
 
@@ -683,22 +620,12 @@ export default Vue.extend({
     mode: 0,
     metadataEditing: false,
     readOnly: false,
-    showComplexity: false,
-    showReturnExpressions: false,
-    showReturnColor: '#E1BEE7',
     examples: [] as any[],
     showExamples: false,
-    highlightExpressions: new Map(),
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
     showOperations: false,
-    validationSeverity: ValidationSeverity.MEDIUM,
-    validations: [] as Validation[],
-    validationsVisible: false,
-    validationHighlight: null as null | Validation,
-    validationSubjectColor: '#E57373',
-    validationParentColor: '#FFCDD2',
     // History
     historyEmpty: true,
     undoEmpty: true,
@@ -862,25 +789,6 @@ export default Vue.extend({
     isDataSaved(): boolean {
       return this.dataTimeout === -1;
     },
-    validationMaxSeverity(): ValidationSeverity {
-      return this.validations.reduce((max, validation) => Math.max(max, validation.severity), ValidationSeverity.LOW);
-    },
-    validationIcon(): string {
-      return ValidationHelper.ICONS[this.validationMaxSeverity];
-    },
-    validationColor(): string {
-      return ValidationHelper.COLORS_BACKGROUND[this.validationMaxSeverity];
-    },
-  },
-  watch: {
-    showReturnExpressions: 'updateHighlightExpressions',
-    program: {
-      immediate: true, 
-      deep: true,
-      handler() {
-        this.updatedProgram();
-      },
-    },
   },
   async mounted() {
     (window as any).registry = Registry;
@@ -929,8 +837,6 @@ export default Vue.extend({
 
     this.updateHistoryData();
     this.history.on('change', this.updateHistoryData);
-
-    this.updatedProgram();
   },  
   methods: {
     // SAVE ERROR
@@ -1000,49 +906,6 @@ export default Vue.extend({
     toggleReadOnly() 
     {
       this.readOnly = !this.readOnly;
-    },
-    // COMPLEXITY
-    toggleComplexity() 
-    {
-      this.showComplexity = !this.showComplexity;
-    },
-    // RETURN EXPRESSIONS
-    updateHighlightExpressions() 
-    {
-      const highlights = new Map();
-
-      if (this.showReturnExpressions) 
-      {
-        const returns = this.program.traverse(Traverser.list<Expression>().filterClass(ReturnExpression));
-        returns.forEach((expr) => {
-          this.registry.getExpressionReturns(expr.value).forEach((highlight) => {
-            highlights.set(highlight, this.showReturnColor);
-          });
-        });
-
-        this.registry.getExpressionReturns(this.program).forEach((highlight) => {
-          highlights.set(highlight, this.showReturnColor);
-        });
-      }
-
-      if (this.validationHighlight)
-      {
-        highlights.set(this.validationHighlight.subject, this.validationSubjectColor);
-
-        if (this.validationHighlight.parent)
-        {
-          highlights.set(this.validationHighlight.parent, this.validationParentColor);
-        }
-      }
-
-      if (!isMapEqual(highlights, this.highlightExpressions))
-      {
-        this.highlightExpressions = highlights;
-      }
-    },
-    toggleShowReturnExpressions() 
-    {
-      this.showReturnExpressions = !this.showReturnExpressions;
     },
     // LOADING
     async handleLoading(eventType: 'loading', loadable: () => Promise<any>)
@@ -1328,8 +1191,6 @@ export default Vue.extend({
 
       this.saveDataPending();
       this.history.save(saving, transform ? 'Type, Settings, and Data change.' : 'Type and Settings change.');
-
-      this.updatedProgram();
     },
     // DESCRIBE
     async describe() 
@@ -1581,30 +1442,6 @@ export default Vue.extend({
       });
     },
     // PROGRAM
-    setHighlightValidation(validation: Validation | null)
-    {
-      this.validationHighlight = validation;
-      this.updateHighlightExpressions();
-    },
-    viewValidations()
-    {
-      if (this.validations.length > 0 || this.validationsVisible)
-      {
-        this.validationsVisible = !this.validationsVisible;
-      }
-    },
-    updatedProgram()
-    {
-      if (this.initialized)
-      {
-        this.validations = this.program
-          .validations(this.registry.defs, this.type)
-          .filter((validation) => validation.severity >= this.validationSeverity)
-        ;
-
-        this.updateHighlightExpressions();
-      }
-    },
     saveProgram(program: Expression = NoExpression.instance) 
     {
       program.setParent();

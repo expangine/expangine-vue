@@ -13,23 +13,23 @@
         
         <h3 class="mb-2">Encode</h3>
 
-        <ex-expression
+        <ex-expression-editor
           :can-remove="false"
           :context="encodeContext"
           :registry="registry"
           :value="transcoder.encode"
           @input="updateEncoded"
-        ></ex-expression>
+        ></ex-expression-editor>
 
         <h3 class="mt-3 mb-2">Decode</h3>
 
-        <ex-expression  
+        <ex-expression-editor
           :can-remove="false"
           :context="decodeContext"
           :required-type="decodeExpected"
           :registry="registry"
           v-model="transcoder.decode"
-        ></ex-expression>
+        ></ex-expression-editor>
 
       </v-card-text>
       <v-card-actions>

@@ -9,13 +9,6 @@
 
         Edit Function
 
-        <v-switch
-          hide-details
-          class="mt-0 ml-4"
-          label="Read Only"
-          v-model="readOnly"
-        ></v-switch>
-
         <v-spacer></v-spacer>
         <v-btn color="secondary" @click="test">
           Test
@@ -46,14 +39,13 @@
             ></ex-type-editor>
           </v-tab-item>
           <v-tab-item class="data-container">
-            <ex-expression
+            <ex-expression-editor
               :value="func.options.expression"
               :context="func.options.params"
               :registry="registry"
               :settings="settings"
-              :read-only="readOnly"
               @input="onProgramChange"
-            ></ex-expression>
+            ></ex-expression-editor>
           </v-tab-item>
         </v-tabs>
       </v-card-text>

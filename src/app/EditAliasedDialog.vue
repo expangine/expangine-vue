@@ -71,24 +71,24 @@
                   ></v-select>
 
                   <div v-if="definesKey">
-                    <ex-expression
+                    <ex-expression-editor
                       :context="keyContext"
                       :registry="registry"
                       :settings="settings"
                       :required-type="keyReturnType"
                       v-model="storage.key"
-                    ></ex-expression>
+                    ></ex-expression-editor>
                   </div>
 
                   <div v-if="definesDescribe" class="mt-3">
                     <h5>A short description of a given instance</h5>
-                    <ex-expression
+                    <ex-expression-editor
                       :context="describeContext"
                       :registry="registry"
                       :settings="settings"
                       :required-type="describeReturnType"
                       v-model="storage.describe"
-                    ></ex-expression>
+                    ></ex-expression-editor>
                   </div>
                 </v-tab-item>
                 <v-tab-item>

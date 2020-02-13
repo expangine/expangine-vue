@@ -39,7 +39,7 @@ export const OptionalVisuals = createVisuals<OptionalSubs>()({
   ,
   subOptions: (registry, type) => registry.getTypeSubOptions(type.options),
   subSettings: (registry, type, settings, sub) => {
-    return settings.sub.innerType;
+    return settings.sub ? settings.sub.innerType : null;
   },
   settingsFor: ({ registry, type, sub }) => ({ 
     input: 'optional', 
