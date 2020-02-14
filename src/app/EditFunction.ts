@@ -1,10 +1,11 @@
 
 import Vue from 'vue';
-import { Type, FunctionType, AnyType, ObjectType, NoExpression } from 'expangine-runtime';
+import { Type, FunctionType, AnyType, ObjectType, NoExpression, defs, Types } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { getMultipleDialoger } from './MultipleDialog';
+import { renameFunction } from './Refactor';
 
 
 export interface EditFunctionOptions
@@ -68,11 +69,19 @@ export async function getEditFunction(options: Partial<EditFunctionOptions> = {}
 
       if (save && saveAs) 
       {
+        const renamed = saveAs !== name && defs.functions[name];
+
+        if (renamed)
+        {
+          Vue.delete(registry.defs.functions, name);
+
+          renameFunction(name, saveAs);
+        }
+
         const returnType = func.options.expression.getType(registry.defs, func.options.params);
 
-        func.options.returnType = returnType || new AnyType({ });
+        func.options.returnType = returnType || Types.any();
 
-        Vue.delete(registry.defs.functions, name);
         Vue.set(registry.defs.functions, saveAs, func);
 
         resolve({

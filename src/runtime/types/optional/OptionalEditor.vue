@@ -41,20 +41,13 @@ export default TypeEditorBase<OptionalType, OptionalOptions, OptionalSubs>().ext
   methods: {
     onChange(event: TypeUpdateEvent) {
       const previousType = this.type.options;
+      
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, OptionalType.STEP_OPTIONAL, OptionalType.STEP_OPTIONAL)
+        : undefined;
 
       this.type.options = event.type;
       this.settings.sub.innerType = event.settings;
-      
-      let transform;
-      if (event.transform) {
-        const isValid = previousType.getValidateExpression();
-
-        transform = Exprs
-          .if(isValid)
-          .than(event.transform)
-          .else(Exprs.get('value'))
-        ;
-      }
 
       this.change({ transform });
     },

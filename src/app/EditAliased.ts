@@ -1,11 +1,12 @@
 
 import Vue from 'vue';
-import { TypeRelation, TypeStorage, ObjectType, objectEach } from 'expangine-runtime';
+import { TypeRelation, TypeStorage, ObjectType, Traverser, objectEach, AliasedType, GetTypeExpression } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { Registry } from '@/runtime/Registry';
 import { renameType, addType } from './Aliased';
 import { getMultipleDialoger } from './MultipleDialog';
+import { renameAliasedReferences } from './Refactor';
 
 
 export interface EditAliasedOptions
@@ -102,6 +103,7 @@ export async function getEditAliased(options: Partial<EditAliasedOptions> = {}):
           });
 
           renameType(registry, saveAs, savedAs);
+          renameAliasedReferences(savedAs, saveAs);
         }
 
         Vue.set(defs.aliased, saveAs, type);

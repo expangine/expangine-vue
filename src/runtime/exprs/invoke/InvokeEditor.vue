@@ -76,7 +76,7 @@
         </span>
       </template>
       <template v-for="(argExpr, arg) in value.args">
-        <span :key="arg" v-if="isExtraArgument(arg)" :style="innerStyle" class="param-span">
+        <span :key="arg" v-if="isExtraArgument(arg)" class="param-span">
 
           <v-chip 
             x-small 

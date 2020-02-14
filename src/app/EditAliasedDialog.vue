@@ -41,8 +41,10 @@
               :type="type"
               :registry="registry"
               :settings="settings"
-              :no-transform="withoutData"
+              :no-transform="zeroReferences"
               @change="handleChange"
+              @prop:remove="onPropertyRemove"
+              @prop:rename="onPropertyRename"
             ></ex-type-editor>
           </v-tab-item>
           <v-tab-item>
@@ -277,6 +279,8 @@ import { getEditTypeTranscoder } from './EditTypeTranscoder';
 import { getEditRelation, getRelationKindText } from './EditRelation';
 import { getConfirmation } from './Confirm';
 import { editAliasedDialog } from './EditAliased';
+import { refactorType } from './Refactor';
+import { System } from './SystemEvents';
 
 
 export default Vue.extend({
@@ -358,8 +362,14 @@ export default Vue.extend({
       return !this.storage
         || !this.storage.getPrimary();
     },
-    withoutData(): boolean {
-      return !this.data || this.data.length === 0;
+    zeroReferences(): boolean {
+      if (this.data && this.data.length > 0) {
+        return false;
+      }
+      if (this.name && System.getAliasReferences(this.name).length > 0) {
+        return false;
+      }
+      return true;
     },
     disableRelations(): boolean {
       return !this.storage
@@ -494,23 +504,39 @@ export default Vue.extend({
     },
     handleChange(event: TypeUpdateEvent) {
       const { type, settings, transform } = event;
-      
-      if (transform instanceof Expression && this.data && this.data.length)
+
+      if (this.type === this.registry.defs.aliased[this.name]) 
       {
-        const cmd = LiveRuntime.getCommand(transform);
-
-        for (let i = 0; i < this.data.length; i++)
-        {
-          this.data[i] = cmd({ value: this.data[i] });
-        }
-      }
-
-      if (this.type === this.registry.defs.aliased[this.name]) {
         Vue.set(this.registry.defs.aliased, this.name, type);
+      }
+      
+      if (transform)
+      {
+        if (!this.name && this.data)
+        {
+          const expr = Types.list(type).getValueChangeExpression(transform);
+          const cmd = LiveRuntime.getCommand(expr);
+
+          this.data = cmd({ value: this.data });
+        }
+        else
+        {
+          refactorType(this.name, transform);
+        }
       }
 
       this.type = type as ObjectType;
       this.settings = settings;
+    },
+    onPropertyRemove(prop: string) {
+      if (this.name) {
+        this.registry.defs.removeProp(this.name, prop);
+      }
+    },
+    onPropertyRename([oldProp, newProp]: [string, string]) {
+      if (this.name) {
+        this.registry.defs.renameProp(this.name, oldProp, newProp);
+      }
     },
   },
 });

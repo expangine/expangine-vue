@@ -277,21 +277,7 @@ export function templateReplace(template: string, values: (token: string) => str
 
 export function castValue(value: any, valueType: Type, targetType: Type)
 {
-  const transform = castExpression(valueType, targetType, false);
+  const transform = Exprs.cast(valueType, targetType, false);
 
   return transform ? LiveRuntime.run(transform, { value }) : undefined;
-}
-
-export function castExpression(valueType: Type, targetType: Type): Expression;
-export function castExpression(valueType: Type, targetType: Type, createOnMissing: false): Expression | null;
-export function castExpression(valueType: Type, targetType: Type, createOnMissing: boolean = true): Expression
-{
-  const opId = `${valueType.getId()}:~${targetType.getId()}`;
-  const op = valueType.getOperations()[opId];
-
-  return op
-    ? Exprs.op(op, { value: Exprs.get('value') })
-    : createOnMissing
-      ? targetType.getCreateExpression()
-      : null as unknown as Expression;
 }

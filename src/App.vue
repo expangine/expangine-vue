@@ -400,7 +400,6 @@
             :read-only="readOnly"
             :registry="registry"
             :settings="settings"
-            :show-complexity="showComplexity"
             @remove="resetProgram"
             @input="saveProgram"
           ></ex-expression-editor>
@@ -549,7 +548,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, TypeStorage, TypeRelation, TypeStorageOptions, RelationOptions, Relation, objectToArray } from 'expangine-runtime';
+import { Types, Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, TypeStorage, TypeRelation, TypeStorageOptions, RelationOptions, Relation, objectToArray } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -574,7 +573,7 @@ import { friendlyList, SimpleFieldOption, isMapEqual } from '@/common';
 import { getPromiser } from './app/Promiser';
 import { Store } from './app/Store';
 import { Trie } from './app/Trie';
-import { SystemEvents } from './app/SystemEvents';
+import { System, SystemProgram } from './app/SystemEvents';
 import { ValidationHelper } from './app/ValidationHelper';
 import { getEditAliased } from './app/EditAliased';
 import { getEditRelation } from './app/EditRelation';
@@ -795,8 +794,25 @@ export default Vue.extend({
     (window as any).home = this;
     (window as any).ex = ex;
 
-    SystemEvents.on('replaceData', this.replaceData);
-    SystemEvents.on('loading', this.handleLoading);
+    LiveRuntime.objectSet = (obj, key, value) => {
+      Vue.set(obj as any, key as string, value);
+    };
+    LiveRuntime.objectRemove = (obj, key) => {
+      Vue.delete(obj as any, key as string);
+    };
+    LiveRuntime.arraySet = (arr, index, item) => {
+      const existing = arr[index];
+      Vue.set(arr, index, item);
+      return existing;
+    };
+    LiveRuntime.arrayRemoveAt = (arr, index) => {
+      const existing = arr[index];
+      Vue.delete(arr, index);
+      return existing;
+    };
+
+    System.on('replaceData', this.replaceData);
+    System.on('loading', this.handleLoading);
     
     this.loadExamples();
 
@@ -836,8 +852,88 @@ export default Vue.extend({
 
     this.updateHistoryData();
     this.history.on('change', this.updateHistoryData);
+
+    this.definePrograms();
   },  
   methods: {
+    definePrograms() {
+      let lastChanges: ProjectState = {};
+      let lastChangeTimeout = -1;
+
+      const trackChanges = (changes: ProjectState) => {
+        Object.assign(lastChanges, changes);
+        if (lastChangeTimeout === -1) {
+          lastChangeTimeout = setTimeout(() => {
+            this.saveDataPending();
+            this.history.save(lastChanges, `${friendlyList(Object.keys(lastChanges))} saved.`);
+            lastChangeTimeout = -1;
+            lastChanges = {};
+          });
+        }
+      };
+
+      System.on('getPrograms', () => [{
+        program: this.program,
+        type: this.type,
+        data: this.data,
+        settings: this.settings,
+        onChange: (changed) => trackChanges(changed),
+      }]);
+
+      System.on('getPrograms', () => 
+        objectValues(this.functions).map((func) => ({
+          program: func.options.expression,
+          type: func.options.params,
+          onChange: (changes) => trackChanges({ functions: this.functions }),
+        })),
+      );
+
+      System.on('getPrograms', () => 
+        objectValues<TypeStorage, SystemProgram>(this.registry.defs.storage, (storage, name) => ({
+          program: storage.key,
+          type: storage.getKeyContext(),
+          onChange: (changes) => trackChanges({ storage: this.storage }),
+        })),
+      );
+
+      System.on('getPrograms', () => 
+        objectValues<TypeStorage, SystemProgram>(this.registry.defs.storage, (storage, name) => ({
+          program: storage.describe,
+          type: storage.getDescribeContext(),
+          onChange: (changes) => trackChanges({ storage: this.storage }),
+        })),
+      );
+
+      System.on('getPrograms', () => 
+        objectValues<Type, SystemProgram>(this.registry.defs.aliased, (aliased, name) => ({
+          program: NoExpression.instance,
+          type: Types.list(aliased),
+          data: this.aliasedData[name],
+          settings: this.aliasedSettings[name]
+            ? { input: 'list',
+                defaultValue: [],
+                options: {},
+                sub: {
+                  item: this.aliasedSettings[name],
+                },
+              }
+            : undefined,
+          onChange: (changes) => {
+            if (changes.type) {
+              trackChanges({ aliased: this.aliased });
+            }
+            if (isArray(changes.data)) {
+              Vue.set(this.aliasedData, name, changes.data);
+              trackChanges({ aliasedData: this.aliasedData });
+            }
+            if (changes.settings) {
+              Vue.set(this.aliasedSettings, name, changes.settings);
+              trackChanges({ aliasedSettings: this.aliasedSettings });
+            }
+          },
+        })),
+      );
+    },
     // SAVE ERROR
     async onSaveError(error: any, transcoder: TranscoderStore<any, any>): Promise<boolean>
     {

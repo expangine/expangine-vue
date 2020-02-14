@@ -85,15 +85,9 @@ export default TypeEditorBase<ListType, any, ListSubs>().extend({
       this.type.options.item = event.type;
       this.settings.sub.item = event.settings;
 
-      let transform;
-      if (event.transform) {
-        transform = Exprs.op(ListOps.map, {
-          list: Exprs.get('value'),
-          transform: event.transform,
-        }, {
-          item: 'value',
-        });
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, ListType.STEP_ITEM, ListType.STEP_ITEM)
+        : undefined;
 
       this.change({ transform });
     },

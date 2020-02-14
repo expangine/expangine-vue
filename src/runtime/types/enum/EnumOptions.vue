@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { EnumType, EnumOptions, Expression, OperationExpression, GetExpression, MapOps, ConstantExpression } from 'expangine-runtime';
+import { EnumType, EnumOptions, Expression, Exprs } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeUpdateEvent, TypeSettings } from '../TypeVisuals';
@@ -126,18 +126,13 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
       this.$set(this.settings.sub, 'key', event.settings);
 
       if (event.transform) {
-        const map = new ConstantExpression(this.type.options.constants);
         const updateKeys = LiveRuntime.getCommand(
-          OperationExpression.create(MapOps.map, {
-            map,
-            transformKey: event.transform,
-          }, {
-            key: 'value',
-            value: 'actualValue',
-          }),
+          this.type.getValueChangeExpression(event.transform, EnumType.STEP_KEY, EnumType.STEP_KEY),
         );
-
-        this.type.options.constants = updateKeys({});
+        
+        this.type.options.constants = updateKeys({
+          value: this.type.options.constants,
+        });
       }
       
       this.update();
@@ -148,15 +143,13 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
 
       let transform;
       if (event.transform) {
-        const map = new ConstantExpression(this.type.options.constants);
         const updateValues = LiveRuntime.getCommand(
-          OperationExpression.create(MapOps.map, {
-            map,
-            transform: event.transform,
-          }),
+          this.type.getValueChangeExpression(event.transform, EnumType.STEP_VALUE, EnumType.STEP_VALUE),
         );
 
-        this.type.options.constants = updateValues({});
+        this.type.options.constants = updateValues({
+          value: this.type.options.constants,
+        });
 
         transform = event.transform;
       }

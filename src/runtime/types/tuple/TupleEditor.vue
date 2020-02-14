@@ -96,15 +96,9 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
 
       this.inputSelected.onSubRemove(index, this.type, this.settings);
 
-      this.change({
-        transform: Exprs.body(
-          Exprs.op(ListOps.removeAt, {
-            list: Exprs.get('value'),
-            index,
-          }),
-          Exprs.get('value'),
-        ),
-      });
+      const transform = this.type.getValueChangeExpression(Exprs.noop(), index, undefined);
+
+      this.change({ transform });
     },
     async addType(index: number, afterType: Type) {
       const chosen = await getBuildType({
@@ -138,13 +132,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
           return sendNotification({ message: 'Element add canceled.' });
         }
 
-        updateEvent.transform = Exprs.define({ parent: Exprs.get('value') },
-          Exprs.op(ListOps.insert, {
-            list: Exprs.get('value'),
-            index: index + 1,
-            item: result.program,
-          }),
-        );
+        updateEvent.transform = this.type.getValueChangeExpression(result.program, undefined, index + 1);
       }
 
       this.type.options.splice(index + 1, 0, chosen.type);
@@ -158,15 +146,10 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
       this.$set(this.type.options, index, event.type);
       this.$set(this.settings.sub, index, event.settings);
       
-      let transform;
-      if (event.transform) {
-        transform = Exprs.body(
-          Exprs.update('value', index)
-            .to(event.transform, 'value'),
-          Exprs.get('value'),
-        );
-      }
-
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, index, index)
+        : undefined;
+      
       this.change({ transform });
     },
   },

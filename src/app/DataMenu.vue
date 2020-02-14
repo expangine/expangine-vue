@@ -64,7 +64,7 @@ import { Type, TypeBuilder, objectValues, ObjectType, ListType, isString, object
 import { Registry } from '../runtime/Registry';
 import { exportFile } from './FileExport';
 import { getInput } from './Input';
-import { SystemEvents } from './SystemEvents';
+import { System } from './SystemEvents';
 import { sendNotification } from './Notify';
 import { getPromiser } from './Promiser';
 import { getDataExport } from './DataExport';
@@ -122,7 +122,7 @@ export default Vue.extend({
       return this.getCsvExportPaths().length > 0;
     },
     canExportOverwrite(): boolean {
-      return SystemEvents.hasListeners('replaceData');
+      return System.hasListeners('replaceData');
     },
   },
   methods: {
@@ -130,7 +130,7 @@ export default Vue.extend({
       const { computedType } = this;
 
       if (computedType) {
-        SystemEvents.trigger('loading', async () => {
+        System.loadable(async () => {
           const filename = await getInput({ 
             title: 'Save as JSON',
             message: 'Enter a filename (without .json extension)',
@@ -157,7 +157,7 @@ export default Vue.extend({
       const { computedType, registry } = this;
 
       if (computedType && registry) {
-        SystemEvents.trigger('loading', async () => {
+        System.loadable(async () => {
           const filename = await getInput({ 
             title: 'Save as JS',
             message: 'Enter a filename (without .js extension)',
@@ -181,7 +181,7 @@ export default Vue.extend({
       }
     },
     async exportCsv() {
-      SystemEvents.trigger('loading', async () => 
+      System.loadable(async () => 
       {
         const paths = this.getCsvExportPaths();
         let selected = paths.slice();
@@ -272,7 +272,7 @@ export default Vue.extend({
       return paths;
     },
     exportOverwrite() {
-      SystemEvents.trigger('replaceData', this.data);
+      System.trigger('replaceData', this.data);
     },
   },
 });

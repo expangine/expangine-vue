@@ -71,15 +71,9 @@ export default TypeEditorBase<SetType, any, SetSubs>().extend({
       this.type.options.value = event.type;
       this.settings.sub.value = event.settings;
 
-      let transform;
-      if (event.transform) {
-        transform = Exprs.op(SetOps.map, {
-          set: Exprs.get('value'),
-          transform: event.transform,
-        }, {
-          value: 'value',
-        });
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, SetType.STEP_VALUE, SetType.STEP_VALUE)
+        : undefined;
 
       this.change({ transform });
     },

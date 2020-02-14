@@ -75,9 +75,13 @@ export default function<T extends Type, O, V, S extends SubsType = unknown>(type
     computed: {
       computedValue: {
         get(): V {
-          return this.valueInternal === null 
-            ? this.value 
-            : this.valueInternal;
+          if (this.valueInternal !== null) {
+            return this.valueInternal;
+          }
+          if (this.value === null && !this.type.isValid(this.value)) {
+            this.input(this.type.create());
+          }
+          return this.value;
         },
         set(newValue: V) {
           this.input(newValue);

@@ -156,7 +156,7 @@ import { getInput } from '@/app/Input';
 import { sendNotification } from '@/app/Notify';
 import { exportFile } from '@/app/FileExport';
 import { getConfirmation } from '@/app/Confirm';
-import { SystemEvents } from '@/app/SystemEvents';
+import { System } from '@/app/SystemEvents';
 import { getDataImportMapping } from '@/app/DataImport';
 import { getDataExport } from '@/app/DataExport';
 import ObjectFormField from '../object/ObjectFormField.vue';
@@ -436,7 +436,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       this.sortDesc = false;
     },
     exportCsv() {
-      SystemEvents.trigger('loading', async () => {
+      System.loadable(async () => {
         const result = await getDataExport({
           namePrefix: this.settings.options.title,
           registry: this.registry,
@@ -450,7 +450,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
       });
     },
     importCsv() {
-      SystemEvents.trigger('loading', async () => {
+      System.loadable(async () => {
         const result = await getDataImportMapping({
           registry: this.registry,
           type: this.itemType,

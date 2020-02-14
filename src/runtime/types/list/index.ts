@@ -1,5 +1,5 @@
 
-import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType, isNumber } from 'expangine-runtime';
+import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType, isNumber, Exprs } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -11,7 +11,7 @@ import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
 import { ListObjectTableInput } from './ListObjectTableTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
-import { initializeSubs, castExpression } from '@/common';
+import { initializeSubs } from '@/common';
 import { ListSubs } from './ListTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
@@ -238,7 +238,7 @@ export const ListModifierFromValue: TypeModifier<ListType> =
             parent: parent || NullType.baseType,
             value: type,
           }),
-          program: castExpression(type, newType),
+          program: Exprs.cast(type, newType),
           expectedType: newType,
         });
 

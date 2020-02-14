@@ -1,6 +1,5 @@
 
-import { ObjectType, NullType } from 'expangine-runtime';
-import { castExpression } from '@/common';
+import { ObjectType, NullType, Exprs } from 'expangine-runtime';
 import { getBuildType } from '@/app/BuildType';
 import { getProgram } from '@/app/GetProgram';
 import { TypeModifier } from '../types/TypeModifier';
@@ -41,7 +40,7 @@ export const ChangeTypeModifier: TypeModifier =
             parent: parent || NullType.baseType,
             value: type,
           }),
-          program: castExpression(type, chosen.type),
+          program: Exprs.cast(type, chosen.type),
           expectedType: chosen.type,
         });
   

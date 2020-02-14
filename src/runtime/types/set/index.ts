@@ -1,5 +1,5 @@
 
-import { SetType, TextType, isString, ObjectType, objectReduce, NumberType, isSet, ListType, ListOps, ExpressionBuilder, NullType, MapType } from 'expangine-runtime';
+import { SetType, TextType, isString, ObjectType, objectReduce, NumberType, isSet, ListType, Exprs, NullType, MapType } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -8,7 +8,7 @@ import { SetComboInput } from './SetComboTypes';
 import { SetEnumSelectInput } from './SetEnumSelectTypes';
 import { SetEnumAutocompleteInput } from './SetEnumAutocompleteTypes';
 import { SetEnumCheckboxInput } from './SetEnumCheckboxTypes';
-import { initializeSubs, castExpression } from '@/common';
+import { initializeSubs } from '@/common';
 import { SetSubs } from './SetTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
@@ -209,7 +209,7 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
               parent: parent || NullType.baseType,
               value: type,
             }),
-            program: castExpression(type, newType),
+            program: Exprs.cast(type, newType),
             expectedType: newType,
           });
   

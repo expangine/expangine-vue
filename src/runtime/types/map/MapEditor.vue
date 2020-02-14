@@ -108,16 +108,9 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
       this.type.options.key = event.type;
       this.$set(this.settings.sub, 'key', event.settings);
 
-      let transform;
-      if (event.transform) {
-        transform = Exprs.op(MapOps.map, {
-          map: Exprs.get('value'),
-          transformKey: event.transform,
-        }, {
-          key: 'value',
-          value: 'actualValue',
-        });
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, MapType.STEP_KEY, MapType.STEP_KEY)
+        : undefined;
 
       this.change({ transform });
     },
@@ -125,13 +118,9 @@ export default TypeEditorBase<MapType, any, MapSubs>().extend({
       this.type.options.value = event.type;
       this.$set(this.settings.sub, 'value', event.settings);
 
-      let transform;
-      if (event.transform) {
-        transform = Exprs.op(MapOps.map, {
-          map: Exprs.get('value'),
-          transform: event.transform,
-        });
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, MapType.STEP_VALUE, MapType.STEP_VALUE)
+        : undefined;
 
       this.change({ transform });
     },

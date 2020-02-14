@@ -52,7 +52,6 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
-import { castExpression } from '../../../common';
 
 
 export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
@@ -73,19 +72,12 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
         return;
       }
 
+      const transform = this.type.getValueChangeExpression(Exprs.noop(), index, undefined);
+
       this.type.options.splice(index, 1);
       this.settings.sub.splice(index, 1);
 
       const { type, settings } = this;
-
-      const destType = this.type.options[0];
-      const castTransform = castExpression(innerType, destType);
-      const transform = Exprs
-        .if(destType.getValidateExpression())
-        .than(Exprs.get('value'))
-        .else(castTransform)
-      ;
-
       const simplify = this.type.options.length === 1;
 
       this.triggerChange({
@@ -116,16 +108,9 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       this.$set(this.type.options, index, event.type);
       this.$set(this.settings.sub, index, event.settings);
 
-      let transform;
-      if (event.transform) {
-        const isValid = this.type.getValidateExpression();
-
-        transform = Exprs
-          .if(Exprs.not(isValid))
-          .than(event.transform)
-          .else(Exprs.get('value'))
-        ;
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, index, index)
+        : undefined;
 
       this.change({ transform });
     },

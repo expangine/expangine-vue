@@ -1,9 +1,10 @@
 
 import Vue from 'vue';
-import { Relation, RelationKind, MapInput, Types, Type, TypePropPair, Definitions, objectFromProps } from 'expangine-runtime';
+import { Relation, RelationKind, MapInput, Types, Type, TypePropPair, Definitions, objectFromProps, GetRelationExpression, Traverser } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
+import { renameRelationReferences } from './Refactor';
 
 
 export interface RelationData
@@ -126,9 +127,13 @@ export async function getEditRelation(options: Partial<EditRelationOptions> = {}
           return resolve(false);
         }
 
-        if (savedAs && savedAs !== relation.name)
+        const renamed = savedAs && savedAs !== relation.name;
+
+        if (renamed)
         {
           Vue.delete(relations, savedAs);
+
+          renameRelationReferences(savedAs, relation.name);
         }
 
         Vue.set(relations, relation.name, relation);
@@ -219,3 +224,4 @@ export function getRelationFromData(kind: RelationKind, defs: Definitions, data:
       return Relation.hasOnePolymorphic(defs, data);
   }
 }
+

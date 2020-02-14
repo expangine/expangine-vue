@@ -36,6 +36,8 @@
               :registry="registry"
               :settings="settings"
               @change="onChange"
+              @prop:remove="onArgumentRemove"
+              @prop:rename="onArgumentRename"
             ></ex-type-editor>
           </v-tab-item>
           <v-tab-item class="data-container">
@@ -83,6 +85,7 @@ import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } fro
 import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { editFunctionDialog } from './EditFunction';
 import { getTestFunction } from './TestFunction';
+import { removeFunctionArgument, renameFunctionArgument } from './Refactor';
 
 
 export default Vue.extend({
@@ -137,6 +140,16 @@ export default Vue.extend({
       const { registry, func, name } = this;
 
       getTestFunction({ registry, func, name });
+    },
+    onArgumentRemove(arg: string) {
+      if (this.name) {
+        removeFunctionArgument(this.name, arg);
+      }
+    },
+    onArgumentRename([oldProp, newProp]: [string, string]) {
+      if (this.name) {
+        renameFunctionArgument(this.name, oldProp, newProp);
+      }
     },
   },
 });

@@ -171,13 +171,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
           return sendNotification({ message: 'Property add canceled.' });
         }
 
-        changeEvent.transform = Exprs.define({ parent: Exprs.get('value') },
-          Exprs.op(ObjectOps.set, {
-            object: Exprs.get('value'),
-            key: propName,
-            value: result.program,
-          }),
-        );
+        changeEvent.transform = this.type.getValueChangeExpression(result.program, undefined, propName);
       }
       
       this.$set(this.type.options.props, propName, chosen.type);
@@ -186,8 +180,9 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.inputSelected.onSubAdd(propName, this.type, this.settings);
 
       this.change(changeEvent);
-      
       this.propChange++;
+
+      this.$emit('prop:add', propName);
     },
     async remove(prop: string) {
       if (!await getConfirmation({ message: `Remove ${prop}?`})) {
@@ -199,17 +194,12 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$delete(this.type.options.props, prop);
       this.$delete(this.settings.sub, prop);
 
-      this.change({
-        transform: Exprs.body(
-          Exprs.op(ObjectOps.delete, {
-            object: Exprs.get('value'),
-            key: prop,
-          }),
-          Exprs.get('value'),
-        ),
-      });
+      const transform = this.type.getValueChangeExpression(Exprs.noop(), prop, undefined);
 
+      this.change({ transform });
       this.propChange++;
+
+      this.$emit('prop:remove', prop);
     },
     async rename(prop: string) {
       const newProp = await getInput({ 
@@ -242,35 +232,23 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
 
       sendNotification({ message: `${prop} renamed to ${newProp}` });
 
-      this.change({
-        transform: Exprs.body(
-          Exprs.op(ObjectOps.set, {
-            object: Exprs.get('value'),
-            key: newProp,
-            value: Exprs.get('value', prop),
-          }),
-          Exprs.op(ObjectOps.delete, {
-            object: Exprs.get('value'),
-            key: prop,
-          }),
-          Exprs.get('value'),
-        ),
-      });
+      const transform = this.type.getValueChangeExpression(Exprs.noop(), prop, newProp);
+
+      this.change({ transform });
+
+      this.$emit('prop:rename', [prop, newProp]);
     },
     onChange(prop: string, event: TypeUpdateEvent) {
       this.type.options.props[prop] = event.type;
       this.settings.sub[prop] = event.settings;
 
-      let transform;
-      if (event.transform) {
-        transform = Exprs.body(
-          Exprs.update('value', prop)
-            .to(event.transform, 'value'),
-          Exprs.get('value'),
-        );
-      }
+      const transform = event.transform
+        ? this.type.getValueChangeExpression(event.transform, prop, prop)
+        : undefined;
 
       this.change({ transform });
+
+      this.$emit('prop:change', prop);
     },
   },
 });
