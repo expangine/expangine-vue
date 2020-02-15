@@ -6,7 +6,14 @@ import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
 import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 import { ComplexityColors } from '@/common';
+import { Preferences } from '@/app/Preference';
 
+
+const PREF_REMOVE_EXPRESSION = Preferences.define({
+  key: 'remove_expression',
+  label: 'Remove expressions without confirmation',
+  defaultValue: false,
+});
 
 
 export type ExpressionEventListeners = Record<string, (event: Event, expression: Expression) => void>;
@@ -246,7 +253,7 @@ export default function<E extends Expression>()
       },
       async requestRemove() {
         if (this.isRemovable) {
-          if (await getConfirmation()) {
+          if (await getConfirmation({ pref: PREF_REMOVE_EXPRESSION })) {
             this.remove();
           }
         }

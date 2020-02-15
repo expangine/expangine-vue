@@ -143,6 +143,14 @@ import Vue from 'vue';
 import { IfExpression, Expression, NoExpression, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_REMOVE_ELSEIF = Preferences.define({
+  key: 'if_remove_elseif',
+  label: 'Remove Else If from If expressions without confirmation',
+  defaultValue: false,
+});
 
 
 export default ExpressionBase<IfExpression>().extend({
@@ -189,7 +197,7 @@ export default ExpressionBase<IfExpression>().extend({
       return expr instanceof ChainExpression;
     },
     async removeGroup(index: number) {
-      if (await getConfirmation()) {
+      if (await getConfirmation({ pref: PREF_REMOVE_ELSEIF })) {
         this.value.cases.splice(index, 1);
         this.update();
       }

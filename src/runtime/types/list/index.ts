@@ -16,6 +16,14 @@ import { ListSubs } from './ListTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
 import { getProgram } from '@/app/GetProgram';
+import { Preferences } from '@/app/Preference';
+
+
+const PREF_LIST_MODIFIER = Preferences.define({
+  key: 'list_modifier',
+  label: 'Convert type to List without confirmation',
+  defaultValue: false,
+});
 
 
 export const ListVisuals = createVisuals<ListSubs>()({
@@ -223,7 +231,7 @@ export const ListModifierFromValue: TypeModifier<ListType> =
       description: 'This type will be converted to a list with the given values',
       priority: 14,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_LIST_MODIFIER })) {
           return false;
         }
 

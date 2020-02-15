@@ -97,8 +97,9 @@
 import Vue from 'vue';
 import { Type, TypeMap, Expression, OperationExpression, ObjectType, ExpressionMap, NoExpression, ConstantExpression } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { testOperationDialog } from './TestOperation';
 import { OperationVisuals } from '../runtime/ops/OperationVisuals';
+import { testOperationDialog, PREF_FULLSCREEN_TEST_OPERATION } from './TestOperation';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -137,6 +138,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_TEST_OPERATION, this.fullscreen);
     },
     setConstant(name: string, value: any) {
       const paramExpr = this.params[name];

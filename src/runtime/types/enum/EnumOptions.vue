@@ -92,7 +92,14 @@ import { getConfirmation } from '../../../app/Confirm';
 import { TypeUpdateEvent, TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import TypeEditorBase from '../TypeEditorBase';
+import { Preferences } from '../../../app/Preference';
 
+
+const PREF_REMOVE_CONSTANT = Preferences.define({
+  key: 'enum_remove_constant',
+  label: 'Remove Enum constant without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
@@ -157,7 +164,7 @@ export default TypeEditorBase<EnumType, any, EnumSubs>().extend({
       this.change({ transform });
     },
     async removeConstant(index: number) {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_REMOVE_CONSTANT })) {
         return;
       }
       

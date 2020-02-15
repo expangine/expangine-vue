@@ -13,10 +13,17 @@ import { ListOptions } from '../../common';
 import { Registry } from '../Registry';
 import { getConfirmation } from '../../app/Confirm';
 import { sendNotification } from '../../app/Notify';
+import { Preferences } from '../../app/Preference';
 
 
 const copyMax = 5;
 const copyExpressions: Expression[] = [];
+
+const PREF_PASTE = Preferences.define({
+  key: 'paste_expression',
+  label: 'Paste expression without confirmation',
+  defaultValue: false,
+});
 
 
 export default Vue.extend({
@@ -75,7 +82,7 @@ export default Vue.extend({
         }
       }
 
-      if (await getConfirmation({ message })) {
+      if (await getConfirmation({ message, pref: PREF_PASTE })) {
         this.$emit('pasted', this.clone(expr));
       }
     },

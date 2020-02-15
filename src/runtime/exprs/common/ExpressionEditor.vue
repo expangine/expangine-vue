@@ -83,7 +83,7 @@
                   label="Minimum Severity"
                   :items="validationOptions"
                   v-model="validationSeverity"
-                  @change="validate"
+                  @change="updatedSeverity"
                 ></v-select>
 
                 <template v-for="(validation, index) in validations">
@@ -107,38 +107,54 @@
           </v-btn>
         </template>
         <v-list dense>
-          <v-menu offset-x :close-on-content-click="false">
-            <template #activator="{ on }">
-              <v-list-item v-on="on">
-                <v-list-item-icon>
-                  <v-icon :color="internalColor">mdi-checkbox-blank-circle</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Color</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-color-picker
-              show-swatches
-              v-model="internalColor"
-            ></v-color-picker>
-          </v-menu>
-          <v-menu offset-x :close-on-content-click="false">
-            <template #activator="{ on }">
-              <v-list-item v-on="on">
-                <v-list-item-icon>
-                  <v-icon :color="internalError">mdi-close-circle</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Error Color</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-color-picker
-              show-swatches
-              v-model="internalError"
-            ></v-color-picker>
-          </v-menu>
+          <v-list-item>
+            <v-list-item-icon class="pt-4 mr-2 my-0">
+              <v-icon :color="internalColor">mdi-checkbox-blank-circle</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-autocomplete
+                dense
+                outlined
+                hide-details
+                label="Color"
+                :items="colorOptions"
+                v-model="internalColor"
+                @input="updateColor"
+              ></v-autocomplete>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon class="pt-4 mr-2 my-0">
+              <v-icon :color="internalError">mdi-close-circle</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-autocomplete
+                dense
+                outlined
+                hide-details
+                label="Error Color"
+                :items="colorOptions"
+                v-model="internalError"
+                @input="updateError"
+              ></v-autocomplete>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon class="pt-4 mr-2 my-0">
+              <v-icon :color="showReturnColor">mdi-alert-circle</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-autocomplete
+                dense
+                outlined
+                hide-details
+                label="Return Color"
+                :items="colorOptions"
+                v-model="showReturnColor"
+                @input="updateReturnColor"
+              ></v-autocomplete>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-tooltip top>
@@ -173,12 +189,64 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, ReturnExpression, Validation, ValidationSeverity, Traverser, copy } from 'expangine-runtime';
+import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, copy } from 'expangine-runtime';
+import { ListOptions, isMapEqual } from '@/common';
 import { getRunProgram } from '@/app/RunProgram';
 import { getDebugProgram } from '@/app/DebugProgram';
 import { ValidationHelper } from '@/app/ValidationHelper';
-import { ListOptions, isMapEqual } from '@/common';
+import { Preferences } from '@/app/Preference';
+import { ColorsType, Colors } from '@/app/Colors';
 import ExpressionBase, { ExpressionDisplayOptions } from '../ExpressionBase';
+
+
+const PREF_COMPACT = Preferences.define({
+  key: 'expression_editor_compact',
+  label: 'Expression editor compact view',
+  defaultValue: false,
+});
+
+const PREF_ORIENTATION = Preferences.define({
+  key: 'expression_editor_orientation',
+  label: 'Expression editor vertical toolbar orientation',
+  defaultValue: null as null | boolean,
+  type: Types.bool(),
+});
+
+const PREF_VALIDATION_SEVERITY = Preferences.define({
+  key: 'expression_editor_severity',
+  label: 'Expression editor minimum validation severity',
+  defaultValue: ValidationSeverity.MEDIUM,
+  type: Types.enum(
+    Types.number(),
+    Types.text(),
+    [
+      ['Low', ValidationSeverity.LOW],
+      ['Medium', ValidationSeverity.MEDIUM],
+      ['High', ValidationSeverity.HIGH],
+    ],
+  ),
+});
+
+const PREF_COLOR = Preferences.define({
+  key: 'expression_editor_color',
+  label: 'Expression editor theme color',
+  defaultValue: 'primary',
+  type: ColorsType,
+});
+
+const PREF_ERROR = Preferences.define({
+  key: 'expression_editor_error',
+  label: 'Expression editor error color',
+  defaultValue: 'error',
+  type: ColorsType,
+});
+
+const PREF_RETURN_COLOR = Preferences.define({
+  key: 'expression_editor_return_color',
+  label: 'Expression editor return expressions color',
+  defaultValue: '#e1bee7',
+  type: ColorsType,
+});
 
 
 export default ExpressionBase().extend({
@@ -224,25 +292,28 @@ export default ExpressionBase().extend({
   data: () => ({
     internalReadOnly: false,
     internalShowComplexity: false,
-    internalCompact: false,
-    internalColor: 'primary',
-    internalError: 'error',
-    internalVertical: null as null | boolean,
+    internalCompact: Preferences.get(PREF_COMPACT),
+    internalColor: Preferences.get(PREF_COLOR),
+    internalError: Preferences.get(PREF_ERROR),
+    internalVertical: Preferences.get(PREF_ORIENTATION),
     internalHighlights: new Map(),
     undos: [] as any[],
     redos: [] as any[],
     triggering: false,
     topOffset: 0,
     validations: [] as Validation[],
-    validationSeverity: ValidationSeverity.MEDIUM,
+    validationSeverity: Preferences.get(PREF_VALIDATION_SEVERITY),
     validationHighlight: null as null | Validation,
     validationSubjectColor: '#E57373',
     validationParentColor: '#FFCDD2',
-    showReturnColor: '#E1BEE7',
+    showReturnColor: Preferences.get(PREF_RETURN_COLOR),
     showReturns: false,
     highlightedExpressions: new Map<Expression, string>(),
   }),
   computed: {
+    colorOptions(): ListOptions<string> {
+      return Colors.map(([text, value]) => ({ text, value }));
+    },
     isVertical(): boolean {
       return this.internalVertical !== null
         ? this.internalVertical 
@@ -354,13 +425,22 @@ export default ExpressionBase().extend({
     },
     toggleCompact() {
       this.internalCompact = !this.internalCompact;
+
+      Preferences.set(PREF_COMPACT, this.internalCompact);
     },
     toggleVertical() {
       this.internalVertical = !this.isVertical;
+
+      Preferences.set(PREF_ORIENTATION, this.internalVertical);
     },
     toggleShowReturns() {
       this.showReturns = !this.showReturns;
       this.updateHighlightExpressions();
+    },
+    updatedSeverity() {
+      Preferences.set(PREF_VALIDATION_SEVERITY, this.validationSeverity);
+
+      this.validate();
     },
     validate() {
       if (!this.hideValidation) {
@@ -419,6 +499,15 @@ export default ExpressionBase().extend({
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
       this.topOffset = rect.top + scrollTop;
+    },
+    updateColor() {
+      Preferences.set(PREF_COLOR, this.internalColor);
+    },
+    updateError() {
+      Preferences.set(PREF_ERROR, this.internalError);
+    },
+    updateReturnColor() {
+      Preferences.set(PREF_RETURN_COLOR, this.showReturnColor);
     },
     undo() {
       const undo = this.undos.pop();

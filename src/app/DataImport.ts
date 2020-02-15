@@ -14,7 +14,47 @@ import { getConfirmation } from './Confirm';
 import { getProgram } from './GetProgram';
 import { sendNotification } from './Notify';
 import { LiveRuntime } from 'expangine-runtime-live';
+import { Preferences } from './Preference';
 
+
+
+const PREF_DATA_IMPORT_CONVERT = Preferences.define({
+  key: 'data_import_convert',
+  label: 'Convert data values to correct type on import without confirmation',
+  defaultValue: false,
+});
+
+const PREF_DATA_IMPORT_PROPERTY = Preferences.define({
+  key: 'data_import_property',
+  label: 'CSV Import default property',
+  defaultValue: 'data',
+});
+
+const PREF_DATA_IMPORT_CHOOSE = Preferences.define({
+  key: 'data_import_choose',
+  label: 'CSV Import choose column types',
+  defaultValue: false,
+});
+
+const PREF_DATA_IMPORT_ALL = Preferences.define({
+  key: 'data_import_all',
+  label: 'CSV Import all columns',
+  defaultValue: false,
+});
+
+const PREF_DATA_IMPORT_ACTION = Preferences.define({
+  key: 'data_import_all',
+  label: 'CSV Import default action',
+  defaultValue: 'replace',
+  type: Types.enum(
+    Types.text(),
+    Types.text(),
+    [
+      ['Merge', 'merge'],
+      ['Replace', 'replace'],
+    ],
+  ),
+});
 
 
 export interface DataImportOptions
@@ -107,10 +147,10 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
       const settings = await getSimpleInput<any>({
         value: {
           columns: {}, 
-          action: 'replace' as 'replace' | 'merge', 
-          property: 'data',
-          all: false,
-          configure: false,
+          action: Preferences.get(PREF_DATA_IMPORT_ACTION) as 'replace' | 'merge', 
+          property: Preferences.get(PREF_DATA_IMPORT_PROPERTY),
+          all: Preferences.get(PREF_DATA_IMPORT_ALL),
+          configure: Preferences.get(PREF_DATA_IMPORT_CHOOSE),
         },
         fields,
       });
@@ -524,6 +564,7 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
           ,
           confirm: 'Import',
           unconfirm: 'Cancel Import',
+          pref: PREF_DATA_IMPORT_CONVERT,
         });
 
         if (!proceed) 

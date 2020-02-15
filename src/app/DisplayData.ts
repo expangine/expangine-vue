@@ -1,6 +1,14 @@
 
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_DISPLAY_DATA = Preferences.define({
+  key: 'fullscreen_display_data',
+  label: 'Display Data dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface DisplayDataOptions
@@ -19,7 +27,7 @@ export function getDisplayDataDefaults(): DisplayDataOptions
     title: 'Data',
     data: undefined,
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_DISPLAY_DATA),
     registry: null as unknown as Registry,
     close: () => undefined,
   };

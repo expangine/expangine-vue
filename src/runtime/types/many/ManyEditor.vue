@@ -52,6 +52,14 @@ import { getConfirmation } from '../../../app/Confirm';
 import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_MANY_REMOVE = Preferences.define({
+  key: 'many_remove',
+  label: 'Remove type from Many without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
@@ -68,7 +76,7 @@ export default TypeEditorBase<ManyType, ManyOptions, ManySubs>().extend({
       return valid || NullType.baseType;
     },
     async removeType(index: number, innerType: Type) {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_MANY_REMOVE })) {
         return;
       }
 

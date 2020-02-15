@@ -67,9 +67,16 @@ import { Type, TypeMap, Expression, ExpressionMap, NoExpression, TemplateExpress
 import { obj } from '@/common';
 import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
+import { Preferences } from '../../../app/Preference';
 
 
 const tp = new TypeBuilder();
+const PREF_REMOVE_VAR = Preferences.define({
+  key: 'template_remove_var',
+  label: 'Remove Template expression vars without confirmation',
+  defaultValue: false,
+});
+
 
 export default ExpressionBase<TemplateExpression>().extend({
   name: 'TemplateEditor',
@@ -156,7 +163,7 @@ export default ExpressionBase<TemplateExpression>().extend({
       this.update();
     },
     async removeVar(name: string) {
-      if (await getConfirmation()) {
+      if (await getConfirmation({ pref: PREF_REMOVE_VAR })) {
         this.$delete(this.value.params, name);
         this.addDefinedVars();
         this.update();

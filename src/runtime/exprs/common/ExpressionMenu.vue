@@ -231,6 +231,20 @@ import { getEditFunction } from '../../../app/EditFunction';
 import { getDisplayData } from '../../../app/DisplayData';
 import { getProgram } from '../../../app/GetProgram';
 import ExpressionBase from '../ExpressionBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_EXPRESSION_CHANGE = Preferences.define({
+  key: 'expression_change',
+  label: 'Change expressions without confirmation',
+  defaultValue: false,
+});
+
+const PREF_EXPRESSION_MODIFY = Preferences.define({
+  key: 'expression_modify',
+  label: 'Modify expressions without confirmation',
+  defaultValue: false,
+});
 
 
 export default ExpressionBase().extend({
@@ -351,7 +365,7 @@ export default ExpressionBase().extend({
       }
     },
     async changeTo(visuals: ExpressionVisuals) {
-      if (await getConfirmation()) {
+      if (await getConfirmation({ pref: PREF_EXPRESSION_CHANGE })) {
         this.input(visuals.create(this.requiredType, this.context, this.registry));
       }
     },
@@ -363,7 +377,7 @@ export default ExpressionBase().extend({
         ? value
         : value.handler;
 
-      if (await getConfirmation(options)) {
+      if (await getConfirmation({ ...options, pref: PREF_EXPRESSION_MODIFY })) {
         const result = callback();
         if (result) {
           this.input(result);

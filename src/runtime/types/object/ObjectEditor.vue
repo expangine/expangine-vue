@@ -107,6 +107,14 @@ import { getBuildType } from '../../../app/BuildType';
 import { getProgram } from '../../../app/GetProgram';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_REMOVE_PROP = Preferences.define({
+  key: 'object_remove_prop',
+  label: 'Remove Object type property without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeEditorBase<ObjectType, any, string>().extend({
@@ -185,7 +193,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
       this.$emit('prop:add', propName);
     },
     async remove(prop: string) {
-      if (!await getConfirmation({ message: `Remove ${prop}?`})) {
+      if (!await getConfirmation({ message: `Remove ${prop}?`, pref: PREF_REMOVE_PROP })) {
         return;
       }
 

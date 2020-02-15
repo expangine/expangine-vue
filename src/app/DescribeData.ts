@@ -3,6 +3,14 @@ import { Type } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_DESCRIBE_DATA = Preferences.define({
+  key: 'fullscreen_describe_data',
+  label: 'Describe Data dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface DescribeDataOptions
@@ -27,7 +35,7 @@ export function getDescribeDataDefaults(): DescribeDataOptions
     input: '',
     removeDescribedRestrictions: true,
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_DESCRIBE_DATA),
     registry: null as unknown as Registry,
     close: () => undefined,
   };

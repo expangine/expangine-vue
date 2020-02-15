@@ -7,7 +7,20 @@ import { getConfirmation } from '@/app/Confirm';
 import { initializeSubs, obj } from '@/common';
 import { Registry } from '@/runtime/Registry';
 import OptionalEditor from './OptionalEditor.vue';
+import { Preferences } from '@/app/Preference';
 
+
+const PREF_MAKE_OPTIONAL = Preferences.define({
+  key: 'optional_make',
+  label: 'Make type Optional without confirmation',
+  defaultValue: false,
+});
+
+const PREF_MAKE_REQUIRED = Preferences.define({
+  key: 'optional_unmake',
+  label: 'Make Optional Required without Confirmation',
+  defaultValue: false,
+});
 
 
 export const OptionalVisuals = createVisuals<OptionalSubs>()({
@@ -71,7 +84,7 @@ export const OptionalModifier: TypeModifier<OptionalType> =
       description: 'An optional type does not require a value',
       priority: 2,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_MAKE_OPTIONAL })) {
           return false;
         }
     
@@ -95,7 +108,7 @@ export const OptionalModifierRequire: TypeModifier =
       description: 'The type should no longer be optional',
       priority: 1,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_MAKE_REQUIRED })) {
           return false;
         }
 

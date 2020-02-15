@@ -52,8 +52,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { editTypeTranscoderDialog } from './EditTypeTranscoder';
 import { Type, NoExpression, Expression, TypeStorageTranscoder } from 'expangine-runtime';
+import { editTypeTranscoderDialog, PREF_FULLSCREEN_EDIT_TRANSCODER } from './EditTypeTranscoder';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -94,6 +95,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_EDIT_TRANSCODER, this.fullscreen);
     },
     updateEncoded(encode: Expression) {
       const encodedType = encode.getType(this.registry.defs, this.encodeContext);

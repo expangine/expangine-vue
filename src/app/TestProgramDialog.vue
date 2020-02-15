@@ -65,7 +65,8 @@ import { Type, TypeMap, Expression, OperationExpression, ObjectType, ExpressionM
 import { LiveRuntime } from 'expangine-runtime-live';
 import { OperationVisuals } from '../runtime/ops/OperationVisuals';
 import { TypeSettings } from '../runtime/types/TypeVisuals';
-import { testProgramDialog } from './TestProgram';
+import { testProgramDialog, PREF_FULLSCREEN_TEST_PROGRAM } from './TestProgram';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -89,6 +90,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_TEST_PROGRAM, this.fullscreen);
     },
     setInput(input: any) {
       this.input = input;

@@ -167,6 +167,16 @@
               <v-list-item-subtitle>View all stored undo/redo events and go to any point in time.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item @click="preferences = true">
+            <v-list-item-icon>
+              <v-icon>mdi-cogs</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Preferences</v-list-item-title>
+              <v-list-item-subtitle>View and edit all editor preferences.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-menu offset-y>
@@ -436,6 +446,10 @@
         :registry="registry"
         :show.sync="showOperations"
       ></ex-operation-catalogue-dialog>
+      <ex-preference-dialog
+        :registry="registry"
+        v-model="preferences"
+      ></ex-preference-dialog>
 
       <v-dialog v-model="metadataEditing" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
@@ -579,6 +593,7 @@ import { getEditAliased } from './app/EditAliased';
 import { getEditRelation } from './app/EditRelation';
 import { addType } from './app/Aliased';
 import Registry from './runtime';
+import { Preferences } from './app/Preference';
 
 
 
@@ -602,6 +617,61 @@ const autoSave = (() => {
 })();
 
 
+const PREF_DISABLE_AUTO_SAVE = Preferences.define({
+  key: 'disable_auto_save',
+  label: 'Disable auto save without confirmation',
+  defaultValue: false,
+});
+
+const PREF_EXAMPLE_OVERWRITE = Preferences.define({
+  key: 'example_overwrite',
+  label: 'Overwrite project with examples without confirmation',
+  defaultValue: false,
+});
+
+const PREF_CLEAR_RELATIONS = Preferences.define({
+  key: 'clear_relations',
+  label: 'Clear relations without confirmation',
+  defaultValue: false,
+});
+
+const PREF_CLEAR_TYPES = Preferences.define({
+  key: 'clear_types',
+  label: 'Clear types without confirmation',
+  defaultValue: false,
+});
+
+const PREF_CLEAR_FUNCTIONS = Preferences.define({
+  key: 'clear_functions',
+  label: 'Clear functions without confirmation',
+  defaultValue: false,
+});
+
+const PREF_SAVE_AS_FUNCTION_OVERWRITE = Preferences.define({
+  key: 'save_as_function_overwrite',
+  label: 'Save project as function and overwrite existing function without confirmation',
+  defaultValue: false,
+});
+
+const PREF_CLEAR_HISTORY = Preferences.define({
+  key: 'clear_history',
+  label: 'Clear undo/redo history without confirmation',
+  defaultValue: false,
+});
+
+const PREF_REPLACE_DATA = Preferences.define({
+  key: 'replace_data',
+  label: 'Replace project data without confirmation',
+  defaultValue: false,
+});
+
+const PREF_READ_ONLY = Preferences.define({
+  key: 'read_only',
+  label: 'Project read-only',
+  defaultValue: false,
+});
+
+
 export default Vue.extend({
   name: 'App',
   data: () => ({
@@ -617,13 +687,14 @@ export default Vue.extend({
     autoSave,
     mode: 0,
     metadataEditing: false,
-    readOnly: false,
+    readOnly: Preferences.get(PREF_READ_ONLY),
     examples: [] as any[],
     showExamples: false,
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
     showOperations: false,
+    preferences: false,
     // History
     historyEmpty: true,
     undoEmpty: true,
@@ -988,6 +1059,7 @@ export default Vue.extend({
           message: 'Your work will no longer be saved to your browser. Would you like to <b>clear</b> the data from your browser or <b>leave</b> it there for next time you visit?',
           confirm: 'Clear',
           unconfirm: 'Leave',
+          pref: PREF_DISABLE_AUTO_SAVE,
         });
 
         if (result) {
@@ -1001,6 +1073,8 @@ export default Vue.extend({
     toggleReadOnly() 
     {
       this.readOnly = !this.readOnly;
+
+      Preferences.set(PREF_READ_ONLY, this.readOnly);
     },
     // LOADING
     async handleLoading(eventType: 'loading', loadable: () => Promise<any>)
@@ -1065,7 +1139,7 @@ export default Vue.extend({
 
         if (isObject(data) && data.type && data.settings && data.program) 
         {
-          if (this.showExamples || await getConfirmation({ message: 'This will overwrite your current program, are you sure?' })) 
+          if (this.showExamples || await getConfirmation({ message: 'This will overwrite your current program, are you sure?', pref: PREF_EXAMPLE_OVERWRITE })) 
           {
             await this.importData(data);
           } 
@@ -1131,7 +1205,7 @@ export default Vue.extend({
     },
     async clearRelations() 
     {
-      if (await getConfirmation()) 
+      if (await getConfirmation({ pref: PREF_CLEAR_RELATIONS })) 
       {
         const relationsCleared = friendlyList(objectValues(this.relations, (_, name) => name));
 
@@ -1188,7 +1262,7 @@ export default Vue.extend({
     },
     async clearTypes() 
     {
-      if (await getConfirmation()) 
+      if (await getConfirmation({ pref: PREF_CLEAR_TYPES })) 
       {
         const typesCleared = friendlyList(objectValues(this.aliased, (_, name) => name));
 
@@ -1221,7 +1295,7 @@ export default Vue.extend({
     },
     async clearFunctions() 
     {
-      if (await getConfirmation()) 
+      if (await getConfirmation({ pref: PREF_CLEAR_FUNCTIONS })) 
       {
         const functionsCleared = friendlyList(objectValues(this.functions, (_, name) => name));
 
@@ -1247,7 +1321,7 @@ export default Vue.extend({
 
       if (this.functions[functionName]) 
       {
-        if (!await getConfirmation({ message: 'A function with that name already exists, overwrite it?' })) 
+        if (!await getConfirmation({ message: 'A function with that name already exists, overwrite it?', pref: PREF_SAVE_AS_FUNCTION_OVERWRITE })) 
         {
           return sendNotification({ message: 'Save as Function canceled' });
         }
@@ -1484,7 +1558,7 @@ export default Vue.extend({
     },
     async historyClear()
     {
-      if (await getConfirmation())
+      if (await getConfirmation({ pref: PREF_CLEAR_HISTORY }))
       {
         this.saveDataPending();
         this.history.clear();
@@ -1567,7 +1641,7 @@ export default Vue.extend({
     {
       const { registry, type, history } = this;
 
-      if (await getConfirmation({ message: 'This will overwrite your current data, are you sure?' })) 
+      if (await getConfirmation({ message: 'This will overwrite your current data, are you sure?', pref: PREF_REPLACE_DATA })) 
       {
         const dataType = registry.defs.describe(data);
         const dataSettings = registry.getTypeSettings(dataType);

@@ -47,6 +47,7 @@ import OperationCatalogueDialog from './app/OperationCatalogue.vue';
 import OperationInfoDialog from './app/OperationInfo.vue';
 import GetProgramDialog from './app/GetProgramDialog.vue';
 import ValueDialog from './app/ValueDialog.vue';
+import PreferenceDialog from './app/PreferenceDialog.vue';
 import Validation from './app/Validation.vue';
 import ChildFilter from './app/ChildFilter.vue';
 
@@ -165,6 +166,7 @@ export default {
     Vue.component('ex-operation-info-dialog', OperationInfoDialog);
     Vue.component('ex-get-program-dialog', GetProgramDialog);
     Vue.component('ex-value-dialog', ValueDialog);
+    Vue.component('ex-preference-dialog', PreferenceDialog);
 
     Vue.component('ex-data-string', DataString);
     Vue.component('ex-data-menu', DataMenu);

@@ -3,6 +3,68 @@ import { getSimpleInput } from './SimpleInput';
 import { exportFile } from './FileExport';
 import { Project, ProjectTranscoders } from './Project';
 import { friendlyList } from '@/common';
+import { Preferences } from './Preference';
+
+
+const PREF_NAME = Preferences.define({
+  key: 'save_name',
+  label: 'Save project name',
+  defaultValue: '',
+});
+
+const PREF_METADATA = Preferences.define({
+  key: 'save_metadata',
+  label: 'Save project metadata',
+  defaultValue: true,
+});
+
+const PREF_TYPE = Preferences.define({
+  key: 'save_type',
+  label: 'Save project designed type',
+  defaultValue: true,
+});
+
+const PREF_SETTINGS = Preferences.define({
+  key: 'save_settings',
+  label: 'Save project designed type inputs',
+  defaultValue: true,
+});
+
+const PREF_DATA = Preferences.define({
+  key: 'save_data',
+  label: 'Save project data',
+  defaultValue: true,
+});
+
+const PREF_PROGRAM = Preferences.define({
+  key: 'save_program',
+  label: 'Save project program',
+  defaultValue: true,
+});
+
+const PREF_FUNCTIONS = Preferences.define({
+  key: 'save_functions',
+  label: 'Save project functions',
+  defaultValue: true,
+});
+
+const PREF_TYPES = Preferences.define({
+  key: 'save_types',
+  label: 'Save project types',
+  defaultValue: true,
+});
+
+const PREF_RELATIONS = Preferences.define({
+  key: 'save_types',
+  label: 'Save project relations',
+  defaultValue: true,
+});
+
+const PREF_COMPRESSED = Preferences.define({
+  key: 'save_compressed',
+  label: 'Save project in the compressed format',
+  defaultValue: false,
+});
 
 
 export interface ProjectExportOptions
@@ -13,23 +75,25 @@ export interface ProjectExportOptions
 
 export async function getProjectExport({ project, transcoders }: ProjectExportOptions): Promise<true | string>
 {
+  const defaultName = project.metadata && project.metadata.title
+    ? project.metadata.title + '-' + Date.now()
+    : 'export-' + Date.now();
+
   const settings = await getSimpleInput({
     title: 'Export',
     confirm: 'Export',
     unconfirm: 'Cancel',
     value: {
-      name: project.metadata && project.metadata.title
-        ? project.metadata.title + '-' + Date.now()
-        : 'export-' + Date.now(),
-      metadata: true,
-      type: true,
-      settings: true,
-      data: true,
-      program: true,
-      functions: true,
-      aliased: true,
-      relations: true,
-      compressed: false,
+      name: Preferences.get(PREF_NAME) || defaultName,
+      metadata: Preferences.get(PREF_METADATA),
+      type: Preferences.get(PREF_TYPE),
+      settings: Preferences.get(PREF_SETTINGS),
+      data: Preferences.get(PREF_DATA),
+      program: Preferences.get(PREF_PROGRAM),
+      functions: Preferences.get(PREF_FUNCTIONS),
+      aliased: Preferences.get(PREF_TYPES),
+      relations: Preferences.get(PREF_RELATIONS),
+      compressed: Preferences.get(PREF_COMPRESSED),
     },
     fields: [
       { name: 'name', type: 'text', label: 'Export As', required: true, details: 'The name of the exported file, without .json extension.' },
@@ -79,6 +143,17 @@ export async function getProjectExport({ project, transcoders }: ProjectExportOp
   if (settings.relations) {
     exporting.relations = transcoders.relations.encode(project.relations);
   }
+
+  Preferences.set(PREF_NAME, settings.name);
+  Preferences.set(PREF_METADATA, settings.metadata);
+  Preferences.set(PREF_TYPE, settings.type);
+  Preferences.set(PREF_SETTINGS, settings.settings);
+  Preferences.set(PREF_DATA, settings.data),
+  Preferences.set(PREF_PROGRAM, settings.program);
+  Preferences.set(PREF_FUNCTIONS, settings.functions);
+  Preferences.set(PREF_TYPES, settings.aliased);
+  Preferences.set(PREF_RELATIONS, settings.relations);
+  Preferences.set(PREF_COMPRESSED, settings.compressed);
 
   const exported = settings.compressed
     ? JSON.stringify(exporting)

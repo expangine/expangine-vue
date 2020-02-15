@@ -43,7 +43,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, AnyType } from 'expangine-runtime';
-import { displayDataDialog } from './DisplayData';
+import { displayDataDialog, PREF_FULLSCREEN_DISPLAY_DATA } from './DisplayData';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -69,6 +70,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_DISPLAY_DATA, this.fullscreen);
     },
   },
 });

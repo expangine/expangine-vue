@@ -74,6 +74,14 @@ import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TypeEditorBase from '../TypeEditorBase';
 import { sendNotification } from '../../../app/Notify';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_TUPLE_REMOVE_ELEMENT = Preferences.define({
+  key: 'tuple_remove',
+  label: 'Remove element from Tuple without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
@@ -87,7 +95,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
       return this.requiredType.options[index] || NullType.baseType;
     },
     async removeType(index: number, innerType: Type) {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_TUPLE_REMOVE_ELEMENT })) {
         return;
       }
 

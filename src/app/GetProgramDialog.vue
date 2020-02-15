@@ -72,7 +72,8 @@
 import Vue from 'vue';
 import { Type } from 'expangine-runtime';
 import { getProgramDialog } from './GetProgram';
-import { getTestProgram } from './TestProgram';
+import { getTestProgram, PREF_FULLSCREEN_TEST_PROGRAM } from './TestProgram';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -107,6 +108,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_TEST_PROGRAM, this.fullscreen);
     },
     cancel() {
       this.close(false);

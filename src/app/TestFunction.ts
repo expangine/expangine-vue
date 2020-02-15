@@ -4,6 +4,14 @@ import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { getMultipleDialoger } from './MultipleDialog';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_TEST_FUNCTION = Preferences.define({
+  key: 'fullscreen_test_function',
+  label: 'Test function dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface TestFunctionOptions
@@ -34,7 +42,7 @@ export function getTestFunctionDefaults(): TestFunctionOptions
     settings: { input: 'form', options: {}, defaultValue: {} },
     data: null,
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_TEST_FUNCTION),
     registry: null as unknown as Registry,
     close: () => undefined,
   };

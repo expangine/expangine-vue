@@ -71,6 +71,14 @@ import { getConfirmation } from '../../../app/Confirm';
 import { SetSubs } from './SetTypes';
 import { SetListOptions } from './SetListTypes';
 import TypeInputBase from '../TypeInputBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_SET_REMOVE_AT = Preferences.define({
+  key: 'set_remove_at',
+  label: 'Remove from Set without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeInputBase<SetType, SetListOptions, Set<any>, SetSubs>(Set).extend({
@@ -173,7 +181,7 @@ export default TypeInputBase<SetType, SetListOptions, Set<any>, SetSubs>(Set).ex
     },
     async removeAt(pageIndex: number) {
       const index = pageIndex + this.pageStart;
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_SET_REMOVE_AT })) {
         return;
       }
 

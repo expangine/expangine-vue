@@ -45,7 +45,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { testFunctionDialog } from './TestFunction';
-import { getRunProgram } from './RunProgram';
+import { getRunProgram, PREF_FULLSCREEN_RUN_PROGRAM } from './RunProgram';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -61,6 +62,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_RUN_PROGRAM, this.fullscreen);
     },
     test() {
       getRunProgram({

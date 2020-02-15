@@ -10,7 +10,14 @@ import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';
 import { MapSubs } from './MapTypes';
 import MapEditor from './MapEditor.vue';
+import { Preferences } from '@/app/Preference';
 
+
+const PREF_MAP_MODIFIER = Preferences.define({
+  key: 'map_modifier',
+  label: 'Convert to Map without confirmation',
+  defaultValue: false,
+});
 
 
 export const MapVisuals = createVisuals<MapSubs>()({
@@ -173,7 +180,7 @@ export const MapModifierFromObject: TypeModifier<MapType> =
       description: 'The value will be a many type and the key will be text',
       priority: 3,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_MAP_MODIFIER })) {
           return false;
         }
     

@@ -4,6 +4,14 @@ import { TypeStorage, Types, TypeStorageTranscoder, Exprs } from 'expangine-runt
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_EDIT_TRANSCODER = Preferences.define({
+  key: 'fullscreen_edit_transcoder',
+  label: 'Edit transcoder dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface EditTypeTranscoderOptions
@@ -28,7 +36,7 @@ export function getEditTypeTranscoderDefaults(): EditTypeTranscoderOptions {
     confirm: 'Save',
     unconfirm: 'Cancel',
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_EDIT_TRANSCODER),
     handle: () => { /* */ },
   };
 }

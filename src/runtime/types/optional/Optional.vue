@@ -33,6 +33,14 @@ import { OptionalOptions, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeVisuals, TypeVisualInput, TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_REMOVE_OPTIONAL = Preferences.define({
+  key: 'optional_clear',
+  label: 'Clear optional value without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>().extend({
@@ -65,7 +73,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>()
   },
   methods: {
     async removeValue() {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_REMOVE_OPTIONAL })) {
         return;
       }
       this.$emit('input', undefined);

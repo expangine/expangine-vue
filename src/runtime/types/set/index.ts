@@ -12,9 +12,17 @@ import { initializeSubs } from '@/common';
 import { SetSubs } from './SetTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
+import { getProgram } from '@/app/GetProgram';
+import { Preferences } from '@/app/Preference';
 import SetEditor from './SetEditor.vue';
 import SetOptions from './SetOptions.vue';
-import { getProgram } from '@/app/GetProgram';
+
+
+const PREF_SET_MODIFIER = Preferences.define({
+  key: 'set_modifier',
+  label: 'Convert to Set without confirmation',
+  defaultValue: false,
+});
 
 
 export const SetVisuals = createVisuals<SetSubs>()({
@@ -175,7 +183,7 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
       description: 'The type will be converted to a set which does not allow duplicate values',
       priority: 14,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_SET_MODIFIER })) {
           return false;
         }
 

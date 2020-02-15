@@ -83,9 +83,10 @@
 import Vue from 'vue';
 import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } from 'expangine-runtime';
 import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
-import { editFunctionDialog } from './EditFunction';
+import { editFunctionDialog, PREF_FULLSCREEN_EDIT_FUNCTION } from './EditFunction';
 import { getTestFunction } from './TestFunction';
 import { removeFunctionArgument, renameFunctionArgument } from './Refactor';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
@@ -123,6 +124,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_EDIT_FUNCTION, this.fullscreen);
     },
     cancel() {
       this.close(false);

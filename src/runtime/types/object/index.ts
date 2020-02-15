@@ -7,6 +7,14 @@ import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
+import { Preferences } from '@/app/Preference';
+
+
+const PREF_OBJECT_MODIFIER = Preferences.define({
+  key: 'object_modifier',
+  label: 'Convert to Object without confirmation',
+  defaultValue: false,
+});
 
 
 export const ObjectVisuals = createVisuals<string>()({
@@ -185,7 +193,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
       description: names.length ? friendlyList(names) : 'An empty object',
       priority: 15,
       value: async () => {
-        if (!await getConfirmation()) {
+        if (!await getConfirmation({ pref: PREF_OBJECT_MODIFIER })) {
           return false;
         }
 

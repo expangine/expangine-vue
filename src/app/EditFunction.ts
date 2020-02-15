@@ -6,6 +6,14 @@ import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { getMultipleDialoger } from './MultipleDialog';
 import { renameFunction } from './Refactor';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_EDIT_FUNCTION = Preferences.define({
+  key: 'fullscreen_edit_function',
+  label: 'Edit function dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface EditFunctionOptions
@@ -34,7 +42,7 @@ export function getEditFunctionDefaults(): EditFunctionOptions
     requiredParamsType: ObjectType.baseType,
     settings: null as unknown as TypeSettings,
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_EDIT_FUNCTION),
     registry: null as unknown as Registry,
     close: () => undefined,
   };

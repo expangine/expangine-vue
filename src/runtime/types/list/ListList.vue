@@ -96,6 +96,14 @@ import { getConfirmation } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import { ListListOptions } from './ListListTypes';
 import TypeInputBase from '../TypeInputBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_LIST_REMOVE = Preferences.define({
+  key: 'list_list_remove_at',
+  label: 'Remove from list without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).extend({
@@ -180,7 +188,7 @@ export default TypeInputBase<ListType, ListListOptions, any[], ListSubs>(Array).
   methods: {
     async removeAt(pageIndex: number) {
       const index = pageIndex + this.pageStart;
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_LIST_REMOVE })) {
         return;
       }
 

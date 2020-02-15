@@ -75,20 +75,15 @@
 import Vue from 'vue';
 import { diffLines } from 'diff';
 import { Type, AnyType, TextType, ColorType, ColorSpaceRGB } from 'expangine-runtime';
-import { runProgramDialog } from './RunProgram';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals } from '../runtime/types/TypeVisuals';
 import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
+import { runProgramDialog, PREF_FULLSCREEN_RUN_PROGRAM } from './RunProgram';
+import { Preferences } from './Preference';
 
 
 interface Part { value: string; added: boolean; removed: boolean; }
 const getColor = (part: Part): string => part.added ? 'added' : part.removed ? 'removed' : '';
-const getText = (part: Part): string => part.value
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;')
-  .replace(/'/g, '&#039;');
 
 export default Vue.extend({
   data: () => runProgramDialog,
@@ -122,6 +117,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_RUN_PROGRAM, this.fullscreen);
     },
   },
 });

@@ -75,12 +75,13 @@
 import Vue from 'vue';
 import { diffLines } from 'diff';
 import { Type, AnyType, TextType } from 'expangine-runtime';
-import { describeDataDialog } from './DescribeData';
+import { describeDataDialog, PREF_FULLSCREEN_DESCRIBE_DATA } from './DescribeData';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
 import { sendNotification } from './Notify';
 import { LiveRuntime } from 'expangine-runtime-live';
+import { Preferences } from './Preference';
 
 
 
@@ -111,6 +112,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_DESCRIBE_DATA, this.fullscreen);
     },
     determineType() {
       const firstVarRegex = /(var\s+|const\s+|let\s+|)([$a-z_][$a-z_0-9]*)\s*=/gi;

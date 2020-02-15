@@ -44,6 +44,14 @@ import { TypeSettings } from '../TypeVisuals';
 import { ManyOptions, ManySubs } from './ManyTypes';
 import TypeInputBase from '../TypeInputBase';
 import { friendlyList } from '../../../common';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_MANY_CHANGE = Preferences.define({
+  key: 'many_change',
+  label: 'Change Many type without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
@@ -86,7 +94,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
       return this.registry.getTypeVisuals(innerType).name;
     },
     async changeType(innerType: Type) {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_MANY_CHANGE })) {
         return;
       }
 

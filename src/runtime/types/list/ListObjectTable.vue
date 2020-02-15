@@ -161,6 +161,26 @@ import { getDataImportMapping } from '@/app/DataImport';
 import { getDataExport } from '@/app/DataExport';
 import ObjectFormField from '../object/ObjectFormField.vue';
 import TypeInputBase from '../TypeInputBase';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_LIST_REMOVE = Preferences.define({
+  key: 'list_table_remove',
+  label: 'Remove from table without confirmation',
+  defaultValue: false,
+});
+
+const PREF_LIST_CLEAR = Preferences.define({
+  key: 'list_table_clear',
+  label: 'Clear table without confirmation',
+  defaultValue: false,
+});
+
+const PREF_LIST_SORT = Preferences.define({
+  key: 'list_table_sort',
+  label: 'Sort table without confirmation',
+  defaultValue: false,
+});
 
 
 export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSubs>(Array).extend({
@@ -331,7 +351,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
   },
   methods: {
     async clear() {
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_LIST_CLEAR })) {
         return;
       }
 
@@ -346,7 +366,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
     },
     async removeAt(pageIndex: number) {
       const index = pageIndex + this.pageStart;
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_LIST_REMOVE })) {
         return;
       }
 
@@ -424,6 +444,7 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
     async sortSave() {
       if (!await getConfirmation({ 
         message: 'Are you sure? The current order of elements will be the new default order of elements.',
+        pref: PREF_LIST_SORT,
       })) {
         return;
       }

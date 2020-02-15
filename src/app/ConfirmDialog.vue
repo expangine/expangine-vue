@@ -8,6 +8,14 @@
       <v-card-text 
         v-html="message"
       ></v-card-text>
+      <v-card-text v-if="pref">
+        <v-switch
+          persistent-hint
+          label="Don't ask again"
+          :hint="dontShowHint"
+          v-model="dontShow"
+        ></v-switch>
+      </v-card-text>
       <v-card-actions>
         <v-btn 
           v-if="confirm"
@@ -30,9 +38,29 @@
 <script lang="ts">
 import Vue from 'vue';
 import { confirmDialog } from './Confirm';
+import { Preferences } from './Preference';
 
 
 export default Vue.extend({
   data: () => confirmDialog,
+  computed: {
+    dontShow: {
+      get(): boolean {
+        return this.pref ? Preferences.get(this.pref, false) : false;
+      },
+      set(value: boolean) { 
+        if (this.pref) {
+          Preferences.set(this.pref, value);
+        }
+      },
+    },
+    dontShowHint(): string {
+      if (!this.pref) {
+        return '';
+      }
+
+      return Preferences.getPreference(this.pref).label;
+    },
+  },
 });
 </script>

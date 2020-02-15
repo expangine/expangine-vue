@@ -3,6 +3,15 @@ import { getPromiser } from './Promiser';
 import { Expression, Type, NoExpression, ObjectType } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_GET_PROGRAM = Preferences.define({
+  key: 'fullscreen_get_program',
+  label: 'Get program dialog is fullscreen when opened',
+  defaultValue: false,
+});
+
 
 export interface GetProgramOptions
 {
@@ -34,7 +43,7 @@ export function getGetProgramDefaults(): GetProgramOptions {
     confirm: 'OK',
     unconfirm: 'Cancel',
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_GET_PROGRAM),
     close: () => { /* */ },
   };
 }

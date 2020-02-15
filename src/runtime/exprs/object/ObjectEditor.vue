@@ -86,7 +86,6 @@
 import Vue from 'vue';
 import { Type, TypeMap, Expression, ExpressionMap, NoExpression, ObjectExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression } from 'expangine-runtime';
 import { obj, renameVariable } from '@/common';
-import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
 
 

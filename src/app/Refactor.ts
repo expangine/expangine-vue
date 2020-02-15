@@ -3,12 +3,53 @@ import { Traverser, GetRelationExpression, GetTypeExpression, AliasedType, Expre
 import { System, SystemProgram } from './SystemEvents';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
+import { Preferences } from './Preference';
 
-export const refactor = {
-  confirm: false,
-};
 
-export async function renameRelationReferences(oldName: string, newName: string, confirm: boolean = refactor.confirm)
+const PREF_REFACTOR_RENAME_RELATION = Preferences.define({
+  key: 'refactor_rename_relation',
+  label: 'Rename relation references when relation name changes without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_RENAME_TYPE_EXPRESSIONS = Preferences.define({
+  key: 'refactor_rename_type_expressions',
+  label: 'Rename type expressions when type name changes without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_RENAME_TYPE_TYPES = Preferences.define({
+  key: 'refactor_rename_type_types',
+  label: 'Update user-defined type references without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_TYPE = Preferences.define({
+  key: 'refactor_type',
+  label: 'Update user-defined type data without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_RENAME_FUNCTION = Preferences.define({
+  key: 'refactor_rename_function',
+  label: 'Update invoke expressions when function renamed without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_RENAME_FUNCTION_ARGUMENT = Preferences.define({
+  key: 'refactor_rename_function_argument',
+  label: 'Update invoke expressions when function argument renamed without confirmation',
+  defaultValue: true,
+});
+
+const PREF_REFACTOR_REMOVE_FUNCTION_ARGUMENT = Preferences.define({
+  key: 'refactor_remove_function_argument',
+  label: 'Update invoke expressions when function argument removed without confirmation',
+  defaultValue: true,
+});
+
+
+export async function renameRelationReferences(oldName: string, newName: string)
 {
   const foundGetRelation: Array<[
     GetRelationExpression, 
@@ -27,7 +68,7 @@ export async function renameRelationReferences(oldName: string, newName: string,
     }));
   });
 
-  if (foundGetRelation.length > 0 && (!confirm || await getConfirmation({ message: `Update ${foundGetRelation.length} reference(s) to the relation?` })))
+  if (foundGetRelation.length > 0 && await getConfirmation({ message: `Update ${foundGetRelation.length} reference(s) to the relation?`, pref: PREF_REFACTOR_RENAME_RELATION }))
   {
     foundGetRelation.forEach(([expr, onChange, program]) =>
     {
@@ -41,7 +82,7 @@ export async function renameRelationReferences(oldName: string, newName: string,
   }
 }
 
-export async function renameAliasedReferences(oldName: string, newName: string, confirm: boolean = refactor.confirm)
+export async function renameAliasedReferences(oldName: string, newName: string)
 {
   const foundGetType: Array<[
     GetTypeExpression, 
@@ -62,7 +103,7 @@ export async function renameAliasedReferences(oldName: string, newName: string, 
     }));
   });
 
-  if (foundGetType.length > 0 && (!confirm || await getConfirmation({ message: `Update ${foundGetType.length} expression reference(s) from ${oldName} to ${newName}?` })))
+  if (foundGetType.length > 0 && await getConfirmation({ message: `Update ${foundGetType.length} expression reference(s) from ${oldName} to ${newName}?`, pref: PREF_REFACTOR_RENAME_TYPE_EXPRESSIONS }))
   {
     foundGetType.forEach(([expr, onChange, program]) =>
     {
@@ -75,7 +116,7 @@ export async function renameAliasedReferences(oldName: string, newName: string, 
     });
   }
 
-  if (foundAliased.length > 0 && (!confirm || await getConfirmation({ message: `Update ${foundAliased.length} type reference(s) from ${oldName} to ${newName}?` })))
+  if (foundAliased.length > 0 && await getConfirmation({ message: `Update ${foundAliased.length} type reference(s) from ${oldName} to ${newName}?`, pref: PREF_REFACTOR_RENAME_TYPE_TYPES }))
   {
     foundAliased.forEach(([aliased, { onChange, type }]) =>
     {
@@ -89,11 +130,11 @@ export async function renameAliasedReferences(oldName: string, newName: string, 
   }
 }
 
-export async function refactorType(name: string, transform: Expression, confirm: boolean = refactor.confirm)
+export async function refactorType(name: string, transform: Expression)
 {
   const refs = System.getAliasReferences(name, true);
 
-  if (refs.length > 0 && (!confirm || await getConfirmation({ message: `Update ${refs.length} data reference(s)?` })))
+  if (refs.length > 0 && await getConfirmation({ message: `Update ${refs.length} data reference(s)?`, pref: PREF_REFACTOR_TYPE }))
   {
     refs.forEach(([aliased, { onChange, data, type }]) =>
     {
@@ -111,11 +152,11 @@ export async function refactorType(name: string, transform: Expression, confirm:
   }
 }
 
-export async function renameFunction(oldName: string, newName: string, confirm: boolean = refactor.confirm)
+export async function renameFunction(oldName: string, newName: string)
 {
   const refs = System.getFunctionReferences(oldName);
 
-  if (refs.length > 0 && (!confirm || await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?` })))
+  if (refs.length > 0 && await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?`, pref: PREF_REFACTOR_RENAME_FUNCTION }))
   {
     refs.forEach(([expr, { onChange, program }]) =>
     {
@@ -129,11 +170,11 @@ export async function renameFunction(oldName: string, newName: string, confirm: 
   }
 }
 
-export async function renameFunctionArgument(functionName: string, oldName: string, newName: string, confirm: boolean = refactor.confirm)
+export async function renameFunctionArgument(functionName: string, oldName: string, newName: string)
 {
   const refs = System.getFunctionReferences(functionName, oldName);
 
-  if (refs.length > 0 && (!confirm || await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?` })))
+  if (refs.length > 0 && await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?`, pref: PREF_REFACTOR_RENAME_FUNCTION_ARGUMENT }))
   {
     refs.forEach(([expr, { onChange, program }]) =>
     {
@@ -148,11 +189,11 @@ export async function renameFunctionArgument(functionName: string, oldName: stri
   }
 }
 
-export async function removeFunctionArgument(functionName: string, name: string, confirm: boolean = refactor.confirm)
+export async function removeFunctionArgument(functionName: string, name: string)
 {
   const refs = System.getFunctionReferences(functionName, name);
 
-  if (refs.length > 0 && (!confirm || await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?` })))
+  if (refs.length > 0 && await getConfirmation({ message: `Update ${refs.length} Invoke expression(s)?`, pref: PREF_REFACTOR_REMOVE_FUNCTION_ARGUMENT }))
   {
     refs.forEach(([expr, { onChange, program }]) =>
     {

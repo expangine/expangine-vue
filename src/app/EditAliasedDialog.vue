@@ -278,9 +278,29 @@ import { getEditTypeIndex } from './EditTypeIndex';
 import { getEditTypeTranscoder } from './EditTypeTranscoder';
 import { getEditRelation, getRelationKindText } from './EditRelation';
 import { getConfirmation } from './Confirm';
-import { editAliasedDialog } from './EditAliased';
+import { editAliasedDialog, PREF_FULLSCREEN_EDIT_ALIASED } from './EditAliased';
 import { refactorType } from './Refactor';
 import { System } from './SystemEvents';
+import { Preferences } from './Preference';
+
+
+const PREF_REMOVE_INDEX = Preferences.define({
+  key: 'aliased_remove_index',
+  label: 'Remove user-defined type indexes without confirmation',
+  defaultValue: false,
+});
+
+const PREF_REMOVE_TRANSCODER = Preferences.define({
+  key: 'aliased_remove_transcoder',
+  label: 'Remove user-defined type transcoders without confirmation',
+  defaultValue: false,
+});
+
+const PREF_REMOVE_RELATION = Preferences.define({
+  key: 'aliased_remove_relation',
+  label: 'Remove user-defined type relations without confirmation',
+  defaultValue: false,
+});
 
 
 export default Vue.extend({
@@ -390,6 +410,8 @@ export default Vue.extend({
   methods: {
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
+
+      Preferences.set(PREF_FULLSCREEN_EDIT_ALIASED, this.fullscreen);
     },
     addStorage() {
       this.storage = new TypeStorage({ name: this.name }, this.registry.defs);
@@ -429,7 +451,7 @@ export default Vue.extend({
     async removeIndex(index: TypeIndex) {
       const { storage } = this;
 
-      if (storage && await getConfirmation()) {      
+      if (storage && await getConfirmation({ pref: PREF_REMOVE_INDEX })) {      
         Vue.delete(storage.indexes, index.name);
       }
     },
@@ -449,7 +471,7 @@ export default Vue.extend({
     async removeTranscoder(property: string) {
       const { storage } = this;
 
-      if (storage && await getConfirmation()) {
+      if (storage && await getConfirmation({ pref: PREF_REMOVE_TRANSCODER })) {
         Vue.delete(storage.transcoders, property);
       }
     },
@@ -482,7 +504,7 @@ export default Vue.extend({
     async removeRelation(typeRelation: TypeRelation) {
       const relations = this.registry.defs.relations;
 
-      if (typeRelation.relation.name in relations && await getConfirmation()) {
+      if (typeRelation.relation.name in relations && await getConfirmation({ pref: PREF_REMOVE_RELATION })) {
         this.relations.splice(this.relations.indexOf(typeRelation), 1);
 
         Vue.delete(relations, typeRelation.relation.name);

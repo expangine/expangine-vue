@@ -74,6 +74,7 @@ import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
 import { TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
+import { Preferences } from '../../../app/Preference';
 
 
 const MIN_INPUT_WIDTH = 300;
@@ -100,6 +101,13 @@ interface MapEntry {
   value: any;
   invalid: boolean;
 }
+
+const PREF_REMOVE_ENTRY = Preferences.define({
+  key: 'map_remove',
+  label: 'Remove Map entry without confirmation',
+  defaultValue: false,
+});
+
 
 export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Map).extend({
   name: 'MapGrid',
@@ -213,7 +221,7 @@ export default TypeInputBase<MapType, MapGridOptions, Map<any, any>, MapSubs>(Ma
     },
     async removeEntry(pageIndex: number) {
       const index = pageIndex + this.pageStart;
-      if (!await getConfirmation()) {
+      if (!await getConfirmation({ pref: PREF_REMOVE_ENTRY })) {
         return;
       }
 

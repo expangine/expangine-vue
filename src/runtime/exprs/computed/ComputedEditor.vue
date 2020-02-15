@@ -51,7 +51,6 @@ import { Type, Expression, ExpressionBuilder, SubExpression, NoExpression, Compu
 import { TypeSubOption, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import NextMenu from '@/app/NextMenu.vue';
-import { getConfirmation } from '../../../app/Confirm';
 
 
 export default ExpressionBase<ComputedExpression>().extend({

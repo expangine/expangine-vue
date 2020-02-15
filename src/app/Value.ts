@@ -6,6 +6,14 @@ import { Registry } from '@/runtime/Registry';
 import { getRandomNumber } from '@/common';
 import { getBuildType } from './BuildType';
 import { getMultipleDialoger } from './MultipleDialog';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_VALUE = Preferences.define({
+  key: 'fullscreen_value',
+  label: 'Value dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface ValueOptions
@@ -34,7 +42,7 @@ export function getValueDefaults(): ValueOptions {
     confirm: 'Ok',
     unconfirm: 'Cancel',
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_VALUE),
     handle: () => { /* */ },
   };
 }

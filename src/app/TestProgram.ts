@@ -1,9 +1,16 @@
 
-import { Expression, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction, OptionalType, ObjectType, Type, Exprs } from 'expangine-runtime';
+import { Expression, ObjectType, Type, Exprs } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
-import { TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { getMultipleDialoger } from './MultipleDialog';
+import { Preferences } from './Preference';
+
+
+export const PREF_FULLSCREEN_TEST_PROGRAM = Preferences.define({
+  key: 'fullscreen_test_program',
+  label: 'Test program dialog is fullscreen when opened',
+  defaultValue: false,
+});
 
 
 export interface TestProgramOptions
@@ -33,7 +40,7 @@ export function getTestProgramDefaults(): TestProgramOptions
     resultAutomatic: true,
     result: null,
     visible: false,
-    fullscreen: false,
+    fullscreen: Preferences.get(PREF_FULLSCREEN_TEST_PROGRAM),
     invalid: false,
     registry: null as unknown as Registry,
     close: () => undefined,

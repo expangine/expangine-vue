@@ -298,7 +298,6 @@ import { Type, ObjectType, Types, TypeStorage, TypeStoragePrimaryType, TypeIndex
 import { ListOptions, ListOption } from '@/common';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { editRelationDialog } from './EditRelation';
-import { getConfirmation } from './Confirm';
 
 
 export default Vue.extend({

@@ -42,6 +42,14 @@ import Vue from 'vue';
 import { Expression, ChainExpression, ReturnExpression, ExpressionBuilder, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
+import { Preferences } from '../../../app/Preference';
+
+
+const PREF_RETURN_REMOVE = Preferences.define({
+  key: 'return_remove',
+  label: 'Remove return without confirmation',
+  defaultValue: false,
+});
 
 
 export default ExpressionBase<ReturnExpression>().extend({
@@ -57,7 +65,7 @@ export default ExpressionBase<ReturnExpression>().extend({
       this.update();
     },
     async removeReturn() {
-      if (await getConfirmation()) {
+      if (await getConfirmation({ pref: PREF_RETURN_REMOVE })) {
         this.input(this.value.value);
       }
     },
