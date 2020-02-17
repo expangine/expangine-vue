@@ -298,7 +298,7 @@ export class Shortcuts
     this.element = element;
 
     this.keydown = (e) => {
-      window.console.log(Shortcuts.nameFromCode(Shortcuts.codeFromEvent(e)));
+      // window.console.log(Shortcuts.nameFromCode(Shortcuts.codeFromEvent(e)));
 
       if (Shortcuts.isBlocked(e)) {
         return;

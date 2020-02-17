@@ -1702,12 +1702,22 @@ export default Vue.extend({
     historyUndo() 
     {
       this.saveDataPending();
-      this.history.undo();
+      const message = this.history.undo();
+
+      if (message)
+      {
+        sendNotification({ message });
+      }
     },
     historyRedo() 
     {
       this.saveDataPending();
-      this.history.redo();
+      const message = this.history.redo();
+
+      if (message)
+      {
+        sendNotification({ message });
+      }
     },
     async historyClear()
     {
