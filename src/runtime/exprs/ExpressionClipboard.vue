@@ -16,9 +16,6 @@ import { sendNotification } from '../../app/Notify';
 import { Preferences } from '../../app/Preference';
 
 
-const copyMax = 5;
-const copyExpressions: Expression[] = [];
-
 const PREF_PASTE = Preferences.define({
   key: 'paste_expression',
   label: 'Paste expression without confirmation',
@@ -40,10 +37,10 @@ export default Vue.extend({
       type: Object as () => Type,
     },
   },
-  data: () => ({
-    copied: copyExpressions,
-  }),
   computed: {
+    copied(): Expression[] {
+      return this.registry.expressionClipboard;
+    },
     enabled(): boolean {
       return this.registry.isClipboardEnabled();
     },
@@ -63,10 +60,8 @@ export default Vue.extend({
   },
   methods: {
     copy(expr: Expression) {
-      copyExpressions.unshift(this.clone(expr));
-      if (copyExpressions.length > copyMax) {
-        copyExpressions.splice(copyMax, copyExpressions.length - copyMax);
-      }
+      this.registry.copy(expr);
+
       sendNotification({ message: 'Expression Copied' });
     },
     async paste(expr: Expression) {
@@ -83,11 +78,8 @@ export default Vue.extend({
       }
 
       if (await getConfirmation({ message, pref: PREF_PASTE })) {
-        this.$emit('pasted', this.clone(expr));
+        this.$emit('pasted', registry.defs.cloneExpression(expr));
       }
-    },
-    clone(expr: Expression): Expression {
-      return this.registry.defs.cloneExpression(expr);
     },
   },
 });

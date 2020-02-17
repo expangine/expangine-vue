@@ -27,6 +27,8 @@ export class Registry
 
   public typeSettings: Record<string, TypeSettings>;
   public typeData: Record<string, any[]>;
+  public expressionClipboard: Expression[];
+  public expressionClipboardMax: number;
 
   public isValidFunction: (name: string) => boolean;
   public isValidProperty: (name: string, type: ObjectType) => boolean;
@@ -55,6 +57,8 @@ export class Registry
     this.exprs = [];
     this.operationMap = obj();
     this.dataImportTypes = [];
+    this.expressionClipboard = [];
+    this.expressionClipboardMax = 10;
 
     this.isValidFunction = () => true;
     this.isValidProperty = () => true;
@@ -74,6 +78,16 @@ export class Registry
     importer(this);
 
     return this;
+  }
+
+  public copy(expr: Expression)
+  {
+    this.expressionClipboard.unshift(this.defs.cloneExpression(expr));
+
+    if (this.expressionClipboard.length > this.expressionClipboardMax) 
+    {
+      this.expressionClipboard.splice(this.expressionClipboardMax, this.expressionClipboard.length - this.expressionClipboardMax);
+    }
   }
 
   public addDataImportType(dataImportType: TypeDataImport)

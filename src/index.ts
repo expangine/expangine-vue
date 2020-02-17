@@ -16,6 +16,8 @@ import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionEditor from './runtime/exprs/common/ExpressionEditor.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
 
+import ShortcutInput from './app/ShortcutInput.vue';
+import ShortcutLabel from './app/ShortcutLabel.vue';
 import DataString from './app/DataString.vue';
 import DataStringBox from './app/DataStringBox.vue';
 import TypeStringBox from './app/TypeStringBox.vue';
@@ -53,6 +55,7 @@ import ChildFilter from './app/ChildFilter.vue';
 
 import { FocusOnVisible, FocusOnCreate, FocusOnChange } from './app/Focus';
 
+import { ShortcutDirective } from './app/Shortcuts';
 
 
 export * from './app/Aliased';
@@ -178,10 +181,13 @@ export default {
     Vue.component('ex-draggable', Draggable);
     Vue.component('ex-templated', Templated);
     Vue.component('ex-validation', Validation);
+    Vue.component('ex-shortcut-input', ShortcutInput);
+    Vue.component('ex-shortcut-label', ShortcutLabel);
 
     Vue.directive('focus-on-visible', FocusOnVisible);
     Vue.directive('focus-on-create', FocusOnCreate);
     Vue.directive('focus-on-change', FocusOnChange);
+    Vue.directive('shortcuts', ShortcutDirective);
 
     Vue.use(VueTimeago, {});
   },

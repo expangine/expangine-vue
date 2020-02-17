@@ -1,5 +1,5 @@
 <template>
-  <table class="ex-table ex-striped">
+  <table v-shortcuts="defineShortcuts" class="ex-table ex-striped">
     <tbody>
       <tr>
         <td class="pl-0 pt-1">
@@ -15,6 +15,7 @@
                   <v-list-item-content>
                     <v-list-item-title>
                       Add Variable
+                      <ex-shortcut-label pref="shortcut_define_add"></ex-shortcut-label>
                     </v-list-item-title>
                     <v-list-item-subtitle>
                       Define a new variable to be used in the body
@@ -130,7 +131,17 @@
 import Vue from 'vue';
 import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, ChainExpression } from 'expangine-runtime';
 import { obj, renameVariable } from '@/common';
+import { Preferences } from '@/app/Preference';
+import { ShortcutContext } from '@/app/Shortcuts';
 import ExpressionBase from '../ExpressionBase';
+
+
+const PREF_SHORTCUT_DEFINE_ADD = Preferences.define({
+  key: 'shortcut_define_add',
+  label: 'Add Define expression variable shortcut',
+  defaultValue: '187__c',
+  component: 'ex-shortcut-input',
+});
 
 
 export default ExpressionBase<DefineExpression>().extend({
@@ -150,6 +161,13 @@ export default ExpressionBase<DefineExpression>().extend({
     },
     hasChain(): boolean {
       return this.value.body instanceof ChainExpression;
+    },
+    defineShortcuts(): ShortcutContext {
+      return { 
+        downs: {
+          [Preferences.get(PREF_SHORTCUT_DEFINE_ADD)]: this.addVar,
+        },
+      };
     },
   },
   mounted() {

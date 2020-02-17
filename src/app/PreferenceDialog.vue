@@ -14,7 +14,15 @@
           <ex-child-filter>
             <template v-for="option in options">
               <v-list-item :key="option.key">
-                <v-list-item-content>
+                <v-list-item-content v-if="option.component">
+                  <component 
+                    :is="option.component"
+                    v-bind="option"
+                    :label="option.pref.label"
+                    v-model="option.value"
+                  ></component>
+                </v-list-item-content>
+                <v-list-item-content v-else>
                   <ex-type-input
                     :type="option.type"
                     :registry="registry"
@@ -41,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 import { copy, objectValues, Type } from 'expangine-runtime';
 import { Preferences, Preference } from './Preference';
 import { Registry } from '../runtime/Registry';
@@ -74,6 +82,7 @@ export default Vue.extend({
       type: Type, 
       settings: TypeSettings,
       value: any,
+      component?: VueConstructor | string,
     }>,
   }),
   computed: {
@@ -91,8 +100,9 @@ export default Vue.extend({
           const value = copy(Preferences.get(pref.key, pref.defaultValue));
           const type = pref.type || this.registry.defs.describe(value);
           const settings = this.registry.getTypeSettings(type, pref.label);
+          const component = pref.component;
 
-          return { key, pref, type, settings, value };
+          return { key, pref, type, settings, value, component };
         });
 
         this.options.sort((a, b) => a.pref.label.localeCompare(b.pref.label));

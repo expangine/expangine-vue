@@ -1,12 +1,13 @@
 
 import Vue from 'vue';
 import { BooleanType, Expression, Type, NoExpression, ObjectType, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
-import { Registry } from '../Registry';
-import { getConfirmation } from '@/app/Confirm';
-import { ExpressionVisuals } from './ExpressionVisuals';
-import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 import { ComplexityColors } from '@/common';
 import { Preferences } from '@/app/Preference';
+import { sendNotification } from '@/app/Notify';
+import { getConfirmation } from '@/app/Confirm';
+import { Registry } from '../Registry';
+import { ExpressionVisuals } from './ExpressionVisuals';
+import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 
 
 const PREF_REMOVE_EXPRESSION = Preferences.define({
@@ -37,6 +38,9 @@ export default function<E extends Expression>()
       requestRemove(): void;
       remove(): void;
       hasContextVar(name: string): boolean;
+      cutExpression(): void;
+      copyExpression(): boolean;
+      pasteExpression(): Promise<void>;
     },
     {
       computedValue: E;
@@ -253,7 +257,9 @@ export default function<E extends Expression>()
       },
       async requestRemove() {
         if (this.isRemovable) {
-          if (await getConfirmation({ pref: PREF_REMOVE_EXPRESSION })) {
+          const describe = this.registry.getExpressionDescribe(this.value);
+
+          if (await getConfirmation({ message: `Remove "${describe}"?`, pref: PREF_REMOVE_EXPRESSION })) {
             this.remove();
           }
         }
@@ -262,6 +268,47 @@ export default function<E extends Expression>()
         return this.context instanceof ObjectType
           ? !!this.context.options.props[name]
           : false;
+      },
+      cutExpression(): void {
+        if (this.isRemovable && this.copyExpression()) {
+          this.requestRemove();
+        }
+      },
+      copyExpression(): boolean {
+        if (this.value !== NoExpression.instance) {
+          this.registry.copy(this.value);
+  
+          sendNotification({ message: 'Expression Copied' });
+  
+          return true;
+        }
+
+        return false;
+      },
+      async pasteExpression() {
+        const expr = this.registry.expressionClipboard[0];
+  
+        if (!expr) {
+          return;
+        }
+  
+        const { context, requiredType, registry } = this;
+        const defaultMessage = 'Are you sure?';
+        let message = defaultMessage;
+  
+        if (context && requiredType) {
+          const exprType = expr.getType(registry.defs, context);
+          
+          if (exprType && !requiredType.acceptsType(exprType)) {
+            message = 'Are you sure? The expression does NOT return the required type.';
+          }
+        }
+  
+        const prompt = message !== defaultMessage || this.value !== NoExpression.instance;
+  
+        if (!prompt || await getConfirmation({ message, pref: 'paste_expression' })) {
+          this.input(registry.defs.cloneExpression(expr));
+        }
       },
     },
   });

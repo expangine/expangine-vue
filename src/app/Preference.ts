@@ -1,5 +1,6 @@
 import { Type, copy, isString } from 'expangine-runtime';
 import { Store } from './Store';
+import Vue, { VueConstructor } from 'vue';
 
 
 // tslint:disable: unified-signatures
@@ -10,6 +11,7 @@ export interface Preference<T = any>
   label: string;
   defaultValue: T;
   type?: Type;
+  component?: VueConstructor | string;
 }
 
 export type PreferenceInput<T = any> = string | Preference<T>;
@@ -54,8 +56,8 @@ export class PreferenceMap
   {
     const key = this.keyOf(pref);
 
-    this.values[key] = value;
-
+    Vue.set(this.values, key, value);
+    
     Store.set(this.prefix + key, JSON.stringify(value));
 
     return this;
@@ -67,7 +69,7 @@ export class PreferenceMap
 
     if (!(pref.key in this.values))
     {
-      this.values[pref.key] = copy(pref.defaultValue);
+      Vue.set(this.values, pref.key, copy(pref.defaultValue));
 
       Store.get(this.prefix + pref.key).then((value) => 
       {
@@ -75,7 +77,7 @@ export class PreferenceMap
         {
           try
           {
-            this.values[pref.key] = JSON.parse(value);
+            Vue.set(this.values, pref.key, JSON.parse(value));
           }
           catch (e)
           {

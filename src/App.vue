@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-shortcuts.document="shortcuts">
 
     <v-app-bar app dense elevate-on-scroll color="primary" dark>
       <v-menu offset-y close-on-content-click>
@@ -15,7 +15,10 @@
               <v-icon>mdi-import</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Open</v-list-item-title>
+              <v-list-item-title>
+                Open
+                <ex-shortcut-label pref="shortcut_open"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>Upload a project JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -24,7 +27,10 @@
               <v-icon>mdi-export</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Save</v-list-item-title>
+              <v-list-item-title>
+                Save
+                <ex-shortcut-label pref="shortcut_save"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>Download project as a JSON file.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -96,7 +102,10 @@
               <v-icon>mdi-refresh</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>New Project</v-list-item-title>
+              <v-list-item-title>
+                New Project
+                <ex-shortcut-label pref="shortcut_new"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>You can clear out or reuse any existing work.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -113,7 +122,7 @@
           <v-list-item @click="toggleAutoSave">
             <v-list-item-action>
               <v-checkbox
-                :input-value="autoSave.value"
+                :input-value="autoSave"
               ></v-checkbox>
             </v-list-item-action>
             <v-list-item-content>
@@ -136,7 +145,10 @@
               <v-icon>mdi-undo</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Undo</v-list-item-title>
+              <v-list-item-title>
+                Undo
+                <ex-shortcut-label pref="shortcut_undo"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>{{ undoLabel }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -145,7 +157,10 @@
               <v-icon>mdi-redo</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Redo</v-list-item-title>
+              <v-list-item-title>
+                Redo
+                <ex-shortcut-label pref="shortcut_redo"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>{{ redoLabel }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -201,7 +216,10 @@
               <v-icon>mdi-file-document-box-search-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Operation Catalogue</v-list-item-title>
+              <v-list-item-title>
+                Operation Explorer
+                <ex-shortcut-label pref="shortcut_operations"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>Search through the list of available operations.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -212,7 +230,10 @@
               ></v-checkbox>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Read Only</v-list-item-title>
+              <v-list-item-title>
+                Read Only
+                <ex-shortcut-label pref="shortcut_readonly"></ex-shortcut-label>
+              </v-list-item-title>
               <v-list-item-subtitle>See what the tool looks like in read-only mode.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -227,7 +248,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-menu offset-y max-height="400">
+      <v-menu offset-y max-height="400" v-model="showFunctions">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Functions
@@ -261,7 +282,7 @@
         </v-list>
       </v-menu>
 
-      <v-menu offset-y max-height="400">
+      <v-menu offset-y max-height="400" v-model="showTypes">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Types
@@ -295,7 +316,7 @@
         </v-list>
       </v-menu>
 
-      <v-menu offset-y max-height="400">
+      <v-menu offset-y max-height="400" v-model="showRelations">
         <template #activator="{ on }">
           <v-btn text v-on="on">
             Relations
@@ -592,29 +613,10 @@ import { ValidationHelper } from './app/ValidationHelper';
 import { getEditAliased } from './app/EditAliased';
 import { getEditRelation } from './app/EditRelation';
 import { addType } from './app/Aliased';
-import Registry from './runtime';
 import { Preferences } from './app/Preference';
+import { ShortcutContext, Shortcuts } from './app/Shortcuts';
+import Registry from './runtime';
 
-
-
-
-const autoSave = (() => {
-  const store = newStore('autoSave', {
-    encode: (value: boolean) => value,
-    decode: (data: boolean) => data,
-    getDefault: () => true,
-  });
-
-  store.load().then((initialValue) => autoSave.value = initialValue);
-
-  return {
-    value: true,
-    can: () => autoSave.value,
-    set(value: boolean) {
-      store.save(this.value = value);
-    },
-  };
-})();
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
@@ -671,6 +673,117 @@ const PREF_READ_ONLY = Preferences.define({
   defaultValue: false,
 });
 
+const PREF_AUTO_SAVE = Preferences.define({
+  key: 'auto_save',
+  label: 'Auto-save project',
+  defaultValue: true,
+});
+
+const PREF_SHORTCUT_SAVE = Preferences.define({
+  key: 'shortcut_save',
+  label: 'Save shortcut',
+  defaultValue: '83__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_OPEN = Preferences.define({
+  key: 'shortcut_open',
+  label: 'Open shortcut',
+  defaultValue: '79__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_UNDO = Preferences.define({
+  key: 'shortcut_undo',
+  label: 'Undo shortcut',
+  defaultValue: '90__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_REDO = Preferences.define({
+  key: 'shortcut_redo',
+  label: 'Redo shortcut',
+  defaultValue: '90_sc',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_NEW = Preferences.define({
+  key: 'shortcut_new',
+  label: 'New Project shortcut',
+  defaultValue: '78__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_READONLY = Preferences.define({
+  key: 'shortcut_readonly',
+  label: 'Toggle Read Only shortcut',
+  defaultValue: '69__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_OPERATIONS = Preferences.define({
+  key: 'shortcut_operations',
+  label: 'Operation Explorer shortcut',
+  defaultValue: '79_sc',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_FUNCTIONS = Preferences.define({
+  key: 'shortcut_functions',
+  label: 'Open functions menu shortcut',
+  defaultValue: '70_sc',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_TYPES = Preferences.define({
+  key: 'shortcut_types',
+  label: 'Open types menu shortcut',
+  defaultValue: '85_sc',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_RELATIONS = Preferences.define({
+  key: 'shortcut_relations',
+  label: 'Open relations menu shortcut',
+  defaultValue: '82_sc',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_VIEW_DESIGN = Preferences.define({
+  key: 'shortcut_view_design',
+  label: 'Goto design view shortcut',
+  defaultValue: '49__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_VIEW_DATA = Preferences.define({
+  key: 'shortcut_view_data',
+  label: 'Goto data view shortcut',
+  defaultValue: '50__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_VIEW_PROGRAM = Preferences.define({
+  key: 'shortcut_view_program',
+  label: 'Goto program view shortcut',
+  defaultValue: '51__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_EXPRESSION_COPY = Preferences.define({
+  key: 'expression_copy',
+  label: 'Copy expression shortcut',
+  defaultValue: '67__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_EXPRESSION_PASTE = Preferences.define({
+  key: 'expression_paste',
+  label: 'Paste expression shortcut',
+  defaultValue: '86__c',
+  component: 'ex-shortcut-input',
+});
+
 
 export default Vue.extend({
   name: 'App',
@@ -684,12 +797,15 @@ export default Vue.extend({
     program: NoExpression.instance as Expression,
     // Editor Properties
     initialized: false,
-    autoSave,
+    autoSave: Preferences.get(PREF_AUTO_SAVE),
     mode: 0,
     metadataEditing: false,
     readOnly: Preferences.get(PREF_READ_ONLY),
     examples: [] as any[],
     showExamples: false,
+    showFunctions: false,
+    showTypes: false,
+    showRelations: false,
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
@@ -702,9 +818,34 @@ export default Vue.extend({
     redoEmpty: true,
     redoLabel: '',
     historyDrawer: false,
+    // Preferences
+    prefs: Preferences.values,
   }),
   computed: 
   {
+    shortcuts(): ShortcutContext {
+      return {
+        id: 'app',
+        downs: {
+          [Preferences.get(PREF_SHORTCUT_SAVE)]: this.exportJson,
+          [Preferences.get(PREF_SHORTCUT_OPEN)]: this.importJson,
+          [Preferences.get(PREF_SHORTCUT_UNDO)]: this.historyUndo,
+          [Preferences.get(PREF_SHORTCUT_REDO)]: this.historyRedo,
+          [Preferences.get(PREF_SHORTCUT_NEW)]: this.reset,
+          [Preferences.get(PREF_SHORTCUT_READONLY)]: this.toggleReadOnly,
+          [Preferences.get(PREF_SHORTCUT_OPERATIONS)]: () => this.showOperations = true,
+          [Preferences.get(PREF_SHORTCUT_FUNCTIONS)]: () => this.showFunctions = true,
+          [Preferences.get(PREF_SHORTCUT_TYPES)]: () => this.showTypes = true,
+          [Preferences.get(PREF_SHORTCUT_RELATIONS)]: () => this.showRelations = true,
+          [Preferences.get(PREF_SHORTCUT_VIEW_DESIGN)]: () => this.mode = 0,
+          [Preferences.get(PREF_SHORTCUT_VIEW_DATA)]: () => this.mode = 1,
+          [Preferences.get(PREF_SHORTCUT_VIEW_PROGRAM)]: () => this.mode = 2,
+        },
+        ups: {
+
+        },
+      };
+    },
     hasExamples(): boolean {
       return this.examples.length > 0;
     },
@@ -768,13 +909,13 @@ export default Vue.extend({
       return new ProjectHistory({
         project: this, 
         transcoders: this.store, 
-        canSave: autoSave.can,
+        canSave: () => this.autoSave,
       });
     },
     store() {
       window.console.log('store created');
 
-      const canSave = autoSave.can;
+      const canSave = () => this.autoSave;
       
       return {
         type: newStore('type', {
@@ -864,6 +1005,8 @@ export default Vue.extend({
     (window as any).runtime = LiveRuntime;
     (window as any).home = this;
     (window as any).ex = ex;
+    (window as any).Shortcuts = Shortcuts;
+    (window as any).Preference = Preferences;
 
     LiveRuntime.objectSet = (obj, key, value) => {
       Vue.set(obj as any, key as string, value);
@@ -1053,7 +1196,7 @@ export default Vue.extend({
     // AUTO SAVE
     async toggleAutoSave()
     {
-      if (autoSave.value) {
+      if (this.autoSave) {
         const result = await getConfirmation({
           title: 'Disable Auto Save',
           message: 'Your work will no longer be saved to your browser. Would you like to <b>clear</b> the data from your browser or <b>leave</b> it there for next time you visit?',
@@ -1067,7 +1210,9 @@ export default Vue.extend({
         }
       }
 
-      autoSave.set(!autoSave.value);
+      this.autoSave = !this.autoSave;
+
+      Preferences.set(PREF_AUTO_SAVE, this.autoSave);
     },
     // READONLY
     toggleReadOnly() 

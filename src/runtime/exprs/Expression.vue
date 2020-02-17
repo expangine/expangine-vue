@@ -16,6 +16,7 @@
       :is="visuals.editor"
       v-bind="$props"
       v-on="$listeners"
+      v-shortcuts="shortcuts"
     ></component>
   </span>
 
@@ -32,7 +33,10 @@
   >
     <v-menu max-height="400">
       <template #activator="{ on }">
-        <v-btn text :color="statusColor" v-on="on" v-focus-on-create>
+        <v-btn text :color="statusColor" 
+          v-on="on" 
+          v-focus-on-create
+          v-shortcuts="shortcuts">
           <v-icon>mdi-plus</v-icon>
           Expression
         </v-btn>
@@ -100,9 +104,42 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, OperationExpression } from 'expangine-runtime';
+import { Expression, OperationExpression, NoExpression } from 'expangine-runtime';
+import { ShortcutContext } from '@/app/Shortcuts';
+import { Preferences } from '@/app/Preference';
+import { sendNotification } from '@/app/Notify';
+import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
 import ExpressionBase from './ExpressionBase';
+
+
+const PREF_SHORTCUT_COPY = Preferences.define({
+  key: 'expression_copy',
+  label: 'Copy expression shortcut',
+  defaultValue: '67__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_PASTE = Preferences.define({
+  key: 'expression_paste',
+  label: 'Paste expression shortcut',
+  defaultValue: '86__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_CUT = Preferences.define({
+  key: 'expression_cut',
+  label: 'Cut expression shortcut',
+  defaultValue: '88__c',
+  component: 'ex-shortcut-input',
+});
+
+const PREF_SHORTCUT_REMOVE = Preferences.define({
+  key: 'expression_remove',
+  label: 'Remove expression shortcut',
+  defaultValue: '8__c',
+  component: 'ex-shortcut-input',
+});
 
 
 export default ExpressionBase().extend({
@@ -116,6 +153,16 @@ export default ExpressionBase().extend({
     },
     compact(): boolean {
       return this.displayOptions.compact;
+    },
+    shortcuts(): ShortcutContext {
+      return {
+        downs: {
+          [Preferences.get(PREF_SHORTCUT_COPY)]: this.copyExpression,
+          [Preferences.get(PREF_SHORTCUT_PASTE)]: this.pasteExpression,
+          [Preferences.get(PREF_SHORTCUT_CUT)]: this.cutExpression,
+          [Preferences.get(PREF_SHORTCUT_REMOVE)]: this.requestRemove,
+        },
+      };
     },
   },
   methods: {

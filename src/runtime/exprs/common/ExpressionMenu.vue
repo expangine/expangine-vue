@@ -26,9 +26,21 @@
                 <v-list-item-content>
                   <v-list-item-title>
                     Copy {{ visuals.name }}
+                    <ex-shortcut-label pref="expression_copy"></ex-shortcut-label>
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     Add this expression to the clipboard
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item @click="cutExpression" v-if="canCopy">
+                <v-list-item-content>
+                  <v-list-item-title>
+                    Cut {{ visuals.name }}
+                    <ex-shortcut-label pref="expression_cut"></ex-shortcut-label>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    Remove expression and add to the clipboard
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -103,6 +115,7 @@
               <v-list-item-content class="red--text darken-4">
                 <v-list-item-title>
                   Remove {{ visuals.name }}
+                  <ex-shortcut-label pref="expression_remove"></ex-shortcut-label>
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   The entire expression will be removed

@@ -1,5 +1,5 @@
 <template>
-  <table class="ex-table ex-striped">
+  <table class="ex-table ex-striped" v-shortcuts="objectShortcuts">
     <tbody>
       <tr>
         <td class="pl-0 pt-1">
@@ -14,6 +14,7 @@
                 <v-list-item-content>
                   <v-list-item-title>
                     Add Property
+                    <ex-shortcut-label pref="shortcut_object_add"></ex-shortcut-label>
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     Define a new property in the object
@@ -86,7 +87,17 @@
 import Vue from 'vue';
 import { Type, TypeMap, Expression, ExpressionMap, NoExpression, ObjectExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression } from 'expangine-runtime';
 import { obj, renameVariable } from '@/common';
+import { Preferences } from '@/app/Preference';
+import { ShortcutContext } from '@/app/Shortcuts';
 import ExpressionBase from '../ExpressionBase';
+
+
+const PREF_SHORTCUT_OBJECT_ADD = Preferences.define({
+  key: 'shortcut_object_add',
+  label: 'Add Object expression property shortcut',
+  defaultValue: '187__c',
+  component: 'ex-shortcut-input',
+});
 
 
 export default ExpressionBase<ObjectExpression>().extend({
@@ -110,6 +121,13 @@ export default ExpressionBase<ObjectExpression>().extend({
     },
     hasProperties(): boolean {
       return this.keys.length > 1;
+    },
+    objectShortcuts(): ShortcutContext {
+      return { 
+        downs: {
+          [Preferences.get(PREF_SHORTCUT_OBJECT_ADD)]: this.addProperty,
+        },
+      };
     },
   },
   mounted() {
