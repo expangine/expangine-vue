@@ -33,12 +33,13 @@ import { OptionalOptions, OptionalSubs } from './OptionalTypes';
 import { getConfirmation } from '../../../app/Confirm';
 import { TypeVisuals, TypeVisualInput, TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_REMOVE_OPTIONAL = Preferences.define({
   key: 'optional_clear',
   label: 'Clear optional value without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

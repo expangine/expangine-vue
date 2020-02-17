@@ -3,12 +3,13 @@ import { getPromiser } from './Promiser';
 import { Expression, Type, NoExpression, ObjectType } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_GET_PROGRAM = Preferences.define({
   key: 'fullscreen_get_program',
   label: 'Get program dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

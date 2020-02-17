@@ -42,12 +42,13 @@ import Vue from 'vue';
 import { Expression, ChainExpression, ReturnExpression, ExpressionBuilder, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_RETURN_REMOVE = Preferences.define({
   key: 'return_remove',
   label: 'Remove return without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

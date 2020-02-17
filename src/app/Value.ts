@@ -6,12 +6,13 @@ import { Registry } from '@/runtime/Registry';
 import { getRandomNumber } from '@/common';
 import { getBuildType } from './BuildType';
 import { getMultipleDialoger } from './MultipleDialog';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_VALUE = Preferences.define({
   key: 'fullscreen_value',
   label: 'Value dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

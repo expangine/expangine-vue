@@ -4,12 +4,13 @@ import { TypeStorage, Types, TypeStorageTranscoder, Exprs } from 'expangine-runt
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_EDIT_TRANSCODER = Preferences.define({
   key: 'fullscreen_edit_transcoder',
   label: 'Edit transcoder dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

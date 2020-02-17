@@ -99,20 +99,21 @@
 
 <script lang="ts">
 import { ObjectType, ObjectOps, Expression, Exprs } from 'expangine-runtime';
-import { friendlyList } from '../../../common';
-import { getConfirmation } from '../../../app/Confirm';
-import { getInput } from '../../../app/Input';
-import { sendNotification } from '../../../app/Notify';
-import { getBuildType } from '../../../app/BuildType';
-import { getProgram } from '../../../app/GetProgram';
+import { friendlyList } from '@/common';
+import { getConfirmation } from '@/app/Confirm';
+import { getInput } from '@/app/Input';
+import { sendNotification } from '@/app/Notify';
+import { getBuildType } from '@/app/BuildType';
+import { getProgram } from '@/app/GetProgram';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import TypeEditorBase from '../TypeEditorBase';
-import { Preferences } from '../../../app/Preference';
 
 
 const PREF_REMOVE_PROP = Preferences.define({
   key: 'object_remove_prop',
   label: 'Remove Object type property without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

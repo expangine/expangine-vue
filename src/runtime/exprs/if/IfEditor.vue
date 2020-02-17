@@ -143,12 +143,13 @@ import Vue from 'vue';
 import { IfExpression, Expression, NoExpression, ChainExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_REMOVE_ELSEIF = Preferences.define({
   key: 'if_remove_elseif',
   label: 'Remove Else If from If expressions without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

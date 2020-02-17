@@ -1,24 +1,26 @@
 
 import { Type, OptionalType } from 'expangine-runtime';
+import { initializeSubs, obj } from '@/common';
+import { getConfirmation } from '@/app/Confirm';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
+import { Registry } from '@/runtime/Registry';
 import { createVisuals, TypeSettings } from '@/runtime/types/TypeVisuals';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
 import { OptionalInput, OptionalSubs } from './OptionalTypes';
-import { getConfirmation } from '@/app/Confirm';
-import { initializeSubs, obj } from '@/common';
-import { Registry } from '@/runtime/Registry';
 import OptionalEditor from './OptionalEditor.vue';
-import { Preferences } from '@/app/Preference';
 
 
 const PREF_MAKE_OPTIONAL = Preferences.define({
   key: 'optional_make',
   label: 'Make type Optional without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_MAKE_REQUIRED = Preferences.define({
   key: 'optional_unmake',
   label: 'Make Optional Required without Confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

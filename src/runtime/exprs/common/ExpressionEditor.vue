@@ -194,7 +194,7 @@ import { ListOptions, isMapEqual } from '@/common';
 import { getRunProgram } from '@/app/RunProgram';
 import { getDebugProgram } from '@/app/DebugProgram';
 import { ValidationHelper } from '@/app/ValidationHelper';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { ColorsType, Colors } from '@/app/Colors';
 import ExpressionBase, { ExpressionDisplayOptions } from '../ExpressionBase';
 
@@ -202,12 +202,14 @@ import ExpressionBase, { ExpressionDisplayOptions } from '../ExpressionBase';
 const PREF_COMPACT = Preferences.define({
   key: 'expression_editor_compact',
   label: 'Expression editor compact view',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: false,
 });
 
 const PREF_ORIENTATION = Preferences.define({
   key: 'expression_editor_orientation',
   label: 'Expression editor vertical toolbar orientation',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: null as null | boolean,
   type: Types.bool(),
 });
@@ -215,6 +217,7 @@ const PREF_ORIENTATION = Preferences.define({
 const PREF_VALIDATION_SEVERITY = Preferences.define({
   key: 'expression_editor_severity',
   label: 'Expression editor minimum validation severity',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: ValidationSeverity.MEDIUM,
   type: Types.enum(
     Types.number(),
@@ -230,6 +233,7 @@ const PREF_VALIDATION_SEVERITY = Preferences.define({
 const PREF_COLOR = Preferences.define({
   key: 'expression_editor_color',
   label: 'Expression editor theme color',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: 'primary',
   type: ColorsType,
 });
@@ -237,6 +241,7 @@ const PREF_COLOR = Preferences.define({
 const PREF_ERROR = Preferences.define({
   key: 'expression_editor_error',
   label: 'Expression editor error color',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: 'error',
   type: ColorsType,
 });
@@ -244,6 +249,7 @@ const PREF_ERROR = Preferences.define({
 const PREF_RETURN_COLOR = Preferences.define({
   key: 'expression_editor_return_color',
   label: 'Expression editor return expressions color',
+  category: [PreferenceCategory.EXPRESSION_EDITOR],
   defaultValue: '#e1bee7',
   type: ColorsType,
 });

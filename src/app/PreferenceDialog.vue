@@ -10,27 +10,42 @@
         Preferences
       </v-card-title>
       <v-card-text v-focus-on-visible="[value, 'input, textarea, select']">
-        <v-list dense>
-          <ex-child-filter>
-            <template v-for="option in options">
-              <v-list-item :key="option.key">
-                <v-list-item-content v-if="option.component">
-                  <component 
-                    :is="option.component"
-                    v-bind="option"
-                    :label="option.pref.label"
-                    v-model="option.value"
-                  ></component>
-                </v-list-item-content>
-                <v-list-item-content v-else>
-                  <ex-type-input
-                    :type="option.type"
-                    :registry="registry"
-                    :settings="option.settings"
-                    v-model="option.value"
-                  ></ex-type-input>
-                </v-list-item-content>
-              </v-list-item>
+        <v-list>
+          <ex-child-filter @filter="updateFiltering">
+            <template v-for="categoryOption in options">
+              <v-list-group 
+                :key="categoryOption.category"
+                :value="filtering || categoryOption.visible" 
+                @input="categoryOption.visible = $event">
+
+                <template #activator>
+                  <v-list-item-title>
+                    <strong>{{ categoryOption.category }}</strong>
+                  </v-list-item-title>
+                </template>
+                
+                <template v-for="option in categoryOption.prefs">
+                  <v-list-item :key="option.category">
+                    <v-list-item-content v-if="option.component" class="pb-0 pt-3">
+                      <component 
+                        :is="option.component"
+                        v-bind="option"
+                        :label="option.pref.label"
+                        v-model="option.value"
+                      ></component>
+                    </v-list-item-content>
+                    <v-list-item-content v-else>
+                      <ex-type-input
+                        :type="option.type"
+                        :registry="registry"
+                        :settings="option.settings"
+                        v-model="option.value"
+                      ></ex-type-input>
+                    </v-list-item-content>
+                  </v-list-item>
+                </template>
+
+              </v-list-group>
             </template>
           </ex-child-filter>
         </v-list>
@@ -50,8 +65,8 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { copy, objectValues, Type } from 'expangine-runtime';
-import { Preferences, Preference } from './Preference';
+import { copy, objectEach, Type, objectValues } from 'expangine-runtime';
+import { Preferences, Preference, PreferenceCategory } from './Preference';
 import { Registry } from '../runtime/Registry';
 import { TypeSettings } from '../runtime/types/TypeVisuals';
 
@@ -59,9 +74,26 @@ import { TypeSettings } from '../runtime/types/TypeVisuals';
 const PREF_FULLSCREEN_PREFERENCE = Preferences.define({
   key: 'fullscreen_preference',
   label: 'Preference dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 
+interface PreferenceInput
+{ 
+  key: string;
+  pref: Preference;
+  type: Type;
+  settings: TypeSettings;
+  value: any;
+  component?: VueConstructor | string;
+}
+
+interface PreferenceCategoryInput
+{ 
+  category: string;
+  visible: boolean;
+  prefs: PreferenceInput[];
+}
 
 export default Vue.extend({
   props: {
@@ -76,14 +108,8 @@ export default Vue.extend({
   },
   data: () => ({
     fullscreen: Preferences.get(PREF_FULLSCREEN_PREFERENCE),
-    options: [] as Array<{ 
-      key: string, 
-      pref: Preference, 
-      type: Type, 
-      settings: TypeSettings,
-      value: any,
-      component?: VueConstructor | string,
-    }>,
+    options: [] as PreferenceCategoryInput[],
+    filtering: false,
   }),
   computed: {
     isFullscreen(): boolean {
@@ -94,32 +120,49 @@ export default Vue.extend({
     },
   },
   watch: {
-    value(visible: boolean) {
-      if (visible) {
-        this.options = objectValues(Preferences.prefs, (pref, key) => {
+    value(visible: boolean) 
+    {
+      if (visible) 
+      {
+        const categoryMap: Record<string, PreferenceInput[]> = {};
+
+        objectEach(Preferences.prefs, (pref, key) => 
+        {
           const value = copy(Preferences.get(pref.key, pref.defaultValue));
           const type = pref.type || this.registry.defs.describe(value);
           const settings = this.registry.getTypeSettings(type, pref.label);
           const component = pref.component;
+          const input: PreferenceInput = { key, pref, type, settings, value, component };
 
-          return { key, pref, type, settings, value, component };
+          pref.category.forEach((category) =>
+          {
+            (categoryMap[category] = categoryMap[category] || []).push(input);
+          });
         });
 
-        this.options.sort((a, b) => a.pref.label.localeCompare(b.pref.label));
+        const options: PreferenceCategoryInput[] = objectValues(categoryMap, (prefs, category) => ({ prefs, category, visible: false }));
+        options.forEach(({ prefs }) => prefs.sort((a, b) => a.pref.label.localeCompare(b.pref.label)));
+        options.sort((a, b) => a.category.localeCompare(b.category));
+
+        this.options = options;
       }
     },
   },
   methods: {
+    updateFiltering(filter: string) {
+      this.filtering = !!filter;
+    },
     toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
 
       Preferences.set(PREF_FULLSCREEN_PREFERENCE, this.fullscreen);
     },
     save() {
-      this.options.forEach(({ key, value }) =>
-      {
-        Preferences.set(key, value);
-      });
+      this.options.forEach(({ prefs }) => 
+        prefs.forEach(({ key, value }) => 
+          Preferences.set(key, value),
+        ),
+      );
 
       this.$emit('input', false);
     },

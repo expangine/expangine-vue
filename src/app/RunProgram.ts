@@ -4,12 +4,13 @@ import { LiveRuntime } from 'expangine-runtime-live';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { measure } from './StopWatch';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_RUN_PROGRAM = Preferences.define({
   key: 'fullscreen_run_program',
   label: 'Run program dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

@@ -244,18 +244,20 @@ import { getEditFunction } from '../../../app/EditFunction';
 import { getDisplayData } from '../../../app/DisplayData';
 import { getProgram } from '../../../app/GetProgram';
 import ExpressionBase from '../ExpressionBase';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_EXPRESSION_CHANGE = Preferences.define({
   key: 'expression_change',
   label: 'Change expressions without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_EXPRESSION_MODIFY = Preferences.define({
   key: 'expression_modify',
   label: 'Modify expressions without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

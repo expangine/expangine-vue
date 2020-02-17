@@ -1,12 +1,13 @@
 
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_DISPLAY_DATA = Preferences.define({
   key: 'fullscreen_display_data',
   label: 'Display Data dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

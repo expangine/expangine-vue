@@ -106,7 +106,7 @@
 import Vue from 'vue';
 import { Expression, OperationExpression, NoExpression } from 'expangine-runtime';
 import { ShortcutContext } from '@/app/Shortcuts';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { sendNotification } from '@/app/Notify';
 import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
@@ -116,6 +116,7 @@ import ExpressionBase from './ExpressionBase';
 const PREF_SHORTCUT_COPY = Preferences.define({
   key: 'expression_copy',
   label: 'Copy expression shortcut',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.SHORTCUT],
   defaultValue: '67__c',
   component: 'ex-shortcut-input',
 });
@@ -123,6 +124,7 @@ const PREF_SHORTCUT_COPY = Preferences.define({
 const PREF_SHORTCUT_PASTE = Preferences.define({
   key: 'expression_paste',
   label: 'Paste expression shortcut',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.SHORTCUT],
   defaultValue: '86__c',
   component: 'ex-shortcut-input',
 });
@@ -130,6 +132,7 @@ const PREF_SHORTCUT_PASTE = Preferences.define({
 const PREF_SHORTCUT_CUT = Preferences.define({
   key: 'expression_cut',
   label: 'Cut expression shortcut',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.SHORTCUT],
   defaultValue: '88__c',
   component: 'ex-shortcut-input',
 });
@@ -137,6 +140,7 @@ const PREF_SHORTCUT_CUT = Preferences.define({
 const PREF_SHORTCUT_REMOVE = Preferences.define({
   key: 'expression_remove',
   label: 'Remove expression shortcut',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.SHORTCUT],
   defaultValue: '8__c',
   component: 'ex-shortcut-input',
 });

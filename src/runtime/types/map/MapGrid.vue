@@ -69,12 +69,12 @@
 
 <script lang="ts">
 import { MapType, isFunction } from 'expangine-runtime';
-import { getConfirmation } from '../../../app/Confirm';
+import { getConfirmation } from '@/app/Confirm';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { MapGridOptions } from './MapGridTypes';
 import { MapSubs } from './MapTypes';
 import { TypeSettings } from '../TypeVisuals';
 import TypeInputBase from '../TypeInputBase';
-import { Preferences } from '../../../app/Preference';
 
 
 const MIN_INPUT_WIDTH = 300;
@@ -105,6 +105,7 @@ interface MapEntry {
 const PREF_REMOVE_ENTRY = Preferences.define({
   key: 'map_remove',
   label: 'Remove Map entry without confirmation',
+  category: [PreferenceCategory.DATA, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

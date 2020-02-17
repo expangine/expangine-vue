@@ -16,12 +16,13 @@ import { ListSubs } from './ListTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
 import { getProgram } from '@/app/GetProgram';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 
 
 const PREF_LIST_MODIFIER = Preferences.define({
   key: 'list_modifier',
   label: 'Convert type to List without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

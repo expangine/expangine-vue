@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import { BooleanType, Expression, Type, NoExpression, ObjectType, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
 import { ComplexityColors } from '@/common';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { sendNotification } from '@/app/Notify';
 import { getConfirmation } from '@/app/Confirm';
 import { Registry } from '../Registry';
@@ -13,6 +13,7 @@ import { TypeVisuals, TypeSettings } from '../types/TypeVisuals';
 const PREF_REMOVE_EXPRESSION = Preferences.define({
   key: 'remove_expression',
   label: 'Remove expressions without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

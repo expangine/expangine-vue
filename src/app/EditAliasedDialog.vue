@@ -281,24 +281,27 @@ import { getConfirmation } from './Confirm';
 import { editAliasedDialog, PREF_FULLSCREEN_EDIT_ALIASED } from './EditAliased';
 import { refactorType } from './Refactor';
 import { System } from './SystemEvents';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 const PREF_REMOVE_INDEX = Preferences.define({
   key: 'aliased_remove_index',
   label: 'Remove user-defined type indexes without confirmation',
+  category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_REMOVE_TRANSCODER = Preferences.define({
   key: 'aliased_remove_transcoder',
   label: 'Remove user-defined type transcoders without confirmation',
+  category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_REMOVE_RELATION = Preferences.define({
   key: 'aliased_remove_relation',
   label: 'Remove user-defined type relations without confirmation',
+  category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

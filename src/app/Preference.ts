@@ -9,6 +9,7 @@ export interface Preference<T = any>
 {
   key: string;
   label: string;
+  category: string[];
   defaultValue: T;
   type?: Type;
   component?: VueConstructor | string;
@@ -93,3 +94,17 @@ export class PreferenceMap
 }
 
 export const Preferences = new PreferenceMap();
+
+export const PreferenceCategory =
+{
+  EDITOR: 'Editor',
+  CONFIRM: 'Confirmation',
+  SHORTCUT: 'Shortcut',
+  EXPRESSION: 'Expression',
+  EXPRESSION_EDITOR: 'Expression Editor',
+  REFACTOR: 'Refactor',
+  DESIGN: 'Design',
+  DATA: 'Data',
+  FULLSCREEN: 'Fullscreen',
+  SAVE: 'Save',
+};

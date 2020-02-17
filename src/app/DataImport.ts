@@ -17,34 +17,42 @@ import { LiveRuntime } from 'expangine-runtime-live';
 import { Preferences } from './Preference';
 
 
+const PREF_CATEGORY = 'Data Import';
+const PREF_CATEGORY_CONFIRM = 'Confirmation';
+
 
 const PREF_DATA_IMPORT_CONVERT = Preferences.define({
   key: 'data_import_convert',
   label: 'Convert data values to correct type on import without confirmation',
+  category: [PREF_CATEGORY, PREF_CATEGORY_CONFIRM],
   defaultValue: false,
 });
 
 const PREF_DATA_IMPORT_PROPERTY = Preferences.define({
   key: 'data_import_property',
   label: 'CSV Import default property',
+  category: [PREF_CATEGORY],
   defaultValue: 'data',
 });
 
 const PREF_DATA_IMPORT_CHOOSE = Preferences.define({
   key: 'data_import_choose',
   label: 'CSV Import choose column types',
+  category: [PREF_CATEGORY],
   defaultValue: false,
 });
 
 const PREF_DATA_IMPORT_ALL = Preferences.define({
   key: 'data_import_all',
   label: 'CSV Import all columns',
+  category: [PREF_CATEGORY],
   defaultValue: false,
 });
 
 const PREF_DATA_IMPORT_ACTION = Preferences.define({
   key: 'data_import_all',
   label: 'CSV Import default action',
+  category: [PREF_CATEGORY],
   defaultValue: 'replace',
   type: Types.enum(
     Types.text(),

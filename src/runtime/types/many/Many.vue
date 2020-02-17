@@ -39,17 +39,18 @@
 
 <script lang="ts">
 import { Type, ManyType, EnumType } from 'expangine-runtime';
-import { getConfirmation } from '../../../app/Confirm';
+import { friendlyList } from '@/common';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
+import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings } from '../TypeVisuals';
 import { ManyOptions, ManySubs } from './ManyTypes';
 import TypeInputBase from '../TypeInputBase';
-import { friendlyList } from '../../../common';
-import { Preferences } from '../../../app/Preference';
 
 
 const PREF_MANY_CHANGE = Preferences.define({
   key: 'many_change',
   label: 'Change Many type without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

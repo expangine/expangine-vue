@@ -107,6 +107,8 @@ export default Vue.extend({
 
         node = node.$parent;
       }
+
+      this.$emit('filter', this.filter);
     },
     isVisible(el: Element, filter: string): boolean {
       return !filter || !(el instanceof HTMLElement) || el.innerText.toLowerCase().indexOf(filter) !== -1;

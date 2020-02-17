@@ -1,12 +1,13 @@
 <template>
-  <div>
-    {{ label }}:
-    <strong>[ {{ shortcutText }} ]</strong>
-    <v-btn absolute right :color="color" @click="capture">
+  <div class="ex-shortcut-input">
+    <v-btn :color="color" @click="capture">
       <v-icon>{{ icon }}</v-icon>
       &nbsp;
       {{ text }}
     </v-btn>
+    <span class="ml-3">
+      {{ label }}
+    </span>
   </div>
 </template>
 
@@ -69,3 +70,19 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.ex-shortcut-input {
+  display: flex;
+  align-items: center;
+
+  > span {
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 20px;
+    font-size: 16px;
+    flex: 1 1;
+    min-width: fit-content;
+  }
+  
+}
+</style>

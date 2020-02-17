@@ -13,12 +13,13 @@ import { ListOptions } from '../../common';
 import { Registry } from '../Registry';
 import { getConfirmation } from '../../app/Confirm';
 import { sendNotification } from '../../app/Notify';
-import { Preferences } from '../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../app/Preference';
 
 
 const PREF_PASTE = Preferences.define({
   key: 'paste_expression',
   label: 'Paste expression without confirmation',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

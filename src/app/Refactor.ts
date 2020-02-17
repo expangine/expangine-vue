@@ -3,48 +3,57 @@ import { Traverser, GetRelationExpression, GetTypeExpression, AliasedType, Expre
 import { System, SystemProgram } from './SystemEvents';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
+
+
 
 
 const PREF_REFACTOR_RENAME_RELATION = Preferences.define({
   key: 'refactor_rename_relation',
   label: 'Rename relation references when relation name changes without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_RENAME_TYPE_EXPRESSIONS = Preferences.define({
   key: 'refactor_rename_type_expressions',
   label: 'Rename type expressions when type name changes without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_RENAME_TYPE_TYPES = Preferences.define({
   key: 'refactor_rename_type_types',
   label: 'Update user-defined type references without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_TYPE = Preferences.define({
   key: 'refactor_type',
   label: 'Update user-defined type data without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_RENAME_FUNCTION = Preferences.define({
   key: 'refactor_rename_function',
   label: 'Update invoke expressions when function renamed without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_RENAME_FUNCTION_ARGUMENT = Preferences.define({
   key: 'refactor_rename_function_argument',
   label: 'Update invoke expressions when function argument renamed without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 
 const PREF_REFACTOR_REMOVE_FUNCTION_ARGUMENT = Preferences.define({
   key: 'refactor_remove_function_argument',
   label: 'Update invoke expressions when function argument removed without confirmation',
+  category: [PreferenceCategory.REFACTOR, PreferenceCategory.CONFIRM],
   defaultValue: true,
 });
 

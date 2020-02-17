@@ -6,12 +6,13 @@ import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { getMultipleDialoger } from './MultipleDialog';
 import { renameFunction } from './Refactor';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_EDIT_FUNCTION = Preferences.define({
   key: 'fullscreen_edit_function',
   label: 'Edit function dialog is fullscreen when opened',
+  category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

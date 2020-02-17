@@ -613,75 +613,85 @@ import { ValidationHelper } from './app/ValidationHelper';
 import { getEditAliased } from './app/EditAliased';
 import { getEditRelation } from './app/EditRelation';
 import { addType } from './app/Aliased';
-import { Preferences } from './app/Preference';
+import { Preferences, PreferenceCategory } from './app/Preference';
 import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import Registry from './runtime';
-
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
   key: 'disable_auto_save',
   label: 'Disable auto save without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_EXAMPLE_OVERWRITE = Preferences.define({
   key: 'example_overwrite',
   label: 'Overwrite project with examples without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_CLEAR_RELATIONS = Preferences.define({
   key: 'clear_relations',
   label: 'Clear relations without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_CLEAR_TYPES = Preferences.define({
   key: 'clear_types',
   label: 'Clear types without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_CLEAR_FUNCTIONS = Preferences.define({
   key: 'clear_functions',
   label: 'Clear functions without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_SAVE_AS_FUNCTION_OVERWRITE = Preferences.define({
   key: 'save_as_function_overwrite',
   label: 'Save project as function and overwrite existing function without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_CLEAR_HISTORY = Preferences.define({
   key: 'clear_history',
   label: 'Clear undo/redo history without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_REPLACE_DATA = Preferences.define({
   key: 'replace_data',
   label: 'Replace project data without confirmation',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_READ_ONLY = Preferences.define({
   key: 'read_only',
   label: 'Project read-only',
+  category: [PreferenceCategory.EDITOR],
   defaultValue: false,
 });
 
 const PREF_AUTO_SAVE = Preferences.define({
   key: 'auto_save',
   label: 'Auto-save project',
+  category: [PreferenceCategory.EDITOR],
   defaultValue: true,
 });
 
 const PREF_SHORTCUT_SAVE = Preferences.define({
   key: 'shortcut_save',
   label: 'Save shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '83__c',
   component: 'ex-shortcut-input',
 });
@@ -689,6 +699,7 @@ const PREF_SHORTCUT_SAVE = Preferences.define({
 const PREF_SHORTCUT_OPEN = Preferences.define({
   key: 'shortcut_open',
   label: 'Open shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '79__c',
   component: 'ex-shortcut-input',
 });
@@ -696,6 +707,7 @@ const PREF_SHORTCUT_OPEN = Preferences.define({
 const PREF_SHORTCUT_UNDO = Preferences.define({
   key: 'shortcut_undo',
   label: 'Undo shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '90__c',
   component: 'ex-shortcut-input',
 });
@@ -703,6 +715,7 @@ const PREF_SHORTCUT_UNDO = Preferences.define({
 const PREF_SHORTCUT_REDO = Preferences.define({
   key: 'shortcut_redo',
   label: 'Redo shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '90_sc',
   component: 'ex-shortcut-input',
 });
@@ -710,6 +723,7 @@ const PREF_SHORTCUT_REDO = Preferences.define({
 const PREF_SHORTCUT_NEW = Preferences.define({
   key: 'shortcut_new',
   label: 'New Project shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '78__c',
   component: 'ex-shortcut-input',
 });
@@ -717,6 +731,7 @@ const PREF_SHORTCUT_NEW = Preferences.define({
 const PREF_SHORTCUT_READONLY = Preferences.define({
   key: 'shortcut_readonly',
   label: 'Toggle Read Only shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '69__c',
   component: 'ex-shortcut-input',
 });
@@ -724,6 +739,7 @@ const PREF_SHORTCUT_READONLY = Preferences.define({
 const PREF_SHORTCUT_OPERATIONS = Preferences.define({
   key: 'shortcut_operations',
   label: 'Operation Explorer shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '79_sc',
   component: 'ex-shortcut-input',
 });
@@ -731,6 +747,7 @@ const PREF_SHORTCUT_OPERATIONS = Preferences.define({
 const PREF_SHORTCUT_FUNCTIONS = Preferences.define({
   key: 'shortcut_functions',
   label: 'Open functions menu shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '70_sc',
   component: 'ex-shortcut-input',
 });
@@ -738,6 +755,7 @@ const PREF_SHORTCUT_FUNCTIONS = Preferences.define({
 const PREF_SHORTCUT_TYPES = Preferences.define({
   key: 'shortcut_types',
   label: 'Open types menu shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '85_sc',
   component: 'ex-shortcut-input',
 });
@@ -745,6 +763,7 @@ const PREF_SHORTCUT_TYPES = Preferences.define({
 const PREF_SHORTCUT_RELATIONS = Preferences.define({
   key: 'shortcut_relations',
   label: 'Open relations menu shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '82_sc',
   component: 'ex-shortcut-input',
 });
@@ -752,6 +771,7 @@ const PREF_SHORTCUT_RELATIONS = Preferences.define({
 const PREF_SHORTCUT_VIEW_DESIGN = Preferences.define({
   key: 'shortcut_view_design',
   label: 'Goto design view shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '49__c',
   component: 'ex-shortcut-input',
 });
@@ -759,6 +779,7 @@ const PREF_SHORTCUT_VIEW_DESIGN = Preferences.define({
 const PREF_SHORTCUT_VIEW_DATA = Preferences.define({
   key: 'shortcut_view_data',
   label: 'Goto data view shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '50__c',
   component: 'ex-shortcut-input',
 });
@@ -766,21 +787,8 @@ const PREF_SHORTCUT_VIEW_DATA = Preferences.define({
 const PREF_SHORTCUT_VIEW_PROGRAM = Preferences.define({
   key: 'shortcut_view_program',
   label: 'Goto program view shortcut',
+  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
   defaultValue: '51__c',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_EXPRESSION_COPY = Preferences.define({
-  key: 'expression_copy',
-  label: 'Copy expression shortcut',
-  defaultValue: '67__c',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_EXPRESSION_PASTE = Preferences.define({
-  key: 'expression_paste',
-  label: 'Paste expression shortcut',
-  defaultValue: '86__c',
   component: 'ex-shortcut-input',
 });
 

@@ -92,12 +92,13 @@ import { getConfirmation } from '../../../app/Confirm';
 import { TypeUpdateEvent, TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import TypeEditorBase from '../TypeEditorBase';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_REMOVE_CONSTANT = Preferences.define({
   key: 'enum_remove_constant',
   label: 'Remove Enum constant without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

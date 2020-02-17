@@ -74,12 +74,13 @@ import { getBuildType } from '../../../app/BuildType';
 import { TupleSubs } from './TupleTypes';
 import TypeEditorBase from '../TypeEditorBase';
 import { sendNotification } from '../../../app/Notify';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_TUPLE_REMOVE_ELEMENT = Preferences.define({
   key: 'tuple_remove',
   label: 'Remove element from Tuple without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

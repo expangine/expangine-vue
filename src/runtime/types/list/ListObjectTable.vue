@@ -149,36 +149,39 @@
 <script lang="ts">
 import { Type, ListType, isNumber, ObjectType, Types, isFunction, isString, AliasedType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
+import { getInput } from '@/app/Input';
+import { System } from '@/app/SystemEvents';
+import { exportFile } from '@/app/FileExport';
+import { sendNotification } from '@/app/Notify';
+import { getConfirmation } from '@/app/Confirm';
+import { getDataExport } from '@/app/DataExport';
+import { getDataImportMapping } from '@/app/DataImport';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { TypeSettings, TypeSettingsRecord } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { exportFile } from '@/app/FileExport';
-import { getConfirmation } from '@/app/Confirm';
-import { System } from '@/app/SystemEvents';
-import { getDataImportMapping } from '@/app/DataImport';
-import { getDataExport } from '@/app/DataExport';
 import ObjectFormField from '../object/ObjectFormField.vue';
 import TypeInputBase from '../TypeInputBase';
-import { Preferences } from '../../../app/Preference';
 
 
 const PREF_LIST_REMOVE = Preferences.define({
   key: 'list_table_remove',
   label: 'Remove from table without confirmation',
+  category: [PreferenceCategory.DATA, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_LIST_CLEAR = Preferences.define({
   key: 'list_table_clear',
   label: 'Clear table without confirmation',
+  category: [PreferenceCategory.DATA, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
 const PREF_LIST_SORT = Preferences.define({
   key: 'list_table_sort',
   label: 'Sort table without confirmation',
+  category: [PreferenceCategory.DATA, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

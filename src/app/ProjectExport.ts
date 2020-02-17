@@ -3,66 +3,76 @@ import { getSimpleInput } from './SimpleInput';
 import { exportFile } from './FileExport';
 import { Project, ProjectTranscoders } from './Project';
 import { friendlyList } from '@/common';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 const PREF_NAME = Preferences.define({
   key: 'save_name',
   label: 'Save project name',
+  category: [PreferenceCategory.SAVE],
   defaultValue: '',
 });
 
 const PREF_METADATA = Preferences.define({
   key: 'save_metadata',
   label: 'Save project metadata',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_TYPE = Preferences.define({
   key: 'save_type',
   label: 'Save project designed type',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_SETTINGS = Preferences.define({
   key: 'save_settings',
   label: 'Save project designed type inputs',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_DATA = Preferences.define({
   key: 'save_data',
   label: 'Save project data',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_PROGRAM = Preferences.define({
   key: 'save_program',
   label: 'Save project program',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_FUNCTIONS = Preferences.define({
   key: 'save_functions',
   label: 'Save project functions',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_TYPES = Preferences.define({
   key: 'save_types',
   label: 'Save project types',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_RELATIONS = Preferences.define({
   key: 'save_types',
   label: 'Save project relations',
+  category: [PreferenceCategory.SAVE],
   defaultValue: true,
 });
 
 const PREF_COMPRESSED = Preferences.define({
   key: 'save_compressed',
   label: 'Save project in the compressed format',
+  category: [PreferenceCategory.SAVE],
   defaultValue: false,
 });
 

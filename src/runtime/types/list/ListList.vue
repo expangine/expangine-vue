@@ -91,17 +91,18 @@
 
 <script lang="ts">
 import { Type, ListType, isNumber, isFunction } from 'expangine-runtime';
+import { getConfirmation } from '@/app/Confirm';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { TypeSettings } from '../TypeVisuals';
-import { getConfirmation } from '../../../app/Confirm';
 import { ListSubs } from './ListTypes';
 import { ListListOptions } from './ListListTypes';
 import TypeInputBase from '../TypeInputBase';
-import { Preferences } from '../../../app/Preference';
 
 
 const PREF_LIST_REMOVE = Preferences.define({
   key: 'list_list_remove_at',
   label: 'Remove from list without confirmation',
+  category: [PreferenceCategory.DATA, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

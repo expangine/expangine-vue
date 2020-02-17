@@ -102,12 +102,13 @@ import { Type, ObjectType, Types, TypeStorage, TypeStoragePrimaryType, TypeIndex
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { editTypeIndexDialog } from './EditTypeIndex';
 import { getConfirmation } from './Confirm';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 const PREF_REMOVE_TYPE_INDEX = Preferences.define({
   key: 'remove_type_index',
   label: 'Remove user-defined type indexes without confirmation',
+  category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

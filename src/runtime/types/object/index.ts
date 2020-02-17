@@ -1,18 +1,19 @@
 
 import { ObjectType, MapType, TextType, ManyType, Type, TupleType, isString, objectValues, objectMap, AnyType, isObject } from 'expangine-runtime';
 import { friendlyList, initializeSubs, obj, isExactType } from '@/common';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
+import { getConfirmation } from '@/app/Confirm';
 import { createVisuals, TypeSettings, TypeSubNode } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
-import { getConfirmation } from '@/app/Confirm';
 import { ObjectFormInput } from './ObjectFormTypes';
 import ObjectEditor from './ObjectEditor.vue';
-import { Preferences } from '@/app/Preference';
 
 
 const PREF_OBJECT_MODIFIER = Preferences.define({
   key: 'object_modifier',
   label: 'Convert to Object without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

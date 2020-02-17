@@ -13,7 +13,7 @@ import { SetSubs } from './SetTypes';
 import { TypeModifier } from '../TypeModifier';
 import { getConfirmation } from '@/app/Confirm';
 import { getProgram } from '@/app/GetProgram';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import SetEditor from './SetEditor.vue';
 import SetOptions from './SetOptions.vue';
 
@@ -21,6 +21,7 @@ import SetOptions from './SetOptions.vue';
 const PREF_SET_MODIFIER = Preferences.define({
   key: 'set_modifier',
   label: 'Convert to Set without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

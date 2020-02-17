@@ -131,7 +131,7 @@
 import Vue from 'vue';
 import { Type, TypeMap, Expression, ExpressionMap, NoExpression, DefineExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, ChainExpression } from 'expangine-runtime';
 import { obj, renameVariable } from '@/common';
-import { Preferences } from '@/app/Preference';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { ShortcutContext } from '@/app/Shortcuts';
 import ExpressionBase from '../ExpressionBase';
 
@@ -139,6 +139,7 @@ import ExpressionBase from '../ExpressionBase';
 const PREF_SHORTCUT_DEFINE_ADD = Preferences.define({
   key: 'shortcut_define_add',
   label: 'Add Define expression variable shortcut',
+  category: [PreferenceCategory.EXPRESSION, PreferenceCategory.SHORTCUT],
   defaultValue: '187__c',
   component: 'ex-shortcut-input',
 });

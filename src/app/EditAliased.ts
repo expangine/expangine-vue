@@ -7,12 +7,13 @@ import { Registry } from '@/runtime/Registry';
 import { renameType, addType } from './Aliased';
 import { getMultipleDialoger } from './MultipleDialog';
 import { renameAliasedReferences } from './Refactor';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
 
 
 export const PREF_FULLSCREEN_EDIT_ALIASED = Preferences.define({
   key: 'fullscreen_edit_aliased',
   label: 'Type editor dialog is fullscreen when opened',
+  category: [PreferenceCategory.FULLSCREEN],
   defaultValue: false,
 });
 

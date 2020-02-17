@@ -1,21 +1,22 @@
 
 import { Type, MapType, TextType, ObjectType, ManyType, isString, isMap } from 'expangine-runtime';
+import { initializeSubs, isExactType } from '@/common';
 import { getConfirmation } from '@/app/Confirm';
 import { TypeSettings, createVisuals, TypeSubNode } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
-import { initializeSubs, isExactType } from '@/common';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { MapGridInput } from './MapGridTypes';
 import { TextBoxInput } from '../text/TextBoxTypes';
 import { TextComboInput } from '../text/TextComboTypes';
 import { MapSubs } from './MapTypes';
 import MapEditor from './MapEditor.vue';
-import { Preferences } from '@/app/Preference';
 
 
 const PREF_MAP_MODIFIER = Preferences.define({
   key: 'map_modifier',
   label: 'Convert to Map without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

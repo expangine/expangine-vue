@@ -47,17 +47,18 @@
 
 <script lang="ts">
 import { Type, ManyType, NullType, Expression, Exprs } from 'expangine-runtime';
+import { getConfirmation } from '@/app/Confirm';
+import { getBuildType } from '@/app/BuildType';
+import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { TypeUpdateEvent } from '../TypeVisuals';
-import { getConfirmation } from '../../../app/Confirm';
-import { getBuildType } from '../../../app/BuildType';
 import { ManySubs, ManyOptions } from './ManyTypes';
 import TypeEditorBase from '../TypeEditorBase';
-import { Preferences } from '../../../app/Preference';
 
 
 const PREF_MANY_REMOVE = Preferences.define({
   key: 'many_remove',
   label: 'Remove type from Many without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 

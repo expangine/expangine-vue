@@ -71,12 +71,13 @@ import { getConfirmation } from '../../../app/Confirm';
 import { SetSubs } from './SetTypes';
 import { SetListOptions } from './SetListTypes';
 import TypeInputBase from '../TypeInputBase';
-import { Preferences } from '../../../app/Preference';
+import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
 const PREF_SET_REMOVE_AT = Preferences.define({
   key: 'set_remove_at',
   label: 'Remove from Set without confirmation',
+  category: [PreferenceCategory.DESIGN, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
 
