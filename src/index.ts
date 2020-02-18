@@ -4,6 +4,8 @@ import './app.less';
 import { VueConstructor } from 'vue';
 import Draggable from 'vuedraggable';
 import VueTimeago from 'vue-timeago';
+import VueMarkdown from 'vue-markdown';
+import wysiwyg from 'vue-wysiwyg';
 
 import TypeEditor from './runtime/types/TypeEditor.vue';
 import TypeEditorMenu from './runtime/types/TypeEditorMenu.vue';
@@ -190,5 +192,7 @@ export default {
     Vue.directive('shortcuts', ShortcutDirective);
 
     Vue.use(VueTimeago, {});
+    Vue.use(wysiwyg, {});
+    Vue.component('vue-markdown', VueMarkdown);
   },
 };
