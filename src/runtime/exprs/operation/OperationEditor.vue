@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, AnyType, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, objectMap, OperationMapping } from 'expangine-runtime';
+import { Expression, Type, AnyType, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, objectMap, OperationMapping, Types } from 'expangine-runtime';
 import { ListOptions, renameVariable } from '@/common';
 import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getInput } from '../../../app/Input';
@@ -264,7 +264,7 @@ export default ExpressionBase<OperationExpression>().extend({
         return null;
       }
 
-      return Type.simplify(paramType);
+      return Types.simplify(paramType);
     },
     scopedContext(): Type {
       const defs = this.registry.defs;

@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { BooleanType, Expression, Type, NoExpression, ObjectType, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap } from 'expangine-runtime';
+import { BooleanType, Expression, Type, NoExpression, ObjectType, ColorType, ColorSpaceHSL, ColorSpaceRGB, objectMap, Types } from 'expangine-runtime';
 import { ComplexityColors } from '@/common';
 import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { sendNotification } from '@/app/Notify';
@@ -165,7 +165,7 @@ export default function<E extends Expression>()
         return this.value.getType(this.registry.defs, this.context);
       },
       computedType(): Type | null {
-        return Type.simplify(this.computedTypeRaw);
+        return Types.simplify(this.computedTypeRaw);
       },
       computedTypeVisuals(): TypeVisuals | null {
         return this.computedType
@@ -308,7 +308,7 @@ export default function<E extends Expression>()
         const prompt = message !== defaultMessage || this.value !== NoExpression.instance;
   
         if (!prompt || await getConfirmation({ message, pref: 'paste_expression' })) {
-          this.input(registry.defs.cloneExpression(expr));
+          this.input(expr.clone());
         }
       },
     },

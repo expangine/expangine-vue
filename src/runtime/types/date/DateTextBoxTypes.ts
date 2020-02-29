@@ -18,6 +18,7 @@ export interface DateTextBoxOptions
   outlined?: boolean;
   dense?: boolean;
   flat?: boolean;
+  singleLine?: boolean;
   prependIcon?: string;
   prependInnerIcon?: string;
   appendIcon?: string;

@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, ListType, isNumber, copy, NumberType, isArray, isString } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, isNumber, copy, NumberType, isArray, isString, Types } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -46,7 +46,7 @@ export const TupleVisuals = createVisuals<TupleSubs>()({
   },
   subNodes: ({ registry, type, value }) => value.map((item: any, index: any) => ({
     sub: index,
-    subType: ListType.indexType,
+    subType: Types.INDEX,
     value: item,
     valueType: type.options[index],
   })),
@@ -69,7 +69,7 @@ export const TupleVisuals = createVisuals<TupleSubs>()({
   subSettings: (registry, type, settings, sub, forKey) => {
     return isNumber(sub.key)
       ? forKey
-        ? registry.getTypeSettings(TupleType.indexType)
+        ? registry.getTypeSettings(Types.INDEX)
         : settings.sub[sub.key]
       : null;
   },
@@ -241,7 +241,7 @@ export const TupleModifierFromList: TypeModifier<TupleType> =
     const settings: TypeSettings[] = [];
 
     for (let i = 0; i < size; i++) {
-      values.push(registry.defs.cloneType(item));
+      values.push(item.clone());
       settings.push(copy((typeSettings as TypeSettings<any, string>).sub.item));
     }
 

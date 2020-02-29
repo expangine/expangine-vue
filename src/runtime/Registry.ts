@@ -25,8 +25,6 @@ export class Registry
   public settingsOverrides: Record<string, any> = {};
   public dataImportTypes: TypeDataImport[];
 
-  public typeSettings: Record<string, TypeSettings>;
-  public typeData: Record<string, any[]>;
   public expressionClipboard: Expression[];
   public expressionClipboardMax: number;
 
@@ -51,8 +49,6 @@ export class Registry
     this.typeBuilderWrappers = [];
     this.typeModifiers = [];
     this.typeHooks = [];
-    this.typeSettings = obj();
-    this.typeData = obj();
     this.exprMap = obj();
     this.exprs = [];
     this.operationMap = obj();
@@ -82,7 +78,7 @@ export class Registry
 
   public copy(expr: Expression)
   {
-    this.expressionClipboard.unshift(this.defs.cloneExpression(expr));
+    this.expressionClipboard.unshift(expr.clone());
 
     if (this.expressionClipboard.length > this.expressionClipboardMax) 
     {

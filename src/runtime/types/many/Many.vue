@@ -83,7 +83,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
         const keys = Array.from(innerType.options.constants.values());
         let matchesAliased = true;
         for (const key of keys) {
-          if (!this.registry.defs.aliased[key]) {
+          if (!this.registry.defs.getEntity(key)) {
             matchesAliased = false;
           }
         }

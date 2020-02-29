@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TextType, Expression, ExpressionBuilder, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression, Exprs } from 'expangine-runtime';
+import { Type, TextType, Expression, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression, Exprs, Types } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
@@ -101,7 +101,7 @@ export default ExpressionBase().extend({
       return this.path[this.index];
     },
     segmentType(): Type | null {
-      return Type.simplify(this.segment.getType(this.registry.defs, this.rootType));
+      return Types.simplify(this.segment.getType(this.registry.defs, this.rootType));
     },
     dynamicOption(): TypeSubOption | null {
       return this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;

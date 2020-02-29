@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { Type, TupleType, Expression, ListOps, NullType, ObjectType, Exprs } from 'expangine-runtime';
+import { Type, TupleType, Expression, ListOps, NullType, ObjectType, Exprs, Types } from 'expangine-runtime';
 import { friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { getConfirmation } from '../../../app/Confirm';
@@ -130,7 +130,7 @@ export default TypeEditorBase<TupleType, any, TupleSubs>().extend({
           message: 'The default value for the new element.',
           confirm: 'Add',
           registry: this.registry,
-          context: ObjectType.from({
+          context: Types.object({
             parent: this.type,
           }),
           program: this.registry.getTypeCreate(chosen.type),

@@ -1,5 +1,5 @@
 
-import { Expression, ObjectType, Type, Exprs } from 'expangine-runtime';
+import { Expression, Type, Exprs, Types } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { getMultipleDialoger } from './MultipleDialog';
@@ -19,13 +19,10 @@ export interface TestProgramOptions
   title: string;
   description: string;
   inputType: Type;
-  input: any;
   program: Expression;
   visible: boolean;
   fullscreen: boolean;
   resultAutomatic: boolean;
-  result: any;
-  invalid: boolean;
   registry: Registry;
   close: (result: any) => any;
 }
@@ -35,14 +32,11 @@ export function getTestProgramDefaults(): TestProgramOptions
   return {
     title: 'Test Program',
     description: '',
-    inputType: ObjectType.from(),
-    input: {},
+    inputType: Types.object(),
     program: Exprs.noop(),
     resultAutomatic: true,
-    result: null,
     visible: false,
     fullscreen: Preferences.get(PREF_FULLSCREEN_TEST_PROGRAM),
-    invalid: false,
     registry: null as unknown as Registry,
     close: () => undefined,
   };
@@ -63,8 +57,6 @@ export async function getTestProgram(options: Partial<TestProgramOptions> = {}):
   {
     Object.assign(testProgramDialog, getTestProgramDefaults());
     Object.assign(testProgramDialog, options);
-
-    testProgramDialog.input = testProgramDialog.inputType.create();
 
     testProgramDialog.close = (save) => 
     {

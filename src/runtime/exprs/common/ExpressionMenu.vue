@@ -234,7 +234,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, FunctionType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, copy } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, copy, Func } from 'expangine-runtime';
 import { LiveContext, LiveResult, LiveRuntime } from 'expangine-runtime-live';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
@@ -366,11 +366,10 @@ export default ExpressionBase().extend({
 
       const result = await getEditFunction({
         registry,
-        func: Types.func(
-          this.computedTypeRaw ? this.computedTypeRaw.clone() : Types.any(),
-          input,
-          () => Exprs.return(value),
-        ),
+        func: Func.create(registry.defs, {
+          params: Types.object(input),
+          expression: Exprs.return(value),
+        }),
       });
 
       if (result) {

@@ -1,5 +1,5 @@
 
-import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType, isNumber, Exprs } from 'expangine-runtime';
+import { ListType, TextType, isString, isArray, ObjectType, objectReduce, objectValues, SetType, NullType, MapType, isNumber, Exprs, Types } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -51,7 +51,7 @@ export const ListVisuals = createVisuals<ListSubs>()({
   },
   subNodes: ({ registry, type, value }) => value.map((item: any, index: any) => ({
     sub: index,
-    subType: ListType.indexType,
+    subType: Types.INDEX,
     value: item,
     valueType: type.options.item,
   })),
@@ -70,7 +70,7 @@ export const ListVisuals = createVisuals<ListSubs>()({
     return { key, value, text, description };
   }),
   subSettings: (registry, type, settings, sub, forKey) => {
-    return !forKey && sub.key === ListType.indexType
+    return !forKey && sub.key === Types.INDEX
       ? settings.sub.item
       : null;
   },
@@ -243,7 +243,7 @@ export const ListModifierFromValue: TypeModifier<ListType> =
           message: 'The expression that changes the type to a list.',
           confirm: 'Convert',
           registry,
-          context: ObjectType.from({
+          context: Types.object({
             parent: parent || NullType.baseType,
             value: type,
           }),

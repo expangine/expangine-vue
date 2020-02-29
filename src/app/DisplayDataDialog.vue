@@ -10,24 +10,10 @@
         {{ title }}
       </v-card-title>
       <v-card-text>
-        <v-tabs>
-          <v-tab>Data</v-tab>
-          <v-tab>Data (json)</v-tab>
-          <v-tab-item>
-            <ex-data-string-box
-              max-height="calc(100vh - 300px)"
-              quotes              
-              :registry="registry"
-              :data="data"
-              :type="dataType"
-            ></ex-data-string-box>
-          </v-tab-item>
-          <v-tab-item>
-            <div class="ex-code-container" style="max-height: calc(100vh - 300px)">
-              <pre class="ex-code" v-html="rawString"></pre>
-            </div>
-          </v-tab-item>
-        </v-tabs>
+        <ex-display-data
+          :registry="registry"
+          :data="data"
+        ></ex-display-data>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -55,16 +41,6 @@ export default Vue.extend({
     },
     isFullscreenToggleVisible(): boolean {
       return !this.$vuetify.breakpoint.mdAndDown;
-    },
-    dataType(): Type {
-      const described = this.registry.defs.describe(this.data);
-      if (described) {
-        described.removeDescribedRestrictions();
-      }
-      return described || AnyType.baseType;
-    },
-    rawString(): string {
-      return JSON.stringify(this.dataType.toJson(this.data), undefined, 2);
     },
   },
   methods: {

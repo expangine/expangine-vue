@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, ExpressionBuilder, SubExpression, NoExpression, ComputedExpression, NullType, Exprs } from 'expangine-runtime';
+import { Type, Expression, SubExpression, NoExpression, ComputedExpression, NullType, Exprs } from 'expangine-runtime';
 import { TypeSubOption, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import NextMenu from '@/app/NextMenu.vue';

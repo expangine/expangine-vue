@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression } from 'expangine-runtime';
+import { Expression, Type, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression, Types } from 'expangine-runtime';
 import { ListOptionsTokenized } from '@/common';
 import { filterOperation, getListOption, sortListOption, sortListOptionByCount } from './helpers';
 import ExpressionBase from '../ExpressionBase';
@@ -65,7 +65,7 @@ export default ExpressionBase<OperationExpression>().extend({
     },
     startingValueType(): Type | null {
       return this.startingValue
-        ? Type.simplify(this.startingValue.getType(this.registry.defs, this.context))
+        ? Types.simplify(this.startingValue.getType(this.registry.defs, this.context))
         : null;
     },
     hasStartingValue(): boolean {
@@ -121,6 +121,7 @@ export default ExpressionBase<OperationExpression>().extend({
     chooseOperation(pair: OperationPair) {
       const startingValue = this.startingValue;
       const params = this.value.params;
+      const visuals = this.registry.getOperationVisuals(pair.op.id);
 
       this.value.name = pair.op.id;
 
@@ -128,6 +129,15 @@ export default ExpressionBase<OperationExpression>().extend({
         const startName = pair.op.params[0];
         this.$set(params, startName, startingValue);
         this.$delete(params, STARTING_PARAM);
+      }
+
+      if (visuals.initialParams) {
+        const initial = visuals.initialParams(this.context, this.registry);
+        for (const param in initial) {
+          if (!params[param]) {
+            this.$set(params, param, initial[param]);
+          }
+        }
       }
 
       for (const param of pair.op.params) {

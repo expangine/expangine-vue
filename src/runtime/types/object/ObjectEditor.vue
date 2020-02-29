@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { ObjectType, ObjectOps, Expression, Exprs } from 'expangine-runtime';
+import { ObjectType, ObjectOps, Expression, Exprs, Types } from 'expangine-runtime';
 import { friendlyList } from '@/common';
 import { getConfirmation } from '@/app/Confirm';
 import { getInput } from '@/app/Input';
@@ -167,7 +167,7 @@ export default TypeEditorBase<ObjectType, any, string>().extend({
           message: 'The default value for the new property.',
           confirm: 'Add',
           registry: this.registry,
-          context: ObjectType.from({
+          context: Types.object({
             parent: this.type,
           }),
           program: chosen.transform

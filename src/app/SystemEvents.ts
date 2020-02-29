@@ -1,75 +1,50 @@
-import { Type, Expression, AliasedType, Traverser, InvokeExpression } from 'expangine-runtime';
+import { Type, objectEach, Relation, ReferenceData, Program, Entity, Func, NamedMap } from 'expangine-runtime';
 import { EventBase } from './EventBase';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { DirectiveOptions } from 'vue';
+import { ExplorerTab } from './explorer/ExplorerTypes';
 
-
-export interface SystemProgram
-{
-  program: Expression;
-  type: Type;
-  data?: any;
-  settings?: TypeSettings;
-  onChange?: (changed: { program?: Expression, type?: Type, data?: any, settings?: TypeSettings }) => void;
-}
 
 export interface SystemEvent
 {
   replaceData: (data: any) => void;
   loading: (loadable: () => Promise<any>) => void;
-  setType: (name: string, type: Type, settings: TypeSettings<any>, data: any[]) => void;
-  getPrograms: () => SystemProgram[];
+  openTab: (tab: ExplorerTab) => void;
+  closeTab: (tab: ExplorerTab) => void;
+
+  relationAdd: (relation: Relation) => void;
+  relationChange: (relation: Relation) => void;
+  relationRemove: (relation: Relation) => void;
+  relationsCleared: (relation: NamedMap<Relation>) => void;
+  relationsChanged: (relation: NamedMap<Relation>) => void;
+
+  programAdd: (program: Program) => void;
+  programChange: (program: Program) => void;
+  programRemove: (program: Program) => void;
+  programsCleared: (func: NamedMap<Program>) => void;
+  programsChanged: (func: NamedMap<Program>) => void;
+
+  dataAdd: (data: ReferenceData) => void;
+  dataChange: (data: ReferenceData) => void;
+  dataRemove: (data: ReferenceData) => void;
+  datasCleared: (func: NamedMap<ReferenceData>) => void;
+  datasChanged: (func: NamedMap<ReferenceData>) => void;
+
+  typeAdd: (type: Entity) => void;
+  typeChange: (type: Entity) => void;
+  typeRemove: (type: Entity) => void;
+  typesCleared: (func: NamedMap<Entity>) => void;
+  typesChanged: (func: NamedMap<Entity>) => void;
+
+  functionAdd: (func: Func) => void;
+  functionChange: (func: Func) => void;
+  functionRemove: (func: Func) => void;
+  functionsCleared: (func: NamedMap<Func>) => void;
+  functionsChanged: (func: NamedMap<Func>) => void;
 }
 
 export class SystemClass extends EventBase<SystemEvent> 
 { 
-
-  public getPrograms(): SystemProgram[]
-  {
-    const listeners = this.trigger('getPrograms');
-
-    return listeners.reduce((all, subset) => all.concat(subset), []);
-  }
-
-  public getAliasReferences(name?: string, withData: boolean = false): Array<[AliasedType, SystemProgram]>
-  {
-    const refs: Array<[AliasedType, SystemProgram]> = [];
-
-    this.getPrograms().forEach((program) =>
-    {
-      if (!program.data || !withData)
-      {
-        return;
-      }
-
-      program.type.traverse(new Traverser((inner) =>
-      {
-        if (inner instanceof AliasedType && (!name || inner.options === name))
-        {
-          refs.push([inner, program]);
-        }
-      }));
-    });
-
-    return refs;
-  }
-
-  public getFunctionReferences(name?: string, arg?: string): Array<[InvokeExpression, SystemProgram]>
-  {
-    const refs: Array<[InvokeExpression, SystemProgram]> = [];
-
-    this.getPrograms().forEach((program) =>
-    {
-      program.program.traverse(new Traverser((expr) =>
-      {
-        if (expr instanceof InvokeExpression && (!name || expr.name === name) && (!arg || arg in expr.args))
-        {
-          refs.push([expr, program]);
-        }
-      }));
-    });
-
-    return refs;
-  }
 
   public loadable(loader: () => Promise<any>): void
   {
@@ -82,7 +57,42 @@ export class SystemClass extends EventBase<SystemEvent>
       loader();
     }
   }
+
+  public forkTab(root: ExplorerTab) 
+  {
+    const tab: ExplorerTab = {
+      ...root,
+      id: root.id + Math.random(),
+      close: () => this.trigger('closeTab', tab),
+    };
+
+    this.trigger('openTab', tab);
+  }
   
 }
 
 export const System = new SystemClass();
+
+
+export const SystemEventsDirective: DirectiveOptions = {
+  bind(el, binding) {
+    objectEach(binding.value, (handler: any, eventName: any) => {
+      System.on(eventName, handler);
+    });
+  },
+  update(el, binding) {
+    if (binding.value !== binding.oldValue) {
+      objectEach(binding.oldValue, (handler: any, eventName: any) => {
+        System.off(eventName, handler);
+      });
+      objectEach(binding.value, (handler: any, eventName: any) => {
+        System.on(eventName, handler);
+      });
+    }
+  },
+  unbind(el, binding) {
+    objectEach(binding.value, (handler: any, eventName: any) => {
+      System.off(eventName, handler);
+    });
+  },
+};

@@ -1,7 +1,56 @@
 <template>
-  <v-app v-shortcuts.document="shortcuts">
+  <v-app v-shortcuts.document="shortcuts" class="expangine-app">
 
-    <v-app-bar app dense elevate-on-scroll color="primary" dark>
+    <v-navigation-drawer app clipped dark disable-resize-watcher permanent width="300">
+      <v-text-field
+        filled
+        dense
+        solo
+        flat
+        single-line
+        hide-details
+        clearable
+        class="ma-2"
+        placeholder="Search in explorer..."
+        append-icon="mdi-magnify"
+        v-model="explorerSearch"
+      ></v-text-field>
+
+      <v-list dark dense class="pa-0">
+        <ex-explorer-program-folder
+          :name-filter="explorerSearch"
+          :registry="registry"
+          @open="onOpen"
+          @close="onClose"
+        ></ex-explorer-program-folder>  
+        <ex-explorer-data-folder
+          :name-filter="explorerSearch"
+          :registry="registry"
+          @open="onOpen"
+          @close="onClose"
+        ></ex-explorer-data-folder>  
+        <ex-explorer-function-folder
+          :name-filter="explorerSearch"
+          :registry="registry"
+          @open="onOpen"
+          @close="onClose"
+        ></ex-explorer-function-folder>  
+        <ex-explorer-entity-folder
+          :name-filter="explorerSearch"
+          :registry="registry"
+          @open="onOpen"
+          @close="onClose"
+        ></ex-explorer-entity-folder>  
+        <ex-explorer-relation-folder
+          :name-filter="explorerSearch"
+          :registry="registry"
+          @open="onOpen"
+          @close="onClose"
+        ></ex-explorer-relation-folder>  
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-app-bar app dense elevate-on-scroll color="primary" dark clipped-left>
       <v-menu offset-y close-on-content-click>
         <template #activator="{ on }">
           <v-btn text v-on="on">
@@ -32,33 +81,6 @@
                 <ex-shortcut-label pref="shortcut_save"></ex-shortcut-label>
               </v-list-item-title>
               <v-list-item-subtitle>Download project as a JSON file.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="saveAsFunction">
-            <v-list-item-icon>
-              <v-icon>mdi-content-save-move-outline</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Save as Function</v-list-item-title>
-              <v-list-item-subtitle>Save this program as a function.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="importCsv">
-            <v-list-item-icon>
-              <v-icon>mdi-file-delimited-outline</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Import CSV</v-list-item-title>
-              <v-list-item-subtitle>Upload data in a CSV.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="describe">
-            <v-list-item-icon>
-              <v-icon>mdi-database-search</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Import JSON / JS</v-list-item-title>
-              <v-list-item-subtitle>Update data from JSON or JS code.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="share">
@@ -119,6 +141,7 @@
           </v-btn>
         </template>
         <v-list>
+          <!--
           <v-list-item @click="toggleAutoSave">
             <v-list-item-action>
               <v-checkbox
@@ -183,6 +206,8 @@
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
+
+          -->
           <v-list-item @click="preferences = true">
             <v-list-item-icon>
               <v-icon>mdi-cogs</v-icon>
@@ -202,15 +227,6 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click="metadataEditing = true">
-            <v-list-item-icon>
-              <v-icon>mdi-information</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Program Information</v-list-item-title>
-              <v-list-item-subtitle>Author, Description, etc</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
           <v-list-item @click="showOperations = true">
             <v-list-item-icon>
               <v-icon>mdi-file-document-box-search-outline</v-icon>
@@ -223,6 +239,7 @@
               <v-list-item-subtitle>Search through the list of available operations.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          <!--
           <v-list-item @click="toggleReadOnly">
             <v-list-item-action>
               <v-checkbox
@@ -237,6 +254,7 @@
               <v-list-item-subtitle>See what the tool looks like in read-only mode.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
+          -->
           <v-list-item @click="showExamples = true">
             <v-list-item-icon>
               <v-icon>mdi-lightbulb-on</v-icon>
@@ -246,107 +264,6 @@
               <v-list-item-subtitle>Show the dialog your saw when you first visited this application.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y max-height="400" v-model="showFunctions">
-        <template #activator="{ on }">
-          <v-btn text v-on="on">
-            Functions
-            <v-icon>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="py-0">
-          <ex-child-filter>
-            <v-list-item key="new" @click="addFunction">
-              <v-list-item-content>
-                <v-list-item-title>Add</v-list-item-title>
-                <v-list-item-subtitle>Create a new re-usable function.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider></v-divider>
-            <template v-for="(func, name) in functions">
-              <v-list-item :key="name" @click="editFunction(name)">
-                <v-list-item-content>
-                  <v-list-item-title>{{ name }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-divider></v-divider>
-            <v-list-item key="clear" @click="clearFunctions">
-              <v-list-item-content>
-                <v-list-item-title>Clear</v-list-item-title>
-                <v-list-item-subtitle>Remove all user-defined functions.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </ex-child-filter>
-        </v-list>
-      </v-menu>
-
-      <v-menu offset-y max-height="400" v-model="showTypes">
-        <template #activator="{ on }">
-          <v-btn text v-on="on">
-            Types
-            <v-icon>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="py-0">
-          <ex-child-filter>
-            <v-list-item key="new" @click="addType">
-              <v-list-item-content>
-                <v-list-item-title>Add</v-list-item-title>
-                <v-list-item-subtitle>Create a new re-usable type.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider></v-divider>
-            <template v-for="(func, name) in aliased">
-              <v-list-item :key="name" @click="editType(name)">
-                <v-list-item-content>
-                  <v-list-item-title>{{ name }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-divider></v-divider>
-            <v-list-item key="clear" @click="clearTypes">
-              <v-list-item-content>
-                <v-list-item-title>Clear</v-list-item-title>
-                <v-list-item-subtitle>Remove all user-defined types.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </ex-child-filter>
-        </v-list>
-      </v-menu>
-
-      <v-menu offset-y max-height="400" v-model="showRelations">
-        <template #activator="{ on }">
-          <v-btn text v-on="on">
-            Relations
-            <v-icon>mdi-menu-down</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="py-0">
-          <ex-child-filter>
-            <v-list-item key="new" @click="addRelation">
-              <v-list-item-content>
-                <v-list-item-title>Add</v-list-item-title>
-                <v-list-item-subtitle>Create a new relation between types.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider></v-divider>
-            <template v-for="(relation, name) in relations">
-              <v-list-item :key="name" @click="editRelation(name)">
-                <v-list-item-content>
-                  <v-list-item-title>{{ name }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-            <v-divider></v-divider>
-            <v-list-item key="clear" @click="clearRelations">
-              <v-list-item-content>
-                <v-list-item-title>Clear</v-list-item-title>
-                <v-list-item-subtitle>Remove all relations.</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </ex-child-filter>
         </v-list>
       </v-menu>
 
@@ -360,6 +277,7 @@
         </template>
         <span>Run Program</span>
       </v-tooltip>
+
       <v-tooltip bottom>
         <template #activator="{ on }">
           <v-btn icon @click="debugProgram" v-on="on">
@@ -368,27 +286,10 @@
         </template>
         <span>Debug Program</span>
       </v-tooltip>
+
       <v-btn icon target="_blank" href="https://github.com/expangine/">
         <v-icon>mdi-github-circle</v-icon>
       </v-btn>
-
-      <template v-slot:extension>
-        <v-tabs v-model="mode">
-          <v-tabs-slider></v-tabs-slider>
-          <v-tab :key="0">
-            <v-icon>mdi-file-tree</v-icon>
-            &nbsp;&nbsp;Design
-          </v-tab>
-          <v-tab :key="1">
-            <v-icon>mdi-database-edit</v-icon>
-            &nbsp;&nbsp;Data
-          </v-tab>
-          <v-tab :key="2">
-            <v-icon>mdi-code-braces</v-icon>
-            &nbsp;&nbsp;Program
-          </v-tab>
-        </v-tabs>
-      </template>
 
       <v-progress-linear
         :active="isLoading"
@@ -397,51 +298,124 @@
         bottom
         color="blue darken-1"
       ></v-progress-linear>
+
     </v-app-bar>
 
     <v-content>
-      <div v-if="initialized">
-        <v-container fluid v-if="mode === 0">
-          <ex-type-editor
-            :type="type"
-            :read-only="readOnly"
-            :registry="registry"
-            :settings="settings"
-            @change="handleChange"
-          ></ex-type-editor>
-        </v-container>
-        <v-container fluid v-else-if="mode === 1">
-          <ex-type-input
-            :value="data"
-            :type="type"
-            :read-only="readOnly"
-            :registry="registry"
-            :settings="settings"
-            @input="saveDataDebounce"
-          ></ex-type-input>
-        </v-container>
-        <v-container fluid v-else>
-          <ex-expression-editor
-            vertical
-            sticky
-            can-remove
-            :value="program"
-            :context="type"
-            :data="data"
-            :read-only="readOnly"
-            :registry="registry"
-            :settings="settings"
-            @remove="resetProgram"
-            @input="saveProgram"
-          ></ex-expression-editor>
-        </v-container>
-      </div>
-      <div v-else class="pa-3">
+      
+      <v-tabs dark show-arrows v-model="currentTab">
+        <v-tabs-slider></v-tabs-slider>
+        <template v-for="(tab, tabIndex) in tabs">
+          <v-tab :key="tabIndex">
+            <v-icon small class="mr-2">
+              {{ tab.icon }}
+            </v-icon>
+            {{ tab.name }}
+            <v-btn icon small class="ml-2" @click.stop.prevent="tab.close"> <!-- removeTab(tabIndex) -->
+              <v-icon small>mdi-close</v-icon>
+            </v-btn>
+          </v-tab>
+        </template>
+      </v-tabs>
+
+      <div v-if="!initialized" class="pa-3">
         <v-skeleton-loader
           type="list-item-avatar-three-line"
         ></v-skeleton-loader>
       </div>
-      
+
+      <v-tabs-items 
+        class="explorer-tabs"
+        v-else-if="tabs.length > 0"
+        v-model="currentTab">
+        <template v-for="(tab, tabIndex) in tabs">
+          <v-tab-item :key="tabIndex">
+            <component
+              :is="tab.component"
+              v-bind="tab.bind"
+              v-on="tab.listeners"
+            ></component>
+          </v-tab-item>
+        </template>
+      </v-tabs-items>
+
+      <div v-else>
+        <v-icon size="100" color="grey lighten-1">mdi-arrow-left-bold</v-icon>
+        You don't have anything open. Do it already.
+
+        <v-list class="ma-4">
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-code-braces</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                Programs
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Programs have input data and runs code to produce output.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-database</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                Data
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Data can be accessed by any program or function through the <strong>Get Data</strong> expression.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-function</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                Functions
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                Functions take parameters and runs code on them to return a result. They can be invoked throught he <strong>Invoke</strong> expression.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-cube-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                Types
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                A type is user-defined object. Optionally they can be stored more efficiently than normal data and can have relationships with other types.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-axis-arrow</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                Relations
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                A relation describes how two Types can be related to each other.
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
+
       <ex-input-dialog></ex-input-dialog>
       <ex-notify-dialog></ex-notify-dialog>
       <ex-confirm-dialog></ex-confirm-dialog>
@@ -457,12 +431,10 @@
       <ex-test-program-dialog></ex-test-program-dialog>
       <ex-get-program-dialog></ex-get-program-dialog>
       <ex-value-dialog></ex-value-dialog>
-      <ex-edit-type-index-dialog></ex-edit-type-index-dialog>
-      <ex-edit-type-transcoder-dialog></ex-edit-type-transcoder-dialog>
+      <ex-edit-entity-index-dialog></ex-edit-entity-index-dialog>
+      <ex-edit-entity-transcoder-dialog></ex-edit-entity-transcoder-dialog>
+      <ex-edit-entity-dialog></ex-edit-entity-dialog>
       <ex-edit-relation-dialog></ex-edit-relation-dialog>
-      <ex-edit-aliased-dialog
-        @saved="handleSaveType"
-      ></ex-edit-aliased-dialog>
       <ex-operation-catalogue-dialog
         :registry="registry"
         :show.sync="showOperations"
@@ -472,60 +444,6 @@
         v-model="preferences"
       ></ex-preference-dialog>
 
-      <v-dialog v-model="metadataEditing" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
-        <v-card>
-          <v-card-title class="headline">
-            Program Information
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="8">
-                  <v-text-field
-                    outlined
-                    hide-details
-                    label="Title"
-                    v-model="metadata.title"
-                    @change="saveMetadata"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="4">
-                  <v-text-field
-                    outlined
-                    hide-details
-                    label="Author"
-                    v-model="metadata.author"
-                    @change="saveMetadata"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12">
-                  <v-textarea
-                    outlined
-                    hide-details
-                    auto-grow
-                    label="Description"
-                    rows="5"
-                    v-model="metadata.description"
-                    @change="saveMetadata"
-                  ></v-textarea>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-chip label>
-              Created: {{ metadata.created }}
-            </v-chip>
-            <v-spacer></v-spacer>
-            <v-btn 
-              color="primary"
-              @click="metadataEditing = false"
-            >Close</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
 
       <v-dialog v-model="showExamples" max-width="800" :fullscreen="$vuetify.breakpoint.mdAndDown">
         <v-card>
@@ -563,18 +481,6 @@
         </v-card>
       </v-dialog>
 
-      <v-navigation-drawer
-        v-model="historyDrawer"
-        right
-        fixed
-        temporary
-        disable-resize-watcher
-        disable-route-watcher
-      >
-        <ex-project-history-list
-          :history="history"
-        ></ex-project-history-list>
-      </v-navigation-drawer>
     </v-content>
   </v-app>
 </template>
@@ -583,7 +489,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Types, Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, FunctionType, ObjectType, NumberType, TypeBuilder, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, TypeStorage, TypeRelation, TypeStorageOptions, RelationOptions, Relation, objectToArray } from 'expangine-runtime';
+import { Types, Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, Func, ObjectType, NumberType, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, RelationOptions, Relation, objectToArray, Entity, Program, ProgramDataSet, ReferenceData, Exprs } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -596,26 +502,24 @@ import { getEditFunction } from './app/EditFunction';
 import { getSimpleInput, SimpleInputOptions } from './app/SimpleInput';
 import { getInput } from './app/Input';
 import { getFile, FileImportStatus } from './app/FileImport';
-import { Project } from './app/Project';
-import { ProjectHistory, ProjectState, PROJECT_STATE_META } from './app/ProjectHistory';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
 import { getDataImport } from './app/DataImport';
 import { getSendMail } from './app/SendMail';
 import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
-import { friendlyList, SimpleFieldOption, isMapEqual } from '@/common';
+import { friendlyList, SimpleFieldOption, isMapEqual, obj } from '@/common';
 import { getPromiser } from './app/Promiser';
 import { Store } from './app/Store';
 import { Trie } from './app/Trie';
-import { System, SystemProgram } from './app/SystemEvents';
+import { System } from './app/SystemEvents';
 import { ValidationHelper } from './app/ValidationHelper';
-import { getEditAliased } from './app/EditAliased';
+import { getEditEntity } from './app/EditEntity';
 import { getEditRelation } from './app/EditRelation';
-import { addType } from './app/Aliased';
 import { Preferences, PreferenceCategory } from './app/Preference';
 import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import Registry from './runtime';
+import { ExplorerTab } from './app/explorer/ExplorerTypes';
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
@@ -628,34 +532,6 @@ const PREF_DISABLE_AUTO_SAVE = Preferences.define({
 const PREF_EXAMPLE_OVERWRITE = Preferences.define({
   key: 'example_overwrite',
   label: 'Overwrite project with examples without confirmation',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
-
-const PREF_CLEAR_RELATIONS = Preferences.define({
-  key: 'clear_relations',
-  label: 'Clear relations without confirmation',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
-
-const PREF_CLEAR_TYPES = Preferences.define({
-  key: 'clear_types',
-  label: 'Clear types without confirmation',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
-
-const PREF_CLEAR_FUNCTIONS = Preferences.define({
-  key: 'clear_functions',
-  label: 'Clear functions without confirmation',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
-
-const PREF_SAVE_AS_FUNCTION_OVERWRITE = Preferences.define({
-  key: 'save_as_function_overwrite',
-  label: 'Save project as function and overwrite existing function without confirmation',
   category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
@@ -744,30 +620,6 @@ const PREF_SHORTCUT_OPERATIONS = Preferences.define({
   component: 'ex-shortcut-input',
 });
 
-const PREF_SHORTCUT_FUNCTIONS = Preferences.define({
-  key: 'shortcut_functions',
-  label: 'Open functions menu shortcut',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '70_sc',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_SHORTCUT_TYPES = Preferences.define({
-  key: 'shortcut_types',
-  label: 'Open types menu shortcut',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '85_sc',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_SHORTCUT_RELATIONS = Preferences.define({
-  key: 'shortcut_relations',
-  label: 'Open relations menu shortcut',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '82_sc',
-  component: 'ex-shortcut-input',
-});
-
 const PREF_SHORTCUT_VIEW_DESIGN = Preferences.define({
   key: 'shortcut_view_design',
   label: 'Goto design view shortcut',
@@ -792,28 +644,25 @@ const PREF_SHORTCUT_VIEW_PROGRAM = Preferences.define({
   component: 'ex-shortcut-input',
 });
 
+const PREF_SHOW_EXAMPLES = Preferences.define({
+  key: 'first',
+  label: 'Show examples dialogue on startup',
+  category: [PreferenceCategory.EDITOR],
+  defaultValue: true,
+});
+
 
 export default Vue.extend({
   name: 'App',
   data: () => ({
-    // Project Data
-    metadata: { title: '', description: '', author: '', created: '' },
-    type: new ObjectType({ props: {} }) as Type,
-    settings: { input: 'none', options: {} } as TypeSettingsAny,
     registry: Registry,
-    data: null as any,
-    program: NoExpression.instance as Expression,
     // Editor Properties
     initialized: false,
     autoSave: Preferences.get(PREF_AUTO_SAVE),
     mode: 0,
-    metadataEditing: false,
     readOnly: Preferences.get(PREF_READ_ONLY),
     examples: [] as any[],
     showExamples: false,
-    showFunctions: false,
-    showTypes: false,
-    showRelations: false,
     dataDebounce: 60 * 1000,
     dataTimeout: -1,
     loading: 0,
@@ -828,6 +677,10 @@ export default Vue.extend({
     historyDrawer: false,
     // Preferences
     prefs: Preferences.values,
+    // Explorer
+    explorerSearch: '',
+    currentTab: -1,
+    tabs: [] as ExplorerTab[],
   }),
   computed: 
   {
@@ -837,14 +690,9 @@ export default Vue.extend({
         downs: {
           [Preferences.get(PREF_SHORTCUT_SAVE)]: this.exportJson,
           [Preferences.get(PREF_SHORTCUT_OPEN)]: this.importJson,
-          [Preferences.get(PREF_SHORTCUT_UNDO)]: this.historyUndo,
-          [Preferences.get(PREF_SHORTCUT_REDO)]: this.historyRedo,
           [Preferences.get(PREF_SHORTCUT_NEW)]: this.reset,
           [Preferences.get(PREF_SHORTCUT_READONLY)]: this.toggleReadOnly,
           [Preferences.get(PREF_SHORTCUT_OPERATIONS)]: () => this.showOperations = true,
-          [Preferences.get(PREF_SHORTCUT_FUNCTIONS)]: () => this.showFunctions = true,
-          [Preferences.get(PREF_SHORTCUT_TYPES)]: () => this.showTypes = true,
-          [Preferences.get(PREF_SHORTCUT_RELATIONS)]: () => this.showRelations = true,
           [Preferences.get(PREF_SHORTCUT_VIEW_DESIGN)]: () => this.mode = 0,
           [Preferences.get(PREF_SHORTCUT_VIEW_DATA)]: () => this.mode = 1,
           [Preferences.get(PREF_SHORTCUT_VIEW_PROGRAM)]: () => this.mode = 2,
@@ -860,150 +708,6 @@ export default Vue.extend({
     isLoading(): boolean {
       return this.loading > 0;
     },
-    functions: {
-      get(): Record<string, FunctionType> {
-        return this.registry.defs.functions;
-      },
-      set(value: Record<string, FunctionType>) {
-        this.registry.defs.functions = LiveRuntime.defs.functions = value;
-      },
-    },
-    aliased: {
-      get(): Record<string, ObjectType> {
-        return this.registry.defs.aliased;
-      },
-      set(value: Record<string, ObjectType>) {
-        this.registry.defs.aliased = value;
-        objectEach(value, (type, name) => {
-          Vue.set(this.registry.defs.parsers, name, () => type);
-        });
-      },
-    },
-    aliasedData: {
-      get(): Record<string, any[]> {
-        return this.registry.typeData;
-      },
-      set(value: Record<string, any[]>) {
-        this.registry.typeData = value;
-      },
-    },
-    aliasedSettings: {
-      get(): Record<string, TypeSettings> {
-        return this.registry.typeSettings;
-      },
-      set(value: Record<string, TypeSettings>) {
-        this.registry.typeSettings = value;
-      },
-    },
-    storage: {
-      get(): Record<string, TypeStorage> {
-        return this.registry.defs.storage;
-      },
-      set(value: Record<string, TypeStorage>) {
-        this.registry.defs.storage = value;
-      },
-    },
-    relations: {
-      get(): Record<string, Relation> {
-        return this.registry.defs.relations;
-      },
-      set(value: Record<string, Relation>) {
-        this.registry.defs.relations = value;
-      },
-    },
-    history(): ProjectHistory {
-      window.console.log('history created');
-
-      return new ProjectHistory({
-        project: this, 
-        transcoders: this.store, 
-        canSave: () => this.autoSave,
-      });
-    },
-    store() {
-      window.console.log('store created');
-
-      const canSave = () => this.autoSave;
-      
-      return {
-        type: newStore('type', {
-          encode: (value: Type) => value.encode(),
-          decode: (data: any) => this.registry.defs.getType(data),
-          getDefault: () => new ObjectType({ props: {} }),
-          canSave,
-        }),
-        settings: newStore('settings', {
-          encode: (value: TypeSettingsAny) => copy(value),
-          decode: (data: any) => copy(data) as TypeSettingsAny,
-          getDefault: () => this.registry.getTypeSettings(this.type),
-          canSave,
-        }),
-        data: newStore('data', {
-          encode: (value: any) => this.type.toJson(value),
-          decode: (data: any) => this.type.fromJson(data),
-          getDefault: () => this.type.fromJson(copy(this.settings.defaultValue)),
-          canSave,
-        }),
-        program: newStore('program', {
-          encode: (value: Expression) => value.encode(),
-          decode: (data: any) => {
-            const program = this.registry.defs.getExpression(data);
-            program.setParent();
-            
-            return program;
-          },
-          getDefault: () => NoExpression.instance,
-          canSave,
-        }),
-        metadata: newStore('metadata', {
-          encode: (value: any) => copy(value),
-          decode: (data: any) => copy(data),
-          getDefault: () => ({
-            title: '',
-            description: '',
-            author: '',
-            created: DateFormat.format('LLL', [new Date(), currentLocale]),
-          }),
-          canSave,
-        }),
-        functions: newStore('functions', {
-          encode: (value: Record<string, FunctionType>) => objectMap(value, (func) => func.encode()),
-          decode: (data: any) => objectMap(data, (functionData) => this.registry.defs.getType(functionData) as FunctionType),
-          getDefault: () => this.registry.defs.functions,
-          canSave,
-        }),
-        aliased: newStore('aliased', {
-          encode: (value: Record<string, ObjectType>) => objectMap(value, (aliased) => aliased.encode()),
-          decode: (data: any) => objectMap(data, (objectData) => this.registry.defs.getType(objectData) as ObjectType),
-          getDefault: () => this.registry.defs.aliased,
-          canSave,
-        }),
-        aliasedData: newStore('aliasedData', {
-          encode: (value: Record<string, any[]>) => objectMap(value, (aliased) => AnyType.baseType.toJson(aliased)),
-          decode: (data: any) => objectMap(data, (objectData) => AnyType.baseType.fromJson(objectData)),
-          getDefault: () => this.registry.typeData,
-          canSave,
-        }),
-        aliasedSettings: newStore('aliasedSettings', {
-          encode: (value: Record<string, TypeSettings>) => copy(value),
-          decode: (data: any) => copy(data),
-          getDefault: () => this.registry.typeSettings,
-          canSave,
-        }),
-        storage: newStore('storage', {
-          encode: (value: Record<string, TypeStorage>) => objectMap(value, (storage) => storage.encode()),
-          decode: (data: Record<string, TypeStorageOptions>) => objectMap(data, (storageData) => new TypeStorage(storageData, this.registry.defs)),
-          getDefault: () => this.registry.defs.storage,
-          canSave,
-        }),
-        relations: newStore('relations', {
-          encode: (value: Record<string, Relation>) => objectMap(value, (relation) => relation.encode()),
-          decode: (data: Record<string, RelationOptions>) => objectMap(data, (relationData) => new Relation(this.registry.defs, relationData)),
-          getDefault: () => this.registry.defs.relations,
-          canSave,
-        }),
-      };
-    },
     isDataSaved(): boolean {
       return this.dataTimeout === -1;
     },
@@ -1016,11 +720,11 @@ export default Vue.extend({
     (window as any).Shortcuts = Shortcuts;
     (window as any).Preference = Preferences;
 
-    LiveRuntime.objectSet = (obj, key, value) => {
-      Vue.set(obj as any, key as string, value);
+    LiveRuntime.objectSet = (target, key, value) => {
+      Vue.set(target as any, key as string, value);
     };
-    LiveRuntime.objectRemove = (obj, key) => {
-      Vue.delete(obj as any, key as string);
+    LiveRuntime.objectRemove = (target, key) => {
+      Vue.delete(target as any, key as string);
     };
     LiveRuntime.arraySet = (arr, index, item) => {
       const existing = arr[index];
@@ -1035,127 +739,33 @@ export default Vue.extend({
 
     System.on('replaceData', this.replaceData);
     System.on('loading', this.handleLoading);
+    System.on('openTab', (type, tab) => this.onOpen(tab));
+    System.on('closeTab', (type, tab) => this.onClose(tab));
     
     this.loadExamples();
 
-    this.aliased = await this.store.aliased.load();
-    this.type = await this.store.type.load();
-    this.settings = await this.store.settings.load();
-    this.data = await this.store.data.load();
-    this.program = await this.store.program.load();
-    this.functions = await this.store.functions.load();
-    this.aliasedData = await this.store.aliasedData.load();
-    this.aliasedSettings = await this.store.aliasedSettings.load();
-    this.storage = await this.store.storage.load();
-    this.relations = await this.store.relations.load();
-    this.metadata = await this.store.metadata.load();
-    
-    this.history.resetLast();
-
     this.initialized = true;
-
-    for (const name in this.aliased) {
-      addType(this.registry, name);
-    }
-
-    this.store.type.on('saveError', this.onSaveError);
-    this.store.settings.on('saveError', this.onSaveError);
-    this.store.data.on('saveError', this.onSaveError);
-    this.store.program.on('saveError', this.onSaveError);
-    this.store.functions.on('saveError', this.onSaveError);
-    this.store.aliased.on('saveError', this.onSaveError);
-    this.store.aliasedData.on('saveError', this.onSaveError);
-    this.store.aliasedSettings.on('saveError', this.onSaveError);
-    this.store.storage.on('saveError', this.onSaveError);
-    this.store.relations.on('saveError', this.onSaveError);
-    this.store.metadata.on('saveError', this.onSaveError);
-    this.history.redosTranscoder.on('saveError', this.onSaveError);
-    this.history.undosTranscoder.on('saveError', this.onSaveError);
-
-    this.updateHistoryData();
-    this.history.on('change', this.updateHistoryData);
-
-    this.definePrograms();
   },  
   methods: {
-    definePrograms() {
-      let lastChanges: ProjectState = {};
-      let lastChangeTimeout = -1;
-
-      const trackChanges = (changes: ProjectState) => {
-        Object.assign(lastChanges, changes);
-        if (lastChangeTimeout === -1) {
-          lastChangeTimeout = setTimeout(() => {
-            this.saveDataPending();
-            this.history.save(lastChanges, `${friendlyList(Object.keys(lastChanges))} saved.`);
-            lastChangeTimeout = -1;
-            lastChanges = {};
-          });
-        }
-      };
-
-      System.on('getPrograms', () => [{
-        program: this.program,
-        type: this.type,
-        data: this.data,
-        settings: this.settings,
-        onChange: (changed) => trackChanges(changed),
-      }]);
-
-      System.on('getPrograms', () => 
-        objectValues(this.functions).map((func) => ({
-          program: func.options.expression,
-          type: func.options.params,
-          onChange: (changes) => trackChanges({ functions: this.functions }),
-        })),
-      );
-
-      System.on('getPrograms', () => 
-        objectValues<TypeStorage, SystemProgram>(this.registry.defs.storage, (storage, name) => ({
-          program: storage.key,
-          type: storage.getKeyContext(),
-          onChange: (changes) => trackChanges({ storage: this.storage }),
-        })),
-      );
-
-      System.on('getPrograms', () => 
-        objectValues<TypeStorage, SystemProgram>(this.registry.defs.storage, (storage, name) => ({
-          program: storage.describe,
-          type: storage.getDescribeContext(),
-          onChange: (changes) => trackChanges({ storage: this.storage }),
-        })),
-      );
-
-      System.on('getPrograms', () => 
-        objectValues<Type, SystemProgram>(this.registry.defs.aliased, (aliased, name) => ({
-          program: NoExpression.instance,
-          type: Types.list(aliased),
-          data: this.aliasedData[name],
-          settings: this.aliasedSettings[name]
-            ? { input: 'list',
-                defaultValue: [],
-                options: {},
-                sub: {
-                  item: this.aliasedSettings[name],
-                },
-              }
-            : undefined,
-          onChange: (changes) => {
-            if (changes.type) {
-              trackChanges({ aliased: this.aliased });
-            }
-            if (isArray(changes.data)) {
-              Vue.set(this.aliasedData, name, changes.data);
-              trackChanges({ aliasedData: this.aliasedData });
-            }
-            if (changes.settings) {
-              Vue.set(this.aliasedSettings, name, changes.settings);
-              trackChanges({ aliasedSettings: this.aliasedSettings });
-            }
-          },
-        })),
-      );
+    onOpen(tab: ExplorerTab) {
+      const i = this.tabs.findIndex((t) => t.id === tab.id);
+      if (i === -1) {
+        this.currentTab = this.tabs.length;
+        this.tabs.push(tab);
+      } else {
+        this.currentTab = i;
+      }
     },
+    onClose(tab: ExplorerTab) {
+      const i = this.tabs.findIndex((t) => t.id === tab.id);
+      if (i !== -1) {
+        this.tabs.splice(i, 1);
+        if (this.currentTab >= this.tabs.length) {
+          this.currentTab = this.tabs.length - 1;
+        }
+      }
+    },
+
     // SAVE ERROR
     async onSaveError(error: any, transcoder: TranscoderStore<any, any>): Promise<boolean>
     {
@@ -1268,17 +878,10 @@ export default Vue.extend({
         {
           this.examples = examples;
 
-          if (examples.length > 0) {
-            const first = new TranscoderStore('first', {
-              encode: (value: boolean) => value,
-              decode: (data: boolean) => data,
-              getDefault: () => true,
-            });
-
-            if (await first.load()) {
-              this.showExamples = true;
-              first.save(false);
-            }
+          if (examples.length > 0 && Preferences.get(PREF_SHOW_EXAMPLES)) {
+            this.showExamples = true;
+            
+            Preferences.set(PREF_SHOW_EXAMPLES, false);
           }
         }
       });
@@ -1312,20 +915,8 @@ export default Vue.extend({
     // SHARE
     share()
     {
-      const name = this.metadata.title || '<Project Name>';
-      const exported = JSON.stringify({
-        metadata: this.store.metadata.encode(this.metadata),
-        type: this.store.type.encode(this.type),
-        settings: this.store.settings.encode(this.settings),
-        data: this.store.data.encode(this.data),
-        program: this.store.program.encode(this.program),
-        functions: this.store.functions.encode(this.functions),
-        aliased: this.store.aliased.encode(this.aliased),
-        aliasedSettings: this.store.aliasedSettings.encode(this.aliasedSettings),
-        aliasedData: this.store.aliasedData.encode(this.aliasedData),
-        relations: this.store.relations.encode(this.relations),
-        storage: this.store.storage.encode(this.storage),
-      });
+      const name = friendlyList(this.registry.defs.programs.keys);
+      const exported = JSON.stringify(this.registry.defs.export());
 
       getSendMail({
         to: 'pdiffenderfer@gmail.com',
@@ -1333,218 +924,22 @@ export default Vue.extend({
         body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into ${location.href}.\n\n\n${exported}`,
       });
     },
-    // RELATIONS
-    async addRelation()
-    {
-      const { registry } = this;
-      const result = await getEditRelation({ registry });
-
-      if (result) 
-      {
-        this.saveDataPending();
-        this.history.save({ relations: this.relations }, `Relation ${result.name} created.`);
-      }
-    },
-    async editRelation(name: string)
-    {
-      const { registry } = this;
-      const result = await getEditRelation({ registry, name });
-
-      if (result)
-      {
-        this.saveDataPending();
-        this.history.save({ relations: this.relations }, `Relation ${result.name} saved.`);
-      }
-    },
-    async clearRelations() 
-    {
-      if (await getConfirmation({ pref: PREF_CLEAR_RELATIONS })) 
-      {
-        const relationsCleared = friendlyList(objectValues(this.relations, (_, name) => name));
-
-        this.saveDataPending();
-        this.history.save({ relations: {} }, `Relations cleared: ${relationsCleared}`);
-      }
-    },
-    // ALIASED
-    handleSaveType(options: { saveAs: string, type: Type, settings: TypeSettings, data: any[], storage: TypeStorage, relations: TypeRelation[] })
-    {
-      const { aliasedData, aliasedSettings, storage } = this;
-      const saving: Partial<Project> = {};
-
-      if (options.settings) {
-        Vue.set(this.registry.typeSettings, options.saveAs, options.settings);
-        saving.aliasedData = aliasedData;
-      }
-
-      if (options.data) {
-        Vue.set(this.registry.typeData, options.saveAs, options.data);
-        saving.aliasedSettings = aliasedSettings;
-      }
-
-      if (options.storage) {
-        Vue.set(this.registry.defs.storage, options.saveAs, options.storage);
-        saving.storage = storage;
-      }
-
-      this.saveDataPending();
-      this.history.save(saving, 'Type Settings & Storage saved.');
-    },
-    async addType()
-    {
-      const { registry } = this;
-      const type = ObjectType.from();
-      const result = await getEditAliased({ registry, type });
-
-      if (result) 
-      {
-        this.saveDataPending();
-        this.history.save({ aliased: this.aliased }, `Type ${result.name} created.`);
-      }
-    },
-    async editType(name: string)
-    {
-      const { registry } = this;
-      const result = await getEditAliased({ registry, name });
-
-      if (result)
-      {
-        this.saveDataPending();
-        this.history.save({ aliased: this.aliased }, `Type ${result.name} saved.`);
-      }
-    },
-    async clearTypes() 
-    {
-      if (await getConfirmation({ pref: PREF_CLEAR_TYPES })) 
-      {
-        const typesCleared = friendlyList(objectValues(this.aliased, (_, name) => name));
-
-        this.saveDataPending();
-        this.history.save({ aliased: {}, aliasedSettings: {}, aliasedData: {} }, `Types cleared: ${typesCleared}`);
-      }
-    },
-    // FUNCTIONS
-    async addFunction() 
-    {
-      const { registry } = this;
-      const result = await getEditFunction({ registry });
-
-      if (result) 
-      {
-        this.saveDataPending();
-        this.history.save({ functions: this.functions }, `Function ${result.name} added.`);
-      }
-    },
-    async editFunction(name: string) 
-    {
-      const { registry } = this;
-      const result = await getEditFunction({ registry, name });
-
-      if (result) 
-      {
-        this.saveDataPending();
-        this.history.save({ functions: this.functions }, `Function ${result.name} edited.`);
-      }
-    },
-    async clearFunctions() 
-    {
-      if (await getConfirmation({ pref: PREF_CLEAR_FUNCTIONS })) 
-      {
-        const functionsCleared = friendlyList(objectValues(this.functions, (_, name) => name));
-
-        this.saveDataPending();
-        this.history.save({ functions: {} }, `Functions cleared: ${functionsCleared}`);
-      }
-    },
-    async saveAsFunction() 
-    {
-      const { type, registry, functions, program } = this;
-
-      if (!(type instanceof ObjectType)) 
-      {
-        return sendNotification({ message: 'Save as Function requires the input to be an object.' });
-      }
-
-      const functionName = await getInput({ label: 'Function Name' });
-
-      if (!functionName) 
-      {
-        return sendNotification({ message: 'Save as Function canceled' });
-      }
-
-      if (this.functions[functionName]) 
-      {
-        if (!await getConfirmation({ message: 'A function with that name already exists, overwrite it?', pref: PREF_SAVE_AS_FUNCTION_OVERWRITE })) 
-        {
-          return sendNotification({ message: 'Save as Function canceled' });
-        }
-      }
-
-      const params = registry.defs.cloneType(type) as ObjectType;
-      const returnType = program.getType(registry.defs, params) || AnyType.baseType;
-      const expression = program instanceof ReturnExpression
-        ? registry.defs.cloneExpression(program)
-        : new ReturnExpression(registry.defs.cloneExpression(program));
-      
-      const newFunction = new FunctionType({
-        params,
-        expression,
-        returnType,
-      });
-
-      this.saveDataPending();
-      this.$set(functions, functionName, newFunction);
-      this.history.save({ functions }, `Saved program as function ${functionName}.`);
-    },
-    // TYPE & SETTINGS CHANGE
-    handleChange(event: TypeUpdateEvent) 
-    {
-      window.console.log('change', event);
-
-      const { type, settings, transform } = event;
-      const saving: Partial<Project> = { type, settings };
-
-      if (transform instanceof Expression)
-      {
-        const cmd = LiveRuntime.getCommand(transform);
-
-        saving.data = cmd({ value: this.data });
-      }
-
-      this.saveDataPending();
-      this.history.save(saving, transform ? 'Type, Settings, and Data change.' : 'Type and Settings change.');
-    },
-    // DESCRIBE
-    async describe() 
-    {
-      const result = await getDescribeData({ registry: this.registry });
-
-      if (result) 
-      {
-        this.saveDataPending();
-        this.history.save(result, 'Detected data, type, and settings.');
-      }
-    },
     // RESET
     async reset() 
     {
       const resetting = await getSimpleInput({
         title: 'New Project',
         value: {
-          main: 'all' as 'all' | 'data' | 'program',
+          programs: true,
           functions: true,
+          data: true,
           types: true,
-          metadata: true,
         },
         fields: [
-          { name: 'main', type: 'select', label: 'Reset', required: true, items: [
-            { text: 'Design, Data & Program', value: 'all' },
-            { text: 'Data Only', value: 'data' },
-            { text: 'Program Only', value: 'program' },
-          ]},
+          { name: 'programs', type: 'boolean', label: 'Programs?' },
           { name: 'functions', type: 'boolean', label: 'Functions?' },
+          { name: 'data', type: 'boolean', label: 'Data?' },
           { name: 'types', type: 'boolean', label: 'Types & Relations?' },
-          { name: 'metadata', type: 'boolean', label: 'Program Information?' },
         ],
       });
 
@@ -1553,53 +948,27 @@ export default Vue.extend({
         return await sendNotification({ message: 'Reset canceled.' });
       }
 
-      const resetProject: Partial<Project> = {};
-
-      switch (resetting.main)
+      
+      if (resetting.programs)
       {
-        case 'data':
-          resetProject.data = this.type.fromJson(copy(this.settings.defaultValue));
-          break;
-        case 'program':
-          resetProject.program = this.store.program.getDefault();
-          break;
-        case 'all':
-          const built = await this.getDefaultTypes();
+        this.registry.defs.clearPrograms();
+      }
 
-          if (!built) 
-          {
-            return await sendNotification({ message: 'Reset canceled.' });
-          }
-
-          resetProject.type = built.type;
-          resetProject.settings = built.settings;
-          resetProject.data = built.type.fromJson(copy(built.settings.defaultValue));
-          resetProject.program = this.store.program.getDefault();
-          break;
+      if (resetting.data)
+      {
+        this.registry.defs.clearData();
       }
 
       if (resetting.functions)
       {
-        resetProject.functions = {};
+        this.registry.defs.clearFunctions();
       }
 
       if (resetting.types)
       {
-        resetProject.aliased = {};
-        resetProject.aliasedSettings = {};
-        resetProject.aliasedData = {};
-        resetProject.relations = {};
-        resetProject.storage = {};
+        this.registry.defs.clearEntities();
+        this.registry.defs.clearRelations();
       }
-
-      if (resetting.metadata)
-      {
-        resetProject.metadata = this.store.metadata.getDefault();
-      }
-
-      this.saveDataPending();
-
-      this.history.save(resetProject, 'Project reset.');
     },
     async getDefaultTypes(): Promise<TypeUpdateEvent | false> 
     {
@@ -1613,8 +982,7 @@ export default Vue.extend({
     async exportJson() 
     {
       const exportResult = await getProjectExport({
-        project: this,
-        transcoders: this.store,
+        defs: this.registry.defs,
       });
 
       if (isString(exportResult)) 
@@ -1625,25 +993,6 @@ export default Vue.extend({
       {
         sendNotification({ message: 'Project exported.' });
       }
-    },
-    // IMPORT CSV
-    async importCsv() 
-    {
-      this.loadable(async () => 
-      {
-        const { registry, type } = this;
-        const result = await getDataImport({ registry, type });
-
-        if (isString(result))
-        {
-          sendNotification({ message: result });
-        }
-        else
-        {
-          this.saveDataPending();
-          this.history.save(result.transform(this), 'Import CSV.');
-        }
-      });
     },
     // IMPORT JSON
     async importJson() 
@@ -1670,128 +1019,27 @@ export default Vue.extend({
     },
     async importData(imported: any, customize: boolean = false) 
     {  
-      const { type, registry, store: transcoders } = this;
+      const { registry } = this;
 
       const importResult = await getProjectImport({
         imported,
         customize,
-        accept: { type: true, settings: true, data: true, program: true, functions: true, metadata: true, aliased: true, aliasedSettings: true, aliasedData: true, relations: true, storage: true },
-        type,
         registry,
-        transcoders,
       });
 
       if (isString(importResult)) 
       {
         sendNotification({ message: importResult });
-      } 
-      else 
-      {
-        const { importing, transform } = importResult;
-
-        this.history.push(importing, () => {
-          objectEach(transform, (transformer, prop) => {
-            if (importing.indexOf(prop) !== -1) {
-              this.store[prop].save(this[prop] = transformer(this));
-            }
-          });
-        }, 'Imported Project.');
       }
-    },
-    // HISTORY
-    historyUndo() 
-    {
-      this.saveDataPending();
-      const message = this.history.undo();
-
-      if (message)
-      {
-        sendNotification({ message });
-      }
-    },
-    historyRedo() 
-    {
-      this.saveDataPending();
-      const message = this.history.redo();
-
-      if (message)
-      {
-        sendNotification({ message });
-      }
-    },
-    async historyClear()
-    {
-      if (await getConfirmation({ pref: PREF_CLEAR_HISTORY }))
-      {
-        this.saveDataPending();
-        this.history.clear();
-      }
-    },
-    updateHistoryData()
-    {
-      const history = this.history;
-      const undo = history.getLastUndoDetails();
-      const redo = history.getLastRedoDetails();
-
-      this.undoEmpty = history.undos.length === 0;
-      this.redoEmpty = history.redos.length === 0;
-      this.historyEmpty = this.undoEmpty && this.redoEmpty;
-
-      this.undoLabel = undo ? `Undo "${undo}"` : 'Undo the last change.';
-      this.redoLabel = redo ? `Redo "${redo}"` : 'Redo the last undone change.';
-    },
-    // METADATA
-    saveMetadata()
-    {
-      this.store.metadata.save(this.metadata);
-    },
-    // DATA SAVING
-    saveDataDebounce() 
-    {
-      window.clearTimeout(this.dataTimeout);
-
-      this.dataTimeout = window.setTimeout(() => {
-        this.dataTimeout = -1;
-        this.saveData();
-      }, this.dataDebounce);
-    },
-    saveDataPending() 
-    {
-      if (this.dataTimeout !== -1) 
-      {
-        window.clearTimeout(this.dataTimeout);
-        this.dataTimeout = -1;
-        this.saveData();
-      }
-    },
-    saveData() 
-    {
-      window.console.log('data saved');
-
-      this.loadable(() => 
-      {
-        this.history.save({ data: this.data }, 'Data saved.');
-      });
-    },
-    // PROGRAM
-    saveProgram(program: Expression = NoExpression.instance) 
-    {
-      program.setParent();
-
-      this.saveDataPending();
-      this.history.save({ program }, 'Program saved.');
-    },
-    resetProgram() 
-    {
-      this.saveProgram();
     },
     async runProgram() 
     {
-      const { type, registry, program, data } = this;
+      const registry = this.registry;
+      const program = defs.programs.values[0];
 
-      try 
+      try
       {
-        await getRunProgram({ registry, type, program, data });
+        await getRunProgram({ registry, program });
       } 
       catch (e) 
       {
@@ -1802,26 +1050,33 @@ export default Vue.extend({
     },
     async replaceData(eventType: 'replaceData', data: any): Promise<boolean> 
     {
-      const { registry, type, history } = this;
+      const program = defs.programs.values[0];
+      const { registry } = this;
 
       if (await getConfirmation({ message: 'This will overwrite your current data, are you sure?', pref: PREF_REPLACE_DATA })) 
       {
         const dataType = registry.defs.describe(data);
         const dataSettings = registry.getTypeSettings(dataType);
 
-        if (type && type.acceptsData(dataType)) 
+        if (program.dataType && program.dataType.acceptsData(dataType)) 
         {
-          history.save({ data }, 'Saved program results as Data.');
+          // history.save({ data }, 'Saved program results as Data.');
+
+          program.datasets[0].data = data;
         }
         else 
         {
           dataType.removeDescribedRestrictions();
 
-          history.save({
-            type: dataType,
-            settings: dataSettings,
-            data,
-          }, 'Saved program results as Type, Settings, and Data.');
+          program.dataType = dataType;
+          program.meta = dataSettings;
+          program.datasets[0].data = data;
+
+          // history.save({
+          //   type: dataType,
+          //   settings: dataSettings,
+          //   data,
+          // }, 'Saved program results as Type, Settings, and Data.');
         }
 
         return true;
@@ -1831,11 +1086,13 @@ export default Vue.extend({
     },
     async debugProgram() 
     { 
-      const { type, registry, program, data } = this;
+      const registry = this.registry;
+      const currentProgram = defs.programs.values[0];
+      const { expression: program, dataType: type, datasets } = currentProgram;
 
       try 
       {
-        await getDebugProgram({ registry, type, program, data });
+        await getDebugProgram({ registry, type, program, data: datasets[0].data });
       } 
       catch (e) 
       {
@@ -1847,3 +1104,26 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.expangine-app /deep/ {
+
+  .v-tabs /deep/ .v-item-group {
+    background-color: #757575 !important;
+
+    .v-tab {
+      text-transform: none !important;
+      font-size: 14px;
+    }
+  }
+}
+
+.explorer-tabs {
+  position: absolute;
+  top: 48px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: scroll;
+}
+</style>

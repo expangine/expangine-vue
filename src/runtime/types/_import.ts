@@ -1,10 +1,10 @@
 import { Registry } from '../Registry';
 
-import AliasedImport from './aliased/_import';
 import AnyImport from './any/_import';
 import BooleanImport from './boolean/_import';
 import ColorImport from './color/_import';
 import DateImport from './date/_import';
+import EntityImport from './entity/_import';
 import EnumImport from './enum/_import';
 import ListImport from './list/_import';
 import ManyImport from './many/_import';
@@ -20,11 +20,12 @@ import TupleImport from './tuple/_import';
 export default function(registry: Registry)
 {
   registry
-    .import(AliasedImport)
+    
     .import(AnyImport)
     .import(BooleanImport)
     .import(ColorImport)
     .import(DateImport)
+    .import(EntityImport)
     .import(EnumImport)
     .import(ListImport)
     .import(ManyImport)

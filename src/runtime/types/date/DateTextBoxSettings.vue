@@ -26,6 +26,7 @@ const fields: SimpleFieldSettings<DateTextBoxOptions> = [
   { name: 'clearIcon', type: 'icon', label: 'Clear Icon', details: 'default: Close' },
   { name: 'backgroundColor', type: 'color', label: 'Background Color' },
   { name: 'color', type: 'color', label: 'Color' },
+  { name: 'singleLine', type: 'boolean', label: 'Single Line', defaultValue: false },
   { name: 'dark', type: 'boolean', label: 'Dark', defaultValue: false },
   { name: 'filled', type: 'boolean', label: 'Filled', defaultValue: false },
   { name: 'solo', type: 'boolean', label: 'Solo', defaultValue: false },

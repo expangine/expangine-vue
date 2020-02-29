@@ -32,19 +32,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ProjectHistory, ProjectState } from './ProjectHistory';
+// import { ProjectHistory, ProjectState } from './ProjectHistory';
 
 
 export default Vue.extend({
   props: {
     history: {
-      type: Object as () => ProjectHistory,
+      type: Object, // as () => ProjectHistory,
       required: true,
     },
   },
   data: () => ({
-    undos: [] as ProjectState[],
-    redos: [] as ProjectState[],
+    undos: [], // as ProjectState[],
+    redos: [], // as ProjectState[],
   }),
   mounted() {
     this.updateLists();

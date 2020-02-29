@@ -147,7 +147,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber, ObjectType, Types, isFunction, isString, AliasedType } from 'expangine-runtime';
+import { Type, ListType, isNumber, ObjectType, Types, isFunction, isString, EntityType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getInput } from '@/app/Input';
 import { System } from '@/app/SystemEvents';
@@ -199,17 +199,17 @@ export default TypeInputBase<ListType, ListObjectTableOptions, object[], ListSub
   }),
   computed: {
     itemType(): ObjectType {
-      return this.type.options.item instanceof AliasedType
+      return this.type.options.item instanceof EntityType
         ? this.type.options.item.getType() as ObjectType
         : this.type.options.item as ObjectType;
     },
     itemSettings(): TypeSettingsRecord<any, any> {
       const item = this.type.options.item;
 
-      if (item instanceof AliasedType) {
-        const storedSettings = this.registry.typeSettings[item.options];
-        if (storedSettings) {
-          return storedSettings as TypeSettingsRecord<any, any>;
+      if (item instanceof EntityType) {
+        const entity = this.registry.defs.getEntity(item.options);
+        if (entity) {
+          return entity.meta as TypeSettingsRecord<any, any>;
         }
 
         return this.registry.getTypeSettings(this.itemType) as TypeSettingsRecord<any, any>;

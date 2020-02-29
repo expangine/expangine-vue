@@ -1,5 +1,5 @@
 <template>
-  <span v-html="dataString"></span>
+  <span class="ex-code-string-span" v-html="dataString"></span>
 </template>
 
 <script lang="ts">
@@ -119,3 +119,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="less">
+.ex-code-string-span {
+  white-space: pre-wrap;
+}
+</style>

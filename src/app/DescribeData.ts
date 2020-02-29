@@ -16,25 +16,15 @@ export const PREF_FULLSCREEN_DESCRIBE_DATA = Preferences.define({
 
 export interface DescribeDataOptions
 {
-  type: Type | null;
-  settings: TypeSettings | null;
-  data: any;
-  input: string;
-  removeDescribedRestrictions: boolean;
   visible: boolean;
   fullscreen: boolean;
   registry: Registry;
-  close: (resolve: boolean) => any;
+  close: (result: DescribeDataResult) => any;
 }
 
 export function getDescribeDataDefaults(): DescribeDataOptions
 {
   return {
-    type: null,
-    settings: null,
-    data: null,
-    input: '',
-    removeDescribedRestrictions: true,
     visible: false,
     fullscreen: Preferences.get(PREF_FULLSCREEN_DESCRIBE_DATA),
     registry: null as unknown as Registry,
@@ -46,7 +36,6 @@ export const describeDataDialog = getDescribeDataDefaults();
 
 export type DescribeDataResult = { type: Type, settings: TypeSettings, data: any } | false;
 
-
 export async function getDescribeData(options: Partial<DescribeDataOptions> = {}): Promise<DescribeDataResult>
 {
   const { resolve, promise } = getPromiser<DescribeDataResult>();
@@ -55,16 +44,9 @@ export async function getDescribeData(options: Partial<DescribeDataOptions> = {}
   Object.assign(describeDataDialog, options);
 
   describeDataDialog.visible = true;
-  describeDataDialog.close = (resolved) => {
-    const { type, data, settings, removeDescribedRestrictions } = describeDataDialog;
-    if (resolved && type && settings) {
-      if (removeDescribedRestrictions){ 
-        type.removeDescribedRestrictions();
-      }
-      resolve({ type, data, settings });
-    } else {
-      resolve(false);
-    }
+  describeDataDialog.close = (result) => {
+    resolve(result);
+
     describeDataDialog.visible = false;
   };
 

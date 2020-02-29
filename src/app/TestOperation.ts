@@ -1,5 +1,5 @@
 
-import { OperationGeneric, OperationTypes, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction, ExpressionBuilder, NoExpression, OptionalType, ObjectType, Type, Exprs } from 'expangine-runtime';
+import { OperationGeneric, OperationTypes, ExpressionMap, TypeMap, objectEach, isOperationTypeFunction, NoExpression, OptionalType, ObjectType, Type, Exprs, Types } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettingsAny } from '@/runtime/types/TypeVisuals';
@@ -38,7 +38,7 @@ export function getTestOperationDefaults(): TestOperationOptions
 {
   return {
     name: '',
-    context: ObjectType.from(),
+    context: Types.object(),
     op: null,
     types: null,
     paramNames: [],

@@ -1,3 +1,5 @@
+import { ExpressionMap, Type } from 'expangine-runtime';
+import { Registry } from '../Registry';
 
 
 export type OperationVisuals<
@@ -12,6 +14,7 @@ export type OperationVisuals<
   returnComments: string;
   keywords?: string[];
   weight?: number;
+  initialParams?: (context: Type, registry: Registry) => ExpressionMap;
 } & (
   [O] extends [never] ? {} : { defaults: Record<O, string> }
 ) & (

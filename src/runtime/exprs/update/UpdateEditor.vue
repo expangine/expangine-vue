@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, NoExpression, Expression, UpdateExpression } from 'expangine-runtime';
+import { Type, NoExpression, Expression, UpdateExpression, Types } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -43,7 +43,7 @@ export default ExpressionBase<UpdateExpression>().extend({
   name: 'UpdateEditor',
   computed: {
     valueType(): Type | null {
-      return Type.simplify(this.registry.defs.getPathType(this.value.path, this.context));
+      return Types.simplify(this.registry.defs.getPathType(this.value.path, this.context));
     },
     valueContext(): Type {
       return this.valueType

@@ -1,5 +1,5 @@
 
-import { FunctionType, AnyType, ObjectType, NoExpression } from 'expangine-runtime';
+import { Func, AnyType, ObjectType, NoExpression } from 'expangine-runtime';
 import { getPromiser } from './Promiser';
 import { Registry } from '@/runtime/Registry';
 import { TypeSettings } from '@/runtime/types/TypeVisuals';
@@ -19,7 +19,7 @@ export interface TestFunctionOptions
 {
   title: string;
   name: string;
-  func: FunctionType;
+  func: Func;
   params: ObjectType;
   settings: TypeSettings;
   data: any;
@@ -34,11 +34,7 @@ export function getTestFunctionDefaults(): TestFunctionOptions
   return {
     title: 'Test Function',
     name: '',
-    func: new FunctionType({
-      returnType: new AnyType({ }),
-      params: new ObjectType({ props: {} }),
-      expression: NoExpression.instance,
-    }),
+    func: null as unknown as Func,
     params: ObjectType.baseType,
     settings: { input: 'form', options: {}, defaultValue: {} },
     data: null,
@@ -67,9 +63,9 @@ export async function getTestFunction(options: Partial<TestFunctionOptions> = {}
 
     const { registry, name } = testFunctionDialog;
 
-    testFunctionDialog.func = name ? registry.defs.getFunction(name) : testFunctionDialog.func;
-    testFunctionDialog.func.setParent();
-    testFunctionDialog.params = testFunctionDialog.func.options.params;
+    testFunctionDialog.func = (name ? registry.defs.getFunction(name) : null) || Func.create(registry.defs);
+    testFunctionDialog.func.params.setParent();
+    testFunctionDialog.params = testFunctionDialog.func.params;
     testFunctionDialog.settings = registry.getTypeSettings(testFunctionDialog.params);
     testFunctionDialog.data = testFunctionDialog.params.create(); 
 

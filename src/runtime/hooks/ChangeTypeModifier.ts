@@ -1,5 +1,5 @@
 
-import { ObjectType, NullType, Exprs } from 'expangine-runtime';
+import { ObjectType, NullType, Exprs, Types } from 'expangine-runtime';
 import { getBuildType } from '@/app/BuildType';
 import { getProgram } from '@/app/GetProgram';
 import { TypeModifier } from '../types/TypeModifier';
@@ -36,7 +36,7 @@ export const ChangeTypeModifier: TypeModifier =
           message: 'The expression that changes the type.',
           confirm: 'Change',
           registry,
-          context: ObjectType.from({
+          context: Types.object({
             parent: parent || NullType.baseType,
             value: type,
           }),

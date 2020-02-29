@@ -1,15 +1,14 @@
 
 import Vue from 'vue';
 import * as Papa from 'papaparse';
-import { objectEach, TextType, ListType, Types, TypeMap, OptionalType, toMap, objectToArray, parse, isWhole } from 'expangine-runtime';
+import { objectEach, TextType, ListType, Types, TypeMap, OptionalType, toMap, objectToArray } from 'expangine-runtime';
 import { getFile } from './FileImport';
 import { getPromiser } from './Promiser';
 import { getSimpleInput } from './SimpleInput';
 import { Registry } from '@/runtime/Registry';
 import { SimpleFieldOption, findClosestPhonetic, castValue, friendlyList } from '@/common';
-import { Project } from './Project';
 import { Type, ObjectType, objectValues, objectMap } from 'expangine-runtime';
-import { TypeSettingsRecord, TypeDataImportMatch } from '@/runtime/types/TypeVisuals';
+import { TypeSettingsRecord, TypeDataImportMatch, TypeSettings, TypeSettingsAny } from '@/runtime/types/TypeVisuals';
 import { getConfirmation } from './Confirm';
 import { getProgram } from './GetProgram';
 import { sendNotification } from './Notify';
@@ -53,7 +52,7 @@ const PREF_DATA_IMPORT_ACTION = Preferences.define({
   key: 'data_import_all',
   label: 'CSV Import default action',
   category: [PREF_CATEGORY],
-  defaultValue: 'replace',
+  defaultValue: 'replace' as 'replace' | 'merge',
   type: Types.enum(
     Types.text(),
     Types.text(),
@@ -68,18 +67,25 @@ const PREF_DATA_IMPORT_ACTION = Preferences.define({
 export interface DataImportOptions
 {
   registry: Registry;
-  type: Type;
+  type?: Type;
   worker?: boolean;
+  returnOnly?: boolean;
 }
 
-export type DataImportProject = Pick<Project, 'data' | 'type' | 'settings'>;
+export interface DataImportProject
+{
+  data: any;
+  type: Type;
+  settings: TypeSettingsAny;
+}
 
 export interface DataImportResult
 {
   transform: (project: DataImportProject) => DataImportProject;
+  filename: string;
 }
 
-export async function getDataImport({ registry, type, worker }: DataImportOptions): Promise<DataImportResult | string>
+export async function getDataImport({ registry, type, worker, returnOnly }: DataImportOptions): Promise<DataImportResult | string>
 {
   const importResult = await getFile({ accept: '.csv' });
 
@@ -88,6 +94,7 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
     return 'No file selected.';
   }
 
+  const filename = importResult.file ? importResult.file.name : '';
   const { promise, resolve } = getPromiser<DataImportResult | string>();
 
   Papa.parse(importResult.file, 
@@ -139,7 +146,11 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
         },
       ];
 
-      if (type instanceof ObjectType) 
+      if (returnOnly)
+      {
+        fields.splice(0, 1);
+      }
+      else if (type instanceof ObjectType) 
       {
         fields.push({
           name: 'action',
@@ -155,7 +166,7 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
       const settings = await getSimpleInput<any>({
         value: {
           columns: {}, 
-          action: Preferences.get(PREF_DATA_IMPORT_ACTION) as 'replace' | 'merge', 
+          action: Preferences.get(PREF_DATA_IMPORT_ACTION), 
           property: Preferences.get(PREF_DATA_IMPORT_PROPERTY),
           all: Preferences.get(PREF_DATA_IMPORT_ALL),
           configure: Preferences.get(PREF_DATA_IMPORT_CHOOSE),
@@ -281,13 +292,24 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
         dataType.removeDescribedRestrictions();
       }
       
-
-      if (settings.action === 'replace') 
+      if (returnOnly)
       {
-        const replaceType = ObjectType.from({ [settings.property]: dataType });
+        resolve({
+          filename,
+          transform: () => ({
+            data,
+            type: dataType,
+            settings: registry.getTypeSettings(dataType),
+          }),
+        });
+      }
+      else if (settings.action === 'replace') 
+      {
+        const replaceType = Types.object({ [settings.property]: dataType });
         const replaceSettings = registry.getTypeSettings(replaceType);
 
         resolve({
+          filename,
           transform: (project) => ({
             data: { [settings.property]: data },
             type: replaceType,
@@ -300,6 +322,7 @@ export async function getDataImport({ registry, type, worker }: DataImportOption
         const dataSettings = registry.getTypeSettings(dataType);
 
         resolve({
+          filename,
           transform: (project) => {
             if (project.type instanceof ObjectType) {
               Vue.set(project.type.options.props, settings.property, dataType);

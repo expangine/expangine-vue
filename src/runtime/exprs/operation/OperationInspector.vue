@@ -222,7 +222,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression } from 'expangine-runtime';
+import { Expression, Type, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression, Types } from 'expangine-runtime';
 import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getTestOperation } from '@/app/TestOperation';
 import OperationSearch from './OperationSearch.vue';
@@ -313,7 +313,7 @@ export default ExpressionBase<OperationExpression>().extend({
         return null;
       }
 
-      return Type.simplify(paramType);
+      return Types.simplify(paramType);
     },
     scopeType(name: string): Type | null {
       return this.operationTypes

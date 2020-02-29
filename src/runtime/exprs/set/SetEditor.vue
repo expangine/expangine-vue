@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, SetExpression, NoExpression, Expression } from 'expangine-runtime';
+import { Type, SetExpression, NoExpression, Expression, Types } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
@@ -51,7 +51,7 @@ export default ExpressionBase<SetExpression>().extend({
       return this.registry.defs.getPathType(this.value.path, this.context);
     },
     valueTypeSimplified(): Type | null {
-      return Type.simplify(this.valueType);
+      return Types.simplify(this.valueType);
     },
   },
   methods: {

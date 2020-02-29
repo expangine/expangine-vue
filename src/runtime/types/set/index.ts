@@ -1,5 +1,5 @@
 
-import { SetType, TextType, isString, ObjectType, objectReduce, NumberType, isSet, ListType, Exprs, NullType, MapType } from 'expangine-runtime';
+import { SetType, TextType, isString, ObjectType, objectReduce, NumberType, isSet, ListType, Exprs, NullType, MapType, Types } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TextBoxInput } from '../text/TextBoxTypes';
@@ -214,7 +214,7 @@ export const SetModifierFromSimpleList: TypeModifier<SetType> =
             message: 'The expression that changes the type to a set.',
             confirm: 'Convert',
             registry,
-            context: ObjectType.from({
+            context: Types.object({
               parent: parent || NullType.baseType,
               value: type,
             }),

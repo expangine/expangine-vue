@@ -8,6 +8,14 @@
       </slot>
     </template>
     <v-list dense> 
+      <v-list-item v-if="canExportData" @click="saveAs">
+        <v-list-item-icon>
+          <v-icon>mdi-database</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Save as Data</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <v-list-item v-if="canExportJson" @click="exportJson">
         <v-list-item-icon>
           <v-icon>mdi-json</v-icon>
@@ -60,7 +68,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import * as Papa from 'papaparse';
-import { Type, TypeBuilder, objectValues, ObjectType, ListType, isString, objectEach } from 'expangine-runtime';
+import { Type, objectValues, ObjectType, ListType, isString, objectEach, Types } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { exportFile } from './FileExport';
 import { getInput } from './Input';
@@ -98,12 +106,11 @@ export default Vue.extend({
       }
 
       const simples = this.registry.defs.getSimpleTypes();
-      const tp = new TypeBuilder();
-
-      return tp.list(
-        tp.object({
-          '*': tp.many(
-            tp.optional(tp.many(...simples)),
+      
+      return Types.list(
+        Types.object({
+          '*': Types.many(
+            Types.optional(Types.many(...simples)),
             ...simples,
           ),
         },
@@ -111,6 +118,9 @@ export default Vue.extend({
     },
     hasOptions(): boolean {
       return this.canExportJson || this.canExportJs || this.canExportCsv || this.canExportOverwrite;
+    },
+    canExportData(): boolean {
+      return !!this.computedType;
     },
     canExportJson(): boolean {
       return !!this.computedType;
@@ -273,6 +283,22 @@ export default Vue.extend({
     },
     exportOverwrite() {
       System.trigger('replaceData', this.data);
+    },
+    async saveAs() {
+      const { data, computedType: dataType, registry: { defs } } = this;
+      const name = await getInput({ title: 'Data Name' });
+
+      if (name) {
+        if (defs.getData(name)) {
+          sendNotification({ message: 'Data with that name already exists.' });
+        } else {
+          defs.addData({
+            name,
+            data,
+            dataType,
+          });
+        }
+      }
     },
   },
 });

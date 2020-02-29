@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, NoExpression, ExpressionBuilder, ComputedExpression, SubExpression, Exprs } from 'expangine-runtime';
+import { Expression, Type, NoExpression, ComputedExpression, SubExpression, Exprs } from 'expangine-runtime';
 import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import PathSegment from './PathSegment.vue';

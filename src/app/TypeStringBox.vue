@@ -12,10 +12,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AliasedType } from 'expangine-runtime';
+import { Type, EntityType } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { CopyModifier } from '../runtime/hooks/ClipboardHooks';
-import { getEditAliased } from './EditAliased';
+import { getEditEntity } from './EditEntity';
 
 
 export default Vue.extend({
@@ -36,7 +36,7 @@ export default Vue.extend({
         : '';
     },
     canView(): boolean {
-      return this.type instanceof AliasedType;
+      return this.type instanceof EntityType;
     },
   },
   methods: {
@@ -59,8 +59,8 @@ export default Vue.extend({
     async view() {
       const { type, registry } = this;
 
-      if (type instanceof AliasedType) {
-        await getEditAliased({
+      if (type instanceof EntityType) {
+        await getEditEntity({
           name: type.options,
           registry,
         });

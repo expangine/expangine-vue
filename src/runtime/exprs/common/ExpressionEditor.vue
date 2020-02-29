@@ -189,7 +189,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, copy } from 'expangine-runtime';
+import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, copy, Program } from 'expangine-runtime';
 import { ListOptions, isMapEqual } from '@/common';
 import { getRunProgram } from '@/app/RunProgram';
 import { getDebugProgram } from '@/app/DebugProgram';
@@ -566,13 +566,21 @@ export default ExpressionBase().extend({
       this.handleRemove();
     },
     run() {
-      const { registry, data, context: type, value: program } = this;
+      const { registry, data, context: dataType, value: expression } = this;
 
       getRunProgram({
         registry,
-        type,
-        data,
-        program,
+        program: Program.create(this.registry.defs, {
+          dataType,
+          expression,
+          datasets: [{ 
+            name: '',
+            data,
+            created: 0,
+            updated: 0,
+            meta: null,
+          }],
+        }),
       });
     },
     debug() {

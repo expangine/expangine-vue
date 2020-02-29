@@ -2,6 +2,9 @@
 import { Registry } from '../Registry';
 
 import { GetVisuals } from './get';
+import { GetDataVisuals } from './data';
+import { GetEntityVisuals } from './entity';
+import { GetRelationVisuals } from './relation';
 import { ComputedVisuals } from './computed';
 import { ConstantVisuals } from './constant';
 import { CommentVisuals } from './comment';
@@ -52,6 +55,9 @@ export default function(registry: Registry)
     .addExpression(NoVisuals)
     .addExpression(OrVisuals)
     .addExpression(ChainVisuals)
+    .addExpression(GetDataVisuals)
+    .addExpression(GetEntityVisuals)
+    .addExpression(GetRelationVisuals)
     .addExpression(CommentVisuals)
     .addExpression(ReturnVisuals)
   ;

@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, ListOptions, isNumber, Expression, ListOps, ExpressionBuilder, Exprs } from 'expangine-runtime';
+import { Type, ListType, ListOptions, isNumber, Expression, ListOps, Exprs } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';

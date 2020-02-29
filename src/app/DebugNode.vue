@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { DebugStep } from './DebugProgram';
+import { DebugStep } from './Debugger';
 import { Registry } from '../runtime/Registry';
 import { Type } from 'expangine-runtime';
 import { TypeSubNode } from '../runtime/types/TypeVisuals';

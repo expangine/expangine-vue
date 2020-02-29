@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, ChainExpression, NotExpression, ExpressionBuilder, NoExpression } from 'expangine-runtime';
+import { Expression, ChainExpression, NotExpression, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 

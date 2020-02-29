@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, ChainExpression, ReturnExpression, ExpressionBuilder, NoExpression } from 'expangine-runtime';
+import { Expression, ChainExpression, ReturnExpression, NoExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { getConfirmation } from '../../../app/Confirm';
 import { Preferences, PreferenceCategory } from '../../../app/Preference';

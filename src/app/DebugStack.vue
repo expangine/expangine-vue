@@ -20,7 +20,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type } from 'expangine-runtime';
-import { DebugStep } from './DebugProgram';
+import { DebugStep } from './Debugger';
 import { Registry } from '../runtime/Registry';
 
 

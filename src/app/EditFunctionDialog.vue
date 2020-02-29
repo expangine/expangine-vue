@@ -8,72 +8,20 @@
         </v-btn>
 
         Edit Function
-
-        <v-spacer></v-spacer>
-        <v-btn color="secondary" @click="test">
-          Test
-        </v-btn>
       </v-card-title>
       <v-card-text>
-        <v-text-field
-          outlined
-          hide-details
-          label="Save As"
-          :error="invalidSaveAs"
-          v-focus-on-visible="[visible, 'input']"
-          v-model="saveAs"
-        ></v-text-field>
-
-        <v-tabs>
-          <v-tab>Input</v-tab>
-          <v-tab>Program</v-tab>
-          <v-tab-item class="data-container">
-            <ex-type-editor
-              hide-settings
-              no-transform
-              :type="func.options.params"
-              :required-type="requiredParamsType"
-              :registry="registry"
-              :settings="settings"
-              @change="onChange"
-              @prop:remove="onArgumentRemove"
-              @prop:rename="onArgumentRename"
-            ></ex-type-editor>
-          </v-tab-item>
-          <v-tab-item class="data-container">
-            <ex-expression-editor
-              :value="func.options.expression"
-              :context="func.options.params"
-              :registry="registry"
-              :settings="settings"
-              @input="onProgramChange"
-            ></ex-expression-editor>
-          </v-tab-item>
-        </v-tabs>
+        <ex-edit-function
+          :func="func"
+          :registry="registry"
+          @remove="close(false)"
+        ></ex-edit-function>
       </v-card-text>
       <v-card-actions>
         <v-btn 
           color="primary"
-          @click="cancel"
-        >Cancel</v-btn>
-        <v-spacer></v-spacer>
-        <v-alert 
-          v-if="!hasValidParams"
-          dense
-          type="error"
-          class="mb-0 mr-3"
-        >Your function parameters must be an object.</v-alert>
-        <v-alert 
-          v-else-if="!hasReturn"
-          dense
-          type="error"
-          class="mb-0 mr-3"
-        >Your function is missing a return statement.</v-alert>
-        <v-btn 
-          color="primary"
-          :disabled="disableSave"
-          @click="save"
-        >Save</v-btn>
+          v-html="buttonText"
+          @click="close(isSaved)"
+        ></v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -85,9 +33,17 @@ import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } fro
 import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { editFunctionDialog, PREF_FULLSCREEN_EDIT_FUNCTION } from './EditFunction';
 import { getTestFunction } from './TestFunction';
-import { removeFunctionArgument, renameFunctionArgument } from './Refactor';
-import { Preferences } from './Preference';
+import { Preferences, PreferenceCategory } from './Preference';
+import { LiveRuntime } from 'expangine-runtime-live';
+import { getConfirmation } from './Confirm';
 
+
+const PREF_REMOVE_FUNCTION = Preferences.define({
+  key: 'function_remove',
+  label: 'Remove function without confirmation',
+  category: [PreferenceCategory.CONFIRM],
+  defaultValue: false,
+});
 
 export default Vue.extend({
   data: () => editFunctionDialog,
@@ -98,27 +54,14 @@ export default Vue.extend({
     isFullscreenToggleVisible(): boolean {
       return !this.$vuetify.breakpoint.mdAndDown;
     },
-    invalidSaveAs(): boolean {
-      if (!this.saveAs) {
-        return true;
-      }
-      const existing = this.registry.defs.functions[this.saveAs];
-      if (existing && existing !== this.func) {
-        return true;
-      }
-
-      return !this.registry.isValidFunction(this.saveAs);
-    },
     disableSave(): boolean {
-      return this.func.options.expression === NoExpression.instance;
+      return this.func.expression === NoExpression.instance;
     },
-    hasValidParams(): boolean {
-      return this.requiredParamsType.acceptsType(this.func.options.params);
+    isSaved(): boolean {
+      return this.registry.defs.getFunction(this.func.name) === this.func;
     },
-    hasReturn(): boolean {
-      return 0 < this.func.options.expression.traverse(
-        Traverser.count<Expression>().filterClass(ReturnExpression),
-      );
+    buttonText(): string {
+      return this.isSaved ? 'Close' : 'Cancel';
     },
   },
   methods: {
@@ -127,41 +70,6 @@ export default Vue.extend({
 
       Preferences.set(PREF_FULLSCREEN_EDIT_FUNCTION, this.fullscreen);
     },
-    cancel() {
-      this.close(false);
-    },
-    save() {
-      this.close(true);
-    },
-    onChange(event: TypeUpdateEvent) {
-      this.func.options.params = event.type as ObjectType;
-    },
-    onProgramChange(program: Expression) {
-      this.func.options.expression = program;
-    },
-    test() {
-      const { registry, func, name } = this;
-
-      getTestFunction({ registry, func, name });
-    },
-    onArgumentRemove(arg: string) {
-      if (this.name) {
-        removeFunctionArgument(this.name, arg);
-      }
-    },
-    onArgumentRename([oldProp, newProp]: [string, string]) {
-      if (this.name) {
-        renameFunctionArgument(this.name, oldProp, newProp);
-      }
-    },
   },
 });
 </script>
-
-<style lang="less" scoped>
-.data-container {
-  position: relative;
-  height: inherit;
-  overflow: scroll;
-}
-</style>

@@ -1,5 +1,5 @@
 
-import { ObjectType, NoExpression, TypeMap } from 'expangine-runtime';
+import { ObjectType, NoExpression, TypeMap, Types } from 'expangine-runtime';
 import { getProgram } from '@/app/GetProgram';
 import { TypeModifier } from '../types/TypeModifier';
 
@@ -30,7 +30,7 @@ export const MigrationModifier: TypeModifier =
           message: 'The type can be changed to a new type based on a migration expression.',
           confirm: 'Migrate',
           registry,
-          context: ObjectType.from(context),
+          context: Types.object(context),
           program: NoExpression.instance,
         });
 

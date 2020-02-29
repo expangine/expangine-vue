@@ -79,7 +79,7 @@ export default Vue.extend({
       }
 
       if (await getConfirmation({ message, pref: PREF_PASTE })) {
-        this.$emit('pasted', registry.defs.cloneExpression(expr));
+        this.$emit('pasted', expr.clone());
       }
     },
   },

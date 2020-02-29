@@ -63,14 +63,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TypeMap, Expression, ExpressionMap, NoExpression, TemplateExpression, objectMap, objectValues, ObjectType, TypeBuilder } from 'expangine-runtime';
+import { Type, TypeMap, Expression, ExpressionMap, NoExpression, TemplateExpression, objectMap, objectValues, ObjectType, Types } from 'expangine-runtime';
 import { obj } from '@/common';
 import { getConfirmation } from '../../../app/Confirm';
 import ExpressionBase from '../ExpressionBase';
 import { Preferences, PreferenceCategory } from '../../../app/Preference';
 
 
-const tp = new TypeBuilder();
 const PREF_REMOVE_VAR = Preferences.define({
   key: 'template_remove_var',
   label: 'Remove Template expression vars without confirmation',
@@ -86,10 +85,10 @@ export default ExpressionBase<TemplateExpression>().extend({
   }),
   computed: {
     paramType(): Type {
-      return tp.many(
-        tp.text(), 
-        tp.number(), 
-        tp.enum(tp.many(tp.text(), tp.number()), tp.any()),
+      return Types.many(
+        Types.text(), 
+        Types.number(), 
+        Types.enum(Types.many(Types.text(), Types.number()), Types.any()),
       );
     },
   },

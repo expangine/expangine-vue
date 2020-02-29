@@ -47,6 +47,7 @@ import Vue from 'vue';
 import { testFunctionDialog } from './TestFunction';
 import { getRunProgram, PREF_FULLSCREEN_RUN_PROGRAM } from './RunProgram';
 import { Preferences } from './Preference';
+import { Program } from 'expangine-runtime';
 
 
 export default Vue.extend({
@@ -68,9 +69,17 @@ export default Vue.extend({
     test() {
       getRunProgram({
         registry: this.registry,
-        type: this.params,
-        program: this.func.options.expression,
-        data: this.data,
+        program: Program.create(this.registry.defs, {
+          dataType: this.params,
+          datasets: [{ 
+            name: '',
+            data: this.data,
+            created: 0,
+            updated: 0,
+            meta: null,
+          }],
+          expression: this.func.expression,
+        }),
       });
     },
   },

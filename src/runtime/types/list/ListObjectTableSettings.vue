@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { ListType, ObjectType, AliasedType } from 'expangine-runtime';
+import { ListType, ObjectType, EntityType } from 'expangine-runtime';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
 import { SimpleFieldSettings, ListOptions } from '../../../common';
 import TypeSettingsBase from '../TypeSettingsBase';
@@ -105,7 +105,7 @@ export default TypeSettingsBase<ListType, ListObjectTableOptions>().extend({
     optionFields: () => fields,
     alignments: () => alignments,
     itemType(): ObjectType {
-      return this.type.options.item instanceof AliasedType
+      return this.type.options.item instanceof EntityType
         ? this.type.options.item.getType() as ObjectType
         : this.type.options.item as ObjectType;
     },

@@ -114,7 +114,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TypeMap, Expression, ChainExpression, InvokeExpression, ExpressionBuilder, NoExpression, FunctionType, objectValues } from 'expangine-runtime';
+import { TypeMap, Expression, ChainExpression, InvokeExpression, NoExpression, Func, objectValues } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { ListOptions } from '../../../common';
 import { getTestFunction } from '../../../app/TestFunction';
@@ -128,18 +128,17 @@ export default ExpressionBase<InvokeExpression>().extend({
   }),
   computed: {
     functions(): ListOptions<string> {
-      return objectValues(this.registry.defs.functions, (f, name) => ({
-        text: name,
-        description: 'Returns ' + this.registry.getTypeDescribeLong(f.options.returnType, '', ' '),
-        value: name,
+      return this.registry.defs.functions.values.map((func) => ({
+        text: func.name,
+        value: func.name,
       }));
     },
-    func(): FunctionType | null {
-      return this.registry.defs.getFunction(this.value.name) || null;
+    func(): Func | null {
+      return this.registry.defs.getFunction(this.value.name);
     },
     paramTypes(): TypeMap {
       return this.func
-        ? this.func.options.params.options.props
+        ? this.func.params.options.props
         : {};
     },
   },

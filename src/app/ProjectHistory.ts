@@ -1,5 +1,6 @@
+/*
+
 import Vue from 'vue';
-import { Project, ProjectTranscoderStores, ProjectType } from './Project';
 import { copy } from 'expangine-runtime';
 import { TranscoderStore, newStore } from './Transcoder';
 import { friendlyList } from '@/common';
@@ -314,3 +315,4 @@ export class ProjectHistory extends EventBase<ProjectHistoryEvents>
   }
 
 }
+*/

@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { MapType, MapOptions, Expression, ExpressionBuilder, MapOps, Exprs } from 'expangine-runtime';
+import { MapType, MapOptions, Expression, MapOps, Exprs } from 'expangine-runtime';
 import { SimpleFieldSettings, friendlyList } from '../../../common';
 import { TypeUpdateEvent } from '../TypeVisuals';
 import { MapSubs } from './MapTypes';
