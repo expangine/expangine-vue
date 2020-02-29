@@ -86,6 +86,16 @@ export default Vue.extend({
       default: '',
     },
   },
+  data: () => ({
+    tab: null as null | ExplorerTab,
+  }),
+  watch: {
+    data(data: ReferenceData) {
+      if (this.tab) {
+        this.tab.bind.data = data;
+      }
+    },
+  },
   methods: {
     async renamed(name: string) {
       const { data, registry: { defs } } = this;
@@ -122,6 +132,8 @@ export default Vue.extend({
       await getNamedExport('data', this.data);
     },
     open(tab: ExplorerTab) {
+      this.tab = tab;
+      
       if (!tab.component) {
         const { data, registry } = this;
 

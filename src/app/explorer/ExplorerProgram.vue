@@ -108,6 +108,16 @@ export default Vue.extend({
       default: '',
     },
   },
+  data: () => ({
+    tab: null as null | ExplorerTab,
+  }),
+  watch: {
+    program(program: Program) {
+      if (this.tab) {
+        this.tab.bind.program = program;
+      }
+    },
+  },
   methods: {
     async renamed(name: string) {
       const { program, registry: { defs } } = this;
@@ -184,6 +194,8 @@ export default Vue.extend({
       await getNamedExport('programs', this.program);
     },
     open(tab: ExplorerTab) {
+      this.tab = tab;
+      
       if (!tab.component) {
         const { program, registry } = this;
 

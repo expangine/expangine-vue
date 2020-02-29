@@ -12,9 +12,11 @@
   },
   "main": "build/expangine.umd.js",
   "dependencies": {
+    "@types/diff-match-patch": "^1.0.32",
     "@types/papaparse": "^5.0.1",
     "core-js": "^2.6.5",
     "diff": "^4.0.1",
+    "diff-match-patch": "^1.0.4",
     "expangine-runtime": "git+https://github.com/expangine/expangine-runtime.git#master",
     "expangine-runtime-live": "git+https://github.com/expangine/expangine-runtime-live.git#master",
     "localforage": "^1.7.3",

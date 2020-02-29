@@ -96,6 +96,13 @@ export default Vue.extend({
   data: () => ({
     tab: null as null | ExplorerTab,
   }),
+  watch: {
+    entity(entity: Entity) {
+      if (this.tab) {
+        this.tab.bind.entity = entity;
+      }
+    },
+  },
   methods: {
     async renamed(name: string) {
       const { entity, registry: { defs } } = this;

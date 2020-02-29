@@ -141,29 +141,7 @@
           </v-btn>
         </template>
         <v-list>
-          <!--
-          <v-list-item @click="toggleAutoSave">
-            <v-list-item-action>
-              <v-checkbox
-                :input-value="autoSave"
-              ></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Auto Save</v-list-item-title>
-              <v-list-item-subtitle>Your project is automatically saved to your browser so you can resume your work anytime.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item @click="saveDataPending" :disabled="isDataSaved">
-            <v-list-item-icon>
-              <v-icon>mdi-clock-outline</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Save Pending</v-list-item-title>
-              <v-list-item-subtitle>Your data changes are saved periodically.</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item @click="historyUndo" :disabled="undoEmpty">
+          <v-list-item @click="historyUndo" :disabled="!undos.length">
             <v-list-item-icon>
               <v-icon>mdi-undo</v-icon>
             </v-list-item-icon>
@@ -172,10 +150,10 @@
                 Undo
                 <ex-shortcut-label pref="shortcut_undo"></ex-shortcut-label>
               </v-list-item-title>
-              <v-list-item-subtitle>{{ undoLabel }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ undos.length }} changes.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click="historyRedo" :disabled="redoEmpty">
+          <v-list-item @click="historyRedo" :disabled="!redos.length">
             <v-list-item-icon>
               <v-icon>mdi-redo</v-icon>
             </v-list-item-icon>
@@ -184,7 +162,7 @@
                 Redo
                 <ex-shortcut-label pref="shortcut_redo"></ex-shortcut-label>
               </v-list-item-title>
-              <v-list-item-subtitle>{{ redoLabel }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ redos.length }} undone changes.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-list-item @click="historyClear" :disabled="historyEmpty">
@@ -206,8 +184,6 @@
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
-
-          -->
           <v-list-item @click="preferences = true">
             <v-list-item-icon>
               <v-icon>mdi-cogs</v-icon>
@@ -481,6 +457,45 @@
         </v-card>
       </v-dialog>
 
+
+      <v-navigation-drawer
+        v-model="historyDrawer"
+        right
+        fixed
+        temporary
+        disable-resize-watcher
+      >
+        <v-list dense subheader>
+          <template v-for="(redo, index) in redos">
+            <v-list-item :key="`redo${index}`" @click="gotoRedo(index)">
+              <v-list-item-content>
+                <v-list-item-title>
+                  <timeago :datetime="redo.time"></timeago>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ redo.patch.length }} bytes changed.
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <v-divider></v-divider>
+          <v-subheader>Current State</v-subheader>
+          <v-divider></v-divider>
+          <template v-for="(undo, index) in undosReversed">
+            <v-list-item :key="`undo${index}`" @click="gotoUndo(index)">
+              <v-list-item-content>
+                <v-list-item-title>
+                  <timeago :datetime="undo.time"></timeago>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ undo.patch.length }} bytes changed.
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>  
+      </v-navigation-drawer>
+
     </v-content>
   </v-app>
 </template>
@@ -498,6 +513,7 @@ import { sendNotification } from './app/Notify';
 import { getRunProgram } from './app/RunProgram';
 import { getDebugProgram } from './app/DebugProgram';
 import { getDescribeData } from './app/DescribeData';
+import { DefinitionsSaver, DefinitionsPatch } from './app/DefinitionsSaver';
 import { getEditFunction } from './app/EditFunction';
 import { getSimpleInput, SimpleInputOptions } from './app/SimpleInput';
 import { getInput } from './app/Input';
@@ -520,6 +536,7 @@ import { Preferences, PreferenceCategory } from './app/Preference';
 import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import Registry from './runtime';
 import { ExplorerTab } from './app/explorer/ExplorerTypes';
+import * as diff from 'diff';
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
@@ -652,6 +669,8 @@ const PREF_SHOW_EXAMPLES = Preferences.define({
 });
 
 
+const saver = new DefinitionsSaver(Registry.defs);
+
 export default Vue.extend({
   name: 'App',
   data: () => ({
@@ -669,11 +688,8 @@ export default Vue.extend({
     showOperations: false,
     preferences: false,
     // History
-    historyEmpty: true,
-    undoEmpty: true,
-    undoLabel: '',
-    redoEmpty: true,
-    redoLabel: '',
+    undos: saver.undos,
+    redos: saver.redos,
     historyDrawer: false,
     // Preferences
     prefs: Preferences.values,
@@ -684,6 +700,12 @@ export default Vue.extend({
   }),
   computed: 
   {
+    historyEmpty(): boolean {
+      return this.undos.length === 0 && this.redos.length === 0;
+    },
+    undosReversed(): DefinitionsPatch[] {
+      return this.undos.slice().reverse();
+    },
     shortcuts(): ShortcutContext {
       return {
         id: 'app',
@@ -691,6 +713,8 @@ export default Vue.extend({
           [Preferences.get(PREF_SHORTCUT_SAVE)]: this.exportJson,
           [Preferences.get(PREF_SHORTCUT_OPEN)]: this.importJson,
           [Preferences.get(PREF_SHORTCUT_NEW)]: this.reset,
+          [Preferences.get(PREF_SHORTCUT_UNDO)]: this.historyUndo,
+          [Preferences.get(PREF_SHORTCUT_REDO)]: this.historyRedo,
           [Preferences.get(PREF_SHORTCUT_READONLY)]: this.toggleReadOnly,
           [Preferences.get(PREF_SHORTCUT_OPERATIONS)]: () => this.showOperations = true,
           [Preferences.get(PREF_SHORTCUT_VIEW_DESIGN)]: () => this.mode = 0,
@@ -719,6 +743,7 @@ export default Vue.extend({
     (window as any).ex = ex;
     (window as any).Shortcuts = Shortcuts;
     (window as any).Preference = Preferences;
+    (window as any).diff = diff;
 
     LiveRuntime.objectSet = (target, key, value) => {
       Vue.set(target as any, key as string, value);
@@ -744,6 +769,8 @@ export default Vue.extend({
     
     this.loadExamples();
 
+    await saver.load();
+
     this.initialized = true;
   },  
   methods: {
@@ -765,52 +792,24 @@ export default Vue.extend({
         }
       }
     },
-
-    // SAVE ERROR
-    async onSaveError(error: any, transcoder: TranscoderStore<any, any>): Promise<boolean>
-    {
-      const options = await getSimpleInput({
-        title: 'Oh no!',
-        message: 'There was an error saving your project data to your browser. This data is saved to your browser so you don\'t lose your work if the browser closes. If you have a lot of data or a long undo/redo history this error can be thrown. What would you like to do next to avoid this problem?',
-        value: { 
-          action: 'history' as 'clear' | 'ignore' | 'history',
-          retry: false,
-        },
-        fields: [
-          { name: 'action', type: 'select', label: 'Action', items: [
-            { text: 'Clear all project data', value: 'clear' },
-            { text: 'Clear undo/redo history only', value: 'history' },
-            { text: 'Ignore error', value: 'ignore' },
-          ]},
-          { name: 'retry', type: 'boolean', label: 'Retry' },
-        ],
-      });
-
-      if (!options) 
-      {
-        return false;
-      }
-      
-      switch (options.action) 
-      {
-        case 'history':
-          Store.remove('redos');
-          Store.remove('undos');
-          sendNotification({ message: 'Undo/redo history cleared.' });
-          break;
-
-        case 'clear':
-          Store.clear();
-          sendNotification({ message: 'Project data cleared.' });
-          break;
-
-        case 'ignore':
-          sendNotification({ message: 'Error ignored. Your last change could not be saved.' });
-          break;
-      }
-
-      return options.retry;
+    async historyUndo() {
+      this.loadable(() => saver.undo());
     },
+    async gotoUndo(index: number) {
+      this.loadable(() => saver.undoMany(index + 1));
+    },
+    async historyRedo() {
+      this.loadable(() => saver.redo());
+    },
+    async gotoRedo(index: number) {
+      this.loadable(() => saver.redoMany(this.redos.length - index));
+    },
+    async historyClear() {
+      if (await getConfirmation({ pref: PREF_CLEAR_HISTORY })) {
+        this.loadable(() => saver.clear());
+      }
+    },
+
     // AUTO SAVE
     async toggleAutoSave()
     {

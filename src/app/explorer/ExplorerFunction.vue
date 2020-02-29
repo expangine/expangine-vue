@@ -93,6 +93,16 @@ export default Vue.extend({
       default: '',
     },
   },
+  data: () => ({
+    tab: null as null | ExplorerTab,
+  }),
+  watch: {
+    func(func: Func) {
+      if (this.tab) {
+        this.tab.bind.func = func;
+      }
+    },
+  },
   methods: {
     async renamed(name: string) {
       const { func, registry: { defs } } = this;
@@ -134,6 +144,8 @@ export default Vue.extend({
       await getNamedExport('functions', this.func);
     },
     open(tab: ExplorerTab) {
+      this.tab = tab;
+      
       if (!tab.component) {
         const { func, registry } = this;
 
