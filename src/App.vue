@@ -20,32 +20,32 @@
         <ex-explorer-program-folder
           :name-filter="explorerSearch"
           :registry="registry"
-          @open="onOpen"
-          @close="onClose"
+          @open="openTab"
+          @close="closeTab"
         ></ex-explorer-program-folder>  
         <ex-explorer-data-folder
           :name-filter="explorerSearch"
           :registry="registry"
-          @open="onOpen"
-          @close="onClose"
+          @open="openTab"
+          @close="closeTab"
         ></ex-explorer-data-folder>  
         <ex-explorer-function-folder
           :name-filter="explorerSearch"
           :registry="registry"
-          @open="onOpen"
-          @close="onClose"
+          @open="openTab"
+          @close="closeTab"
         ></ex-explorer-function-folder>  
         <ex-explorer-entity-folder
           :name-filter="explorerSearch"
           :registry="registry"
-          @open="onOpen"
-          @close="onClose"
+          @open="openTab"
+          @close="closeTab"
         ></ex-explorer-entity-folder>  
         <ex-explorer-relation-folder
           :name-filter="explorerSearch"
           :registry="registry"
-          @open="onOpen"
-          @close="onClose"
+          @open="openTab"
+          @close="closeTab"
         ></ex-explorer-relation-folder>  
       </v-list>
     </v-navigation-drawer>
@@ -411,6 +411,7 @@
       <ex-edit-entity-transcoder-dialog></ex-edit-entity-transcoder-dialog>
       <ex-edit-entity-dialog></ex-edit-entity-dialog>
       <ex-edit-relation-dialog></ex-edit-relation-dialog>
+      <ex-func-test-dialog></ex-func-test-dialog>
       <ex-operation-catalogue-dialog
         :registry="registry"
         :show.sync="showOperations"
@@ -556,13 +557,6 @@ const PREF_EXAMPLE_OVERWRITE = Preferences.define({
 const PREF_CLEAR_HISTORY = Preferences.define({
   key: 'clear_history',
   label: 'Clear undo/redo history without confirmation',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
-
-const PREF_REPLACE_DATA = Preferences.define({
-  key: 'replace_data',
-  label: 'Replace project data without confirmation',
   category: [PreferenceCategory.EDITOR, PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
@@ -743,7 +737,6 @@ export default Vue.extend({
     (window as any).ex = ex;
     (window as any).Shortcuts = Shortcuts;
     (window as any).Preference = Preferences;
-    (window as any).diff = diff;
 
     LiveRuntime.objectSet = (target, key, value) => {
       Vue.set(target as any, key as string, value);
@@ -762,19 +755,19 @@ export default Vue.extend({
       return existing;
     };
 
-    System.on('replaceData', this.replaceData);
     System.on('loading', this.handleLoading);
-    System.on('openTab', (type, tab) => this.onOpen(tab));
-    System.on('closeTab', (type, tab) => this.onClose(tab));
-    
-    this.loadExamples();
+    System.on('openTab', (type, tab) => this.openTab(tab));
+    System.on('closeTab', (type, tab) => this.closeTab(tab));
 
     await saver.load();
+    
+    this.loadExamples();
 
     this.initialized = true;
   },  
   methods: {
-    onOpen(tab: ExplorerTab) {
+    openTab(tab: ExplorerTab) 
+    {
       const i = this.tabs.findIndex((t) => t.id === tab.id);
       if (i === -1) {
         this.currentTab = this.tabs.length;
@@ -783,7 +776,8 @@ export default Vue.extend({
         this.currentTab = i;
       }
     },
-    onClose(tab: ExplorerTab) {
+    closeTab(tab: ExplorerTab) 
+    {
       const i = this.tabs.findIndex((t) => t.id === tab.id);
       if (i !== -1) {
         this.tabs.splice(i, 1);
@@ -792,25 +786,29 @@ export default Vue.extend({
         }
       }
     },
-    async historyUndo() {
+    async historyUndo() 
+    {
       this.loadable(() => saver.undo());
     },
-    async gotoUndo(index: number) {
+    async gotoUndo(index: number) 
+    {
       this.loadable(() => saver.undoMany(index + 1));
     },
-    async historyRedo() {
+    async historyRedo() 
+    {
       this.loadable(() => saver.redo());
     },
-    async gotoRedo(index: number) {
+    async gotoRedo(index: number) 
+    {
       this.loadable(() => saver.redoMany(this.redos.length - index));
     },
-    async historyClear() {
-      if (await getConfirmation({ pref: PREF_CLEAR_HISTORY })) {
+    async historyClear() 
+    {
+      if (await getConfirmation({ pref: PREF_CLEAR_HISTORY })) 
+      {
         this.loadable(() => saver.clear());
       }
     },
-
-    // AUTO SAVE
     async toggleAutoSave()
     {
       if (this.autoSave) {
@@ -831,14 +829,12 @@ export default Vue.extend({
 
       Preferences.set(PREF_AUTO_SAVE, this.autoSave);
     },
-    // READONLY
     toggleReadOnly() 
     {
       this.readOnly = !this.readOnly;
 
       Preferences.set(PREF_READ_ONLY, this.readOnly);
     },
-    // LOADING
     async handleLoading(eventType: 'loading', loadable: () => Promise<any>)
     {
       this.loadable(loadable);
@@ -865,7 +861,6 @@ export default Vue.extend({
 
       return result;
     },
-    // EXAMPLES
     async loadExamples() 
     {
       this.loadable(async () => 
@@ -877,7 +872,7 @@ export default Vue.extend({
         {
           this.examples = examples;
 
-          if (examples.length > 0 && Preferences.get(PREF_SHOW_EXAMPLES)) {
+          if (!saver.loaded && examples.length > 0 && Preferences.get(PREF_SHOW_EXAMPLES)) {
             this.showExamples = true;
             
             Preferences.set(PREF_SHOW_EXAMPLES, false);
@@ -911,7 +906,6 @@ export default Vue.extend({
         this.showExamples = false;
       });
     },
-    // SHARE
     share()
     {
       const name = friendlyList(this.registry.defs.programs.keys);
@@ -923,7 +917,6 @@ export default Vue.extend({
         body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into ${location.href}.\n\n\n${exported}`,
       });
     },
-    // RESET
     async reset() 
     {
       const resetting = await getSimpleInput({
@@ -969,15 +962,6 @@ export default Vue.extend({
         this.registry.defs.clearRelations();
       }
     },
-    async getDefaultTypes(): Promise<TypeUpdateEvent | false> 
-    {
-      const builtOption = await DefaultBuilder.getOption({
-        registry: this.registry,
-      });
-
-      return builtOption ? await builtOption.value() : false;
-    },
-    // EXPORT
     async exportJson() 
     {
       const exportResult = await getProjectExport({
@@ -993,7 +977,6 @@ export default Vue.extend({
         sendNotification({ message: 'Project exported.' });
       }
     },
-    // IMPORT JSON
     async importJson() 
     {
       this.loadable(async () => 
@@ -1046,42 +1029,6 @@ export default Vue.extend({
         
         window.console.log('error in run program', e);
       }
-    },
-    async replaceData(eventType: 'replaceData', data: any): Promise<boolean> 
-    {
-      const program = defs.programs.values[0];
-      const { registry } = this;
-
-      if (await getConfirmation({ message: 'This will overwrite your current data, are you sure?', pref: PREF_REPLACE_DATA })) 
-      {
-        const dataType = registry.defs.describe(data);
-        const dataSettings = registry.getTypeSettings(dataType);
-
-        if (program.dataType && program.dataType.acceptsData(dataType)) 
-        {
-          // history.save({ data }, 'Saved program results as Data.');
-
-          program.datasets[0].data = data;
-        }
-        else 
-        {
-          dataType.removeDescribedRestrictions();
-
-          program.dataType = dataType;
-          program.meta = dataSettings;
-          program.datasets[0].data = data;
-
-          // history.save({
-          //   type: dataType,
-          //   settings: dataSettings,
-          //   data,
-          // }, 'Saved program results as Type, Settings, and Data.');
-        }
-
-        return true;
-      }
-
-      return false;
     },
     async debugProgram() 
     { 

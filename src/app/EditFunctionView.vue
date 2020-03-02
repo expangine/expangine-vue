@@ -9,7 +9,7 @@
       @remove="remove"
     ></ex-namer>
 
-    <v-tabs vertical icons-and-text background-color="grey lighten-3">
+    <v-tabs vertical icons-and-text background-color="grey lighten-3" v-model="tab">
       <v-tab>
         <v-icon>mdi-file-tree</v-icon>
         Parameters
@@ -34,7 +34,7 @@
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
-      <v-tab-item class="data-container">
+      <v-tab-item>
         <ex-type-editor
           hide-settings
           no-transform
@@ -47,7 +47,7 @@
           @prop:rename="onArgumentRename"
         ></ex-type-editor>
       </v-tab-item>
-      <v-tab-item class="data-container">
+      <v-tab-item>
         <ex-expression-editor
           :value="func.expression"
           :context="func.params"
@@ -73,7 +73,38 @@
         ></ex-test-program>
       </v-tab-item>
       <v-tab-item>
-        Unit Tests!
+        <v-simple-table v-if="hasTests">
+          <colgroup>
+            <col style="width: 60px;">
+            <col style="width: 40%;">
+            <col style="width: 60%;">
+            <col style="width: 80px;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="test in func.tests">
+              <ex-func-test-row
+                :key="test.name"
+                :test="test"
+                :func="func"
+                :registry="registry"
+              ></ex-func-test-row>
+            </template>
+          </tbody>
+        </v-simple-table>
+        <div class="text-center pa-3">
+          <v-btn @click="addTest">
+            <v-icon>mdi-plus</v-icon>
+            Unit Test
+          </v-btn>
+        </div>
       </v-tab-item>
       <v-tab-item>
         <p v-if="references.length === 0" class="pa-3">
@@ -117,6 +148,8 @@ import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
 import { Registry } from '../runtime/Registry';
 import { sendNotification } from './Notify';
+import { getFuncTest } from './FuncTest';
+
 
 
 const PREF_REMOVE_FUNCTION = Preferences.define({
@@ -145,6 +178,9 @@ export default Vue.extend({
       default: false,
     },
   },
+  data: () => ({
+    tab: 0,
+  }),
   computed: {
     settings() {
       return this.registry.getTypeSettings(this.func.params);
@@ -159,6 +195,9 @@ export default Vue.extend({
     },
     references(): DefinitionsFunctionReference[] {
       return this.registry.defs.getFunctionReferences(this.func);
+    },
+    hasTests(): boolean {
+      return this.func.tests.length > 0 && this.tab === 4;
     },
   },
   methods: {
@@ -201,6 +240,24 @@ export default Vue.extend({
         sendNotification({ message: 'You cannot remove a referenced function. '});
       } else {
         this.$emit('remove', this.func);
+      }
+    },
+    async addTest() {
+      const { func, registry } = this;
+
+      const test = await getFuncTest({
+        func,
+        test: {
+          name: '',
+          description: '',
+          args: func.params.create(),
+          expected: null,
+        },
+        registry,
+      });
+
+      if (!test) {
+        sendNotification({ message: 'Add Unit Test canceled.' });
       }
     },
     onChange(event: TypeUpdateEvent) {

@@ -26,11 +26,15 @@
         <v-icon>mdi-play</v-icon>
         Run
       </v-tab>
+      <v-tab @click="onDebugSetup">
+        <v-icon>mdi-bug</v-icon>
+        Debug
+      </v-tab>
       <v-tab>
         <v-icon>mdi-information-outline</v-icon>
         Info
       </v-tab>
-      <v-tab-item class="data-container">
+      <v-tab-item>
         <ex-type-editor
           :read-only="readOnly"
           :type="program.dataType"
@@ -39,7 +43,7 @@
           @change="onChange"
         ></ex-type-editor>
       </v-tab-item>
-      <v-tab-item class="data-container">
+      <v-tab-item>
         <ex-type-input
           :value="currentData"
           :type="program.dataType"
@@ -49,11 +53,12 @@
           @input="onDataChange"
         ></ex-type-input>
       </v-tab-item>
-      <v-tab-item class="data-container">
+      <v-tab-item>
         <ex-expression-editor
           vertical
           sticky
           can-remove
+          hide-history
           :read-only="readOnly"
           :value="program.expression"
           :context="program.dataType"
@@ -65,11 +70,20 @@
         ></ex-expression-editor>
       </v-tab-item>
       <v-tab-item>
-        <div v-if="tab === 3">
+        <div v-if="isRunVisible">
           <ex-run-program
             :program="program"
             :registry="registry"
           ></ex-run-program>
+        </div>
+      </v-tab-item>
+      <v-tab-item>
+        <div v-if="isDebugVisible">
+          <ex-debug-program
+            hide-close
+            :debug="debug"
+            :registry="registry"
+          ></ex-debug-program>
         </div>
       </v-tab-item>
       <v-tab-item>
@@ -125,6 +139,7 @@ import { Registry } from '../runtime/Registry';
 import { sendNotification } from './Notify';
 import { System } from './SystemEvents';
 import { ExplorerTab } from './explorer/ExplorerTypes';
+import { Debugger, DebuggerOptions } from './Debugger';
 
 
 const PREF_REMOVE_PROGRAM = Preferences.define({
@@ -156,6 +171,7 @@ export default Vue.extend({
   data: () => ({
     id: Entity.uuid(),
     tab: 0,
+    debug: null as null | Debugger,
   }),
   computed: {
     settings(): TypeSettings {
@@ -168,6 +184,12 @@ export default Vue.extend({
     currentData(): any {
       return this.program.datasets[0].data;
     },
+    isDebugVisible(): boolean {
+      return this.tab === 4 && !!this.debug;
+    },
+    isRunVisible(): boolean {
+      return this.tab === 3;
+    },  
   },
   methods: {
     renamed(newName: string) {
@@ -208,6 +230,21 @@ export default Vue.extend({
       this.registry.defs.removeProgram(this.program);
 
       this.$emit('removed', this.program);
+    },
+    onDebugSetup() {
+      const { registry, program: { dataType: inputType, datasets, expression: program } } = this;
+      const options: DebuggerOptions = {
+        registry,
+        inputType,
+        input: datasets[0].data,
+        program,
+      };
+
+      if (this.debug) {
+        this.debug.set(options);
+      } else {
+        this.debug = new Debugger(options);
+      }
     },
     onChange(event: TypeUpdateEvent) {
       this.program.dataType = event.type as ObjectType;
@@ -257,11 +294,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="less" scoped>
-.data-container {
-  position: relative;
-  height: inherit;
-  overflow: scroll;
-}
-</style>

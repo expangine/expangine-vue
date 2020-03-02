@@ -49,17 +49,6 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="canExportOverwrite" @click="exportOverwrite">
-        <v-list-item-icon>
-          <v-icon>mdi-file-replace-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-content>
-          <v-list-item-title>Overwrite Project</v-list-item-title>
-          <v-list-item-subtitle>
-            Replace current project data and possibly type
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
     </v-list>
   </v-menu>
   <span v-else></span>
@@ -117,7 +106,7 @@ export default Vue.extend({
       ));
     },
     hasOptions(): boolean {
-      return this.canExportJson || this.canExportJs || this.canExportCsv || this.canExportOverwrite;
+      return this.canExportJson || this.canExportJs || this.canExportCsv || this.canExportData;
     },
     canExportData(): boolean {
       return !!this.computedType;
@@ -130,9 +119,6 @@ export default Vue.extend({
     },
     canExportCsv(): boolean {
       return this.getCsvExportPaths().length > 0;
-    },
-    canExportOverwrite(): boolean {
-      return System.hasListeners('replaceData');
     },
   },
   methods: {
@@ -280,9 +266,6 @@ export default Vue.extend({
       }
 
       return paths;
-    },
-    exportOverwrite() {
-      System.trigger('replaceData', this.data);
     },
     async saveAs() {
       const { data, computedType: dataType, registry: { defs } } = this;

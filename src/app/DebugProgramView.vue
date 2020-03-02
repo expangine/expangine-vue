@@ -99,7 +99,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon @click="close">
+        <v-btn v-if="!hideClose" icon @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
 
@@ -218,24 +218,20 @@ export default Vue.extend({
     ExDebugBreakpoint,
   },
   props: {
-    inputType: {
-      type: Object as () => Type,
-      required: true,
-    },
-    input: {
-      required: true,
-    },
-    program: {
-      type: Object as () => Expression,
-      required: true,
+    debug: {
+      type: Object as () => Debugger,
+      default: null,
     },
     registry: {
       type: Object as () => Registry,
       required: true,
     },
+    hideClose: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
-    debugs: null as unknown as Debugger,
     hoverExpression: null as null | Expression,
     stepsLoaded: 0,
     breakpointSet: false,
@@ -243,13 +239,13 @@ export default Vue.extend({
   }),
   computed: {
     step(): DebugStep {
-      return this.debugs.current.stepDebug;
+      return this.debug.current.stepDebug;
     },
     stepName(): string {
       return this.registry.getExpressionName(this.step.expr);
     },
     breakpoints(): DebugBreakpoint[] {
-      return Array.from(this.debugs.breakpoints.entries());
+      return Array.from(this.debug.breakpoints.entries());
     },
     highlightMap(): Map<Expression, string> {
       const highlights = new Map();
@@ -279,22 +275,22 @@ export default Vue.extend({
       return highlights;
     },
     callstack(): DebugStep[] {
-      return this.debugs.getCallstack();
+      return this.debug.getCallstack();
     },
     scopeNodes(): TypeSubNode[] {
-      return this.debugs.getScopeNodes();
+      return this.debug.getScopeNodes();
     },
     disabledBack(): boolean {
-      return this.debugs.current.step === 0;
+      return this.debug.current.step === 0;
     },
     disabledForward(): boolean {
-      return this.debugs.current.end;
+      return this.debug.current.end;
     },
     stepsVisible(): DebugStep[] {
-      return this.debugs.steps.slice(0, this.stepsLoaded);
+      return this.debug.steps.slice(0, this.stepsLoaded);
     },
     stepBackLabel(): string {
-      const step = this.getStepName(this.debugs.current.stepBack);
+      const step = this.getStepName(this.debug.current.stepBack);
 
       return step ? ' to ' + step : '';
     },
@@ -305,7 +301,7 @@ export default Vue.extend({
       return this.stepName;
     },
     stepOutLabel(): string {
-      const step = this.getStepName(this.debugs.current.stepBack);
+      const step = this.getStepName(this.debug.current.stepBack);
 
       return step ? ' of ' + step : '';
     },
@@ -316,28 +312,7 @@ export default Vue.extend({
       return new Map(this.breakpoints);
     },
   },
-  watch: {
-    inputType: 'updateDebugger',
-    input: 'updateDebugger',
-    registry: 'updateDebugger',
-    program: {
-      immediate: true,
-      handler() {
-        this.updateDebugger();
-      },
-    },
-  },
   methods: {
-    updateDebugger() {
-      const { inputType, input, registry, program } = this;
-      const options = { inputType, input, registry, program };
-
-      if (!this.debugs) {
-        this.debugs = new Debugger(options);
-      } else {
-        this.debugs.set(options);
-      }
-    },
     gotoClick(ev: Event, expr: Expression) {
       if (this.breakpointSet) {
         this.breakpoint = expr;
@@ -352,7 +327,7 @@ export default Vue.extend({
     },
     gotoEnd() {
       if (this.breakpoint) {
-        this.debugs.addBreakpoint(this.breakpoint);
+        this.debug.addBreakpoint(this.breakpoint);
       }
       this.gotoCancel();
     },
@@ -361,7 +336,7 @@ export default Vue.extend({
       this.breakpoint = null;
     },
     getStep(index: number): DebugStep | undefined {
-      return this.debugs.steps.find((s) => s.index === index);
+      return this.debug.steps.find((s) => s.index === index);
     },
     getStepName(index: number): string {
       const step = this.getStep(index);
@@ -369,31 +344,31 @@ export default Vue.extend({
       return step ? this.registry.getExpressionName(step.expr) : '';
     },
     removeBreakpoint(expr: Expression) {
-      this.debugs.removeBreakpoint(expr);
+      this.debug.removeBreakpoint(expr);
     },
     close() {
       this.$emit('close');
     },
     first() {
-      this.debugs.first();
+      this.debug.first();
     },
     stepBack() {
-      this.debugs.stepBack();
+      this.debug.stepBack();
     },
     stepInto() {
-      this.debugs.stepInto();
+      this.debug.stepInto();
     },
     stepOver() {
-      this.debugs.stepOver();
+      this.debug.stepOver();
     },
     stepOut() {
-      this.debugs.stepOut();
+      this.debug.stepOut();
     },
     stepToBreakpoint() {
-      this.debugs.stepToBreakpoint();
+      this.debug.stepToBreakpoint();
     },
     last() {
-      this.debugs.last();
+      this.debug.last();
     },
     onHoverStep(step: DebugStep | null = null) {
       this.hoverExpression = step ? step.expr : null;
@@ -402,8 +377,8 @@ export default Vue.extend({
       this.hoverExpression = breakpoint ? breakpoint[0] : null;
     },
     onIntersect(entries: Array<{ isIntersecting: boolean }>) {
-      if (entries[0].isIntersecting && this.stepsLoaded < this.debugs.steps.length) {
-        this.stepsLoaded = Math.min(this.debugs.steps.length, this.stepsLoaded + 10);
+      if (entries[0].isIntersecting && this.stepsLoaded < this.debug.steps.length) {
+        this.stepsLoaded = Math.min(this.debug.steps.length, this.stepsLoaded + 10);
       }
     },
   },

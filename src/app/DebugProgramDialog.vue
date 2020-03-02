@@ -2,10 +2,8 @@
   <v-dialog v-model="visible" fullscreen scrollable>
     <ex-debug-program
       v-if="visible"
-      :input-type="type"
-      :input="data"
+      :debug="debug"
       :registry="registry"
-      :program="program"
       @close="close"
     ></ex-debug-program>
   </v-dialog>

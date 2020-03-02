@@ -26,4 +26,8 @@ declare module 'diff' {
   }
 
   export function diffLines(oldStr: string, newStr: string, options?: { ignoreWhitespace?: boolean, newlineIsToken?: boolean}): Part[];
+
+  export function diffChars(oldStr: string, newStr: string, options?: { ignoreCase?: boolean }): Part[];
+
+  export function diffWords(oldStr: string, newStr: string, options?: { ignoreCase?: boolean }): Part[];
 }

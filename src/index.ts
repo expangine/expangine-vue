@@ -64,6 +64,8 @@ import EditEntityTranscoderDialog from './app/EditEntityTranscoderDialog.vue';
 import EditProgram from './app/EditProgramView.vue';
 import EditRelation from './app/EditRelationView.vue';
 import EditRelationDialog from './app/EditRelationDialog.vue';
+import FuncTestRow from './app/FuncTestRow.vue';
+import FuncTestDialog from './app/FuncTestDialog.vue';
 import InputDialog from './app/InputDialog.vue';
 import NotifyDialog from './app/NotifyDialog.vue';
 import ProjectHistoryList from './app/ProjectHistoryList.vue';
@@ -87,6 +89,7 @@ import DefinitionsReference from './app/DefinitionsReference.vue';
 import { FocusOnVisible, FocusOnCreate, FocusOnChange } from './app/Focus';
 import { ShortcutDirective } from './app/Shortcuts';
 import { SystemEventsDirective } from './app/SystemEvents';
+import { StickyDirective } from './app/directives/Sticky';
 
 
 export * from './app/BuildType';
@@ -212,6 +215,8 @@ export default {
     Vue.component('ex-edit-program', EditProgram);
     Vue.component('ex-edit-relation', EditRelation);
     Vue.component('ex-edit-relation-dialog', EditRelationDialog);
+    Vue.component('ex-func-test-row', FuncTestRow);
+    Vue.component('ex-func-test-dialog', FuncTestDialog);
     Vue.component('ex-input-dialog', InputDialog);
     Vue.component('ex-simple-input-dialog', SimpleInputDialog);
     Vue.component('ex-notify-dialog', NotifyDialog);
@@ -248,6 +253,7 @@ export default {
     Vue.directive('focus-on-change', FocusOnChange);
     Vue.directive('shortcuts', ShortcutDirective);
     Vue.directive('system-events', SystemEventsDirective);
+    Vue.directive('sticky', StickyDirective);
 
     Vue.directive('click-outside', ClickOutside);
 

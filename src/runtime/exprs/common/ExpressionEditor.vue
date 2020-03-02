@@ -1,9 +1,9 @@
 <template>
-  <div class="ex-expression-editor" :class="classes" :style="style">
-    <v-toolbar flat dense color="grey lighten-3">
+  <div class="ex-expression-editor" :class="classes">
+    <v-toolbar flat dense color="grey lighten-3" v-sticky.x.y="stickyTarget">
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn icon @click="toggleVertical" v-on="on">
+          <v-btn icon :small="internalCompact" @click="toggleVertical" v-on="on">
             <v-icon>{{ verticalIcon }}</v-icon>
           </v-btn>
         </template>
@@ -11,7 +11,15 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn icon :disabled="isReadOnlyDisabled" @click="toggleReadOnly" v-on="on">
+          <v-btn v-if="sticky" icon :small="internalCompact" @click="toggleSticky" v-on="on">
+            <v-icon>{{ stickyIcon }}</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ stickyText }}</span>
+      </v-tooltip>
+      <v-tooltip top>
+        <template #activator="{ on }">
+          <v-btn icon :small="internalCompact" :disabled="isReadOnlyDisabled" @click="toggleReadOnly" v-on="on">
             <v-icon>{{ readonlyIcon }}</v-icon>
           </v-btn>
         </template>
@@ -19,7 +27,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn icon v-if="!hideComplexity" :disabled="isShowComplexityDisabled" @click="toggleShowComplexity" v-on="on">
+          <v-btn icon :small="internalCompact" v-if="!hideComplexity" :disabled="isShowComplexityDisabled" @click="toggleShowComplexity" v-on="on">
             <v-icon>mdi-speedometer</v-icon>
           </v-btn>
         </template>
@@ -27,7 +35,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn icon v-if="!hideReturns" @click="toggleShowReturns" v-on="on">
+          <v-btn icon :small="internalCompact" v-if="!hideReturns" @click="toggleShowReturns" v-on="on">
             <v-icon>mdi-calculator</v-icon>
           </v-btn>
         </template>
@@ -35,7 +43,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn icon @click="toggleCompact" v-on="on">
+          <v-btn icon :small="internalCompact" @click="toggleCompact" v-on="on">
             <v-icon>{{ compactIcon }}</v-icon>
           </v-btn>
         </template>
@@ -43,7 +51,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn v-if="!hideHistory" icon :disabled="isUndoDisabled" @click="undo" v-on="on">
+          <v-btn v-if="!hideHistory" icon :small="internalCompact" :disabled="isUndoDisabled" @click="undo" v-on="on">
             <v-icon>mdi-undo</v-icon>
           </v-btn>
         </template>
@@ -51,7 +59,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn v-if="!hideHistory" icon :disabled="isRedoDisabled" @click="redo" v-on="on">
+          <v-btn v-if="!hideHistory" icon :small="internalCompact" :disabled="isRedoDisabled" @click="redo" v-on="on">
             <v-icon>mdi-redo</v-icon>
           </v-btn>
         </template>
@@ -61,7 +69,7 @@
         <template #activator="tooltip">
           <v-menu fixed :close-on-content-click="false" max-height="400">
             <template #activator="menu">
-              <v-btn v-if="isValidating" icon v-on="{ ...tooltip.on, ...menu.on }">
+              <v-btn v-if="isValidating" icon :small="internalCompact" v-on="{ ...tooltip.on, ...menu.on }">
                 <v-badge
                   overlap="overlap"
                   class="align-self-center"
@@ -102,7 +110,7 @@
       </v-tooltip>
       <v-menu offset-y :close-on-content-click="false">
         <template #activator="{ on }">
-          <v-btn icon :disabled="readOnly" v-on="on">
+          <v-btn icon :small="internalCompact" :disabled="readOnly" v-on="on">
             <v-icon>mdi-palette-outline</v-icon>
           </v-btn>
         </template>
@@ -159,7 +167,7 @@
       </v-menu>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn v-if="canRun" icon @click="run" v-on="on">
+          <v-btn v-if="canRun" icon :small="internalCompact" @click="run" v-on="on">
             <v-icon>mdi-play</v-icon>
           </v-btn>
         </template>
@@ -167,7 +175,7 @@
       </v-tooltip>
       <v-tooltip top>
         <template #activator="{ on }">
-          <v-btn v-if="canRun" icon @click="debug" v-on="on">
+          <v-btn v-if="canRun" icon :small="internalCompact" @click="debug" v-on="on">
             <v-icon>mdi-bug</v-icon>
           </v-btn>
         </template>
@@ -315,6 +323,7 @@ export default ExpressionBase().extend({
     showReturnColor: Preferences.get(PREF_RETURN_COLOR),
     showReturns: false,
     highlightedExpressions: new Map<Expression, string>(),
+    stickyEnabled: true,
   }),
   computed: {
     colorOptions(): ListOptions<string> {
@@ -361,6 +370,14 @@ export default ExpressionBase().extend({
     returnsText(): string {
       return this.showReturns ? 'Hide Highlights for Return Expressions' : 'Show Highlights for Return Expressions';
     },
+    stickyIcon(): string {
+      return this.vertical
+        ? 'mdi-arrow-up-down'
+        : 'mdi-arrow-left-right';
+    },
+    stickyText(): string {
+      return this.stickyEnabled ? 'Disable Auto Scrolling' : 'Enable Auto Scrolling';
+    },
     getDisplayOptions(): ExpressionDisplayOptions {
       return {
         compact: this.internalCompact,
@@ -399,15 +416,12 @@ export default ExpressionBase().extend({
         { text: 'High', value: ValidationSeverity.HIGH },
       ];
     },
-    style(): any {
-      return {
-        '--content-top': this.topOffset + 'px',
-      };
+    stickyTarget(): string | false {
+      return this.sticky && this.stickyEnabled ? '.v-toolbar__content' : false;
     },
     classes(): any {
       return {
         vertical: this.isVertical,
-        sticky: this.sticky,
       };
     },
   },
@@ -442,6 +456,9 @@ export default ExpressionBase().extend({
     toggleShowReturns() {
       this.showReturns = !this.showReturns;
       this.updateHighlightExpressions();
+    },
+    toggleSticky() {
+      this.stickyEnabled = !this.stickyEnabled;
     },
     updatedSeverity() {
       Preferences.set(PREF_VALIDATION_SEVERITY, this.validationSeverity);
@@ -599,14 +616,6 @@ export default ExpressionBase().extend({
 
 <style lang="less" scoped>
 .ex-expression-editor {
-
-  &.vertical.sticky {
-
-    /deep/ .v-toolbar .v-toolbar__content {
-      position: sticky;
-      top: var(--content-top);
-    }
-  }
 
   &.vertical {
     display: flex;

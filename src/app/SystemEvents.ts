@@ -1,13 +1,11 @@
-import { Type, objectEach, Relation, ReferenceData, Program, Entity, Func, NamedMap } from 'expangine-runtime';
+import { objectEach, Relation, ReferenceData, Program, Entity, Func, NamedMap } from 'expangine-runtime';
 import { EventBase } from './EventBase';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { DirectiveOptions } from 'vue';
 import { ExplorerTab } from './explorer/ExplorerTypes';
 
 
 export interface SystemEvent
 {
-  replaceData: (data: any) => void;
   loading: (loadable: () => Promise<any>) => void;
   openTab: (tab: ExplorerTab) => void;
   closeTab: (tab: ExplorerTab) => void;

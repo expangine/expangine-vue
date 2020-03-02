@@ -35,6 +35,7 @@ export class DefinitionsSaver
   public patching: boolean;
   public timeout: number;
   public debounce: number;
+  public loaded: boolean;
 
   public constructor(defs: Definitions, debounce: number = 1000)
   {
@@ -45,6 +46,7 @@ export class DefinitionsSaver
     this.patching = false;
     this.timeout = -1;
     this.debounce = debounce;
+    this.loaded = false;
 
     this.component = new Vue({
       data: { defs },
@@ -67,6 +69,7 @@ export class DefinitionsSaver
       this.state = state;
       this.undos.splice(0, this.undos.length, ...await this.loadPatches(storeUndos));
       this.redos.splice(0, this.redos.length, ...await this.loadPatches(storeRedos));
+      this.loaded = true;
     }
   }
 
@@ -192,16 +195,18 @@ export class DefinitionsSaver
   {
     const patches: patch_obj[] = JSON.parse(definitionsPatch.patch);
 
-    patches.forEach((patch) =>
+    patches.forEach((obj) =>
     {
-      patch.diffs.forEach((diff) =>
+      obj.diffs.forEach((diff) =>
       {
         diff[0] = -diff[0];
       });
     });
 
+    const time = new Date().getTime();
+    const patch = JSON.stringify(patches);
 
-    return { time: new Date().getTime(), patch: JSON.stringify(patches) };
+    return { time, patch };
   }
 
   public async applyPatch(definitionsPatch: DefinitionsPatch, delayApply: boolean = false)
