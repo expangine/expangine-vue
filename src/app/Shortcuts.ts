@@ -402,8 +402,8 @@ export class Shortcuts
   {
     if (!this.listening) 
     {
-      this.element.addEventListener('keydown', this.keydown);
-      this.element.addEventListener('keyup', this.keyup);
+      this.element.addEventListener('keydown', this.keydown, true);
+      this.element.addEventListener('keyup', this.keyup, true);
       this.listening = true;
     }
   }
@@ -427,8 +427,8 @@ export class Shortcuts
 
     if (destroy && this.contexts.length === 0)
     {
-      this.element.removeEventListener('keydown', this.keydown);
-      this.element.removeEventListener('keyup', this.keyup);
+      this.element.removeEventListener('keydown', this.keydown, true);
+      this.element.removeEventListener('keyup', this.keyup, true);
       this.listening = false;
     }
   }

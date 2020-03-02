@@ -11,9 +11,10 @@
         hide-details
         clearable
         class="ma-2"
-        placeholder="Search in explorer..."
         append-icon="mdi-magnify"
+        :placeholder="explorerSearchPlaceholder"
         v-model="explorerSearch"
+        v-focus-on-change="[explorerSearchFocuses, 'input']"
       ></v-text-field>
 
       <v-list dark dense class="pa-0">
@@ -631,27 +632,11 @@ const PREF_SHORTCUT_OPERATIONS = Preferences.define({
   component: 'ex-shortcut-input',
 });
 
-const PREF_SHORTCUT_VIEW_DESIGN = Preferences.define({
-  key: 'shortcut_view_design',
-  label: 'Goto design view shortcut',
+const PREF_SHORTCUT_EXPLORER_SEARCH = Preferences.define({
+  key: 'shortcut_explorer_search',
+  label: 'Focus on explorer search',
   category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '49__c',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_SHORTCUT_VIEW_DATA = Preferences.define({
-  key: 'shortcut_view_data',
-  label: 'Goto data view shortcut',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '50__c',
-  component: 'ex-shortcut-input',
-});
-
-const PREF_SHORTCUT_VIEW_PROGRAM = Preferences.define({
-  key: 'shortcut_view_program',
-  label: 'Goto program view shortcut',
-  category: [PreferenceCategory.EDITOR, PreferenceCategory.SHORTCUT],
-  defaultValue: '51__c',
+  defaultValue: '70_sc',
   component: 'ex-shortcut-input',
 });
 
@@ -689,6 +674,7 @@ export default Vue.extend({
     prefs: Preferences.values,
     // Explorer
     explorerSearch: '',
+    explorerSearchFocuses: 0,
     currentTab: -1,
     tabs: [] as ExplorerTab[],
   }),
@@ -711,9 +697,7 @@ export default Vue.extend({
           [Preferences.get(PREF_SHORTCUT_REDO)]: this.historyRedo,
           [Preferences.get(PREF_SHORTCUT_READONLY)]: this.toggleReadOnly,
           [Preferences.get(PREF_SHORTCUT_OPERATIONS)]: () => this.showOperations = true,
-          [Preferences.get(PREF_SHORTCUT_VIEW_DESIGN)]: () => this.mode = 0,
-          [Preferences.get(PREF_SHORTCUT_VIEW_DATA)]: () => this.mode = 1,
-          [Preferences.get(PREF_SHORTCUT_VIEW_PROGRAM)]: () => this.mode = 2,
+          [Preferences.get(PREF_SHORTCUT_EXPLORER_SEARCH)]: () => this.explorerSearchFocuses++,
         },
         ups: {
 
@@ -728,6 +712,11 @@ export default Vue.extend({
     },
     isDataSaved(): boolean {
       return this.dataTimeout === -1;
+    },
+    explorerSearchPlaceholder(): string {
+      const shortcut = Shortcuts.nameFromCode(Preferences.get(PREF_SHORTCUT_EXPLORER_SEARCH));
+
+      return `Search (${shortcut})`;
     },
   },
   async mounted() {

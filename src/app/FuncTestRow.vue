@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr @click="edit">
     <td>
       <v-icon :color="statusColor">
         {{ statusIcon }}
@@ -13,7 +13,7 @@
     </td>
     <td>
       <v-icon @click="edit">mdi-pencil</v-icon>
-      <v-icon @click="remove">mdi-trash</v-icon>
+      <v-icon @click="remove">mdi-delete</v-icon>
     </td>
   </tr>
 </template>

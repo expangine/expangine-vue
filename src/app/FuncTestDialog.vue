@@ -133,7 +133,7 @@ export default Vue.extend({
       return !this.passes;
     },
     diffString(): string {
-      return diffWords(this.expectedString, this.actualString)
+      return diffWords(this.expectedString || '', this.actualString || '')
         .map((part: Part) => `<span class="${getColor(part)}">${part.value}</span>`)
         .join('')
       ;

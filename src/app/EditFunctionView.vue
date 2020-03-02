@@ -75,10 +75,10 @@
       <v-tab-item>
         <v-simple-table v-if="hasTests">
           <colgroup>
-            <col style="width: 60px;">
+            <col style="width: 48px;">
             <col style="width: 40%;">
             <col style="width: 60%;">
-            <col style="width: 80px;">
+            <col style="width: 96px;">
           </colgroup>
           <thead>
             <tr>
