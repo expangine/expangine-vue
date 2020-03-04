@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, copy } from 'expangine-runtime';
+import { Type, Expression, DataTypes } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeSettings } from '../runtime/types/TypeVisuals';
 import { Registry } from '../runtime/Registry';
@@ -125,7 +125,7 @@ export default Vue.extend({
         this.invalid = false;
 
         const cmd = LiveRuntime.getCommand(this.program);
-        const data = copy(this.data);
+        const data = DataTypes.copy(this.data);
 
         this.result = cmd(data);
 

@@ -1,5 +1,5 @@
 
-import { EntityType, ObjectType, copy, objectToArray, objectValues } from 'expangine-runtime';
+import { EntityType, ObjectType, DataTypes, objectValues } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { EntityInput } from './EntityTypes';
 import { TypeModifier } from '../TypeModifier';
@@ -61,7 +61,7 @@ export const EntityModifier: TypeModifier =
         await getEditEntity({
           registry,
           type: type.clone(),
-          settings: copy(typeSettings),
+          settings: DataTypes.copy(typeSettings),
         });
 
         return false;

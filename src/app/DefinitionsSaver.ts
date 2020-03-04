@@ -47,7 +47,7 @@ export class DefinitionsSaver
     this.timeout = -1;
     this.debounce = debounce;
     this.loaded = false;
-
+    
     this.component = new Vue({
       data: { defs },
       watch: {
@@ -219,12 +219,7 @@ export class DefinitionsSaver
     if (!delayApply)
     {
       const options: DefinitionsImportOptions = JSON.parse(state);
-      this.defs.clearPrograms();
-      this.defs.clearData();
-      this.defs.clearFunctions();
-      this.defs.clearEntities();
-      this.defs.clearRelations();
-      this.defs.import(options);
+      this.defs.sync(options);
     }
     
     this.state = state;

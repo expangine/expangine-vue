@@ -1,5 +1,5 @@
 
-import { Type, TupleType, ObjectType, ListType, isNumber, copy, NumberType, isArray, isString, Types } from 'expangine-runtime';
+import { Type, TupleType, ObjectType, ListType, isNumber, DataTypes, NumberType, isArray, isString, Types } from 'expangine-runtime';
 import { createVisuals, TypeSettings, TypeVisualInput } from '@/runtime/types/TypeVisuals';
 import { TypeBuilder, TypeBuilderWrapper } from '@/runtime/types/TypeBuilder';
 import { TypeModifier } from '@/runtime/types/TypeModifier';
@@ -242,7 +242,7 @@ export const TupleModifierFromList: TypeModifier<TupleType> =
 
     for (let i = 0; i < size; i++) {
       values.push(item.clone());
-      settings.push(copy((typeSettings as TypeSettings<any, string>).sub.item));
+      settings.push(DataTypes.copy((typeSettings as TypeSettings<any, string>).sub.item));
     }
 
     return {

@@ -1,5 +1,4 @@
-import { objectEach, Relation, ReferenceData, Program, Entity, Func, NamedMap } from 'expangine-runtime';
-import { EventBase } from './EventBase';
+import { EventBase, objectEach, Relation, ReferenceData, Program, Entity, Func, NamedMap } from 'expangine-runtime';
 import { DirectiveOptions } from 'vue';
 import { ExplorerTab } from './explorer/ExplorerTypes';
 
@@ -43,6 +42,11 @@ export interface SystemEvent
 
 export class SystemClass extends EventBase<SystemEvent> 
 { 
+
+  public constructor()
+  {
+    super();
+  }
 
   public loadable(loader: () => Promise<any>): void
   {

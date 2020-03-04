@@ -234,7 +234,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, copy, Func } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, DataTypes, Func } from 'expangine-runtime';
 import { LiveContext, LiveResult, LiveRuntime } from 'expangine-runtime-live';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
@@ -420,7 +420,7 @@ export default ExpressionBase().extend({
     },
     async getAll() {
       const registry = this.registry;
-      const data = copy(this.data);
+      const data = DataTypes.copy(this.data);
       const results: Map<string, [any, number]> = new Map();
       const resultType = this.computedTypeRaw;
       const capture: Expression = this.value;

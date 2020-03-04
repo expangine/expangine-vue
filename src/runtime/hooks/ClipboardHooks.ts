@@ -1,4 +1,4 @@
-import { Type, copy } from 'expangine-runtime';
+import { Type, DataTypes } from 'expangine-runtime';
 import { TypeModifier } from '../types/TypeModifier';
 import { TypeSettings } from '../types/TypeVisuals';
 import { Registry } from '../Registry';
@@ -20,7 +20,7 @@ export const CopyModifier: TypeModifier =
     priority: 15,
     value: async () => {
       copyType = type.clone();
-      copySettings = copy(typeSettings);
+      copySettings = DataTypes.copy(typeSettings);
       copyRegistry = registry;
 
       sendNotification({ message: 'Type Copied!' });
@@ -45,7 +45,7 @@ export const PasteBuilder: TypeBuilder =
       description: summary,
       priority: 15,
       value: async () => (copyType && copySettings 
-        ? { type: copyType.clone(), settings: copy(copySettings) } 
+        ? { type: copyType.clone(), settings: DataTypes.copy(copySettings) } 
         : false
       ),
     };

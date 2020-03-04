@@ -506,7 +506,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Types, Type, defs, copy, Expression, isString, isObject, NoExpression, objectMap, objectEach, Func, ObjectType, NumberType, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, RelationOptions, Relation, objectToArray, Entity, Program, ProgramDataSet, ReferenceData, Exprs } from 'expangine-runtime';
+import { Types, Type, defs, Expression, isString, isObject, NoExpression, objectMap, objectEach, Func, ObjectType, NumberType, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, RelationOptions, Relation, objectToArray, Entity, Program, ProgramDataSet, ReferenceData, Exprs } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
 import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
@@ -524,11 +524,9 @@ import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
 import { getDataImport } from './app/DataImport';
 import { getSendMail } from './app/SendMail';
-import { newStore, TranscoderStore } from './app/Transcoder';
 import { exportFile } from './app/FileExport';
 import { friendlyList, SimpleFieldOption, isMapEqual, obj } from '@/common';
 import { getPromiser } from './app/Promiser';
-import { Store } from './app/Store';
 import { Trie } from './app/Trie';
 import { System } from './app/SystemEvents';
 import { ValidationHelper } from './app/ValidationHelper';
@@ -808,10 +806,6 @@ export default Vue.extend({
           unconfirm: 'Leave',
           pref: PREF_DISABLE_AUTO_SAVE,
         });
-
-        if (result) {
-          Store.clear();
-        }
       }
 
       this.autoSave = !this.autoSave;
@@ -1048,7 +1042,9 @@ export default Vue.extend({
 
     .v-tab {
       text-transform: none !important;
-      font-size: 14px;
+      font-family: Roboto, sans-serif;
+      font-weight: 400;
+      letter-spacing: initial;
     }
   }
 }

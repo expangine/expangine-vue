@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType, ObjectType, EnumType, ColorType, ColorSpaceRGB, ConstantExpression, isArray, isObject, compare, copy } from 'expangine-runtime';
+import { Type, AnyType, TextType, ObjectType, EnumType, ColorType, ColorSpaceRGB, ConstantExpression, isArray, isObject, DataTypes } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
@@ -119,7 +119,7 @@ export default ExpressionBase<ConstantExpression>().extend({
       }
 
       for (const [label, value] of type.options.constants.entries()) {
-        if (compare(value, this.value.value) === 0) {
+        if (DataTypes.equals(value, this.value.value)) {
           return label;
         }
       }
@@ -150,7 +150,7 @@ export default ExpressionBase<ConstantExpression>().extend({
     },
     editSave() {
       if (isObject(this.editValue)) {
-        this.editValue = copy(this.editValue);
+        this.editValue = DataTypes.copy(this.editValue);
       }
       this.value.value = this.editValue;
       this.editing = false;

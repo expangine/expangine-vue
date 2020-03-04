@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { copy, objectEach, Type, objectValues } from 'expangine-runtime';
+import { DataTypes, objectEach, Type, objectValues } from 'expangine-runtime';
 import { Preferences, Preference, PreferenceCategory } from './Preference';
 import { Registry } from '../runtime/Registry';
 import { TypeSettings } from '../runtime/types/TypeVisuals';
@@ -128,7 +128,7 @@ export default Vue.extend({
 
         objectEach(Preferences.prefs, (pref, key) => 
         {
-          const value = copy(Preferences.get(pref.key, pref.defaultValue));
+          const value = DataTypes.copy(Preferences.get(pref.key, pref.defaultValue));
           const type = pref.type || this.registry.defs.describe(value);
           const settings = this.registry.getTypeSettings(type, pref.label);
           const component = pref.component;

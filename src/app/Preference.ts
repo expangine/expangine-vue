@@ -1,9 +1,12 @@
-import { Type, copy, isString } from 'expangine-runtime';
-import { Store } from './Store';
+import { Type, DataTypes, isString } from 'expangine-runtime';
+import localforage from 'localforage';
 import Vue, { VueConstructor } from 'vue';
 
 
 // tslint:disable: unified-signatures
+
+export const storePreferences = localforage.createInstance({ name: 'prefs' });
+
 
 export interface Preference<T = any>
 {
@@ -59,7 +62,7 @@ export class PreferenceMap
 
     Vue.set(this.values, key, value);
     
-    Store.set(this.prefix + key, JSON.stringify(value));
+    storePreferences.setItem(this.prefix + key, JSON.stringify(value));
 
     return this;
   }
@@ -70,9 +73,9 @@ export class PreferenceMap
 
     if (!(pref.key in this.values))
     {
-      Vue.set(this.values, pref.key, copy(pref.defaultValue));
+      Vue.set(this.values, pref.key, DataTypes.copy(pref.defaultValue));
 
-      Store.get(this.prefix + pref.key).then((value) => 
+      storePreferences.getItem<string>(this.prefix + pref.key).then((value) => 
       {
         if (value !== null && value !== undefined)
         {

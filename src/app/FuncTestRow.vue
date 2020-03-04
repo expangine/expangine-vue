@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Func, FuncTest, compare, copy } from 'expangine-runtime';
+import { Func, FuncTest, DataTypes } from 'expangine-runtime';
 import { LiveRuntime, LiveContext } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
 import { Preferences, PreferenceCategory } from './Preference';
@@ -52,10 +52,10 @@ export default Vue.extend({
   },
   computed: {
     actual(): any {
-      return LiveRuntime.run(this.func.expression, copy(this.test.args));
+      return LiveRuntime.run(this.func.expression, DataTypes.copy(this.test.args));
     },
     passed(): boolean {
-      return compare(this.actual, this.test.expected) === 0;
+      return DataTypes.equals(this.actual, this.test.expected);
     },
     statusIcon(): string {
       return this.passed ? 'mdi-check-circle' : 'mdi-close-circle';

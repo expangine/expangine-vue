@@ -84,7 +84,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { diffWords, Part } from 'diff';
-import { Type, AnyType, TextType, ColorType, ColorSpaceRGB, compare, copy } from 'expangine-runtime';
+import { Type, AnyType, TextType, ColorType, ColorSpaceRGB, DataTypes } from 'expangine-runtime';
 import { ListOptions, friendlyList, asArray } from '../common';
 import { TypeVisuals, TypeSettings } from '../runtime/types/TypeVisuals';
 import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
@@ -119,7 +119,7 @@ export default Vue.extend({
         : this.registry.getTypeSettings(this.func.params);
     },
     actual(): any {
-      const actual = LiveRuntime.run(this.func.expression, copy(this.test.args));
+      const actual = LiveRuntime.run(this.func.expression, DataTypes.copy(this.test.args));
 
       return actual === undefined ? null : actual;
     },
@@ -127,7 +127,7 @@ export default Vue.extend({
       return this.test.expected === undefined ? null : this.test.expected;
     },
     passes(): boolean {
-      return compare(this.actual, this.test.expected) === 0;
+      return DataTypes.equals(this.actual, this.test.expected);
     },
     showDiff(): boolean {
       return !this.passes;
@@ -167,7 +167,7 @@ export default Vue.extend({
           : '';
     },
     updateExpected() {
-      this.test.expected = copy(this.actual);
+      this.test.expected = DataTypes.copy(this.actual);
     },
   },
 });

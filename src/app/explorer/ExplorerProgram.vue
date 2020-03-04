@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, Entity, ReturnExpression, ObjectType, copy } from 'expangine-runtime';
+import { Program, Entity, ReturnExpression, ObjectType, DataTypes } from 'expangine-runtime';
 import { ExplorerTab } from './ExplorerTypes';
 import { Registry } from '@/runtime/Registry';
 import { getInput } from '@/app/Input';
@@ -178,7 +178,7 @@ export default Vue.extend({
       }
 
       const params = program.dataType.clone();
-      const meta = copy(program.meta);
+      const meta = DataTypes.copy(program.meta);
       const expression = program.expression instanceof ReturnExpression
         ? program.expression.clone()
         : new ReturnExpression(program.expression.clone());

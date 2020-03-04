@@ -197,7 +197,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, copy, Program } from 'expangine-runtime';
+import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, DataTypes, Program } from 'expangine-runtime';
 import { ListOptions, isMapEqual } from '@/common';
 import { getRunProgram } from '@/app/RunProgram';
 import { getDebugProgram } from '@/app/DebugProgram';

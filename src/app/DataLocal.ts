@@ -1,6 +1,6 @@
 
 import Vue from 'vue';
-import { isArray, isNumber, isString, compare, isObject, isMap } from 'expangine-runtime';
+import { isArray, isNumber, isString, DataTypes, isObject, isMap } from 'expangine-runtime';
 import { Data, DataQueryOptions, DataQuery, DataOrderDirection, DataFilterOperation, DataFilter } from './Data';
 
 
@@ -150,7 +150,7 @@ export class DataLocal extends Data
           const avalue = this.internalGet(a, property);
           const bvalue = this.internalGet(b, property);
 
-          const compared = compare(avalue, bvalue);
+          const compared = DataTypes.compare(avalue, bvalue);
 
           if (compared !== 0) 
           {
@@ -245,15 +245,15 @@ export class DataLocal extends Data
     switch (filter.operation) 
     {
       case DataFilterOperation.EQUALS:
-        return (compare(value, filter.value) === 0) === !filter.not;
+        return (DataTypes.equals(value, filter.value)) === !filter.not;
       case DataFilterOperation.LESS_THAN:
-        return (compare(value, filter.value) < 0) === !filter.not;
+        return (DataTypes.compare(value, filter.value) < 0) === !filter.not;
       case DataFilterOperation.LESS_THAN_EQUAL:
-        return (compare(value, filter.value) <= 0) === !filter.not;
+        return (DataTypes.compare(value, filter.value) <= 0) === !filter.not;
       case DataFilterOperation.MORE_THAN:
-        return (compare(value, filter.value) > 0) === !filter.not;
+        return (DataTypes.compare(value, filter.value) > 0) === !filter.not;
       case DataFilterOperation.MORE_THAN_EQUAL:
-        return (compare(value, filter.value) >= 0) === !filter.not;
+        return (DataTypes.compare(value, filter.value) >= 0) === !filter.not;
       case DataFilterOperation.MATCHES:
         return (filter.value instanceof RegExp && isString(value) && !!value.match(filter.value)) === !filter.not;
     }
