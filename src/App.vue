@@ -1043,8 +1043,8 @@ export default Vue.extend({
     .v-tab {
       text-transform: none !important;
       font-family: Roboto, sans-serif;
-      font-weight: 400;
       letter-spacing: initial;
+      font-size: 16px;
     }
   }
 }
