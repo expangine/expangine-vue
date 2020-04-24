@@ -13,11 +13,11 @@ import TypeEditorMenu from './runtime/types/TypeEditorMenu.vue';
 import TypeInput from './runtime/types/TypeInput.vue';
 import TypeHookList from './runtime/types/TypeHookList.vue';
 import Expression from './runtime/exprs/Expression.vue';
-import PathEditor from './runtime/exprs/common/PathEditor.vue';
-import PathViewer from './runtime/exprs/common/PathViewer.vue';
 import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionEditor from './runtime/exprs/common/ExpressionEditor.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
+import PathEditor from './runtime/exprs/path/PathEditor.vue';
+import PathViewer from './runtime/exprs/path/PathViewer.vue';
 
 import ExplorerFile from './app/explorer/ExplorerFile.vue';
 import ExplorerFolder from './app/explorer/ExplorerFolder.vue';

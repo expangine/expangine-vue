@@ -3,7 +3,7 @@
     <ex-path-viewer
       v-bind="$props"
       v-on="$listeners"
-      :path="value.path"
+      :value="value.path"
     ></ex-path-viewer>
     =
     <ex-expression

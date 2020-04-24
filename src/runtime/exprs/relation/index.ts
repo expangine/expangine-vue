@@ -7,6 +7,7 @@ import RelationEditor from './RelationEditor.vue';
 export const GetRelationVisuals: ExpressionVisuals<GetRelationExpression> =
 {
   expr: GetRelationExpression,
+  menu: 'Relation',
   create: () => new GetRelationExpression(''),
   name: 'Get Relation',
   description: 'Gets a Relation',

@@ -7,6 +7,7 @@ import IfEditor from './IfEditor.vue';
 export const IfVisuals: ExpressionVisuals<IfExpression> =
 {
   expr: IfExpression,
+  menu: 'If',
   create: (forType) => new IfExpression([[NoExpression.instance, NoExpression.instance]], NoExpression.instance),
   name: 'If',
   description: 'If (condition A) then (B) else if (condition C) then (D) else (E)',

@@ -281,7 +281,7 @@ export default ExpressionBase<OperationExpression>().extend({
       return this.operationVisuals.description;
     },
     complexity(): number {
-      return this.value.getComplexity(this.registry.defs);
+      return this.value.getComplexity(this.registry.defs, this.context);
     },
     operationComplexity(): string {
       return COMPLEXITY_LABELS[Math.round(this.complexity)] || COMPLEXITY_LABEL_MAX;

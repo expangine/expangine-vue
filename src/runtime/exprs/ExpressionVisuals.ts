@@ -10,6 +10,7 @@ import { ConfirmOptions } from '@/app/Confirm';
 export interface ExpressionVisuals<E extends Expression = any> 
 {
   expr: ExpressionClass<E>;
+  menu: string;
   create: (forType: Type | null, context: Type | null, registry: Registry) => E;
   name: string;
   description: string;

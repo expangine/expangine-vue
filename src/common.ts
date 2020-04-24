@@ -1,4 +1,4 @@
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextOps, DateFormat, currentLocale, Exprs } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextOps, DateFormat, currentLocale, Exprs, PathExpression } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';
@@ -208,33 +208,24 @@ export function renameVariable(startingAt: Expression, from: string, to: string)
 {
   startingAt.traverse(new Traverser((expr) =>  
   {
-    if (isPathExpression(expr)) 
+    if (expr instanceof PathExpression)
     {
-      const first = expr.path[0];
-      
-      if (first instanceof ConstantExpression) 
+      const e0 = expr.expressions[0];
+      const e1 = expr.expressions[1];
+
+      if (e0 instanceof GetExpression && e1 instanceof ConstantExpression && e1.value === from)
       {
-        if (first.value === from) 
-        {
-          first.value = to;
-        }
+        e1.value = to;
       }
     }
   }));
 }
 
-export function isPathExpression(expr: Expression): expr is (GetExpression | SetExpression | UpdateExpression) 
-{
-  return expr instanceof GetExpression 
-    || expr instanceof SetExpression 
-    || expr instanceof UpdateExpression;
-}
-
 export function isInPathExpression(expr: Expression): boolean
 {
   return expr.parent 
-    && isPathExpression(expr.parent)
-    && expr.parent.path.indexOf(expr) !== -1;
+    && expr.parent instanceof PathExpression
+    && expr.parent.expressions.indexOf(expr) !== -1;
 }
 
 const phoneticDistance = LiveRuntime.getCommand(

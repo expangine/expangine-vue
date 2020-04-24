@@ -1,9 +1,7 @@
 <template>
-  <ex-path-viewer
-    v-bind="$props"
-    v-on="$listeners"
-    :path="value.path"
-  ></ex-path-viewer>
+  <span>
+    Get
+  </span>
 </template>
 
 <script lang="ts">

@@ -7,6 +7,7 @@ import SwitchEditor from './SwitchEditor.vue';
 export const SwitchVisuals: ExpressionVisuals<SwitchExpression> =
 {
   expr: SwitchExpression,
+  menu: 'Switch',
   create: () => new SwitchExpression(
     NoExpression.instance, // value
     'any:=', // operation

@@ -7,6 +7,7 @@ import NotEditor from './NotEditor.vue';
 export const NotVisuals: ExpressionVisuals<NotExpression> =
 {
   expr: NotExpression,
+  menu: 'Not',
   create: (forType) => new NotExpression(NoExpression.instance),
   name: 'Not',
   description: 'Negates the following expression',

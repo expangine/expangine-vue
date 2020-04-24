@@ -7,6 +7,7 @@ import InvokeEditor from './InvokeEditor.vue';
 export const InvokeVisuals: ExpressionVisuals<InvokeExpression> =
 {
   expr: InvokeExpression,
+  menu: 'Invoke',
   create: () => new InvokeExpression('', {}),
   name: 'Invoke',
   description: 'Execute a user-defined function',

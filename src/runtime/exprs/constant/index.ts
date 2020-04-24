@@ -10,6 +10,7 @@ import ConstantViewer from './ConstantViewer.vue';
 export const ConstantVisuals: ExpressionVisuals<ConstantExpression> =
 {
   expr: ConstantExpression,
+  menu: 'Constant',
   create: (forType, context, registry) => {
     if (forType instanceof NullType) {
       forType = null;

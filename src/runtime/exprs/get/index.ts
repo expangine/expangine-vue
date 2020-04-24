@@ -8,10 +8,11 @@ import GetViewer from './GetViewer.vue';
 export const GetVisuals: ExpressionVisuals<GetExpression> =
 {
   expr: GetExpression,
-  create: () => new GetExpression([]),
+  menu: 'Get',
+  create: () => new GetExpression(),
   name: 'Get',
   description: 'Get a data value',
-  describe: ({ registry, expr }) => 'Get ' + expr.path.map((segment) => registry.getExpressionDescribe(segment)).join(' -> '),
+  describe: ({ registry, expr }) => 'Get',
   viewer: GetViewer,
   editor: GetEditor,
   complex: true,
@@ -23,7 +24,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
         text: 'Transform to Get',
         description: 'Get the current value',
         priority: 9,
-        value: () => new GetExpression(expr.path),
+        value: () => expr.path.clone(),
       }]
     : []
   ,

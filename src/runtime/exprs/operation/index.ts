@@ -10,6 +10,7 @@ const STARTING_PARAM = '$wrapped';
 export const OperationVisuals: ExpressionVisuals<OperationExpression> =
 {
   expr: OperationExpression,
+  menu: 'Op',
   create: (forType) => new OperationExpression('', {}),
   name: 'Operation',
   description: 'Perform an operation',

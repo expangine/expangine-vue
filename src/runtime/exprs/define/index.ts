@@ -1,4 +1,4 @@
-import { Expression, DefineExpression, NoExpression, GetExpression, ConstantExpression, Type } from 'expangine-runtime';
+import { Expression, DefineExpression, NoExpression, GetExpression, ConstantExpression, Type, Exprs } from 'expangine-runtime';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
 import { friendlyList, ListOptionsPriority } from '@/common';
 import { Registry } from '@/runtime/Registry';
@@ -9,6 +9,7 @@ import DefineEditor from './DefineEditor.vue';
 export const DefineVisuals: ExpressionVisuals<DefineExpression> =
 {
   expr: DefineExpression,
+  menu: 'Define',
   create: (forType) => new DefineExpression([], NoExpression.instance),
   name: 'Define',
   description: 'Define variables to use later',
@@ -59,7 +60,7 @@ function getModifiers(requiredType: Type | null, expr: Expression, exprType: Typ
 
           define.define = newDefine;
 
-          return new GetExpression([new ConstantExpression(exprName)]);
+          return Exprs.get(Exprs.const(exprName));
         },
       },
     });

@@ -8,6 +8,7 @@ import TemplateEditor from './TemplateEditor.vue';
 export const TemplateVisuals: ExpressionVisuals<TemplateExpression> =
 {
   expr: TemplateExpression,
+  menu: 'Template',
   create: (forType) => new TemplateExpression('', obj()),
   name: 'Template',
   description: 'Text with variables injected into it',

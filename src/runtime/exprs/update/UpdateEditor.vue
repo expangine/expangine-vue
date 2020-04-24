@@ -43,7 +43,7 @@ export default ExpressionBase<UpdateExpression>().extend({
   name: 'UpdateEditor',
   computed: {
     valueType(): Type | null {
-      return Types.simplify(this.registry.defs.getPathType(this.value.path, this.context));
+      return Types.simplify(this.value.path.getType(this.registry.defs, this.context));
     },
     valueContext(): Type {
       return this.valueType

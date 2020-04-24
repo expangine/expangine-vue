@@ -234,7 +234,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, DataTypes, Func } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, DataTypes, Func, PathExpression } from 'expangine-runtime';
 import { LiveContext, LiveResult, LiveRuntime } from 'expangine-runtime-live';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';
@@ -339,19 +339,29 @@ export default ExpressionBase().extend({
       const input: TypeMap = {};
       let setTopLevel = false;
 
-      value.traverse(new Traverser((expr) => {
-        if (expr instanceof SetExpression || expr instanceof UpdateExpression) {
-          if (expr.path.length === 1) {
-            const first = expr.path[0];
-            if (first instanceof ConstantExpression && first.value in context.options.props) {
+      value.traverse(new Traverser((expr) => 
+      {
+        if (expr instanceof PathExpression) 
+        {
+          const e0 = expr.expressions[0];
+          const e1 = expr.expressions[1];
+
+          if (expr.parent instanceof SetExpression || expr.parent instanceof UpdateExpression) 
+          {
+            if (expr.expressions.length === 2 && 
+                e0 instanceof GetExpression &&
+                e1 instanceof ConstantExpression &&
+                e1.value in context.options.props) 
+            {
               setTopLevel = true;
             }
           }
-        }
-        if (expr instanceof SetExpression || expr instanceof UpdateExpression || expr instanceof GetExpression) {
-          const first = expr.path[0];
-          if (first instanceof ConstantExpression && first.value in context.options.props) {
-            input[first.value] = context.options.props[first.value];
+
+          if (e0 instanceof GetExpression &&
+              e1 instanceof ConstantExpression &&
+              e1.value in context.options.props) 
+          {
+            input[e1.value] = context.options.props[e1.value];
           }
         }
       }));

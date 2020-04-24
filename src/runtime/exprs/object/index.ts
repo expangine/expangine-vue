@@ -7,6 +7,7 @@ import ObjectEditor from './ObjectEditor.vue';
 export const ObjectVisuals: ExpressionVisuals<ObjectExpression> =
 {
   expr: ObjectExpression,
+  menu: 'Object',
   create: (forType) => new ObjectExpression({}),
   name: 'Object',
   description: 'Create a dynamic Object',

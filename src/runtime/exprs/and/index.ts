@@ -7,6 +7,7 @@ import AndEditor from './AndEditor.vue';
 export const AndVisuals: ExpressionVisuals<AndExpression> =
 {
   expr: AndExpression,
+  menu: 'And',
   create: (forType) => new AndExpression([]),
   name: 'And',
   description: 'Returns true if all conditions are true',

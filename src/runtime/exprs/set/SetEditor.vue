@@ -48,7 +48,7 @@ export default ExpressionBase<SetExpression>().extend({
   }),
   computed: {
     valueType(): Type | null {
-      return this.registry.defs.getPathType(this.value.path, this.context);
+      return this.value.path.getType(this.registry.defs, this.context);
     },
     valueTypeSimplified(): Type | null {
       return Types.simplify(this.valueType);

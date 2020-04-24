@@ -7,6 +7,7 @@ import WhileEditor from './WhileEditor.vue';
 export const WhileVisuals: ExpressionVisuals<WhileExpression> =
 {
   expr: WhileExpression,
+  menu: 'While',
   create: () => new WhileExpression(NoExpression.instance, NoExpression.instance),
   name: 'While',
   description: 'While a condition is true, do an expression',

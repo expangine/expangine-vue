@@ -234,7 +234,7 @@ export default function<E extends Expression>()
         return this.registry.getExpressionMultiline(this.value);
       },
       complexity(): number {
-        return this.value.getComplexity(this.registry.defs);
+        return this.value.getComplexity(this.registry.defs, this.context);
       },
       complexityColor(): string {
         const c = Math.round(this.complexity);

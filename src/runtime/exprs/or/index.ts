@@ -7,6 +7,7 @@ import OrEditor from './OrEditor.vue';
 export const OrVisuals: ExpressionVisuals<OrExpression> =
 {
   expr: OrExpression,
+  menu: 'Or',
   create: () => new OrExpression([]),
   name: 'Or',
   description: 'Returns true if any of the conditions are true',

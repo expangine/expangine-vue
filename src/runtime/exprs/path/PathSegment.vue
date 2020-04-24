@@ -1,25 +1,6 @@
 <template>
   <span class="path-segment ex-center-aligned">
 
-    <next-menu
-      :type="nextType"
-      :registry="registry"
-      :context-details="contextDetails"
-      :allow-computed="allowComputed"
-      :read-only="readOnly"
-      @segment="changeSegment"
-      @computed="changeComputed"
-    >
-      <template #append>
-        <v-list-item key="remove" @click="removeSegment">
-          <v-list-item-content>
-            <v-list-item-title>Remove</v-list-item-title>
-            <v-list-item-subtitle>Remove this segment and everything after it</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-    </next-menu>
-    
     <v-tooltip top :disabled="!segmentRisky">
       <template #activator="{ on }">
         <ex-expression
@@ -39,6 +20,25 @@
       <span>This segment will most likely result in an undefined value.</span>
     </v-tooltip>
 
+    <next-menu
+      :type="segmentType"
+      :registry="registry"
+      :context-details="contextDetails"
+      :allow-computed="allowComputed"
+      :read-only="readOnly"
+      @segment="changeSegment"
+      @computed="changeComputed"
+    >
+      <template #append>
+        <v-list-item key="remove" @click="removeSegment">
+          <v-list-item-content>
+            <v-list-item-title>Remove</v-list-item-title>
+            <v-list-item-subtitle>Remove this segment and everything after it</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </next-menu>
+    
     <path-segment 
       key="next"
       v-if="hasNext"
@@ -48,6 +48,7 @@
       :path="path"
       :sub-settings="segmentValueSettings"
       :allow-computed="allowComputed"
+      :allow-methods="allowMethods"
       @settings="onSettings"
     ></path-segment>
 
@@ -56,26 +57,22 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, TextType, Expression, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression, Exprs, Types } from 'expangine-runtime';
+import { Type, TextType, Expression, ConstantExpression, isFunction, NullType, ComputedExpression, GetExpression, Exprs, Types, PathExpression } from 'expangine-runtime';
 import { ListOptions } from '../../../common';
 import { TypeSubOption, TypeSettings, TypeComputedOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import NextMenu from '@/app/NextMenu.vue';
 
 
-export default ExpressionBase().extend({
+export default ExpressionBase<PathExpression>().extend({
   name: 'PathSegment',
   components: {
     NextMenu,
   },
   props: {
-    path: {
-      type: Array as () => Expression[],
-      required: true,
-    },
-    root: {
+    thisType: {
       type: Object as () => Type | null,
-      default: null,
+      required: true,
     },
     index: {
       type: Number,
@@ -88,20 +85,29 @@ export default ExpressionBase().extend({
       type: Boolean,
       default: false,
     },
+    allowMethods: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     noop: () => (() => undefined),
-    rootType(): Type {
-      return this.root || this.context;
-    },
     hasNext(): boolean {
-      return this.index + 1 < this.path.length;
+      return this.index + 1 < this.value.expressions.length;
     },
     segment(): Expression {
-      return this.path[this.index];
+      return this.value.expressions[this.index];
     },
     segmentType(): Type | null {
-      return Types.simplify(this.segment.getType(this.registry.defs, this.rootType));
+      if (!this.thisType) {
+        return null;
+      }
+
+      const node = this.segment;
+
+      return node.isPathNode()
+        ? node.getType(this.registry.defs, this.context, this.thisType)
+        : this.thisType.getSubType(node, this.registry.defs, this.context);
     },
     dynamicOption(): TypeSubOption | null {
       return this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;
@@ -145,22 +151,12 @@ export default ExpressionBase().extend({
         : null;
     },
     segmentReadOnly(): boolean {
-      return this.readOnly || !this.expectedType;
-    },
-    previousType(): Type | null {
-      return this.registry.defs.getPathType(this.path, this.rootType, this.index);
-    },
-    nextType(): Type {
-      return this.index === 0 
-        ? this.rootType
-        : this.previousType || NullType.baseType;
+      return this.readOnly || (!this.expectedType && !this.segment.isPathNode());
     },
     alternativeSegments(): TypeSubOption[] {
-      const segments = this.index === 0
-        ? this.registry.getTypeSubOptions(this.rootType)
-        : this.previousType
-          ? this.registry.getTypeSubOptions(this.previousType)
-          : [];
+      const segments = this.segmentType
+        ? this.registry.getTypeSubOptions(this.segmentType)
+        : [];
       
       const sorted = segments.slice();
 
@@ -186,15 +182,15 @@ export default ExpressionBase().extend({
   },
   methods: {
     getSettings(forKey: boolean): TypeSettings | null {
-      return this.previousType && this.subSettings && this.segmentOption
-        ? this.registry.getTypeSubSettings(this.previousType, this.subSettings, this.segmentOption, forKey)
+      return this.segmentType && this.subSettings && this.segmentOption
+        ? this.registry.getTypeSubSettings(this.segmentType, this.subSettings, this.segmentOption, forKey)
         : null;
     },
     onSettings(settings: TypeSettings | null) {
       this.$emit('settings', settings);
     },
     updateSegment(segment: Expression) {
-      this.$set(this.path, this.index, segment);
+      this.$set(this.value.expressions, this.index, segment);
       this.update();
     },
     changeSegment(sub: TypeSubOption) {
@@ -206,14 +202,15 @@ export default ExpressionBase().extend({
         segment = Exprs.const(sub.key);
       }
       
-      this.path.splice(this.index, this.path.length - this.index, segment);
+      this.value.expressions.splice(this.index, this.value.expressions.length - this.index, segment);
       this.update();
     },
     changeComputed(sub: TypeComputedOption) {
-      this.input(new ComputedExpression(new GetExpression(this.path.slice(0, this.index)), sub.value.id));
+      this.value.expressions.splice(this.index, this.value.expressions.length - this.index, new ComputedExpression(sub.value.id));
+      this.update();
     },
     removeSegment() {
-      this.path.splice(this.index, this.path.length - this.index);
+      this.value.expressions.splice(this.index, this.value.expressions.length - this.index);
       this.update();
     },
     optionalListener(callback: any, $event: any) {

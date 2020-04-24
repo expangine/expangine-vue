@@ -7,6 +7,7 @@ import DoEditor from './DoEditor.vue';
 export const DoVisuals: ExpressionVisuals<DoExpression> =
 {
   expr: DoExpression,
+  menu: 'Do',
   create: () => new DoExpression(NoExpression.instance, NoExpression.instance),
   name: 'Do',
   description: 'Do an expression repeatedly while a condition is true',

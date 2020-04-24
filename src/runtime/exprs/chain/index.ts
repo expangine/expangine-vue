@@ -7,6 +7,7 @@ import ChainEditor from './ChainEditor.vue';
 export const ChainVisuals: ExpressionVisuals<ChainExpression> =
 {
   expr: ChainExpression,
+  menu: 'Body',
   create: (forType) => new ChainExpression([]),
   name: 'Body',
   description: 'Multiple expressions, return the result of the last one',

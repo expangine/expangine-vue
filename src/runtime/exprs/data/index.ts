@@ -7,6 +7,7 @@ import DataEditor from './DataEditor.vue';
 export const GetDataVisuals: ExpressionVisuals<GetDataExpression> =
 {
   expr: GetDataExpression,
+  menu: 'Data',
   create: () => new GetDataExpression(''),
   name: 'Get Data',
   description: 'Gets user-defined Data',

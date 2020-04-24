@@ -7,6 +7,7 @@ import ForEditor from './ForEditor.vue';
 export const ForVisuals: ExpressionVisuals<ForExpression> =
 {
   expr: ForExpression,
+  menu: 'For',
   create: (forType, context) => new ForExpression(
     ['i', 'k', 'j', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'w']
       .find((v) => context instanceof ObjectType 

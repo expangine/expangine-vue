@@ -9,7 +9,6 @@ import { ComputedVisuals } from './computed';
 import { ConstantVisuals } from './constant';
 import { CommentVisuals } from './comment';
 import { SetVisuals } from './set';
-import { SubVisuals } from './sub';
 import { IfVisuals } from './if';
 import { ChainVisuals } from './chain';
 import { UpdateVisuals } from './update';
@@ -23,6 +22,7 @@ import { AndVisuals } from './and';
 import { NoVisuals } from './no';
 import { OrVisuals } from './or';
 import { OperationVisuals } from './operation';
+import { PathVisuals } from './path';
 import { TupleVisuals } from './tuple';
 import { ObjectVisuals } from './object';
 import { SwitchVisuals } from './switch';
@@ -37,8 +37,7 @@ export default function(registry: Registry)
     .addExpression(GetVisuals)
     .addExpression(OperationVisuals)
     .addExpression(SetVisuals)
-    .addExpression(UpdateVisuals)
-    .addExpression(SubVisuals)
+    .addExpression(UpdateVisuals)  
     .addExpression(ComputedVisuals)
     .addExpression(IfVisuals)
     .addExpression(SwitchVisuals)
@@ -54,6 +53,7 @@ export default function(registry: Registry)
     .addExpression(AndVisuals)
     .addExpression(NoVisuals)
     .addExpression(OrVisuals)
+    .addExpression(PathVisuals)
     .addExpression(ChainVisuals)
     .addExpression(GetDataVisuals)
     .addExpression(GetEntityVisuals)

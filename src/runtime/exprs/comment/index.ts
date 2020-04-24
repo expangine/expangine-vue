@@ -7,6 +7,7 @@ import CommentEditor from './CommentEditor.vue';
 export const CommentVisuals: ExpressionVisuals<CommentExpression> =
 {
   expr: CommentExpression,
+  menu: 'Comment',
   create: (forType) => new CommentExpression(''),
   name: 'Comment',
   description: 'Add a comment to document your code',

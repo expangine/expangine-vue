@@ -7,6 +7,7 @@ import TupleEditor from './TupleEditor.vue';
 export const TupleVisuals: ExpressionVisuals<TupleExpression> =
 {
   expr: TupleExpression,
+  menu: 'Tuple',
   create: (forType) => new TupleExpression([]),
   name: 'Tuple',
   description: 'Create a dynamic Tuple',

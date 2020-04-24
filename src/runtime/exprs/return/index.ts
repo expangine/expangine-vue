@@ -8,6 +8,7 @@ import ReturnEditor from './ReturnEditor.vue';
 export const ReturnVisuals: ExpressionVisuals<ReturnExpression> =
 {
   expr: ReturnExpression,
+  menu: 'Return',
   create: (forType) => new ReturnExpression(NoExpression.instance),
   name: 'Return',
   description: 'Return this value immediately',

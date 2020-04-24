@@ -7,6 +7,7 @@ import NoEditor from './NoEditor.vue';
 export const NoVisuals: ExpressionVisuals<NoExpression> =
 {
   expr: NoExpression,
+  menu: 'No',
   create: (forType) => NoExpression.instance,
   name: 'No',
   description: 'No expression',

@@ -1,6 +1,6 @@
 <template>
   <span>
-    <template v-for="(segment, index) in path">
+    <template v-for="(segment, index) in value.expressions">
       <span :key="index">
         {{ getSegmentPrefix(segment, index) }}
         <ex-expression
@@ -16,26 +16,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, isString, ConstantExpression } from 'expangine-runtime';
+import { Expression, isString, ConstantExpression, PathExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
-export default ExpressionBase().extend({
+export default ExpressionBase<PathExpression>().extend({
   name: 'PathViewer',
-  props: {
-    path: {
-      type: Array as () => Expression[],
-      required: true,
-    },
-  },
   methods: {
     getSegmentClass(segment: Expression) {
-      return segment instanceof ConstantExpression && isString(segment.value)
+      return (segment instanceof ConstantExpression && isString(segment.value)) || segment.isPathNode()
         ? ''
         : 'ex-brackets';
     },
     getSegmentPrefix(segment: Expression, index: number) {
-      return segment instanceof ConstantExpression && isString(segment.value)
+      return (segment instanceof ConstantExpression && isString(segment.value)) || segment.isPathNode()
         ? (index > 0 ? '.' : '')
         : '';
     },

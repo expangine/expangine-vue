@@ -7,6 +7,7 @@ import EntityEditor from './EntityEditor.vue';
 export const GetEntityVisuals: ExpressionVisuals<GetEntityExpression> =
 {
   expr: GetEntityExpression,
+  menu: 'Type',
   create: () => new GetEntityExpression(''),
   name: 'Get Type',
   description: 'Gets a Type',
