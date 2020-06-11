@@ -33,6 +33,16 @@
             </v-list-item>
           </template>
         </template>
+        <template v-if="allowMethods">
+          <template v-for="method in nextMethods">
+            <v-list-item :key="method.value.name" @click="addMethod(meth)">
+              <v-list-item-content>
+                <v-list-item-title>{{ meth.text }}</v-list-item-title>
+                <v-list-item-subtitle>{{ meth.value.description || meth.description }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </template>
         <slot name="append"></slot>
       </ex-child-filter>
     </v-list>
@@ -42,9 +52,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type } from 'expangine-runtime';
+import { Type, objectToArray, EntityType } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
-import { TypeSubOption, TypeSettings, TypeComputedOption } from '../runtime/types/TypeVisuals';
+import { TypeSubOption, TypeComputedOption, TypeMethodOption } from '../runtime/types/TypeVisuals';
 
 
 export default Vue.extend({
@@ -61,6 +71,10 @@ export default Vue.extend({
       type: Object as () => Record<string, string>,
     },
     allowComputed: {
+      type: Boolean,
+      default: false,
+    },
+    allowMethods: {
       type: Boolean,
       default: false,
     },
@@ -112,6 +126,23 @@ export default Vue.extend({
     nextComputed(): TypeComputedOption[] {
       return this.registry.getTypeComputedOptions(this.type);
     },
+    nextMethods(): TypeMethodOption[] {
+      if (!(this.type instanceof EntityType)) {
+        return [];
+      }
+
+      const entity = this.registry.defs.getEntity(this.type.options);
+
+      if (!entity) {
+        return [];
+      }
+
+      return objectToArray(entity.methods, (func, funcName) => ({
+        text: funcName,
+        description: 'Call user-defined method',
+        value: func,
+      }));
+    },
   },
   methods: {
     addSegment(sub: TypeSubOption) {
@@ -119,6 +150,9 @@ export default Vue.extend({
     },
     addComputed(comp: TypeComputedOption) {
       this.$emit('computed', comp);
+    },
+    addMethod(meth: TypeMethodOption) {
+      this.$emit('method', meth);
     },
   },
 });

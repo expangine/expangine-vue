@@ -24,7 +24,7 @@ import Vue from 'vue';
 
 
 export default Vue.extend({
-  name: 'ex-chip-menu',
+  name: 'ChipMenu',
   props: {
     text: {
       type: String,

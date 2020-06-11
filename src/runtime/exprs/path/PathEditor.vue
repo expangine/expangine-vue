@@ -1,5 +1,14 @@
 <template>
   <span class="ex-center-aligned">
+    <ex-expression-menu
+      v-if="hasMenu"
+      v-bind="$props"
+      v-on="$listeners"
+      :invalid-override="invalid"
+      text="Get"
+      tooltip="A sub-value"
+      class="mr-1"
+    ></ex-expression-menu>
     <path-segment
       v-bind="$props"
       :this-type="context"
@@ -36,6 +45,11 @@ export default ExpressionBase<PathExpression>().extend({
     allowMethods: {
       type: Boolean,
       default: true,
+    },
+  },
+  computed: {
+    hasMenu(): boolean {
+      return !this.value.expressions[0].isPathStart();
     },
   },
   methods: {

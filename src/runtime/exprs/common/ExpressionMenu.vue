@@ -263,7 +263,7 @@ const PREF_EXPRESSION_MODIFY = Preferences.define({
 
 
 export default ExpressionBase().extend({
-  name: 'ex-expression-menu',
+  name: 'ExpressionMenu',
   props: {
     text: {
       type: String,

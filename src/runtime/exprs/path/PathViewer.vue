@@ -6,7 +6,7 @@
         <ex-expression
           v-bind="$props"
           v-on="$listeners"
-          :class="getSegmentClass(segment)"
+          :class="getSegmentClass(segment, index)"
           :value="segment"
         ></ex-expression>
       </span>
@@ -23,10 +23,12 @@ import ExpressionBase from '../ExpressionBase';
 export default ExpressionBase<PathExpression>().extend({
   name: 'PathViewer',
   methods: {
-    getSegmentClass(segment: Expression) {
+    getSegmentClass(segment: Expression, index: number) {
       return (segment instanceof ConstantExpression && isString(segment.value)) || segment.isPathNode()
         ? ''
-        : 'ex-brackets';
+        : index === 0
+          ? 'ex-parenthesis'
+          : 'ex-brackets';
     },
     getSegmentPrefix(segment: Expression, index: number) {
       return (segment instanceof ConstantExpression && isString(segment.value)) || segment.isPathNode()

@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, GetExpression } from 'expangine-runtime';
+import { GetExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 

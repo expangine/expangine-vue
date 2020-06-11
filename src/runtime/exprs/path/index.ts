@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { PathExpression } from 'expangine-runtime';
+import { PathExpression, Exprs } from 'expangine-runtime';
 
 import PathEditor from './PathEditor.vue';
 import PathViewer from './PathViewer.vue';
@@ -23,5 +23,17 @@ export const PathVisuals: ExpressionVisuals<PathExpression> =
   ,
   getReturnExpressions: (registry, expr) => [expr],
   isStart: () => false,
-  getModifiers: (requiredType, expr) => [],
+  getModifiers: (requiredType, expr) => expr instanceof PathExpression && !expr.expressions[0].isPathStart()
+    ? [{
+        text: 'Remove sub-value',
+        description: 'Replace this expression with the first expression in the path',
+        priority: 5,
+        value: () => expr.expressions[0],
+      }]
+    : [{
+        text: 'Get sub-value',
+        description: 'Get a sub-value of the result of this expression',
+        priority: 5,
+        value: () => Exprs.path(expr),
+      }],
 };

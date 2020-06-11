@@ -30,6 +30,7 @@ import { templateTokens } from '@/common';
 
 
 export default Vue.extend({
+  name: 'Templated',
   props: {
     template: {
       type: String,
