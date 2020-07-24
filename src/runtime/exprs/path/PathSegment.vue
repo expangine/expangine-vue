@@ -22,6 +22,7 @@
 
     <next-menu
       v-if="segmentType"
+      :changes="1"
       :type="segmentType"
       :registry="registry"
       :context-details="contextDetails"

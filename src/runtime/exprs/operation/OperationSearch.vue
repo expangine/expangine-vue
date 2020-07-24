@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Expression, Type, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, Traverser, GetExpression, ConstantExpression, isArray, UpdateExpression, SetExpression, Types } from 'expangine-runtime';
+import { Expression, Type, OperationExpression, OperationPair, NoExpression, Types } from 'expangine-runtime';
 import { ListOptionsTokenized } from '@/common';
 import { filterOperation, getListOption, sortListOption, sortListOptionByCount } from './helpers';
 import ExpressionBase from '../ExpressionBase';
@@ -77,7 +76,8 @@ export default ExpressionBase<OperationExpression>().extend({
         : 'Operation';
     },
     returnTypeMode(): boolean {
-      return !!this.requiredType && !this.hasStartingValue;
+      return false;
+      // return !!this.requiredType && !this.hasStartingValue; // no return type mode
     },
     returnTypeOperations(): ListOptionsTokenized<OperationPair> {
       return this.requiredType
