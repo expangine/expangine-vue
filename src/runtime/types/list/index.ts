@@ -29,7 +29,7 @@ const PREF_LIST_MODIFIER = Preferences.define({
 
 export const ListVisuals = createVisuals<ListSubs>()({
   type: ListType,
-  name: 'List',
+  name: () => 'List',
   description: 'A list of values.',
   describe: ({registry, type}) => 'List of ' + registry.getTypeDescribe(type.options.item),
   describeLong: (registry, type, padding, tab, newline) => 

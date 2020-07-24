@@ -19,6 +19,10 @@
         Type
       </v-tab>
       <v-tab>
+        <v-icon>mdi-information-outline</v-icon>
+        Info
+      </v-tab>
+      <v-tab>
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
@@ -42,6 +46,20 @@
         ></ex-type-editor>
       </v-tab-item>
       <v-tab-item>
+        <v-container>
+          <v-row>
+            <v-col>
+              <v-chip label>
+                Created:&nbsp;<timeago :datetime="data.created"></timeago>
+              </v-chip>
+              <v-chip label class="ml-4">
+                Updated:&nbsp;<timeago :datetime="data.updated"></timeago>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-tab-item>
+      <v-tab-item>
         <p v-if="references.length === 0" class="pa-3">
           <v-alert type="info">
             This Data is not referenced by anything.
@@ -63,7 +81,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, NoExpression, ObjectType, Expression, Traverser, ReturnExpression, Program, Types, DateFormat, ReferenceData, DefinitionsDataReference } from 'expangine-runtime';
+import { ObjectType, ReferenceData, DefinitionsDataReference } from 'expangine-runtime';
 import { TypeUpdateEvent, TypeSettings } from '../runtime/types/TypeVisuals';
 import { Preferences, PreferenceCategory } from './Preference';
 import { LiveRuntime } from 'expangine-runtime-live';
@@ -116,7 +134,7 @@ export default Vue.extend({
       const { defs } = registry;
 
       if (data.name) {
-        const updates = this.registry.defs.renameData(data.name, newName);
+        const updates = defs.renameData(data.name, newName);
         
         if (updates && updates.length) {
           sendNotification({ message: `${updates.length} Data reference(s) updated` });
@@ -126,7 +144,7 @@ export default Vue.extend({
       } else {
         data.name = newName;
 
-        this.registry.defs.addData(data);
+        defs.addData(data);
       }
     },
     validateName(name: string) {

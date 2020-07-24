@@ -62,9 +62,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType } from 'expangine-runtime';
+import { Type } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
+import { TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { sendNotification } from './Notify';
 import { Registry } from '../runtime/Registry';
 

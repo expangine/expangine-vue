@@ -28,8 +28,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, isArray, isBoolean } from 'expangine-runtime';
-import { DebugStep, DebugBreakpoint } from './Debugger';
+import { Expression, isArray, isBoolean } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 
 

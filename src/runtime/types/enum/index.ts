@@ -15,7 +15,7 @@ import EnumOptions from './EnumOptions.vue';
 
 export const EnumVisuals = createVisuals<EnumSubs>()({
   type: EnumType,
-  name: 'Enum',
+  name: () => 'Enum',
   description: 'A list of key value pairs.',
   describe: ({registry, type}) => 'Enum of ' + registry.getTypeDescribe(type.options.value),
   describeLong: (registry, type, padding, tab, newline) => 

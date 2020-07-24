@@ -27,19 +27,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ObjectType, Types, objectEach, objectToArray } from 'expangine-runtime';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
 import { editTypeIndexDialog } from './EditEntityIndex';
-import { getConfirmation } from './Confirm';
-import { Preferences, PreferenceCategory } from './Preference';
-
-
-const PREF_REMOVE_TYPE_INDEX = Preferences.define({
-  key: 'remove_type_index',
-  label: 'Remove user-defined type indexes without confirmation',
-  category: [PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
 
 
 export default Vue.extend({

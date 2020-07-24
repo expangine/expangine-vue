@@ -10,7 +10,7 @@
             <strong v-html="settings.options.title"></strong>
           </td>
         </tr>
-        <tr>
+        <tr class="ex-accent-bar">
           <th>
             <v-menu v-if="hasMenu">
               <template #activator="{ on }">
@@ -18,7 +18,7 @@
                   <v-icon>mdi-settings</v-icon>
                 </v-btn>
               </template>
-              <v-list>
+              <v-list dense>
                 <v-list-item v-if="canAdd" @click="addItem">
                   <v-list-item-content>
                     Add {{ itemName }}

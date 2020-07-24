@@ -12,7 +12,7 @@ import NumberOptions from './NumberOptions.vue';
 
 export const NumberVisuals = createVisuals()({
   type: NumberType,
-  name: 'Number',
+  name: () => 'Number',
   description: 'A number value',
   describe: () => 'Number',
   describeLong: (registry, type) =>  
@@ -21,7 +21,7 @@ export const NumberVisuals = createVisuals()({
     (isNumber(type.options.min) ? ' min=' + type.options.min : '') +
     (isNumber(type.options.max) ? ' max=' + type.options.max : '')
   ,
-  stringify: ({ value }) => value.toString(),
+  stringify: ({ value }) => isNaN(value) ? 'Not A Number' : value.toString(),
   subNodes: () => [],
   toString: ({ value, type, process, processInvalid }) => {
     if (!isNumber(value)) {

@@ -11,7 +11,7 @@ import DateOptions from './DateOptions.vue';
 export const DateVisuals = createVisuals()(
 {
   type: DateType,
-  name: 'Date',
+  name: () => 'Date',
   description: 'A date value',
   describe: () => 'Date',
   describeLong: (registry, type, padding) => 'Date',

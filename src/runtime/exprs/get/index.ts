@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { GetExpression, SetExpression, UpdateExpression } from 'expangine-runtime';
+import { GetExpression, SetExpression, UpdateExpression, Exprs } from 'expangine-runtime';
 
 import GetEditor from './GetEditor.vue';
 import GetViewer from './GetViewer.vue';
@@ -9,7 +9,7 @@ export const GetVisuals: ExpressionVisuals<GetExpression> =
 {
   expr: GetExpression,
   menu: 'Get',
-  create: () => new GetExpression(),
+  create: () => Exprs.path(Exprs.get()),
   name: 'Get',
   description: 'Get a data value',
   describe: ({ registry, expr }) => 'Get',

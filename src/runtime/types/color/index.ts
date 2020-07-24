@@ -12,7 +12,7 @@ const FORMAT = ColorSpaceRGB.formatMap.bestfit;
 export const ColorVisuals = createVisuals()(
 {
   type: ColorType,
-  name: 'Color',
+  name: () => 'Color',
   description: 'A color value',
   describe: () => 'Color',
   describeLong: (registry, type, padding) => 'Color',

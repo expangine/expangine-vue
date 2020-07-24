@@ -6,9 +6,9 @@
     :name-filter="nameFilter"
     :count="registry.defs.programs.values.length">
     <template #files>
-      <template v-for="(program, index) in registry.defs.programs.values">
+      <template v-for="program in registry.defs.programs.values">
         <ex-explorer-program
-          :key="index"
+          :key="program.name"
           :program="program"
           :registry="registry"
           :name-filter="nameFilter"
@@ -27,7 +27,7 @@
         </template>
         <v-list dense>
           <v-list-item @click="add(opener)">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-plus-circle</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -35,7 +35,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="toJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-export</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -43,15 +43,16 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="fromJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-import</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
               Import
             </v-list-item-title>
           </v-list-item>
+          <ex-explorer-sorter :sorter="sorter"></ex-explorer-sorter>
           <v-list-item @click="clear">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-delete</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -67,16 +68,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, NamedMap } from 'expangine-runtime';
+import { Program } from 'expangine-runtime';
 import { ExplorerTab, isNameVisible } from './ExplorerTypes';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
-import { Registry } from '@/runtime/Registry';
+import { getInput } from '../Input';
+import { sendNotification } from '../Notify';
+import { getConfirmation } from '../Confirm';
+import { Registry } from '../../runtime/Registry';
 import { Preferences, PreferenceCategory } from '../Preference';
 import { getNamedMapExport } from '../ProjectExport';
 import { System } from '../SystemEvents';
 import { getNamedImport } from '../ProjectImport';
+import { ExplorerSorter } from './ExplorerSorter';
 
 
 const PREF_CLEAR_PROGRAMS = Preferences.define({
@@ -104,6 +106,15 @@ export default Vue.extend({
     filesVisible(): boolean {
       return this.registry.defs.programs.keys.some((name) => isNameVisible(name, this.nameFilter));
     },
+    sorter(): ExplorerSorter<Program> {
+      const defs = this.registry.defs;
+
+      return new ExplorerSorter(defs.programs, {
+        'Name': (a, b) => a.name.localeCompare(b.name),
+        'Created': (a, b) => a.created - b.created,
+        'Updated': (a, b) => a.updated - b.updated,
+      });
+    },
   },
   methods: {
     async add(opener: () => void) {
@@ -122,7 +133,7 @@ export default Vue.extend({
     async clear() {
       const { registry: { defs } } = this;
 
-      if (await getConfirmation({ /*pref: PREF_CLEAR_PROGRAMS*/ })) {
+      if (await getConfirmation({ pref: PREF_CLEAR_PROGRAMS })) {
         defs.clearPrograms();
       }
     },  

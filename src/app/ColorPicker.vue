@@ -4,7 +4,7 @@
     v-model="menu"
     :disabled="readOnly"
   >
-    <template #activator="{ on }">
+    <template #activator>
       <v-text-field
         v-bind="textProps"
         v-model="textValue"

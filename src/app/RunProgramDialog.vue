@@ -33,11 +33,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { diffLines } from 'diff';
-import { Type, AnyType, TextType, ColorType, ColorSpaceRGB } from 'expangine-runtime';
-import { ListOptions, friendlyList, asArray } from '../common';
-import { TypeVisuals } from '../runtime/types/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
 import { runProgramDialog, PREF_FULLSCREEN_RUN_PROGRAM } from './RunProgram';
 import { Preferences } from './Preference';
 

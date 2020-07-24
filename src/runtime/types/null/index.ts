@@ -8,7 +8,7 @@ import NullEditor from './NullEditor.vue';
 
 export const NullVisuals = createVisuals()({
   type: NullType,
-  name: 'Null',
+  name: () => 'Null',
   description: 'Null value',
   describe: ({registry, type}) => 'Null value',
   describeLong: (registry, type, padding) => 'Null',

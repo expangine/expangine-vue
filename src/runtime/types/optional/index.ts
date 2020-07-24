@@ -27,7 +27,7 @@ const PREF_MAKE_REQUIRED = Preferences.define({
 
 export const OptionalVisuals = createVisuals<OptionalSubs>()({
   type: OptionalType,
-  name: 'Optional',
+  name: () => 'Optional',
   description: 'An optional value',
   describe: ({ registry, type }) => registry.getTypeDescribe(type.options) + ' (optional)',
   describeLong: (registry, type, padding, tab, newline) => 

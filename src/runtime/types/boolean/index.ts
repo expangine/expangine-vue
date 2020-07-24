@@ -13,7 +13,7 @@ import BooleanOptions from './BooleanOptions.vue';
 
 export const BooleanVisuals = createVisuals()({
   type: BooleanType,
-  name: 'Boolean',
+  name: () => 'Boolean',
   description: 'A boolean value is true/false, on/off, yes/no, etc.',
   describe: () => 'Boolean',
   describeLong: (registry, type, padding) => 'Boolean',

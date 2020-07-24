@@ -27,6 +27,10 @@
         Relations
       </v-tab>
       <v-tab>
+        <v-icon>mdi-function</v-icon>
+        Methods
+      </v-tab>
+      <v-tab>
         <v-icon>mdi-information-outline</v-icon>
         Info
       </v-tab>
@@ -48,7 +52,7 @@
       <v-tab-item>
         <div>
 
-          <v-tabs>
+          <v-tabs class="ex-accent-bar">
             <v-tab>Identifier</v-tab>
             <v-tab :disabled="disableData">Indexes</v-tab>
             <v-tab :disabled="disableData">Transcoders</v-tab>
@@ -98,7 +102,7 @@
                   <col style="width: 110px">
                 </colgroup>
                 <thead class="v-data-table--dense">
-                  <tr class="grey lighten-3">
+                  <tr class="ex-accent-bar">
                     <th>Name</th>
                     <th>Properties</th>
                     <th>Type</th>
@@ -143,7 +147,7 @@
                   <col style="width: 110px">
                 </colgroup>
                 <thead class="v-data-table--dense">
-                  <tr class="grey lighten-3">
+                  <tr class="ex-accent-bar">
                     <th>Property</th>
                     <th>To</th>
                     <th>Encode</th>
@@ -205,7 +209,7 @@
             <col style="width: 110px">
           </colgroup>
           <thead class="v-data-table--dense">
-            <tr class="grey lighten-3">
+            <tr class="ex-accent-bar">
               <th>Name</th>
               <th>Kind</th>
               <th>Related</th>
@@ -242,13 +246,66 @@
         </v-btn>
       </v-tab-item>
       <v-tab-item>
-        <v-textarea
-          outlined
-          rows="5"
-          label="Description"
-          class="ma-3"
-          v-model="entity.description"
-        ></v-textarea>
+        <v-simple-table class="ex-table-fixed">
+          <colgroup>
+            <col style="width: 30%">
+            <col style="width: 70%">
+            <col style="width: 110px">
+          </colgroup>
+          <thead class="v-data-table--dense">
+            <tr class="ex-accent-bar">
+              <th>Name</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="method in methods">
+              <tr :key="method.name">
+                <td>{{ method.name }}</td>
+                <td>{{ method.description }}</td>
+                <td>
+                  <v-btn icon @click="editMethod(method)">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn icon @click="removeMethod(method)">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </v-simple-table>
+        <v-btn class="ma-3" @click="addMethod">
+          <v-icon>mdi-plus</v-icon>
+          Add Method
+        </v-btn>
+      </v-tab-item>
+      <v-tab-item>
+        <v-container>
+          <v-row>
+            <v-col cols="12">
+              <v-textarea
+                outlined
+                hide-details
+                auto-grow
+                rows="5"
+                label="Description"
+                v-model="entity.description"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-chip label>
+                Created:&nbsp;<timeago :datetime="entity.created"></timeago>
+              </v-chip>
+              <v-chip label class="ml-4">
+                Updated:&nbsp;<timeago :datetime="entity.updated"></timeago>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
       <v-tab-item>
         <p v-if="references.length === 0" class="pa-3">
@@ -272,11 +329,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ObjectType, Types, EntityPrimaryType, EntityIndex, objectEach, EntityTranscoder, Expression, objectToArray, EntityRelation, ListType, Entity, DefinitionsEntityReference } from 'expangine-runtime';
+import { Type, Func, ObjectType, Types, EntityPrimaryType, EntityIndex, objectEach, Expression, objectToArray, EntityRelation, Entity, DefinitionsEntityReference } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { Registry } from '@/runtime/Registry';
-import { TypeSettings, TypeUpdateEvent } from '@/runtime/types/TypeVisuals';
-import { System } from './SystemEvents';
+import { Registry } from '../runtime/Registry';
+import { TypeSettings, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
 import { getConfirmation } from './Confirm';
 import { renameEntity, addEntity, removeEntity } from './EntityBuilders';
 import { getEditEntityIndex } from './EditEntityIndex';
@@ -284,6 +340,7 @@ import { getEditEntityTranscoder } from './EditEntityTranscoder';
 import { Preferences, PreferenceCategory } from './Preference';
 import { getEditRelation, getRelationKindText } from './EditRelation';
 import { sendNotification } from './Notify';
+import { getEditMethod } from './EditMethod';
 
 
 
@@ -304,6 +361,13 @@ const PREF_REMOVE_TRANSCODER = Preferences.define({
 const PREF_REMOVE_RELATION = Preferences.define({
   key: 'aliased_remove_relation',
   label: 'Remove user-defined type relations without confirmation',
+  category: [PreferenceCategory.CONFIRM],
+  defaultValue: false,
+});
+
+const PREF_REMOVE_METHOD = Preferences.define({
+  key: 'aliased_remove_method',
+  label: 'Remove user-defined type methods without confirmation',
   category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
@@ -390,6 +454,9 @@ export default Vue.extend({
         transcoder: this.entity ? this.entity.transcoders[prop] || null : null,
       }));
     },
+    methods() {
+      return objectToArray(this.entity.methods, (method, prop) => method);
+    },
     primaryTypes() {
       return [
         { value: EntityPrimaryType.AUTO_INCREMENT, text: 'Auto Incrementing Number' },
@@ -438,7 +505,7 @@ export default Vue.extend({
       const { defs } = registry;
 
       if (entity.name) {
-        const updates = this.registry.defs.renameEntity(entity.name, newName);
+        const updates = defs.renameEntity(entity.name, newName);
 
         if (updates && updates.length) {
           sendNotification({ message: `${updates.length} Type reference(s) updated.` });
@@ -448,7 +515,7 @@ export default Vue.extend({
       } else {
         entity.name = newName;
 
-        this.registry.defs.addEntity(entity);
+        defs.addEntity(entity);
 
         addEntity(registry, newName);
       }
@@ -521,7 +588,7 @@ export default Vue.extend({
       const { entity } = this;
 
       if (await getConfirmation({ pref: PREF_REMOVE_INDEX })) {      
-        Vue.delete(entity.indexes, index.name);
+        entity.removeIndex(index.name);
       }
     },
     async editTranscoder(property: string) {
@@ -537,7 +604,7 @@ export default Vue.extend({
       const { entity } = this;
 
       if (await getConfirmation({ pref: PREF_REMOVE_TRANSCODER })) {
-        Vue.delete(entity.transcoders, property);
+        entity.removeTranscoder(property);
       }
     },
     getRelationType(typeRelation: EntityRelation) {
@@ -573,6 +640,32 @@ export default Vue.extend({
         this.relations.splice(this.relations.indexOf(typeRelation), 1);
 
         relations.remove(typeRelation.relation.name);
+      }
+    },
+    async addMethod() {
+      const { entity, registry } = this;
+      
+      await getEditMethod({
+        entity,
+        registry,
+      });
+    },
+    async editMethod(method: Func) {
+      const { entity, registry } = this;
+
+      const edited = await getEditMethod({
+        entity,
+        method,
+        registry,
+      });
+
+      if (edited) {
+        registry.defs.trigger('updateMethod', registry.defs, method, entity);
+      }
+    },
+    async removeMethod(method: Func) {
+      if (await getConfirmation({ pref: PREF_REMOVE_METHOD })) {
+        this.registry.defs.removeMethod(this.entity, method);
       }
     },
     getTypeDescription(type: Type) {

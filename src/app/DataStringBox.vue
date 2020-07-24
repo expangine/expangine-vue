@@ -14,8 +14,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Type } from 'expangine-runtime';
 import DataString from './DataString.vue';
 
 

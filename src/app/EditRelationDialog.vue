@@ -10,6 +10,7 @@
           :registry="registry"
           :relation="relation"
           @remove="removed"
+          @create="setRelation"
         ></ex-edit-relation>
       </v-card-text>
       <v-card-actions>
@@ -26,9 +27,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ObjectType, Types, objectEach, objectToArray, objectValues, RelationKind, Relation } from 'expangine-runtime';
-import { ListOptions, ListOption } from '@/common';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { Relation } from 'expangine-runtime';
 import { editRelationDialog } from './EditRelation';
 
 
@@ -54,6 +53,9 @@ export default Vue.extend({
     },
     removed() {
       this.done(false);
+    },
+    setRelation(relation: Relation) {
+      this.relation = relation;
     },
   },
 });

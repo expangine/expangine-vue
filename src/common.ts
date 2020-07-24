@@ -1,4 +1,4 @@
-import { isString, isArray, isObject, Type, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression, Expression, TypeClass, TextOps, DateFormat, currentLocale, Exprs, PathExpression } from 'expangine-runtime';
+import { isString, isArray, isObject, Type, Traverser, GetExpression, ConstantExpression, Expression, TypeClass, TextOps, DateFormat, currentLocale, Exprs, PathExpression } from 'expangine-runtime';
 import { TypeSettings, TypeVisualInput, TypeUpdateEvent } from './runtime/types/TypeVisuals';
 import { Registry } from './runtime/Registry';
 import { Trie } from './app/Trie';

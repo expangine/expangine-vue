@@ -81,6 +81,7 @@
         <div v-if="isDebugVisible">
           <ex-debug-program
             hide-close
+            sticky
             :debug="debug"
             :registry="registry"
           ></ex-debug-program>
@@ -130,13 +131,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, NoExpression, ObjectType, Expression, Traverser, ReturnExpression, Program, Types, DateFormat, Entity } from 'expangine-runtime';
+import { NoExpression, ObjectType, Expression, Program, Entity } from 'expangine-runtime';
 import { TypeUpdateEvent, TypeSettings } from '../runtime/types/TypeVisuals';
 import { Preferences, PreferenceCategory } from './Preference';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
 import { Registry } from '../runtime/Registry';
-import { sendNotification } from './Notify';
 import { System } from './SystemEvents';
 import { ExplorerTab } from './explorer/ExplorerTypes';
 import { Debugger, DebuggerOptions } from './Debugger';
@@ -197,7 +197,7 @@ export default Vue.extend({
       const { defs } = registry;
 
       if (program.name) {
-        if (this.registry.defs.renameProgram(program.name, newName)) {
+        if (defs.renameProgram(program.name, newName)) {
           this.$emit('renamed', this.program);
         } else {
           return;
@@ -205,7 +205,7 @@ export default Vue.extend({
       } else {
         program.name = newName;
 
-        this.registry.defs.addProgram(program);
+        defs.addProgram(program);
       }
 
       this.markUpdated();

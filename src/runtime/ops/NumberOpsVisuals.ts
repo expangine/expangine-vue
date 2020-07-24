@@ -51,6 +51,7 @@ export default (registry: Registry) =>
     singleline: 'sqrt(2)',
     comments: {},
     returnComments: '1.41421356237',
+    keywords: ['sqrt'],
   });
 
   registry.addOperation(NumberOps.sqrt12, {
@@ -59,6 +60,7 @@ export default (registry: Registry) =>
     singleline: 'sqrt(1/2)',
     comments: {},
     returnComments: '0.70710678118',
+    keywords: ['sqrt'],
   });
 
   registry.addOperation(NumberOps.ln2, {
@@ -67,6 +69,7 @@ export default (registry: Registry) =>
     singleline: 'ln(2)',
     comments: {},
     returnComments: '0.69314718056',
+    keywords: ['ln'],
   });
 
   registry.addOperation(NumberOps.ln10, {
@@ -75,6 +78,7 @@ export default (registry: Registry) =>
     singleline: 'ln(10)',
     comments: {},
     returnComments: '2.30258509299',
+    keywords: ['ln'],
   });
 
   registry.addOperation(NumberOps.log2e, {
@@ -102,6 +106,7 @@ export default (registry: Registry) =>
       addend: 'The second number',
     },
     returnComments: 'The sum of [value] and [addend].',
+    keywords: ['+'],
   });
 
   registry.addOperation(NumberOps.sub, {
@@ -113,6 +118,7 @@ export default (registry: Registry) =>
       subtrahend: 'The second number',
     },
     returnComments: 'The difference of [value] and [subtrahend].',
+    keywords: ['-'],
   });
 
   registry.addOperation(NumberOps.mul, {
@@ -124,6 +130,7 @@ export default (registry: Registry) =>
       multiplier: 'The second number',
     },
     returnComments: 'The product of [value] and [multiplier].',
+    keywords: ['*', 'x'],
   });
 
   registry.addOperation(NumberOps.div, {
@@ -135,6 +142,7 @@ export default (registry: Registry) =>
       divisor: 'The second number',
     },
     returnComments: 'The quotient of [value] and [divisor].',
+    keywords: ['/'],
   });
 
   registry.addOperation(NumberOps.mod, {
@@ -146,6 +154,7 @@ export default (registry: Registry) =>
       divisor: 'The second number',
     },
     returnComments: 'The remainder of [value] divided by [divisor].',
+    keywords: ['%'],
   });
 
   registry.addOperation(NumberOps.min, {
@@ -179,6 +188,7 @@ export default (registry: Registry) =>
       exponent: 'The exponent',
     },
     returnComments: 'The result of the exponential equation.',
+    keywords: ['^'],
   });
 
   registry.addOperation(NumberOps.atan2, {
@@ -223,6 +233,7 @@ export default (registry: Registry) =>
       b: 'The second number',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['gcd'],
   });
 
   registry.addOperation(NumberOps.bitAnd, {
@@ -234,6 +245,7 @@ export default (registry: Registry) =>
       b: 'The second number',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['&'],
   });
 
   registry.addOperation(NumberOps.bitOr, {
@@ -245,6 +257,7 @@ export default (registry: Registry) =>
       b: 'The second number',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['|'],
   });
 
   registry.addOperation(NumberOps.bitXor, {
@@ -256,6 +269,7 @@ export default (registry: Registry) =>
       b: 'The second number',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['^'],
   });
 
   registry.addOperation(NumberOps.cmp, {
@@ -287,9 +301,10 @@ export default (registry: Registry) =>
       value: 'The value to find the square root of',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['sqrt'],
   });
 
-  registry.addOperation(NumberOps.sqrt, {
+  registry.addOperation(NumberOps.sq, {
     name: 'Square',
     description: 'Square of [value] (value * value)',
     singleline: 'square {value}',
@@ -307,6 +322,7 @@ export default (registry: Registry) =>
       value: 'The value to find the cube root of',
     },
     returnComments: 'The result of the operation.',
+    keywords: ['cbrt'],
   });
 
   registry.addOperation(NumberOps.floor, {
@@ -317,6 +333,7 @@ export default (registry: Registry) =>
       value: 'The value to find the floor of',
     },
     returnComments: '[value] to the smallest integer value.',
+    keywords: ['_'],
   });
 
   registry.addOperation(NumberOps.ceil, {
@@ -367,6 +384,7 @@ export default (registry: Registry) =>
       value: 'The value to find the absolute value of',
     },
     returnComments: '| [value] |',
+    keywords: ['|'],
   });
 
   registry.addOperation(NumberOps.neg, {
@@ -377,6 +395,7 @@ export default (registry: Registry) =>
       value: 'The value to find the negative value of',
     },
     returnComments: '-[value]',
+    keywords: ['-'],
   });
 
   registry.addOperation(NumberOps.sign, {

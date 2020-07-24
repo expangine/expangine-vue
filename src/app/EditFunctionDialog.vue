@@ -29,21 +29,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { NoExpression, ObjectType, Expression, Traverser, ReturnExpression } from 'expangine-runtime';
-import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
+import { NoExpression } from 'expangine-runtime';
 import { editFunctionDialog, PREF_FULLSCREEN_EDIT_FUNCTION } from './EditFunction';
-import { getTestFunction } from './TestFunction';
-import { Preferences, PreferenceCategory } from './Preference';
-import { LiveRuntime } from 'expangine-runtime-live';
-import { getConfirmation } from './Confirm';
+import { Preferences } from './Preference';
 
 
-const PREF_REMOVE_FUNCTION = Preferences.define({
-  key: 'function_remove',
-  label: 'Remove function without confirmation',
-  category: [PreferenceCategory.CONFIRM],
-  defaultValue: false,
-});
 
 export default Vue.extend({
   data: () => editFunctionDialog,

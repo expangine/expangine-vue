@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Func, FuncTest, DataTypes } from 'expangine-runtime';
-import { LiveRuntime, LiveContext } from 'expangine-runtime-live';
+import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './Confirm';
 import { Preferences, PreferenceCategory } from './Preference';
 import { getFuncTest } from './FuncTest';

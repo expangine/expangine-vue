@@ -28,7 +28,7 @@ const PREF_SET_MODIFIER = Preferences.define({
 
 export const SetVisuals = createVisuals<SetSubs>()({
   type: SetType,
-  name: 'Set',
+  name: () => 'Set',
   description: 'A unique collection of values.',
   describe: ({registry, type}) => 'Set of ' + registry.getTypeDescribe(type.options.value),
   describeLong: (registry, type, padding, tab, newline) => 

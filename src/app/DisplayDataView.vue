@@ -22,8 +22,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, AnyType } from 'expangine-runtime';
-import { displayDataDialog, PREF_FULLSCREEN_DISPLAY_DATA } from './DisplayData';
-import { Preferences } from './Preference';
 import { Registry } from '../runtime/Registry';
 
 

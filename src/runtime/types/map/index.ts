@@ -23,7 +23,7 @@ const PREF_MAP_MODIFIER = Preferences.define({
 
 export const MapVisuals = createVisuals<MapSubs>()({
   type: MapType,
-  name: 'Map',
+  name: () => 'Map',
   description: 'A collection of key-value pairs.',
   describe: ({registry, type}) => 'Map of ' + registry.getTypeDescribe(type.options.key) + ' to ' + registry.getTypeDescribe(type.options.value),
   describeLong: (registry, type, padding, tab, newline) => 

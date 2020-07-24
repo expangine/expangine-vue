@@ -17,7 +17,7 @@
         </template>
         <v-list dense>
           <v-list-item @click="duplicate">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-content-copy</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -25,7 +25,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="saveAsFunction">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-function</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -33,7 +33,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="setAsMain">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-numeric-1-circle</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -41,7 +41,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="toJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-export</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -49,7 +49,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="remove">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-delete</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -65,12 +65,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, Entity, ReturnExpression, ObjectType, DataTypes } from 'expangine-runtime';
+import { Program, ReturnExpression, ObjectType, DataTypes } from 'expangine-runtime';
 import { ExplorerTab } from './ExplorerTypes';
-import { Registry } from '@/runtime/Registry';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
+import { Registry } from '../../runtime/Registry';
+import { getInput } from '../Input';
+import { sendNotification } from '../Notify';
+import { getConfirmation } from '../Confirm';
 import { Preferences, PreferenceCategory } from '../Preference';
 import { getNamedExport } from '../ProjectExport';
 

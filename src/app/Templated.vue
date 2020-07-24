@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { templateTokens } from '@/common';
+import { templateTokens } from '../common';
 
 
 export default Vue.extend({

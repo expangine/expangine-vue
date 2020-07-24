@@ -233,8 +233,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ReturnExpression, ChainExpression, Exprs, objectMap, Types, CommandProvider, DataTypes, Func, PathExpression } from 'expangine-runtime';
+import { Expression, AnyType, isFunction, TypeMap, Traverser, SetExpression, UpdateExpression, GetExpression, ConstantExpression, ObjectType, ChainExpression, Exprs, objectMap, Types, CommandProvider, DataTypes, Func, PathExpression } from 'expangine-runtime';
 import { LiveContext, LiveResult, LiveRuntime } from 'expangine-runtime-live';
 import { ListOptions } from '../../../common';
 import { ExpressionVisuals, ExpressionModifierCallback } from '../ExpressionVisuals';

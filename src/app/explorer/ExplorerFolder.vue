@@ -21,9 +21,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { NamedMap } from 'expangine-runtime';
-import { ExplorerTab, isNameVisible } from './ExplorerTypes';
-import { Registry } from '../../runtime/Registry';
+import { isNameVisible } from './ExplorerTypes';
 
 
 export default Vue.extend({

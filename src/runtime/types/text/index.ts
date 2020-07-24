@@ -14,7 +14,7 @@ import TextOptions from './TextOptions.vue';
 
 export const TextVisuals = createVisuals()({
   type: TextType,
-  name: 'Text',
+  name: () => 'Text',
   description: 'A text value',
   describe: () => 'Text',
   describeLong: () => 'Text',

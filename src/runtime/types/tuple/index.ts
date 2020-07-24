@@ -12,7 +12,7 @@ import TupleEditor from './TupleEditor.vue';
 
 export const TupleVisuals = createVisuals<TupleSubs>()({
   type: TupleType,
-  name: 'Tuple',
+  name: () => 'Tuple',
   description: 'A fixed size array of types',
   describe: ({registry, type}) => 'Tuple [' + type.options.map((t) => registry.getTypeDescribe(t)).join(', ') + ']',
   describeLong: (registry, type, padding, tab, newline) => 

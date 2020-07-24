@@ -1,14 +1,6 @@
 <template>
   <span class="ex-center-aligned">
 
-    <ex-expression-menu
-      key="menu"
-      v-bind="$props"
-      v-on="$listeners"
-      text="Data"
-      tooltip="Get Data"
-    ></ex-expression-menu>
-
     <span v-if="readOnly" class="ml-3">{{ value.name }}</span>
 
     <v-autocomplete
@@ -27,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { objectValues, GetDataExpression } from 'expangine-runtime';
+import { GetDataExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 import { ListOptions } from '../../../common';
 

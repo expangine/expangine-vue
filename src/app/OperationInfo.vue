@@ -207,7 +207,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Expression, Type, TypeMap, OperationExpression, OperationPair, Operation, OperationTypes, ObjectType } from 'expangine-runtime';
+import { Type, TypeMap, Operation, OperationTypes, ObjectType } from 'expangine-runtime';
 import { OperationVisuals } from '../runtime/ops/OperationVisuals';
 import { Registry } from '../runtime/Registry';
 import { getTestOperation } from './TestOperation';

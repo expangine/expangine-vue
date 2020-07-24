@@ -37,8 +37,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, NoExpression, Expression, Entity, EntityTranscoder } from 'expangine-runtime';
-import { editTypeTranscoderDialog, PREF_FULLSCREEN_EDIT_TRANSCODER } from './EditEntityTranscoder';
-import { Preferences } from './Preference';
 import { Registry } from '../runtime/Registry';
 
 

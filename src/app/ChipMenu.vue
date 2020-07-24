@@ -6,6 +6,7 @@
           <v-chip 
             :color="color" 
             :dark="dark"
+            :class="chipClass"
             tabindex="0"
             v-on="{ ...ta.on, ...ma.on }"
             v-html="text"
@@ -41,6 +42,10 @@ export default Vue.extend({
     dark: {
       type: Boolean,
       default: false,
+    },
+    chipClass: {
+      type: String,
+      default: '',
     },
   },
   methods: {

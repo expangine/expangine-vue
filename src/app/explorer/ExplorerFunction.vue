@@ -4,6 +4,8 @@
     :name="func.name"
     :name-filter="nameFilter"
     :auto-open="autoOpen"
+    :count="referenceCount"
+    :show-count="showCount"
     @update:auto-open="updateAutoOpen"
     @rename="renamed"
     @open="open"
@@ -17,7 +19,7 @@
         </template>
         <v-list dense>
           <v-list-item @click="duplicate">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-content-copy</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -25,7 +27,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="duplicate">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-alpha-e-circle</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -33,7 +35,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="toJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-export</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -41,7 +43,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="remove">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-delete</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -57,12 +59,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, Entity, ReferenceData, Func, Exprs } from 'expangine-runtime';
+import { Func, Exprs } from 'expangine-runtime';
 import { ExplorerTab } from './ExplorerTypes';
-import { Registry } from '@/runtime/Registry';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
+import { Registry } from '../../runtime/Registry';
+import { getInput } from '../Input';
+import { sendNotification } from '../Notify';
+import { getConfirmation } from '../Confirm';
 import { Preferences, PreferenceCategory } from '../Preference';
 import { getNamedExport } from '../ProjectExport';
 
@@ -92,10 +94,19 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+    showCount: {
+      type: [Number, Boolean],
+      default: false,
+    },
   },
   data: () => ({
     tab: null as null | ExplorerTab,
   }),
+  computed: {
+    referenceCount(): string {
+      return this.showCount ? this.registry.defs.getFunctionReferences(this.func).length.toFixed() : '-';
+    },
+  },
   watch: {
     func(func: Func) {
       if (this.tab) {

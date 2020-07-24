@@ -13,8 +13,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Type, DefinitionsEntityReference, DefinitionsDataReference, DefinitionsFunctionReference, DefinitionsRelationReference, Expression } from 'expangine-runtime';
-import { Registry } from '@/runtime/Registry';
-import { getSourceName, getTypePath, getExpressionPath, getIcon } from '@/app/DefinitionsVisuals';
+import { Registry } from '../runtime/Registry';
+import { getSourceName, getTypePath, getExpressionPath, getIcon } from './DefinitionsVisuals';
 
 
 export default Vue.extend({

@@ -15,6 +15,10 @@
         Edit
       </v-tab>
       <v-tab>
+        <v-icon>mdi-information-outline</v-icon>
+        Info
+      </v-tab>
+      <v-tab>
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
@@ -233,7 +237,7 @@
                   <col style="width: 70%">
                 </colgroup>
                 <thead class="v-data-table--dense">
-                  <tr class="grey lighten-3">
+                  <tr class="ex-accent-bar">
                     <th>Type</th>
                     <th>Value</th>
                   </tr>
@@ -277,6 +281,20 @@
         </v-container>  
       </v-tab-item>
       <v-tab-item>
+        <v-container v-if="relation">
+          <v-row>
+            <v-col>
+              <v-chip label>
+                Created:&nbsp;<timeago :datetime="relation.created"></timeago>
+              </v-chip>
+              <v-chip label class="ml-4">
+                Updated:&nbsp;<timeago :datetime="relation.updated"></timeago>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-tab-item>
+      <v-tab-item>
         <p v-if="references.length === 0" class="pa-3">
           <v-alert type="info">
             This Relation is not referenced by anything.
@@ -298,12 +316,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ObjectType, MapInput, EntityPropPair, Types, objectEach, objectToArray, objectValues, RelationKind, Relation, DefinitionsRelationReference } from 'expangine-runtime';
-import { ListOptions, ListOption } from '@/common';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
-import { Registry } from '@/runtime/Registry';
+import { Type, MapInput, EntityPropPair, Types, objectToArray, RelationKind, Relation, DefinitionsRelationReference } from 'expangine-runtime';
+import { ListOptions, ListOption } from '../common';
+import { sendNotification } from './Notify';
+import { getConfirmation } from './Confirm';
+import { TypeSettings } from '../runtime/types/TypeVisuals';
+import { Registry } from '../runtime/Registry';
 import { Preferences, PreferenceCategory } from './Preference';
 
 
@@ -355,7 +373,7 @@ export default Vue.extend({
   }),
   computed: { 
     references(): DefinitionsRelationReference[] {
-      return this.registry.defs.getRelationReferences(this.relation);
+      return this.relation ? this.registry.defs.getRelationReferences(this.relation) : [];
     },
     kindOptions(): ListOptions<RelationKind> {
       return [
@@ -417,7 +435,7 @@ export default Vue.extend({
       return !one || !hasOne;
     },
     invalidHasOnePolymorphicRelation(): boolean {
-      const { hasOne, morphs, morphsToRelated, poly, hasOneRelationName } = this.relationData;
+      const { hasOne, morphs, poly, hasOneRelationName } = this.relationData;
 
       return !hasOne || !morphs || !morphs[0] || !morphs[1] || poly.length < 2 || !hasOneRelationName;
     },
@@ -559,6 +577,8 @@ export default Vue.extend({
           if (relation) {
             this.updatingData = true;
             defs.addRelation(relation);
+
+            this.$emit('create', relation);
           }
         }
       },
@@ -569,16 +589,18 @@ export default Vue.extend({
       const { registry, relation } = this;
       const { defs } = registry;
 
-      if (relation.name) {
-        const updates = this.registry.defs.renameRelation(relation, newName);
+      if (relation) {
+        if (relation.name) {
+          const updates = defs.renameRelation(relation, newName);
 
-        if (updates && updates.length) {
-          sendNotification({ message: `${updates.length} Function reference(s) updated.` });
+          if (updates && updates.length) {
+            sendNotification({ message: `${updates.length} Function reference(s) updated.` });
+          }
+        } else {
+          relation.name = newName;
+
+          defs.addRelation(relation);
         }
-      } else {
-        relation.name = newName;
-
-        this.registry.defs.addRelation(relation);
       }
     },
     validateName(name: string) {
@@ -640,6 +662,11 @@ export default Vue.extend({
     getRelationData() {
       const relation = this.relation;
       const data = this.getRelationDataDefaults();
+
+      if (!relation)
+      {
+        return data;
+      }
 
       switch (relation.kind)
       {

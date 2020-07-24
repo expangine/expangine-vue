@@ -21,10 +21,12 @@
     </v-tooltip>
 
     <next-menu
+      v-if="segmentType"
       :type="segmentType"
       :registry="registry"
       :context-details="contextDetails"
       :allow-computed="allowComputed"
+      :allow-methods="allowMethods"
       :read-only="readOnly"
       @segment="changeSegment"
       @computed="changeComputed"
@@ -39,6 +41,10 @@
         </v-list-item>
       </template>
     </next-menu>
+
+    <v-btn v-else icon>
+      <v-icon>mdi-chevron-right</v-icon>
+    </v-btn>
     
     <path-segment 
       key="next"
@@ -57,7 +63,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { Type, TextType, Expression, ConstantExpression, isFunction, ComputedExpression, Exprs, PathExpression, MethodExpression, EntityType } from 'expangine-runtime';
 import { TypeSubOption, TypeSettings, TypeComputedOption, TypeMethodOption } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
@@ -72,7 +77,7 @@ export default ExpressionBase<PathExpression>().extend({
   props: {
     thisType: {
       type: Object as () => Type | null,
-      required: true,
+      default: (): Type | null => null,
     },
     index: {
       type: Number,
@@ -112,7 +117,9 @@ export default ExpressionBase<PathExpression>().extend({
         : this.thisType.getSubType(node, this.registry.defs, this.context);
     },
     dynamicOption(): TypeSubOption | null {
-      return this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;
+      return this.segment.isPathNode() 
+        ? null
+        : this.alternativeSegments.find((sub) => sub.key instanceof Type) || null;
     },
     segmentOption(): TypeSubOption | null {
       return this.alternativeSegments.find((sub) => {
@@ -139,6 +146,9 @@ export default ExpressionBase<PathExpression>().extend({
       if (this.index === 0) {
         return false;
       }
+      if (this.segment.isPathNode()) {
+        return false;
+      }
       if (!this.segmentOption) {
         return true;
       }
@@ -156,7 +166,7 @@ export default ExpressionBase<PathExpression>().extend({
       };
     },
     hasBrackets(): boolean {
-      return !this.segment.isPathStart() && (!this.segmentOption || !!this.expectedType) && this.index > 0;
+      return !this.segment.isPathNode() && (!this.segmentOption || !!this.expectedType) && this.index > 0;
     },
     hasParenthesis(): boolean {
       return this.index === 0 && !this.segment.isPathStart();
@@ -167,7 +177,7 @@ export default ExpressionBase<PathExpression>().extend({
         : null;
     },
     segmentReadOnly(): boolean {
-      return this.readOnly || (!this.expectedType && !this.segment.isPathNode());
+      return this.readOnly || (!this.expectedType && !this.segment.isPathNode() && this.index > 0);
     },
     alternativeSegments(): TypeSubOption[] {
       if (this.index === 0) {
@@ -230,10 +240,10 @@ export default ExpressionBase<PathExpression>().extend({
       this.update();
     },
     changeMethod(sub: TypeMethodOption) {
-      const context = this.context;
+      const segmentType = this.segmentType;
 
-      if (context instanceof EntityType) {
-        this.value.expressions.splice(this.nextIndex, this.value.expressions.length - this.nextIndex, new MethodExpression(context.options as string, sub.value.name, {}));
+      if (segmentType instanceof EntityType) {
+        this.value.expressions.splice(this.nextIndex, this.value.expressions.length - this.nextIndex, new MethodExpression(segmentType.options as string, sub.value.name, {}));
         this.update();
       }
     },

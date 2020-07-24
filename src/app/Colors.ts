@@ -2,7 +2,7 @@ import colors from 'vuetify/lib/util/colors';
 import { Types } from 'expangine-runtime';
 
 
-export const Colors = [
+export const Colors: Array<[string, string]> = [
   ['Primary', 'primary'],
   ['Secondary', 'secondary'],
   ['Accent', 'accent'],

@@ -1,3 +1,4 @@
+import { isWhole } from 'expangine-runtime';
 
 
 export function now()
@@ -22,6 +23,7 @@ export interface StopWatchOutput<R>
   elapsedSecondsFormatted: string;
   elapsedTime: string;
   elapsedSummary: string;
+  elapsedShort: string;
 }
 
 export function measure<R = any>(callback: () => R): StopWatchOutput<R>
@@ -62,6 +64,29 @@ export function measure<R = any>(callback: () => R): StopWatchOutput<R>
 
   const elapsedTime = elapsed.join(' ');
   const elapsedSummary = elapsedTime + ' (' + elapsedSecondsFormatted + ' seconds total)';
+  const elapsedUnit = min > 0
+    ? 'm'
+    : sec > 0
+      ? 's'
+      : mil > 0
+        ? 'ms'
+        : mic > 0
+          ? 'µs'
+          : 'ns';
+  const elapsedUnitAmount = min > 0
+    ? min + sec / 60
+    : sec > 0
+      ? sec + mil / 1000
+      : mil > 0
+        ? mil + mic / 1000
+        : mic > 0
+          ? mic + nan / 1000
+          : nan;
+  const elapsedShort = elapsedUnitAmount < 10
+    ? isWhole(elapsedUnitAmount)
+      ? elapsedUnitAmount + elapsedUnit
+      : elapsedUnitAmount.toFixed(1) + elapsedUnit
+    : Math.round(elapsedUnitAmount) + elapsedUnit;
 
   return {
     result,
@@ -71,5 +96,6 @@ export function measure<R = any>(callback: () => R): StopWatchOutput<R>
     elapsedSecondsFormatted,
     elapsedTime,
     elapsedSummary,
+    elapsedShort,
   };
 }

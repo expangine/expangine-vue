@@ -1,8 +1,8 @@
 <template>
-  <table class="ex-table ex-striped" v-shortcuts="objectShortcuts">
+  <table class="ex-table ex-striped" v-shortcuts="objectShortcuts" :class="tableClasses">
     <tbody>
       <tr>
-        <td class="pl-0 pt-1">
+        <td class="pl-0 pt-1" v-if="!readOnly">
           <ex-expression-menu 
             v-bind="$props"
             v-on="$listeners"
@@ -84,9 +84,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Type, TypeMap, Expression, ExpressionMap, NoExpression, ObjectExpression, objectMap, objectValues, ObjectType, Traverser, GetExpression, SetExpression, UpdateExpression, ConstantExpression } from 'expangine-runtime';
-import { obj, renameVariable } from '@/common';
+import { Expression, ExpressionMap, NoExpression, ObjectExpression } from 'expangine-runtime';
+import { obj } from '@/common';
 import { Preferences, PreferenceCategory } from '@/app/Preference';
 import { ShortcutContext } from '@/app/Shortcuts';
 import ExpressionBase from '../ExpressionBase';
@@ -129,6 +128,9 @@ export default ExpressionBase<ObjectExpression>().extend({
           [Preferences.get(PREF_SHORTCUT_OBJECT_ADD)]: this.addProperty,
         },
       };
+    },
+    tableClasses(): string {
+      return this.readOnly ? 'ex-expression ex-curly-braces' : '';
     },
   },
   mounted() {

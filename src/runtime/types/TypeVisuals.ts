@@ -47,7 +47,7 @@ export interface TypeVisuals<
   OptionMap = any
 > {
   type: TypeClass<T>;
-  name: string;
+  name: (type: T) => string;
   description: string;
   describe: (options: { registry: Registry, type: T }) => string;
   describeLong: (registry: Registry, type: T, padding: string, tab: string, newline: string) => string;

@@ -82,10 +82,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ListOptions, friendlyList, asArray } from '../common';
-import { TypeVisuals, TypeUpdateEvent } from '../runtime/types/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption, TypeBuildInput } from '../runtime/types/TypeBuilder';
-import { Registry } from '../runtime/Registry';
+import { friendlyList, asArray } from '../common';
+import { TypeUpdateEvent } from '../runtime/types/TypeVisuals';
+import { TypeBuildOption, TypeBuilderWrapOption, TypeBuildInput } from '../runtime/types/TypeBuilder';
 import { OptionalModifierTransform } from '../runtime/types/optional';
 
 

@@ -6,13 +6,14 @@
     :name-filter="nameFilter"
     :count="registry.defs.data.values.length">
     <template #files>
-      <template v-for="(data, index) in registry.defs.data.values">
+      <template v-for="data in registry.defs.data.values">
         <ex-explorer-data
-          :key="index"
+          :key="data.name"
           :data="data"
           :registry="registry"
           :name-filter="nameFilter"
           :auto-open.sync="autoOpen"
+          :show-count="showReferenceCounts"
           @open="open"
           @close="close"
         ></ex-explorer-data>
@@ -27,7 +28,7 @@
         </template>
         <v-list dense>
           <v-list-item @click="add(opener)">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-plus-circle</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -35,7 +36,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="csv">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-file-delimited-outline</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -43,7 +44,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="json">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-database-search</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -51,7 +52,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="toJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-export</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -59,15 +60,24 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="fromJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-import</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
               Import
             </v-list-item-title>
           </v-list-item>
+          <v-list-item @click="toggleReferenceCounts">
+            <v-list-item-avatar class="mr-3 my-0">
+              <v-icon>mdi-swap-horizontal-bold</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-title>
+              {{ showReferenceCounts ? 'Hide' : 'Show' }} Reference Counts
+            </v-list-item-title>
+          </v-list-item>
+          <ex-explorer-sorter :sorter="sorter"></ex-explorer-sorter>
           <v-list-item @click="clear">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-delete</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -83,18 +93,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, NamedMap, ReferenceData, isString } from 'expangine-runtime';
+import { isString, ReferenceData } from 'expangine-runtime';
 import { ExplorerTab, isNameVisible } from './ExplorerTypes';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
-import { getDataImport } from '@/app/DataImport';
-import { getDescribeData } from '@/app/DescribeData';
-import { Registry } from '@/runtime/Registry';
+import { getInput } from '../Input';
+import { sendNotification } from '../Notify';
+import { getConfirmation } from '../Confirm';
+import { getDataImport } from '../DataImport';
+import { getDescribeData } from '../DescribeData';
+import { Registry } from '../../runtime/Registry';
 import { System } from '../SystemEvents';
 import { Preferences, PreferenceCategory } from '../Preference';
-import { getNamedMapExport, getNamedExport } from '../ProjectExport';
+import { getNamedMapExport } from '../ProjectExport';
 import { getNamedImport } from '../ProjectImport';
+import { ExplorerSorter } from './ExplorerSorter';
 
 
 const PREF_CLEAR_DATA = Preferences.define({
@@ -117,10 +128,21 @@ export default Vue.extend({
   },
   data: () => ({
     autoOpen: null as null | string,
+    showReferenceCounts: false,
   }),
   computed: {
     filesVisible(): boolean {
       return this.registry.defs.data.keys.some((name) => isNameVisible(name, this.nameFilter));
+    },
+    sorter(): ExplorerSorter<ReferenceData> {
+      const defs = this.registry.defs;
+
+      return new ExplorerSorter(defs.data, {
+        'Name': (a, b) => a.name.localeCompare(b.name),
+        'Created': (a, b) => a.created - b.created,
+        'Updated': (a, b) => a.updated - b.updated,
+        'Reference Counts': (a, b) => defs.getDataReferences(a).length - defs.getDataReferences(b).length,
+      });
     },
   },
   methods: {
@@ -208,6 +230,9 @@ export default Vue.extend({
     },
     close(tab: ExplorerTab) {
       this.$emit('close', tab);
+    },
+    toggleReferenceCounts() {
+      this.showReferenceCounts = !this.showReferenceCounts;
     },
   },
 });

@@ -9,7 +9,7 @@ import AnyEditor from './AnyEditor.vue';
 
 export const AnyVisuals = createVisuals()({
   type: AnyType,
-  name: 'Any',
+  name: () => 'Any',
   description: 'Any value',
   describe: ({registry, type}) => 'Any value',
   describeLong: (registry, type, padding) => 'Any',

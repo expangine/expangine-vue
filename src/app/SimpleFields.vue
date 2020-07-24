@@ -215,7 +215,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { isArray } from 'expangine-runtime';
-import { TypeSettings } from '../runtime/types/TypeVisuals';
 import { SimpleFieldOption } from '../common';
 import { Icons } from '../app/Icons';
 
@@ -235,9 +234,6 @@ export default Vue.extend({
     readOnly: {
       type: Boolean,
       default: false,
-    },
-    defaults: {
-      type: Object,
     },
   },
   computed: {
@@ -266,7 +262,6 @@ export default Vue.extend({
       return isFinite(parsed) ? parsed : undefined;
     },
     setField(field: SimpleFieldOption, value: any) {
-      const defaults = this.defaults;
       const isEmpty = value === undefined || value === null || value === field.defaultValue;
       if (isEmpty && !field.required) {
         this.$delete(this.value, field.name);

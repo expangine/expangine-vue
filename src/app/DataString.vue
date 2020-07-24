@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, AnyType, TextType, ColorType, Color, ColorFormat, ColorSpaceRGB, isObject } from 'expangine-runtime';
+import { Type, TextType, ColorType, Color, ColorFormat, ColorSpaceRGB } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 
 
@@ -114,7 +114,10 @@ export default Vue.extend({
           : undefined;
     },
     processInvalidDefault(data: any, t: Type): string {
-      return '<span class="ex-string-invalid">' + JSON.stringify(data) + '</span>';
+      const NAN = typeof data === 'number' && isNaN(data);
+      const text = NAN ? 'NaN' : JSON.stringify(data);
+
+      return `<span class="ex-string-invalid">${text}</span>`;
     },
   },
 });

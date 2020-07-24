@@ -20,7 +20,7 @@ const PREF_OBJECT_MODIFIER = Preferences.define({
 
 export const ObjectVisuals = createVisuals<string>()({
   type: ObjectType,
-  name: 'Object',
+  name: () => 'Object',
   description: 'An object is a collection of named fields.',
   describe: () => 'Object',
   describeLong: (registry, type, padding, tab, newline) => 
@@ -187,7 +187,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
       ? (typeSettings as TypeSettings<any, number>).sub
       : [typeSettings];
 
-    const names = props.map((p) => registry.getTypeVisuals(p).name);
+    const names = props.map((p) => registry.getTypeVisuals(p).name(p));
 
     return {
       text: 'Convert to Object',

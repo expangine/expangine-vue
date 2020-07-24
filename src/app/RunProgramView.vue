@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-tabs>
+    <v-tabs class="ex-accent-bar">
       <v-tab>Output</v-tab>
       <v-tab>Output (json)</v-tab>
       <v-tab v-if="showData">Data After Execution</v-tab>
@@ -9,7 +9,6 @@
       <v-chip label class="float-right ma-2">
         Elapsed: {{ elapsedTime }}
       </v-chip>
-
       <v-tab-item>
         <ex-data-string-box
           quotes              
@@ -47,19 +46,13 @@
         </div>
       </v-tab-item>
     </v-tabs>
-    
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { diffLines } from 'diff';
-import { Type, AnyType, TextType, ColorType, ColorSpaceRGB, Program } from 'expangine-runtime';
-import { ListOptions, friendlyList, asArray } from '../common';
-import { TypeVisuals } from '../runtime/types/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
-import { runProgramDialog, PREF_FULLSCREEN_RUN_PROGRAM } from './RunProgram';
-import { Preferences } from './Preference';
+import { Type, AnyType, Program } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { measure } from './StopWatch';

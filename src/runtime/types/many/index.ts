@@ -11,7 +11,7 @@ import { initializeSubs, friendlyList } from '@/common';
 
 export const ManyVisuals = createVisuals<ManySubs>()({
   type: ManyType,
-  name: 'Many',
+  name: () => 'Many',
   description: 'A type that represents any number of possible types.',
   describe: ({registry, type}) => friendlyList(type.options.map((t) => registry.getTypeDescribe(t)), ' or '),
   describeLong: (registry, type, padding, tab, newline) => 

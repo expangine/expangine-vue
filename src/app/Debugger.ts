@@ -1,4 +1,4 @@
-import { Type, TextType, Expression, CommandProvider, InvokeExpression, Traverser, isBoolean } from 'expangine-runtime';
+import { Type, TextType, Expression, CommandProvider, Traverser, isString } from 'expangine-runtime';
 import { Registry } from '@/runtime/Registry';
 import { StopWatchOutput, measure } from './StopWatch';
 import { LiveRuntime, LiveContext, LiveResult } from 'expangine-runtime-live';
@@ -164,6 +164,7 @@ export class Debugger
 
     const input = inputType.fromJson(inputType.toJson(originalInput));
     const programStack: Expression[] = [program];
+    const innerStack: Expression[] = [];
     let stepInto = step + 1;
     let stepBack = step - 1;
     let stepOver = -1;
@@ -199,6 +200,24 @@ export class Debugger
           const isEnter = stepCurrent === step || isSearchFound;
           const stepEnter = stepCurrent;
 
+          const inner = expr.getInnerExpression(registry.defs);
+
+          if (isString(inner))
+          {
+            throw new Error(inner);
+          }
+          else if (inner !== false)
+          {
+            innerStack.unshift(inner);
+          }
+
+          const inside = expr === innerStack[0];
+
+          if (inside)
+          {
+            programStack.unshift(expr);
+          }
+
           if (isEnter)
           {
             const enter = this.describe(context);
@@ -224,29 +243,12 @@ export class Debugger
           }
 
           stepCurrent++;
-
-          if (expr instanceof InvokeExpression) 
-          {
-            const func = registry.defs.getFunction(expr.name);
-
-            if (!func)
-            {
-              throw new Error(`Function "${expr.name}" does not exist, debugging cannot continue.`);
-            }
-
-            programStack.unshift(func.expression);
-          }
           
           currentDepth++;
 
           const out = run(context);
 
           currentDepth--;
-
-          if (expr instanceof InvokeExpression) 
-          {
-            programStack.shift();
-          }
 
           const lastExpression = stepCurrent === stepEnter + 1 && isEnter;
           const isExit = stepCurrent === step;
@@ -293,6 +295,16 @@ export class Debugger
           }
 
           stepCurrent++;
+
+          if (inner !== false)
+          {
+            innerStack.shift();
+          }
+
+          if (inside)
+          {
+            programStack.shift();
+          }
 
           return out;
         };
@@ -413,6 +425,8 @@ export class Debugger
 
   public first() 
   {
+    this.steps = [];
+
     this.stepTo(0);
   }
 

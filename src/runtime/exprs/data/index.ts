@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { GetDataExpression } from 'expangine-runtime';
+import { GetDataExpression, Exprs } from 'expangine-runtime';
 
 import DataEditor from './DataEditor.vue';
 
@@ -8,7 +8,7 @@ export const GetDataVisuals: ExpressionVisuals<GetDataExpression> =
 {
   expr: GetDataExpression,
   menu: 'Data',
-  create: () => new GetDataExpression(''),
+  create: () => Exprs.path(Exprs.data('')),
   name: 'Get Data',
   description: 'Gets user-defined Data',
   describe: ({ registry, expr }) => 'Data ' + expr.name,

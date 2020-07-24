@@ -2,7 +2,9 @@
   <v-list-item :style="style" @click="clicked" v-click-outside="blur">
     <slot name="prepend">
       <v-list-item-icon v-if="icon" class="mr-3">
-        <v-icon>{{ icon }}</v-icon>
+        <v-badge overlap :content="count" :value="showCount">
+          <v-icon>{{ icon }}</v-icon>
+        </v-badge>
       </v-list-item-icon>
     </slot>
     <v-list-item-content class="pa-0">
@@ -59,6 +61,14 @@ export default Vue.extend({
     autoOpen: {
       type: String,
       default: '',
+    },
+    showCount: {
+      type: [Number, Boolean],
+      default: false,
+    },
+    count: {
+      type: [Number, String],
+      default: 0,
     },
   },
   data: () => ({

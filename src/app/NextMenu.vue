@@ -35,10 +35,10 @@
         </template>
         <template v-if="allowMethods">
           <template v-for="method in nextMethods">
-            <v-list-item :key="method.value.name" @click="addMethod(meth)">
+            <v-list-item :key="method.value.name" @click="addMethod(method)">
               <v-list-item-content>
-                <v-list-item-title>{{ meth.text }}</v-list-item-title>
-                <v-list-item-subtitle>{{ meth.value.description || meth.description }}</v-list-item-subtitle>
+                <v-list-item-title>{{ method.text }}</v-list-item-title>
+                <v-list-item-subtitle>{{ method.value.description || method.description }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -52,9 +52,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, objectToArray, EntityType } from 'expangine-runtime';
+import { Type, objectToArray, EntityType, Func } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { TypeSubOption, TypeComputedOption, TypeMethodOption } from '../runtime/types/TypeVisuals';
+import { friendlyList } from '../common';
 
 
 export default Vue.extend({
@@ -138,7 +139,7 @@ export default Vue.extend({
       }
 
       return objectToArray(entity.methods, (func, funcName) => ({
-        text: funcName,
+        text: this.getFunctionText(func),
         description: 'Call user-defined method',
         value: func,
       }));
@@ -153,6 +154,14 @@ export default Vue.extend({
     },
     addMethod(meth: TypeMethodOption) {
       this.$emit('method', meth);
+    },
+    getFunctionText(func: Func): string {
+      const registry = this.registry;
+      const props = func.params.options.props;
+      const paramList = friendlyList(objectToArray(props, (paramType, paramName) => paramName + ': ' + registry.getTypeDescribe(paramType)), ' ');
+      const returnType = registry.getTypeDescribe(func.getReturnType(registry.defs, props));
+
+      return `${func.name} (${paramList}): ${returnType}`;
     },
   },
 });

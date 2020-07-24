@@ -18,7 +18,7 @@
         <col style="width: 24px;">
       </colgroup>
       <thead>
-        <tr class="grey lighten-3">
+        <tr class="ex-accent-bar">
           <th></th>
           <th>#</th>
           <th class="text-left">Property</th>
@@ -77,8 +77,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, ObjectType, Types, EntityIndex, objectEach, objectToArray, Entity } from 'expangine-runtime';
-import { TypeSettings } from '@/runtime/types/TypeVisuals';
+import { Type, EntityIndex, objectToArray, Entity } from 'expangine-runtime';
 import { editTypeIndexTypes } from './EditEntityIndex';
 import { getConfirmation } from './Confirm';
 import { Preferences, PreferenceCategory } from './Preference';
@@ -136,7 +135,7 @@ export default Vue.extend({
       const oldName = index.name;
 
       index.name = newName;
-      Vue.delete(entity.indexes, index.name);
+      Vue.delete(entity.indexes, oldName);
       Vue.set(entity.indexes, newName, index);
 
       this.$emit('renamed', index);

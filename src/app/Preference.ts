@@ -110,4 +110,5 @@ export const PreferenceCategory =
   DATA: 'Data',
   FULLSCREEN: 'Fullscreen',
   SAVE: 'Save',
+  DEBUGGER: 'Debugger',
 };

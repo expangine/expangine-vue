@@ -403,6 +403,7 @@
       <ex-describe-data-dialog></ex-describe-data-dialog>
       <ex-display-data-dialog></ex-display-data-dialog>
       <ex-edit-function-dialog></ex-edit-function-dialog>
+      <ex-edit-method-dialog></ex-edit-method-dialog>
       <ex-test-function-dialog></ex-test-function-dialog>
       <ex-test-operation-dialog></ex-test-operation-dialog>
       <ex-test-program-dialog></ex-test-program-dialog>
@@ -506,37 +507,25 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { Types, Type, defs, Expression, isString, isObject, NoExpression, objectMap, objectEach, Func, ObjectType, NumberType, Traverser, TextType, DateFormat, currentLocale, isArray, AnyType, ReturnExpression, objectValues, NullType, Validation, ValidationSeverity, RelationOptions, Relation, objectToArray, Entity, Program, ProgramDataSet, ReferenceData, Exprs } from 'expangine-runtime';
+import { defs, isString, isObject, isArray } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { TypeVisuals, TypeSettings, TypeUpdateEvent, TypeSettingsRecord, TypeSettingsAny } from './runtime/types/TypeVisuals';
-import { ObjectBuilder as DefaultBuilder } from './runtime/types/object';
 import { getConfirmation } from './app/Confirm';
 import { sendNotification } from './app/Notify';
 import { getRunProgram } from './app/RunProgram';
 import { getDebugProgram } from './app/DebugProgram';
-import { getDescribeData } from './app/DescribeData';
 import { DefinitionsSaver, DefinitionsPatch } from './app/DefinitionsSaver';
-import { getEditFunction } from './app/EditFunction';
-import { getSimpleInput, SimpleInputOptions } from './app/SimpleInput';
-import { getInput } from './app/Input';
+import { getSimpleInput } from './app/SimpleInput';
 import { getFile, FileImportStatus } from './app/FileImport';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
-import { getDataImport } from './app/DataImport';
 import { getSendMail } from './app/SendMail';
-import { exportFile } from './app/FileExport';
-import { friendlyList, SimpleFieldOption, isMapEqual, obj } from '@/common';
-import { getPromiser } from './app/Promiser';
-import { Trie } from './app/Trie';
+import { friendlyList } from './common';
 import { System } from './app/SystemEvents';
-import { ValidationHelper } from './app/ValidationHelper';
-import { getEditEntity } from './app/EditEntity';
-import { getEditRelation } from './app/EditRelation';
 import { Preferences, PreferenceCategory } from './app/Preference';
 import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import Registry from './runtime';
 import { ExplorerTab } from './app/explorer/ExplorerTypes';
-import * as diff from 'diff';
+import { addEntity } from './app/EntityBuilders';
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
@@ -749,9 +738,11 @@ export default Vue.extend({
     await saver.load();
     
     this.loadExamples();
+    
+    this.registry.defs.entities.forEach((_, entityName) => addEntity(this.registry, entityName));
 
     this.initialized = true;
-  },  
+  },
   methods: {
     openTab(tab: ExplorerTab) 
     {
@@ -799,7 +790,7 @@ export default Vue.extend({
     async toggleAutoSave()
     {
       if (this.autoSave) {
-        const result = await getConfirmation({
+        await getConfirmation({
           title: 'Disable Auto Save',
           message: 'Your work will no longer be saved to your browser. Would you like to <b>clear</b> the data from your browser or <b>leave</b> it there for next time you visit?',
           confirm: 'Clear',

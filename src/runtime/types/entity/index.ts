@@ -12,7 +12,7 @@ import EntityEditor from './EntityEditor.vue';
 
 export const EntityVisuals = createVisuals()({
   type: EntityType,
-  name: 'Entity',
+  name: (e) => e.options,
   description: 'Entity',
   describe: ({registry, type}) => type.options,
   describeLong: (registry, type, padding, tab, newline) => {

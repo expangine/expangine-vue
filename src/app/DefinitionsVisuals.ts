@@ -158,7 +158,7 @@ export function getTypePath(registry: Registry, type: Type, root: Type): string[
 
     if (visuals)
     {
-      path.push(visuals.name);
+      path.push(visuals.name(type));
     }
 
     type = type.parent;

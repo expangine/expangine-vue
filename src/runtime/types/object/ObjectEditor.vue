@@ -28,7 +28,7 @@
         <col style="width: 100%;">
       </colgroup>
       <thead>
-        <tr class="grey lighten-3">
+        <tr class="ex-accent-bar">
           <th class="text-right pr-6" style="min-width: 100px">Property</th>
           <th class="text-left pl-6">Type</th>
         </tr>
@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { ObjectType, ObjectOps, Expression, Exprs, Types } from 'expangine-runtime';
+import { ObjectType, Exprs, Types } from 'expangine-runtime';
 import { friendlyList } from '@/common';
 import { getConfirmation } from '@/app/Confirm';
 import { getInput } from '@/app/Input';

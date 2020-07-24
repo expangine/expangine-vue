@@ -28,6 +28,7 @@ import { ObjectVisuals } from './object';
 import { SwitchVisuals } from './switch';
 import { ReturnVisuals } from './return';
 import { InvokeVisuals } from './invoke';
+import { MethodVisuals } from './method';
 
 
 export default function(registry: Registry)
@@ -49,6 +50,7 @@ export default function(registry: Registry)
     .addExpression(TupleVisuals)
     .addExpression(ObjectVisuals)
     .addExpression(InvokeVisuals) 
+    .addExpression(MethodVisuals) 
     .addExpression(NotVisuals)
     .addExpression(AndVisuals)
     .addExpression(NoVisuals)

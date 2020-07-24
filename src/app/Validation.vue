@@ -20,8 +20,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Validation, ValidationSeverity } from 'expangine-runtime';
-import { ValidationHelper } from '@/app/ValidationHelper';
+import { Validation } from 'expangine-runtime';
+import { ValidationHelper } from './ValidationHelper';
 import { Registry } from '../runtime/Registry';
 
 

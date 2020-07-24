@@ -1,7 +1,25 @@
 <template>
-  <v-card>
+  <v-card class="ex-debug-view" :class="classes">
     <v-card-title class="pa-0">
-      <v-toolbar dark class="elevation-0">
+      <v-toolbar flat dense class="ex-accent-bar" v-sticky.x.y="stickyTarget">
+
+        <v-tooltip top>
+          <template #activator="{ on }">
+            <v-btn icon @click="toggleVertical" v-on="on">
+              <v-icon>{{ verticalIcon }}</v-icon>
+            </v-btn>
+          </template>
+          <span>{{ verticalText }}</span>
+        </v-tooltip>
+
+        <v-tooltip top>
+          <template #activator="{ on }">
+            <v-btn v-if="sticky" icon @click="toggleSticky" v-on="on">
+              <v-icon>{{ stickyIcon }}</v-icon>
+            </v-btn>
+          </template>
+          <span>{{ stickyText }}</span>
+        </v-tooltip>
 
         <v-tooltip bottom open-delay="1000">
           <template #activator="{ on }">
@@ -93,8 +111,8 @@
           <span>End Debugging</span>
         </v-tooltip>
 
-        <v-chip label>
-          Stepped in {{ debugs.elapsed.elapsedSecondsFormatted }}s
+        <v-chip small label :title="elapsedTitle" class="px-1">
+          {{ elapsedText }}
         </v-chip>
 
         <v-spacer></v-spacer>
@@ -111,14 +129,14 @@
 
         <ex-expression
           :value="step.program"
-          :context="inputType"
+          :context="step.contextType"
           :registry="registry"
           :highlight="highlightMap"
           :event-listeners="eventListeners"
         ></ex-expression>
 
       </div>
-      <div class="debug-inspect">
+      <div class="debug-inspect elevation-1">
 
         <v-expansion-panels accordion focusable multiple>
 
@@ -179,9 +197,9 @@
                   :step="step"
                   :index="step.index"
                   :registry="registry"
-                  :value="debugs.current.step"
+                  :value="debug.current.step"
                   @hover="onHoverStep"
-                  @input="debugs.stepTo($event)"
+                  @input="debug.stepTo($event)"
                 ></ex-debug-step>
               </template>
               <div v-intersect="onIntersect"></div>
@@ -197,18 +215,26 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Type, Expression, TextType } from 'expangine-runtime';
-import { debugProgramDialog } from './DebugProgram';
+import { Expression, Types } from 'expangine-runtime';
 import { Debugger, DebugStep, DebugBreakpoint } from './Debugger';
 import { ExpressionEventListeners } from '../runtime/exprs/ExpressionBase';
 import { TypeSubNode } from '../runtime/types/TypeVisuals';
-import { measure, StopWatchOutput } from './StopWatch';
 import { Registry } from '../runtime/Registry';
 import ExDebugStack from './DebugStack.vue';
 import ExDebugNode from './DebugNode.vue';
 import ExDebugStep from './DebugStep.vue';
 import ExDebugBreakpoint from './DebugBreakpoint.vue';
+import { Preferences, PreferenceCategory } from './Preference';
 
+
+
+const PREF_ORIENTATION = Preferences.define({
+  key: 'expression_debug_orientation',
+  label: 'Debugger vertical toolbar orientation',
+  category: [PreferenceCategory.DEBUGGER],
+  defaultValue: null as null | boolean,
+  type: Types.bool(),
+});
 
 export default Vue.extend({
   components: {
@@ -230,12 +256,23 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    vertical: {
+      type: Boolean,
+      default: false,
+    },
+    sticky: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
     hoverExpression: null as null | Expression,
     stepsLoaded: 0,
     breakpointSet: false,
     breakpoint: null as null | Expression,
+    topOffset: 0,
+    stickyEnabled: true,
+    internalVertical: Preferences.get(PREF_ORIENTATION),
   }),
   computed: {
     step(): DebugStep {
@@ -311,8 +348,52 @@ export default Vue.extend({
     breakpointMap(): Map<Expression, boolean> {
       return new Map(this.breakpoints);
     },
+    isVertical(): boolean {
+      return this.internalVertical !== null
+        ? this.internalVertical 
+        : this.vertical;
+    },
+    verticalIcon(): string {
+      return this.isVertical ? 'mdi-arrow-right' : 'mdi-arrow-down';
+    },
+    verticalText(): string {
+      return this.isVertical ? 'Switch to Horizontal' : 'Switch to Vertical';
+    },
+    stickyIcon(): string {
+      return this.vertical
+        ? 'mdi-arrow-up-down'
+        : 'mdi-arrow-left-right';
+    },
+    stickyText(): string {
+      return this.stickyEnabled ? 'Disable Auto Scrolling' : 'Enable Auto Scrolling';
+    },
+    stickyTarget(): string | false {
+      return this.sticky && this.stickyEnabled ? '.v-toolbar__content' : false;
+    },
+    classes(): any {
+      return {
+        vertical: this.isVertical,
+      };
+    },
+    elapsedText(): string {
+      return this.isVertical ? this.debug.elapsed.elapsedShort : this.elapsedTitle;
+    },
+    elapsedTitle(): string {
+      return `Stepped in ${this.debug.elapsed.elapsedSecondsFormatted}s`;
+    },
   },
   methods: {
+    toggleVertical() {
+      this.internalVertical = !this.isVertical;
+
+      Preferences.set(PREF_ORIENTATION, this.internalVertical);
+    },
+    updateTopOffset() {
+      const rect = this.$el.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      this.topOffset = rect.top + scrollTop;
+    },
     gotoClick(ev: Event, expr: Expression) {
       if (this.breakpointSet) {
         this.breakpoint = expr;
@@ -320,6 +401,9 @@ export default Vue.extend({
         ev.stopPropagation();
         ev.preventDefault();
       }
+    },
+    toggleSticky() {
+      this.stickyEnabled = !this.stickyEnabled;
     },
     gotoStart() {
       this.breakpointSet = true;
@@ -391,24 +475,49 @@ export default Vue.extend({
 }
 
 .debug-pane {
-  position: relative;
+  display: flex;
+  flex-direction: row;
 
   .debug-program {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 300px;
-    bottom: 0;
+    flex: 1 1 auto;
     overflow: scroll;
+    width: 0;
   }
 
   .debug-inspect {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 300px;
-    bottom: 0;
+    flex: 0 0 300px;
     overflow: scroll;
+    min-width: 300px;
+  }
+}
+
+.ex-debug-view {
+
+  &.vertical {
+    display: flex;
+    
+    /deep/ .v-toolbar {
+      width: 48px;
+      height: auto !important;
+      flex: 0 0 48px;
+
+      .v-toolbar__content {
+        width: 48px;
+        height: auto !important;
+        padding: 16px 0 !important;
+        flex-direction: column;
+
+        & > .v-btn.v-btn--icon:first-child {
+          margin-left: 0px;
+          margin-top: -12px;
+        }
+
+        & > .v-btn.v-btn--icon:last-child {
+          margin-right: 0px;
+          margin-bottom: -12px;
+        }
+      }
+    }    
   }
 }
 </style>

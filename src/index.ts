@@ -31,6 +31,7 @@ import ExplorerEntity from './app/explorer/ExplorerEntity.vue';
 import ExplorerEntityFolder from './app/explorer/ExplorerEntityFolder.vue';
 import ExplorerRelation from './app/explorer/ExplorerRelation.vue';
 import ExplorerRelationFolder from './app/explorer/ExplorerRelationFolder.vue';
+import ExplorerSorterMenu from './app/explorer/ExplorerSorterMenu.vue';
 
 import ShortcutInput from './app/ShortcutInput.vue';
 import ShortcutLabel from './app/ShortcutLabel.vue';
@@ -54,6 +55,8 @@ import DisplayData from './app/DisplayDataView.vue';
 import DisplayDataDialog from './app/DisplayDataDialog.vue';
 import EditFunction from './app/EditFunctionView.vue';
 import EditFunctionDialog from './app/EditFunctionDialog.vue';
+import EditMethod from './app/EditMethodView.vue';
+import EditMethodDialog from './app/EditMethodDialog.vue';
 import EditData from './app/EditDataView.vue';
 import EditEntity from './app/EditEntityView.vue';
 import EditEntityDialog from './app/EditEntityDialog.vue';
@@ -105,6 +108,7 @@ export * from './app/DefinitionsVisuals';
 export * from './app/DescribeData';
 export * from './app/DisplayData';
 export * from './app/EditFunction';
+export * from './app/EditMethod';
 export * from './app/EditEntity';
 export * from './app/EditEntityIndex';
 export * from './app/EditEntityTranscoder';
@@ -197,6 +201,7 @@ export default {
     Vue.component('ex-explorer-entity-folder', ExplorerEntityFolder);
     Vue.component('ex-explorer-relation', ExplorerRelation);
     Vue.component('ex-explorer-relation-folder', ExplorerRelationFolder);
+    Vue.component('ex-explorer-sorter', ExplorerSorterMenu);
 
     Vue.component('ex-build-type', BuildType);
     Vue.component('ex-build-type-dialog', BuildTypeDialog);
@@ -209,6 +214,8 @@ export default {
     Vue.component('ex-display-data-dialog', DisplayDataDialog);
     Vue.component('ex-edit-function', EditFunction);
     Vue.component('ex-edit-function-dialog', EditFunctionDialog);
+    Vue.component('ex-edit-method', EditMethod);
+    Vue.component('ex-edit-method-dialog', EditMethodDialog);
     Vue.component('ex-edit-data', EditData);
     Vue.component('ex-edit-entity', EditEntity);
     Vue.component('ex-edit-entity-dialog', EditEntityDialog);

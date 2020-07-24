@@ -4,6 +4,7 @@
     <ex-expression-menu
       v-bind="$props"
       v-on="$listeners"
+      class="mr-1"
       text="Set"
       tooltip="Set the variable to the given value"
     ></ex-expression-menu>
@@ -11,19 +12,21 @@
     <ex-path-editor
       v-bind="$props"
       v-on="$listeners"
-      class="mr-3"
-      :path="value.path"
+      class="mx-3 ex-expression ex-parenthesis"
+      :value="value.path"
+      @input="setPath"
       @settings="setValueSettings"
     ></ex-path-editor>
 
     <ex-chip-menu
+      chip-class="mx-1"
       text="To"
       tooltip="The value to set the above variable to"
     ></ex-chip-menu>
 
     <ex-expression
       v-bind="$props"
-      class="ml-3"
+      class="ml-3 ex-expression ex-parenthesis"
       :required-type="valueTypeSimplified"
       :value="value.value"
       :path-settings="valueSettings"
@@ -35,8 +38,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Type, SetExpression, NoExpression, Expression, Types } from 'expangine-runtime';
+import { Type, SetExpression, NoExpression, Expression, Types, PathExpression } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 
@@ -64,6 +66,10 @@ export default ExpressionBase<SetExpression>().extend({
     },
     setValue(value: Expression) {
       this.value.value = value;
+      this.update();
+    },
+    setPath(path: PathExpression) {
+      this.value.path = path;
       this.update();
     },
   },

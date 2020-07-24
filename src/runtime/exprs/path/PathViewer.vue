@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import { Expression, isString, ConstantExpression, PathExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 

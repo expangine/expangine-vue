@@ -1,6 +1,6 @@
 <template>
   <div class="ex-expression-editor" :class="classes">
-    <v-toolbar flat dense color="grey lighten-3" v-sticky.x.y="stickyTarget">
+    <v-toolbar flat dense v-sticky.x.y="stickyTarget" class="ex-accent-bar">
       <v-tooltip top>
         <template #activator="{ on }">
           <v-btn icon :small="internalCompact" @click="toggleVertical" v-on="on">
@@ -196,8 +196,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, DataTypes, Program } from 'expangine-runtime';
+import { Expression, Types, ReturnExpression, Validation, ValidationSeverity, Traverser, Program } from 'expangine-runtime';
 import { ListOptions, isMapEqual } from '@/common';
 import { getRunProgram } from '@/app/RunProgram';
 import { getDebugProgram } from '@/app/DebugProgram';
@@ -327,7 +326,7 @@ export default ExpressionBase().extend({
   }),
   computed: {
     colorOptions(): ListOptions<string> {
-      return Colors.map(([text, value]) => ({ text, value }));
+      return Colors.map(([text, value]: [string, string]) => ({ text, value }));
     },
     isVertical(): boolean {
       return this.internalVertical !== null
@@ -518,7 +517,6 @@ export default ExpressionBase().extend({
     },
     updateTopOffset() {
       const rect = this.$el.getBoundingClientRect();
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
       this.topOffset = rect.top + scrollTop;

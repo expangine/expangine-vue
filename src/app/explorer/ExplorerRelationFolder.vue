@@ -6,9 +6,9 @@
     :name-filter="nameFilter"
     :count="registry.defs.relations.values.length">
     <template #files>
-      <template v-for="(relation, index) in registry.defs.relations.values">
+      <template v-for="relation in registry.defs.relations.values">
         <ex-explorer-relation
-          :key="index"
+          :key="relation.name"
           :relation="relation"
           :registry="registry"
           :name-filter="nameFilter"
@@ -27,7 +27,7 @@
         </template>
         <v-list dense>
           <v-list-item @click="add(opener)">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-plus-circle</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -35,7 +35,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="toJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-export</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -43,15 +43,16 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item @click="fromJson">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-import</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
               Import
             </v-list-item-title>
           </v-list-item>
+          <ex-explorer-sorter :sorter="sorter"></ex-explorer-sorter>
           <v-list-item @click="clear">
-            <v-list-item-avatar class="mr-3">
+            <v-list-item-avatar class="mr-3 my-0">
               <v-icon>mdi-delete</v-icon>
             </v-list-item-avatar>
             <v-list-item-title>
@@ -67,17 +68,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Program, NamedMap, ReferenceData, isString, Func } from 'expangine-runtime';
+import { Relation } from 'expangine-runtime';
 import { ExplorerTab, isNameVisible } from './ExplorerTypes';
-import { getInput } from '@/app/Input';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
-import { getEditRelation } from '@/app/EditRelation';
-import { Registry } from '@/runtime/Registry';
+import { getConfirmation } from '../Confirm';
+import { getEditRelation } from '../EditRelation';
+import { Registry } from '../../runtime/Registry';
 import { System } from '../SystemEvents';
 import { Preferences, PreferenceCategory } from '../Preference';
 import { getNamedMapExport } from '../ProjectExport';
 import { getNamedImport } from '../ProjectImport';
+import { ExplorerSorter } from './ExplorerSorter';
 
 
 const PREF_CLEAR_RELATIONS = Preferences.define({
@@ -104,6 +104,15 @@ export default Vue.extend({
   computed: {
     filesVisible(): boolean {
       return this.registry.defs.relations.keys.some((name) => isNameVisible(name, this.nameFilter));
+    },
+    sorter(): ExplorerSorter<Relation> {
+      const defs = this.registry.defs;
+
+      return new ExplorerSorter(defs.relations, {
+        'Name': (a, b) => a.name.localeCompare(b.name),
+        'Created': (a, b) => a.created - b.created,
+        'Updated': (a, b) => a.updated - b.updated,
+      });
     },
   },
   methods: {

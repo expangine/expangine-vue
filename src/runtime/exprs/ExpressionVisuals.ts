@@ -11,7 +11,7 @@ export interface ExpressionVisuals<E extends Expression = any>
 {
   expr: ExpressionClass<E>;
   menu: string;
-  create: (forType: Type | null, context: Type | null, registry: Registry) => E;
+  create: (forType: Type | null, context: Type | null, registry: Registry) => Expression;
   name: string;
   description: string;
   describe: (options: { registry: Registry, expr: E }) => string;

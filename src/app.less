@@ -59,6 +59,8 @@
 
 .ex-table {
   width: 100%;
+  width: max-content;
+  max-width: 100%;
   border-spacing: 0px;
 
   &.ex-striped > tbody {
@@ -175,6 +177,70 @@
     }
   }
 
+  &.ex-curly-braces {
+    position: relative;
+    margin-left: 16px;
+    margin-right: 16px;
+
+    &:before {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      left: -10px;
+      border-radius: 13px;
+      border-left: @symbol-width solid @symbol-color;
+      width: 40px;
+    }
+
+    &:after {
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      content: '';
+      top: 0;
+      bottom: 0;
+      right: -8px;
+      border-radius: 13px;
+      border-right: @symbol-width solid @symbol-color;
+      width: 40px;
+    }
+
+    & > *:first-child {
+
+      &::before {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        content: ' ';
+        top: 50%;
+        margin-top: -5px;
+        background-color: white;
+        border-bottom: @symbol-width solid @symbol-color;
+        border-left: @symbol-width solid @symbol-color;
+        left: -14px;
+        transform: rotate(45deg);
+      }
+
+      &::after {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        content: ' ';
+        top: 50%;
+        margin-top: -5px;
+        background-color: white;
+        border-top: @symbol-width solid @symbol-color;
+        border-right: @symbol-width solid @symbol-color;
+        right: -12px;
+        transform: rotate(45deg);
+        z-index: 2;
+      }
+    }
+  }
+
   &.ex-brackets {
     position: relative;
     margin-left: 16px;
@@ -227,4 +293,11 @@
   color: black;
   line-height: 1em;
   font-weight: bold;
+}
+
+.ex-accent-bar {
+
+  &, & > .v-tabs-bar {
+    background-color: #E3F2FD !important;
+  }
 }

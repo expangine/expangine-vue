@@ -45,9 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { DebugStep } from './Debugger';
 import { Registry } from '../runtime/Registry';
-import { Type } from 'expangine-runtime';
 import { TypeSubNode } from '../runtime/types/TypeVisuals';
 
 
@@ -82,18 +80,24 @@ export default Vue.extend({
       return this.subs.length > 0;
     },
     valueTypeName(): string {
-      return this.registry.getTypeVisuals(this.node.valueType).name;
+      return this.registry.getTypeVisuals(this.node.valueType).name(this.node.valueType);
     },
   },
   watch: {
     subs: {
       immediate: true,
-      handler() {
-        const count = this.subsGroups.length;
+      handler(subs: TypeSubNode[]) {
         const size = this.groupSize;
-        const offset = count * size;
+        const totalVisible = Math.max(this.groupSize, this.subsGroups.reduce((total, g) => total + g.length, 0));
 
-        this.subsGroups = [this.subs.slice(offset, offset + size)];
+        const subsGroups: TypeSubNode[][] = [];
+        let offset = 0;
+        while (offset < totalVisible) {
+          subsGroups.push(subs.slice(offset, offset + size));
+          offset += size;
+        }
+
+        this.subsGroups = subsGroups;
       },
     },
   },

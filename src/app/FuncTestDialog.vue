@@ -84,10 +84,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { diffWords, Part } from 'diff';
-import { Type, AnyType, TextType, ColorType, ColorSpaceRGB, DataTypes } from 'expangine-runtime';
-import { ListOptions, friendlyList, asArray } from '../common';
-import { TypeVisuals, TypeSettings } from '../runtime/types/TypeVisuals';
-import { TypeBuildOption, TypeBuildHandler, TypeBuilderWrapHandler, TypeBuilderWrapOption } from '../runtime/types/TypeBuilder';
+import { DataTypes } from 'expangine-runtime';
+import { TypeSettings } from '../runtime/types/TypeVisuals';
 import { Preferences } from './Preference';
 import { funcTestDialog, PREF_FULLSCREEN_FUNC_TEST } from './FuncTest';
 import { LiveRuntime } from 'expangine-runtime-live';

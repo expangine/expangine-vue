@@ -63,7 +63,7 @@ export default TypeInputBase<OptionalType, OptionalOptions, any, OptionalSubs>()
       return this.innerTypeVisuals.inputs[this.innerTypeSettings.input];
     },
     valueName(): string {
-      return this.innerTypeInput.getName(this.innerTypeSettings.options) || this.innerTypeVisuals.name;
+      return this.innerTypeInput.getName(this.innerTypeSettings.options) || this.innerTypeVisuals.name(this.type);
     },
     removeIcon(): string {
       return this.settings.options.removeIcon || 'mdi-minus';

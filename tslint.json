@@ -18,6 +18,8 @@
     "no-trailing-whitespace": false,
     "quotemark": [true, "single"],
     "forin": false,
-    "max-line-length": false
+    "max-line-length": false,
+    "quote-props": "consistent",
+    "arrow-parens": "as-needed"
   }
 }
