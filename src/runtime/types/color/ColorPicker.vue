@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import { ColorType, ColorSpaceRGB, Color } from 'expangine-runtime';
-import { formatDate } from '../../../common';
 import { ColorPickerOptions } from './ColorPickerTypes';
 import TypeInputBase from '../TypeInputBase';
 

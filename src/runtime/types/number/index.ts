@@ -5,6 +5,7 @@ import { TypeBuilder } from '@/runtime/types/TypeBuilder';
 import { NumberTextBoxInput } from './NumberTextBoxTypes';
 import { NumberSliderInput } from './NumberSliderTypes';
 import { NumberComboInput } from './NumberComboTypes';
+import { NumberBitDropdownInput } from './NumberBitDropdownTypes';
 import NumberEditor from './NumberEditor.vue';
 import NumberOptions from './NumberOptions.vue';
 
@@ -48,11 +49,12 @@ export const NumberVisuals = createVisuals()({
   editor: NumberEditor,
   options: NumberOptions,
   defaultInput: 'textbox',
-  inputsOrder: ['textbox', 'slider', 'combo'],
+  inputsOrder: ['textbox', 'slider', 'combo', 'bits'],
   inputs: {
     textbox: NumberTextBoxInput,
     slider: NumberSliderInput,
     combo: NumberComboInput,
+    bits: NumberBitDropdownInput,
   },
 });
 

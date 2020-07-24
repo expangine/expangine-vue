@@ -4,10 +4,11 @@
     v-model="menu"
     :disabled="readOnly"
   >
-    <template #activator>
+    <template #activator="{ on }">
       <v-text-field
         v-bind="textProps"
         v-model="textValue"
+        v-on="on"
         @click:append="menu = true"
         @click:clear="clear"
       >

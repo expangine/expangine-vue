@@ -1,7 +1,8 @@
 <template>
   <v-app v-shortcuts.document="shortcuts" class="expangine-app">
 
-    <v-navigation-drawer app clipped dark disable-resize-watcher permanent width="300">
+    <v-navigation-drawer app clipped dark disable-resize-watcher :permanent="explorerVisible" width="300" v-model="explorerVisible">
+
       <v-text-field
         filled
         dense
@@ -49,6 +50,7 @@
           @close="closeTab"
         ></ex-explorer-relation-folder>  
       </v-list>
+
     </v-navigation-drawer>
 
     <v-app-bar app dense elevate-on-scroll color="primary" dark clipped-left>
@@ -239,6 +241,15 @@
             <v-list-item-content>
               <v-list-item-title>Introduction Dialog</v-list-item-title>
               <v-list-item-subtitle>Show the dialog your saw when you first visited this application.</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click="toggleExplorerVisible">
+            <v-list-item-icon>
+              <v-icon>mdi-file-tree</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ explorerVisible ? 'Hide' : 'Show' }} Explorer</v-list-item-title>
+              <v-list-item-subtitle>Toggle the project explorer on the left.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -664,6 +675,7 @@ export default Vue.extend({
     explorerSearchFocuses: 0,
     currentTab: -1,
     tabs: [] as ExplorerTab[],
+    explorerVisible: true,
   }),
   computed: 
   {
@@ -808,6 +820,10 @@ export default Vue.extend({
       this.readOnly = !this.readOnly;
 
       Preferences.set(PREF_READ_ONLY, this.readOnly);
+    },
+    toggleExplorerVisible()
+    {
+      this.explorerVisible = !this.explorerVisible;
     },
     async handleLoading(eventType: 'loading', loadable: () => Promise<any>)
     {
