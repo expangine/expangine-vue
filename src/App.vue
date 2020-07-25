@@ -749,7 +749,7 @@ export default Vue.extend({
     let loaded = false;
     const shareName = window.location.href.match(/share=([^&]*)/);
     if (shareName && shareName[1]) {
-      window.history.replaceState({}, document.title, '/');
+      window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
 
       try {
         const shareResponse = await fetch('shares/' + shareName[1]);
