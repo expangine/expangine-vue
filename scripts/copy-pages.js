@@ -29,6 +29,7 @@ removeDirectory(pagesBranchLocation + 'css');
 removeDirectory(pagesBranchLocation + 'examples');
 removeDirectory(pagesBranchLocation + 'img');
 removeDirectory(pagesBranchLocation + 'js');
+removeDirectory(pagesBranchLocation + 'api');
 removeFile(pagesBranchLocation + 'index.html');
 
 fs.readdirSync(pagesBranchLocation)

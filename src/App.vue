@@ -92,7 +92,7 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Share</v-list-item-title>
-              <v-list-item-subtitle>Send expangine or a friend your project via E-mail.</v-list-item-subtitle>
+              <v-list-item-subtitle>Share your project with a friend, if you know the password.</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-menu offset-x open-on-hover v-if="hasExamples">
@@ -518,7 +518,7 @@
 
 import Vue from 'vue';
 import * as ex from 'expangine-runtime';
-import { defs, isString, isObject, isArray } from 'expangine-runtime';
+import { defs, isString, isObject, isArray, DefinitionsImportOptions } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { getConfirmation } from './app/Confirm';
 import { sendNotification } from './app/Notify';
@@ -529,14 +529,13 @@ import { getSimpleInput } from './app/SimpleInput';
 import { getFile, FileImportStatus } from './app/FileImport';
 import { getProjectImport } from './app/ProjectImport';
 import { getProjectExport } from './app/ProjectExport';
-import { getSendMail } from './app/SendMail';
-import { friendlyList } from './common';
 import { System } from './app/SystemEvents';
 import { Preferences, PreferenceCategory } from './app/Preference';
 import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import Registry from './runtime';
 import { ExplorerTab } from './app/explorer/ExplorerTypes';
 import { addEntity } from './app/EntityBuilders';
+import { getInput } from './app/Input';
 
 
 const PREF_DISABLE_AUTO_SAVE = Preferences.define({
@@ -747,7 +746,29 @@ export default Vue.extend({
     System.on('openTab', (type, tab) => this.openTab(tab));
     System.on('closeTab', (type, tab) => this.closeTab(tab));
 
-    await saver.load();
+    let loaded = false;
+    const shareName = window.location.href.match(/share=([^&]*)/);
+    if (shareName && shareName[1]) {
+      window.history.replaceState({}, document.title, '/');
+
+      try {
+        const shareResponse = await fetch('shares/' + shareName[1]);
+
+        if (shareResponse.ok) {
+          const shareData = await shareResponse.json();
+
+          await saver.clear();
+
+          this.registry.defs.sync(shareData as DefinitionsImportOptions);
+          loaded = true;
+        }
+      } catch (e) {
+        window.console.log('share load error', e);
+      }
+    }
+    if (!loaded) {
+      await saver.load();
+    }
     
     this.loadExamples();
     
@@ -896,16 +917,39 @@ export default Vue.extend({
         this.showExamples = false;
       });
     },
-    share()
+    async share()
     {
-      const name = friendlyList(this.registry.defs.programs.keys);
-      const exported = JSON.stringify(this.registry.defs.export());
+      const name = await getInput({ title: 'Share Name' });
 
-      getSendMail({
-        to: 'pdiffenderfer@gmail.com',
-        subject: 'I would like to share my Expangine project with you',
-        body: `Greetings!\nHere is an export of an Expangine project of mine, ${name}.\nYou can save this in a JSON file and import it into ${location.href}.\n\n\n${exported}`,
+      if (!name) {
+        return;
+      }
+
+      const secret = await getInput({ title: 'Share Password', message: 'If you are not sure what the password is, ask The Creator.' });
+
+      if (!secret) {
+        return;
+      }
+
+      const data = JSON.stringify(this.registry.defs.export());
+
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('secret', secret);
+      formData.append('data', data);
+
+      const response = await fetch('api/share.php', {
+        method: 'post',
+        body: formData,
       });
+
+      const result = await response.json();
+
+      if (result) {
+        await getInput({ message: 'Project shared!', value: window.location + '?share=' + name });
+      } else {
+        await sendNotification({ message: 'Sorry, either the password was incorrect or the name is already taken.' });
+      }
     },
     async reset() 
     {
