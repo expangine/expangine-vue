@@ -260,7 +260,7 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="method in methods">
+            <template v-for="method in entity.methods">
               <tr :key="method.name">
                 <td>{{ method.name }}</td>
                 <td>{{ method.description }}</td>
@@ -453,9 +453,6 @@ export default Vue.extend({
         prop,
         transcoder: this.entity ? this.entity.transcoders[prop] || null : null,
       }));
-    },
-    methods() {
-      return objectToArray(this.entity.methods, (method, prop) => method);
     },
     primaryTypes() {
       return [

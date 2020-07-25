@@ -109,9 +109,9 @@ export default Vue.extend({
       const defs = this.registry.defs;
 
       return new ExplorerSorter(defs.relations, {
-        'Name': (a, b) => a.name.localeCompare(b.name),
-        'Created': (a, b) => a.created - b.created,
-        'Updated': (a, b) => a.updated - b.updated,
+        Name: (a, b) => a.name.localeCompare(b.name),
+        Created: (a, b) => a.created - b.created,
+        Updated: (a, b) => a.updated - b.updated,
       });
     },
   },

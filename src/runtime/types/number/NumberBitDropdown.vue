@@ -19,6 +19,8 @@ import { ListOptions } from '../../../common';
 import TypeInputBase from '../TypeInputBase';
 
 
+/* tslint:disable:no-bitwise */
+
 export default TypeInputBase<NumberType, NumberBitDropdownOptions, number>(Number).extend({
   name: 'NumberBitDropdown',
   computed: {
@@ -37,9 +39,9 @@ export default TypeInputBase<NumberType, NumberBitDropdownOptions, number>(Numbe
         while (value > 0) {
           if ((value & bit) !== 0) {
             bits.push(bit);
-            value = value ^ bit;
+            value ^= bit;
           }
-          bit = bit << 1;
+          bit <<= 1;
         }
 
         return bits;
@@ -47,8 +49,8 @@ export default TypeInputBase<NumberType, NumberBitDropdownOptions, number>(Numbe
       set(bits: number[]) {
         let value = 0;
 
-        for (let i = 0; i < bits.length; i++) {
-          value = value | bits[i];
+        for (const bit of bits) {
+          value |= bit;
         }
 
         this.computedValue = value;
