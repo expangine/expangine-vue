@@ -25,4 +25,4 @@ if ($decoded === null) {
     die('false');
 }
 
-die (file_put_contents($path, $data) ? 'true' : 'false');
+echo (file_put_contents($path, $data) ? 'true' : 'false');
