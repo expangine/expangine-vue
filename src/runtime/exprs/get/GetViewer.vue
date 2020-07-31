@@ -1,7 +1,5 @@
 <template>
-  <span>
-    Get
-  </span>
+  <span></span>
 </template>
 
 <script lang="ts">

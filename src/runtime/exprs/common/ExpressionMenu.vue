@@ -1,7 +1,13 @@
 <template>
   <span class="d-inline-block">
     
-    <ex-chip-menu :text="text" :tooltip="statusTooltip" :color="statusColor" :dark="statusDark">
+    <ex-chip-menu 
+      :text="text" 
+      :tooltip="statusTooltip" 
+      :color="statusColor" 
+      :dark="statusDark"
+      :read-only="readOnly"
+    >
       <v-list subheader class="py-0">
         <ex-child-filter @keydown.native="menuRight">
 

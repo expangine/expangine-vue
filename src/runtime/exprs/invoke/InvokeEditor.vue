@@ -50,7 +50,7 @@
       <template v-for="(paramType, param) in paramTypes">
         <span :key="param" class="param-span">
 
-          <v-chip label outlined @click="toggleParameter(param)">
+          <v-chip label outlined small class="ma-1 pa-1" @click="toggleParameter(param)">
             {{ param }}
           </v-chip>
 

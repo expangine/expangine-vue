@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Expression, isString, ConstantExpression, PathExpression } from 'expangine-runtime';
+import { Expression, isString, ConstantExpression, PathExpression, GetExpression } from 'expangine-runtime';
 import ExpressionBase from '../ExpressionBase';
 
 
@@ -31,8 +31,11 @@ export default ExpressionBase<PathExpression>().extend({
     },
     getSegmentPrefix(segment: Expression, index: number) {
       return (segment instanceof ConstantExpression && isString(segment.value)) || segment.isPathNode()
-        ? (index > 0 ? '.' : '')
+        ? (index > this.getFirstIndex() ? '.' : '')
         : '';
+    },
+    getFirstIndex(): number {
+      return this.value.expressions[0] instanceof GetExpression ? 1 : 0;
     },
   },
 });

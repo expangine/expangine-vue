@@ -1,5 +1,5 @@
 <template>
-  <v-menu max-height="400" ref="menu">
+  <v-menu max-height="400" ref="menu" :disabled="readOnly">
     <template #activator="ma">
       <v-tooltip top open-delay="1000">
         <template #activator="ta">
@@ -46,6 +46,10 @@ export default Vue.extend({
     chipClass: {
       type: String,
       default: '',
+    },
+    readOnly: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
