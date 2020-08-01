@@ -44,6 +44,73 @@
         ></ex-type-editor>
       </v-tab-item>
       <v-tab-item>
+        <div v-if="isSingleDataset">
+          <v-btn right absolute rounded color="primary" class="mt-3" @click="addDataset">
+            <v-icon>mdi-plus</v-icon> Add Alternative Input
+          </v-btn>
+          <div class="pt-3"></div>
+        </div>
+        <div v-else>
+          <v-tabs color="primary" show-arrows v-model="dataIndex">
+            <v-tabs-slider></v-tabs-slider>
+            <template v-for="(dataset, datasetIndex) in program.datasets">
+              <v-tab :key="datasetIndex">
+                {{ dataset.name }}
+                <v-menu offset-y>
+                  <template #activator="{ on }">
+                    <v-btn icon small class="ml-2" v-on="on">
+                      <v-icon small>mdi-settings</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list>
+                    <v-list-item v-if="datasetIndex" @click="setPrimaryDataSet(dataset)">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Set as primary
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          When the program is ran in the program editor it will use this dataset.
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item @click="renameDataset(dataset)">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Rename
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Change the name of the dataset.
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item @click="copyDataset(dataset)">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Copy
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Copy this dataset to a new one.
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item @click="removeDataset(dataset)">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Remove
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                          Remove this dataset from the program.
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                
+              </v-tab>
+            </template>
+          </v-tabs>
+        </div>
+        
         <ex-type-input
           :value="currentData"
           :type="program.dataType"
@@ -131,7 +198,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { NoExpression, ObjectType, Expression, Program, Entity } from 'expangine-runtime';
+import { NoExpression, ObjectType, Expression, Program, ProgramDataSet, Entity, DataTypes } from 'expangine-runtime';
 import { TypeUpdateEvent, TypeSettings } from '../runtime/types/TypeVisuals';
 import { Preferences, PreferenceCategory } from './Preference';
 import { LiveRuntime } from 'expangine-runtime-live';
@@ -140,11 +207,21 @@ import { Registry } from '../runtime/Registry';
 import { System } from './SystemEvents';
 import { ExplorerTab } from './explorer/ExplorerTypes';
 import { Debugger, DebuggerOptions } from './Debugger';
+import { now } from './StopWatch';
+import { getInput } from './Input';
+import { sendNotification } from './Notify';
 
 
 const PREF_REMOVE_PROGRAM = Preferences.define({
   key: 'program_remove',
   label: 'Remove program without confirmation',
+  category: [PreferenceCategory.CONFIRM],
+  defaultValue: false,
+});
+
+const PREF_REMOVE_DATASET = Preferences.define({
+  key: 'program_dataset_remove',
+  label: 'Remove program dataset without confirmation',
   category: [PreferenceCategory.CONFIRM],
   defaultValue: false,
 });
@@ -172,6 +249,7 @@ export default Vue.extend({
     id: Entity.uuid(),
     tab: 0,
     debug: null as null | Debugger,
+    dataIndex: 0,
   }),
   computed: {
     settings(): TypeSettings {
@@ -182,14 +260,17 @@ export default Vue.extend({
       return this.program.meta = this.registry.getTypeSettings(this.program.dataType);
     },
     currentData(): any {
-      return this.program.datasets[0].data;
+      return this.program.datasets[this.dataIndex].data;
     },
     isDebugVisible(): boolean {
       return this.tab === 4 && !!this.debug;
     },
     isRunVisible(): boolean {
       return this.tab === 3;
-    },  
+    },
+    isSingleDataset(): boolean {
+      return this.program.datasets.length === 1;
+    },
   },
   methods: {
     renamed(newName: string) {
@@ -236,7 +317,7 @@ export default Vue.extend({
       const options: DebuggerOptions = {
         registry,
         inputType,
-        input: datasets[0].data,
+        input: datasets[this.dataIndex].data,
         program,
       };
 
@@ -265,17 +346,16 @@ export default Vue.extend({
       this.markUpdated();
     },
     onDataChange(data: any) {
-      this.program.datasets[0].data = data;
-      this.program.datasets[0].updated = this.now();
+      this.program.updateDataset(this.dataIndex, {
+        data,
+        updated: now(),
+      });
       this.markUpdated();
     },
     markUpdated(): void {
-      this.program.updated = this.now();
+      this.program.changed();
 
       this.$emit('updated', this.program);
-    },
-    now(): number {
-      return new Date().getTime();
     },
     run() {
       const { program, registry } = this;
@@ -290,6 +370,80 @@ export default Vue.extend({
       };
 
       System.forkTab(tab);
+    },
+    addDataset() {
+      this.program.addDataset({
+        name: 'Data Set #' + (this.program.datasets.length + 1),
+        data: this.program.dataType.create(),
+        created: now(),
+        updated: now(),
+        meta: null,
+      });
+      this.markUpdated();
+    },
+    async setPrimaryDataSet(dataset: ProgramDataSet) {      
+      this.program.moveDataset(dataset, 0);
+      this.dataIndex = 0;
+      this.markUpdated();
+    },
+    async copyDataset(dataset: ProgramDataSet) {
+
+      const name = await getInput({
+        message: `Dataset name for copy of ${dataset.name}`,
+        value: `${dataset.name} Copy`,
+      });
+
+      if (!name) {
+        return sendNotification({ message: 'Dataset copy cancelled.' });
+      }
+
+      if (this.getDatasetByName(name)) {
+        return sendNotification({ message: 'A dataset with that name already exists.' });
+      }
+
+      const copy: ProgramDataSet = {
+        name,
+        data: DataTypes.copy(dataset.data),
+        created: now(),
+        updated: now(),
+        meta: DataTypes.copy(dataset.meta),
+      };
+
+      this.program.addDataset(copy);
+      this.dataIndex = this.program.datasets.length - 1;
+      this.markUpdated();
+    },
+    async renameDataset(dataset: ProgramDataSet) {
+      const name = await getInput({
+        message: `Dataset Name`,
+        value: `${dataset.name}`,
+      });
+
+      if (!name) {
+        return sendNotification({ message: 'Dataset rename cancelled.' });
+      }
+
+      if (this.getDatasetByName(name)) {
+        return sendNotification({ message: 'A dataset with that name already exists.' });
+      }
+
+      this.program.updateDataset(dataset, { name });
+      this.markUpdated();
+    },
+    async removeDataset(dataset: ProgramDataSet) {
+      if (!await getConfirmation({ message: `Are you sure you want to remove this dataset?`, pref: PREF_REMOVE_DATASET })) {
+        return;
+      }
+
+      this.program.removeDataset(dataset);
+
+      if (this.dataIndex >= this.program.datasets.length) {
+        this.dataIndex = this.program.datasets.length - 1;
+      }
+      this.markUpdated();
+    },
+    getDatasetByName(name: string): ProgramDataSet | undefined {
+      return this.program.datasets.find((d) => d.name === name);
     },
   },
 });
