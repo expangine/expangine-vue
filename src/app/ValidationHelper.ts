@@ -26,8 +26,8 @@ export class ValidationHelper
   {
     const subjectName = subject ? registry.getExpressionName(subject) : 'expression';
     const parentName = parent ? registry.getExpressionName(parent) : 'the parent expression';
-    const expectedName = expected ? registry.getTypeVisuals(expected).name : 'type';
-    const actualName = actual ? registry.getTypeVisuals(actual).name : 'type';
+    const expectedName = expected ? registry.getTypeName(expected) : 'type';
+    const actualName = actual ? registry.getTypeName(actual) : 'type';
 
     switch (type) {
       case ValidationType.UNSAFE_OPERATION:

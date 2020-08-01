@@ -187,7 +187,7 @@ export const ObjectModifierToObject: TypeModifier<ObjectType> =
       ? (typeSettings as TypeSettings<any, number>).sub
       : [typeSettings];
 
-    const names = props.map((p) => registry.getTypeVisuals(p).name(p));
+    const names = props.map((p) => registry.getTypeName(p));
 
     return {
       text: 'Convert to Object',

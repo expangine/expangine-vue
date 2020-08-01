@@ -13,8 +13,10 @@
 
           <v-subheader>Info</v-subheader>
 
-          <v-list-item v-if="hasTypeInformation" @click="showTypeInformation = true">
-            <v-list-item-content>
+          <v-list-item 
+            v-if="hasTypeInformation" 
+            @click="showTypeInformation = true">
+            <v-list-item-content :class="typeInfoClass">
               <v-list-item-title>
                 Type Information
               </v-list-item-title>
@@ -289,6 +291,9 @@ export default ExpressionBase().extend({
   computed: {
     isInvalid(): boolean {
       return this.invalidOverride !== null ? this.invalidOverride : this.invalid;
+    },
+    typeInfoClass(): string {
+      return this.invalid ? 'red--text darken-4' : '';
     },
     hasTypeInformation(): boolean {
       return !!(this.requiredType && !(this.requiredType instanceof AnyType))

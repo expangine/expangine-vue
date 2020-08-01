@@ -13,6 +13,7 @@ import TypeEditorMenu from './runtime/types/TypeEditorMenu.vue';
 import TypeInput from './runtime/types/TypeInput.vue';
 import TypeHookList from './runtime/types/TypeHookList.vue';
 import Expression from './runtime/exprs/Expression.vue';
+import FuncArgument from './runtime/exprs/common/FuncArgument.vue';
 import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionEditor from './runtime/exprs/common/ExpressionEditor.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
@@ -183,6 +184,7 @@ export default {
     Vue.component('ex-expression', Expression);
     Vue.component('ex-path-editor', PathEditor);
     Vue.component('ex-path-viewer', PathViewer);
+    Vue.component('ex-func-argument', FuncArgument);
     Vue.component('ex-expression-menu', ExpressionMenu);
     Vue.component('ex-expression-editor', ExpressionEditor);
     Vue.component('ex-expression-clipboard', ExpressionClipboard);

@@ -425,6 +425,11 @@ export class Registry
     return this.getTypeVisuals(type).stringify({ registry: this, type, value });
   }
 
+  public getTypeName(type: Type): string
+  {
+    return this.getTypeVisuals(type).name(type);
+  }
+
   public getTypeSubSettings(type: Type, settings: TypeSettings<any, string> & TypeSettings<any, number>, sub: TypeSub, forKey: boolean): TypeSettings | null
   {
     return this.getTypeVisuals(type).subSettings(this, type, settings, sub, forKey) || 

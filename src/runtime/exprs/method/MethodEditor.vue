@@ -36,65 +36,27 @@
 
     <span v-if="func" class="function-args ex-expression ex-parenthesis">
       <template v-for="(paramType, param) in paramTypes">
-        <span :key="param" class="param-span">
-
-          <v-chip label outlined @click="toggleParameter(param)">
-            {{ param }}
-          </v-chip>
-
-          <span> = </span>
-
-          <span v-if="hiddenParameter(param)"
-            class="ex-expression ex-parenthesis">
-            <v-btn text @click="toggleParameter(param)">
-              show
-            </v-btn>
-          </span>
-
-          <ex-expression
-            v-else
-            v-bind="$props"
-            class="ex-parenthesis"
-            :value="getParam(param)"
-            :required-type="paramType"
-            @input="setParam(param, $event)"
-            @remove="setParam(param)"
-          ></ex-expression>
-
-        </span>
+        <ex-func-argument
+          :key="param"
+          :registry="registry"
+          :func="func"
+          :arg="param"
+          :args="value.args"
+          :expression-props="$props"
+          @update="update"
+        ></ex-func-argument>
       </template>
       <template v-for="(argExpr, arg) in value.args">
-        <span :key="arg" v-if="isExtraArgument(arg)" class="param-span">
-
-          <v-chip 
-            x-small 
-            label 
-            outlined 
-            class="param-label" 
-            color="red"
-            @click="toggleParameter(arg)"
-          >
-            {{ arg }} (extra)
-          </v-chip>
-
-          <span v-if="hiddenParameter(arg)"
-            class="ex-expression ex-parenthesis">
-            <v-btn text @click="toggleParameter(arg)">
-              show
-            </v-btn>
-          </span>
-
-          <ex-expression
-            v-else
-            v-bind="$props"
-            class="ex-parenthesis"
-            :value="argExpr"
-            :required-type="null"
-            @input="setParam(arg, $event)"
-            @remove="removeParam(arg)"
-          ></ex-expression>
-
-        </span>
+        <ex-func-argument
+          v-if="isExtraArgument(arg)"
+          :key="arg"
+          :registry="registry"
+          :func="func"
+          :arg="param"
+          :args="value.args"
+          :expression-props="$props"
+          @update="update"
+        ></ex-func-argument>
       </template>
     </span>
   </span>
@@ -169,16 +131,6 @@ export default ExpressionBase<MethodExpression>().extend({
 </script>
 
 <style lang="less" scoped>
-.param-span {
-  display: inline-block;
-  position: relative;
-
-  > .param-label {
-    position: absolute;
-    top: -15px;
-  }
-}
-
 .function-args {
   flex: 0 1 200px;
   min-width: fit-content;

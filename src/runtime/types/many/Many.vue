@@ -92,7 +92,7 @@ export default TypeInputBase<ManyType, ManyOptions, any, ManySubs>().extend({
         }
       }
 
-      return this.registry.getTypeVisuals(innerType).name;
+      return this.registry.getTypeName(innerType);
     },
     async changeType(innerType: Type) {
       if (!await getConfirmation({ pref: PREF_MANY_CHANGE })) {

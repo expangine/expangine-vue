@@ -80,7 +80,7 @@ export default Vue.extend({
       return this.subs.length > 0;
     },
     valueTypeName(): string {
-      return this.registry.getTypeVisuals(this.node.valueType).name(this.node.valueType);
+      return this.registry.getTypeName(this.node.valueType);
     },
   },
   watch: {
