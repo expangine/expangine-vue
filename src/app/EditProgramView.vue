@@ -48,7 +48,7 @@
           <v-btn right absolute rounded color="primary" class="mt-3" @click="addDataset">
             <v-icon>mdi-plus</v-icon> Add Alternative Input
           </v-btn>
-          <div class="pt-3"></div>
+          <div class="py-4"></div>
         </div>
         <div v-else>
           <v-tabs color="primary" show-arrows v-model="dataIndex">
