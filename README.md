@@ -1,6 +1,8 @@
 # expangine-vue
 A Vue & Vuetify component library for expangine, a visual development framework. 
 
+Checkout this [presentation](https://docs.google.com/presentation/d/1SLr6ut7sEPF06EMCo7ao1mspdm4VgGrYQ7FL-AxGgPk/edit?usp=sharing).
+
 You can test out the sandbox [here](http://expangine.com/vue/), where you can define the structure of your program input, populate the input, and develop the program. 
 
 Features of this example:
