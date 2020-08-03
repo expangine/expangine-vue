@@ -11,6 +11,7 @@
       <v-card-text>
         <v-text-field
           outlined
+          :error="error"
           :label="label"
           v-focus-on-visible="[visible, 'input']"
           v-model="value"
@@ -19,6 +20,7 @@
       <v-card-actions>
         <v-btn 
           color="primary"
+          :disabled="error"
           v-html="confirm" 
           @click="handle(true)"
         ></v-btn>
@@ -40,5 +42,10 @@ import { inputDialog } from './Input';
 
 export default Vue.extend({
   data: () => inputDialog,
+  computed: {
+    error(): boolean {
+      return this.matches && !this.matches.test(this.value);
+    },
+  },
 });
 </script>

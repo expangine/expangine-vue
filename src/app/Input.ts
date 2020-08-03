@@ -11,6 +11,7 @@ export interface InputOptions
   confirm: string;
   unconfirm: string;
   visible: boolean;
+  matches: RegExp | false;
   handle: (confirmed: boolean) => void;
 }
 
@@ -23,6 +24,7 @@ export function getInputDefaults(): InputOptions {
     confirm: 'Ok',
     unconfirm: 'Cancel',
     visible: false,
+    matches: false,
     handle: () => { /* */ },
   };
 }

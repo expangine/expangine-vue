@@ -82,6 +82,10 @@ export default Vue.extend({
       type: Object,
       default: () => ({}),
     },
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     computedType(): Type | null {
@@ -107,7 +111,7 @@ export default Vue.extend({
       return this.canExportJson || this.canExportJs || this.canExportCsv || this.canExportData;
     },
     canExportData(): boolean {
-      return !!this.computedType;
+      return !!this.computedType && !this.readOnly;
     },
     canExportJson(): boolean {
       return !!this.computedType;
