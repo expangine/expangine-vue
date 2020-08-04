@@ -2,12 +2,12 @@
 import { EntityType, ObjectType, DataTypes, objectValues } from 'expangine-runtime';
 import { createVisuals } from '@/runtime/types/TypeVisuals';
 import { EntityInput } from './EntityTypes';
+import { EntityAutocompleteInput } from './EntityAutocompleteTypes';
 import { TypeModifier } from '../TypeModifier';
 import { TypeBuilder } from '../TypeBuilder';
 import { getEditEntity } from '@/app/EditEntity';
 import { getSimpleInput } from '@/app/SimpleInput';
 import EntityEditor from './EntityEditor.vue';
-
 
 
 export const EntityVisuals = createVisuals()({
@@ -40,9 +40,10 @@ export const EntityVisuals = createVisuals()({
   }),
   editor: EntityEditor,
   defaultInput: 'aliased',
-  inputsOrder: ['aliased'],
+  inputsOrder: ['aliased', 'autocomplete'],
   inputs: { 
     aliased: EntityInput,
+    autocomplete: EntityAutocompleteInput,
   },
 });
 

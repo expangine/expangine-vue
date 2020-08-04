@@ -273,7 +273,7 @@
 
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       
       <v-tabs dark show-arrows v-model="currentTab">
         <v-tabs-slider></v-tabs-slider>
@@ -472,7 +472,7 @@
         </v-list>  
       </v-navigation-drawer>
 
-    </v-content>
+    </v-main>
   </div>
 </template>
 
@@ -494,6 +494,7 @@ import { ShortcutContext, Shortcuts } from './app/Shortcuts';
 import { ExplorerTab } from './app/explorer/ExplorerTypes';
 import { addEntity } from './app/EntityBuilders';
 import { getInput } from './app/Input';
+import { clearEntity } from './app/EntityBuilders';
 import Registry from './runtime';
 
 
@@ -909,6 +910,8 @@ export default Vue.extend({
       {
         this.registry.defs.clearEntities();
         this.registry.defs.clearRelations();
+
+        clearEntity(this.registry);
       }
     },
     async exportJson() 
@@ -1015,7 +1018,7 @@ export default Vue.extend({
     }
   }
 
-  > .v-content {
+  > .v-main {
     height: 100%;
   }
 }

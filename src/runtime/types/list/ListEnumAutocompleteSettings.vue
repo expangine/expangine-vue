@@ -28,7 +28,7 @@ const fields: SimpleFieldSettings<ListEnumAutocompleteOptions> = [
   { name: 'color', type: 'color', label: 'Color' },
   { name: 'itemColor', type: 'color', label: 'Item Color' },
   { name: 'singleLine', type: 'boolean', label: 'Single Line', defaultValue: false },
-  { name: 'clearable', type: 'boolean', label: 'Clearable', defaultValue: false },
+  { name: 'clearable', type: 'boolean', label: 'Clearable', defaultValue: false }, 
   { name: 'chips', type: 'boolean', label: 'Chips', defaultValue: false },
   { name: 'smallChips', type: 'boolean', label: 'Small Chips', defaultValue: false },
   { name: 'deletableChips', type: 'boolean', label: 'Deletable Chips', defaultValue: false },

@@ -88,6 +88,7 @@ import { Preferences, PreferenceCategory } from '../Preference';
 import { getNamedMapExport } from '../ProjectExport';
 import { getNamedImport } from '../ProjectImport';
 import { ExplorerSorter } from './ExplorerSorter';
+import { addEntity, clearEntity } from '../EntityBuilders';
 
 
 const PREF_CLEAR_TYPES = Preferences.define({
@@ -129,7 +130,7 @@ export default Vue.extend({
   },
   methods: {
     async add(opener: () => void) {
-      const { registry: { defs } } = this;
+      const { registry, registry: { defs } } = this;
       const name = await getInput({ title: 'Type Name'});
 
       if (!name || defs.getEntity(name)) {
@@ -137,15 +138,19 @@ export default Vue.extend({
       }
       defs.addEntity({ name });
 
+      addEntity(registry, name);
+
       opener();
 
       this.autoOpen = name;
     },
     async clear() {
-      const { registry: { defs } } = this;
+      const { registry, registry: { defs } } = this;
 
       if (await getConfirmation({ pref: PREF_CLEAR_TYPES })) {
         defs.clearEntities();
+
+        clearEntity(registry);
       }
     },
     async toJson() {

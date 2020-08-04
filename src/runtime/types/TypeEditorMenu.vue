@@ -215,7 +215,6 @@
 <script lang="ts">
 import { Type } from 'expangine-runtime';
 import { ListOptions } from '../../common';
-import { TypeVisuals } from './TypeVisuals';
 import { TypeModifyOption, TypeModifyHandler } from './TypeModifier';
 import TypeEditorBase from './TypeEditorBase';
 

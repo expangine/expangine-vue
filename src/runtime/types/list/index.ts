@@ -8,6 +8,7 @@ import { ListComboInput } from './ListComboTypes';
 import { ListEnumSelectInput } from './ListEnumSelectTypes';
 import { ListEnumAutocompleteInput } from './ListEnumAutocompleteTypes';
 import { ListEnumCheckboxInput } from './ListEnumCheckboxTypes';
+import { ListEntityAutocompleteInput } from './ListEntityAutocompleteTypes';
 import { ListObjectTableInput } from './ListObjectTableTypes';
 import ListEditor from './ListEditor.vue';
 import ListOptions from './ListOptions.vue';
@@ -154,7 +155,7 @@ export const ListVisuals = createVisuals<ListSubs>()({
   editor: ListEditor,
   options: ListOptions,
   defaultInput: 'list',
-  inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox', 'table'],
+  inputsOrder: ['list', 'combo', 'select', 'autocomplete', 'checkbox', 'table', 'entity'],
   inputs: {
     list: ListListInput,
     combo: ListComboInput,
@@ -162,6 +163,7 @@ export const ListVisuals = createVisuals<ListSubs>()({
     autocomplete: ListEnumAutocompleteInput,
     checkbox: ListEnumCheckboxInput,
     table: ListObjectTableInput,
+    entity: ListEntityAutocompleteInput,
   },
 });
 

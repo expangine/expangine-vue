@@ -13,7 +13,6 @@
 <script lang="ts">
 import { EnumType } from 'expangine-runtime';
 import { EnumAutocompleteOptions } from './EnumAutocompleteTypes';
-import { TypeSettings } from '../TypeVisuals';
 import { EnumSubs } from './EnumTypes';
 import { ListOptions } from '../../../common';
 import TypeInputBase from '../TypeInputBase';

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { EntityType, ObjectType, Entity } from 'expangine-runtime';
+import { EntityType, Entity } from 'expangine-runtime';
 import { EntityOptions } from './EntityTypes';
 import TypeInputBase from '../TypeInputBase';
 import { TypeSettings } from '../TypeVisuals';
