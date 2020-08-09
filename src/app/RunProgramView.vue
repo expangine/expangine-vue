@@ -1,8 +1,9 @@
 <template>
   <div>
-    <v-tabs class="ex-accent-bar">
+    <v-tabs class="ex-accent-bar" v-model="tab">
       <v-tab>Output</v-tab>
-      <v-tab>Output (json)</v-tab>
+      <v-tab>JSON</v-tab>
+      <v-tab>UI</v-tab>
       <v-tab v-if="showData">Data After Execution</v-tab>
       <v-tab v-if="showData">Data Before Execution</v-tab>
       <v-tab v-if="showData">Data Changes</v-tab>
@@ -21,6 +22,16 @@
         <div class="ex-code-container">
           <pre class="ex-code" v-html="rawString"></pre>
         </div>
+      </v-tab-item>
+      <v-tab-item>
+        <ex-type-input
+          v-if="isOutputInterface"
+          read-only
+          :value="result"
+          :type="resultType"
+          :registry="registry"
+          :settings="resultSettings"
+        ></ex-type-input>
       </v-tab-item>
       <v-tab-item v-if="showData">
         <ex-data-string-box
@@ -56,6 +67,7 @@ import { Type, AnyType, Program } from 'expangine-runtime';
 import { Registry } from '../runtime/Registry';
 import { LiveRuntime } from 'expangine-runtime-live';
 import { measure } from './StopWatch';
+import { TypeSettings } from '../runtime/types/TypeVisuals';
 
 
 interface Part { value: string; added: boolean; removed: boolean; }
@@ -78,6 +90,7 @@ export default Vue.extend({
     dataAfterString: '',
     result: null,
     elapsedTime: '',
+    tab: null,
   }),
   computed: {
     resultType(): Type {
@@ -86,6 +99,9 @@ export default Vue.extend({
         described.removeDescribedRestrictions();
       }
       return described || AnyType.baseType;
+    },
+    resultSettings(): TypeSettings {
+      return this.registry.getTypeSettings(this.resultType);
     },
     rawString(): string {
       return JSON.stringify(this.resultType.toJson(this.result), undefined, 2);
@@ -98,6 +114,9 @@ export default Vue.extend({
         .map((part: Part) => `<span class="${getColor(part)}">${part.value}</span>`)
         .join('')
       ;
+    },
+    isOutputInterface(): boolean {
+      return this.tab === 2;
     },
   },
   watch: {

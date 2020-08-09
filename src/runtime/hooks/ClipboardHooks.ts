@@ -37,11 +37,12 @@ export const PasteBuilder: TypeBuilder =
     }
 
     const visuals = copyRegistry.getTypeVisuals(copyType);
+    const name = visuals.name(copyType);
     const inputs = visuals.inputs[copySettings.input];
     const summary = inputs.getSummary(copySettings.options);
 
     return {
-      text: `Paste ${visuals.name}`,
+      text: `Paste ${name}`,
       description: summary,
       priority: 15,
       value: async () => (copyType && copySettings 
