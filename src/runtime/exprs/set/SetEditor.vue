@@ -11,10 +11,10 @@
 
     <ex-path-editor
       v-bind="$props"
-      v-on="$listeners"
       class="mx-3 ex-expression ex-parenthesis"
       :value="value.path"
       @input="setPath"
+      @remove="clearPath"
       @settings="setValueSettings"
     ></ex-path-editor>
 
@@ -70,6 +70,10 @@ export default ExpressionBase<SetExpression>().extend({
     },
     setPath(path: PathExpression) {
       this.value.path = path;
+      this.update();
+    },
+    clearPath() {
+      this.value.path.expressions = [NoExpression.instance];
       this.update();
     },
   },

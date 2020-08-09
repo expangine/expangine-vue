@@ -1,5 +1,5 @@
 <template>
-  <div class="ex-center-aligned pl-3">
+  <div class="ex-center-aligned">
 
     <ex-expression-menu
       v-bind="$props"
@@ -11,10 +11,10 @@
 
     <ex-path-editor
       v-bind="$props"
-      v-on="$listeners"
       class="mx-3 ex-expression ex-parenthesis"
       :value="value.path"
       @input="setPath"
+      @remove="clearPath"
     ></ex-path-editor>
 
     <ex-chip-menu
@@ -62,6 +62,10 @@ export default ExpressionBase<UpdateExpression>().extend({
     },
     setValue(value: Expression) {
       this.value.value = value;
+      this.update();
+    },
+    clearPath() {
+      this.value.path.expressions = [NoExpression.instance];
       this.update();
     },
     setPath(path: PathExpression) {
