@@ -312,9 +312,29 @@
       </v-tabs-items>
 
       <div v-else>
-        <v-icon size="100" color="grey lighten-1">mdi-arrow-left-bold</v-icon>
-        You don't have anything open. Do it already.
 
+        <v-alert
+          prominent
+          colored-border
+          border="left"
+          color="primary"
+          elevation="2"
+          icon="mdi-arrow-left-bold"
+          class="ma-4"
+        >
+          <v-row align="center">
+            <v-col class="grow">
+              You don't have anything open. Try an example or create something.
+            </v-col>
+            <v-col class="shrink">
+              <v-btn large dark color="primary" href="https://youtu.be/c_E06eNWg70" target="_blank">
+                Intro Video
+                <v-icon right>mdi-open-in-new</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-alert>
+      
         <v-list class="ma-4">
           <v-list-item>
             <v-list-item-icon>

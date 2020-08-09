@@ -1,12 +1,13 @@
 <template>
   <span class="ex-center-aligned">
     <ex-expression-menu
+      v-if="hasValue"
       v-bind="$props"
       v-on="$listeners"
+      class="mr-1"
       :invalid-override="invalid"
       :tooltip="menuTooltip"
       :text="menuText"
-      class="mr-1"
       :style="firstHighlightStyle"
     ></ex-expression-menu>
     <path-segment
@@ -16,7 +17,7 @@
       :sub-settings="settings"
       :allow-computed="allowComputed"
       :allow-methods="allowMethods"
-      @input="input"
+      @input="update"
       @remove="remove"
       @settings="onSettings"
     ></path-segment>
@@ -24,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Expression, PathExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB } from 'expangine-runtime';
+import { Expression, PathExpression, ColorType, ColorSpaceHSL, ColorSpaceRGB, NoExpression } from 'expangine-runtime';
 import { TypeSettings } from '../../types/TypeVisuals';
 import ExpressionBase from '../ExpressionBase';
 import PathSegment from './PathSegment.vue';
@@ -80,8 +81,11 @@ export default ExpressionBase<PathExpression>().extend({
 
       return formatted;
     },
+    hasValue(): boolean {
+      return !!this.first && this.first !== NoExpression.instance;
+    },
     isSub(): boolean {
-      return !this.first.isPathStart();
+      return !!this.first && !this.first.isPathStart();
     },
     menuText(): string {
       return this.isSub ? 'Sub' : this.registry.getExpressionMenu(this.first);

@@ -9,7 +9,7 @@ export const SetVisuals: ExpressionVisuals<SetExpression> =
 {
   expr: SetExpression,
   menu: 'Set',
-  create: () => new SetExpression(new PathExpression([]), NoExpression.instance),
+  create: () => new SetExpression(new PathExpression([NoExpression.instance]), NoExpression.instance),
   name: 'Set',
   description: 'Set a data value',
   describe: ({ registry, expr }) => 'Set ' + expr.path.expressions.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' = ' + registry.getExpressionDescribe(expr.value),

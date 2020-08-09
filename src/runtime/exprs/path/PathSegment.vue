@@ -221,7 +221,12 @@ export default ExpressionBase<PathExpression>().extend({
       this.$emit('settings', settings);
     },
     updateSegment(segment: Expression) {
-      this.$set(this.value.expressions, this.index, segment);
+      if (segment instanceof PathExpression) {
+        this.value.expressions.splice(this.index, 1, ...segment.expressions);
+      } else {
+        this.$set(this.value.expressions, this.index, segment);
+      }
+      
       this.update();
     },
     changeSegment(sub: TypeSubOption) {

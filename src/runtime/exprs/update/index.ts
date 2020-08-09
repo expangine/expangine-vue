@@ -9,7 +9,7 @@ export const UpdateVisuals: ExpressionVisuals<UpdateExpression> =
 {
   expr: UpdateExpression,
   menu: 'Update',
-  create: () => new UpdateExpression(new PathExpression([]), NoExpression.instance),
+  create: () => new UpdateExpression(new PathExpression([NoExpression.instance]), NoExpression.instance),
   name: 'Update',
   description: 'Set a value based on the current value',
   describe: ({ registry, expr }) => 'Update ' + expr.path.expressions.map((segment) => registry.getExpressionDescribe(segment)).join('->') + ' = ' + registry.getExpressionDescribe(expr.value),
