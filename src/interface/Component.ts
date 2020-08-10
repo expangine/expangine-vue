@@ -1,4 +1,5 @@
-import { Type, Expression, Types } from "expangine-runtime";
+import { Type, Expression, Types, ObjectType } from 'expangine-runtime';
+
 
 interface ComponentValue<C, E, V extends keyof C> {
     type: Type;
@@ -8,19 +9,18 @@ interface ComponentValue<C, E, V extends keyof C> {
     update?: (value: C[V], instance: ComponentInstance<C, E>, e: HTMLElement) => void;
 }
 
-interface ComponentInstance<C, E> {
-    component: Component<C, E>;
+interface ComponentInstance<C, E, S extends string> {
+    component: Component<C, E, S>;
     cache: Record<string, any>;
     get<V extends keyof C>(value: V, defaultValue?: C[V]): C[V];
-    get<V extends C>(value: C): C;
-    update(): void;
-    rerender(): void;
     trigger<P extends keyof E>(eventName: P, payload: E[P]): void;
+    update(): void;
+    render(): void;
 }
 
 type ComponentTemplateTag = string | Expression;
-type ComponentTemplateValues = Record<string, any>;
-type ComponentTemplateEvents = Record<string, (payload: any) => any>;
+type ComponentTemplateValues = Record<string, Expression | any>; // when value is Expression, that expression is watched
+type ComponentTemplateEvents = Record<string, Expression | ((payload: any) => any)>;
 type ComponentTemplateSlots = Record<string, string | ComponentTemplate | Array<string | ComponentTemplate>>;
 
 type ComponentTemplate = [
@@ -30,24 +30,31 @@ type ComponentTemplate = [
     ComponentTemplateSlots?
 ];
 
-interface Component<C, E = never, S extends string = never> {
-    name: string;
-    collection: string;
-    values: { [V in keyof C]: ComponentValue<C, E, V> | Type };
-    events: [E] extends [never] ? never : { [P in keyof E]: Type };
-    slots: [S] extends [never] ? never: { [L in S]: Type }
-    render: (instance: ComponentInstance<C, E>) => ComponentTemplate;
-    created?: (instance: ComponentInstance<C, E>, e: HTMLElement) => void;
-    updated?: (instance: ComponentInstance<C, E>, e: HTMLElement) => void;
-    destroyed?: (instance: ComponentInstance<C, E>, e: HTMLElement) => void;
+interface ComponentBase<C, E = never, S extends string = never> {
+  ref?: string;
+  name: string;
+  collection: string;
+  render: (instance: ComponentInstance<C, E, S>) => ComponentTemplate;
+  created?: (instance: ComponentInstance<C, E, S>, e: HTMLElement) => void;
+  updated?: (instance: ComponentInstance<C, E,S>, e: HTMLElement) => void;
+  destroyed?: (instance: ComponentInstance<C, E, S>, e: HTMLElement) => void;
 }
 
-interface ComponentVisuals<C> {
+type Component<C = never, E = never, S extends string = never> = 
+  ComponentBase<C, E, S> & 
+  ( [C] extends [never] ? {} : { attributes: { [V in keyof C]: ComponentValue<C, E, V> | Type } } ) & 
+  ( [E] extends [never] ? {} : { events: { [P in keyof E]: Type } } ) & 
+  ( [S] extends [never] ? {} : { slots: { [L in S]: ObjectType /* scope added to context */ } } );
+
+
+interface ComponentVisuals<C = never, E = never, S extends string = never> {
     collection: string;
+    category: string;
     name: string;
     description: string;
-    category: string;
-    values: { [V in keyof C]: string },
+    attributes: { [V in keyof C]: string };
+    events: { [V in keyof E]: string };
+    slots: { [P in S]: string };
 }
 
 interface ComponentCollection {
@@ -68,13 +75,13 @@ export const HtmlInput: Component<{
 }> = {
     name: 'input',
     collection: 'html',
-    values: {
+    attributes: {
         type: Types.enumForText(['text', 'password', 'number', 'date']),
         value: Types.text(),
     },
     render: (i) => ['input', {
         type: i.get('type'),
-        value: i.get('value')
+        value: i.get('value'),
     }],
 };
 
@@ -85,11 +92,11 @@ export const PieChart: Component<{
     value: string,
     data: Array<{label: string, value: number, color?: string, offset?: number}>,
 }, { 
-    updated: null 
+    updated: null,
 }> = {
     name: 'pie',
     collection: 'googlecharts',
-    values: {
+    attributes: {
         title: Types.text(),
         label: Types.text(),
         value: Types.text(),
@@ -109,18 +116,18 @@ export const PieChart: Component<{
     },
     updated: (i, e) => {
         const chart = i.cache.chart || new google.visualization.PieChart(e);
-        const { data, label, value, title } = i.get({ data: [], label: '', value: '', title: ''});
-        const chartData = ([[label, value]] as Array<[string, any]>).concat(data.map(p => [p.label, p.value]))
+        const [data, label, value, title] = [i.get('data'), i.get('label'), i.get('value'), i.get('title')];
+        const chartData = ([[label, value]] as Array<[string, any]>).concat(data.map((p) => [p.label, p.value]));
 
         const options = {
-            title: title,
+            title,
             slices: {} as any,
         };
 
         data.forEach((point, pointIndex) => {
             options.slices[pointIndex] = {
                 offset: point.offset,
-                color: point.color
+                color: point.color,
             };
         });
 
@@ -131,7 +138,7 @@ export const PieChart: Component<{
 
         i.trigger('updated', null);
     },
-}
+};
 
 /**
  * 
@@ -139,5 +146,32 @@ export const PieChart: Component<{
  *      { title: 'Hello World', data: [], value: 'Tasks', label: 'Person' }, 
  *      { updated: () => {} },
  * ]
+ * 
+ * special
+ * 
+ * [':for', { items: Expression, item: string, index: string, key: Expression }, { },
+ *  [...childTemplate]
+ * ]
+ * [':if, { condition: Expression }, {}, 
+ *  [...children]
+ * ]
+ * [':show, { condition: Expression }, {}, 
+ *  [...children]
+ * ]
+ * [':hide, { condition: Expression }, {}, 
+ *  [...children]
+ * ]
+ * 
+ * context in components
+ * { 
+ *   page: Type (defined for interface),
+ *   refs: {
+ *     [ref]: ComponentType
+ *   },
+ *   this: ComponentType (for current component)
+ *   item & index if in :for
+ * }
+ * 
+ * ComponentType = object with attribute and local component state
  * 
  */
