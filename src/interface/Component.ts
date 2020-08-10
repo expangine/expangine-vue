@@ -1,19 +1,20 @@
-import { Type, Expression, Types, ObjectType } from 'expangine-runtime';
+import { Type, Expression, Types, ObjectType, isArray, isObject, DefinitionProvider, isFunction, Runtime, isString } from 'expangine-runtime';
+import { LiveContext, LiveRuntimeImpl } from 'expangine-runtime-live';
 
 
-interface ComponentValue<C, E, V extends keyof C> {
+interface ComponentValue<A, E, S extends string, V extends keyof A> {
     type: Type;
     default?: Expression;
-    changed?: (value: C[V], instance: ComponentInstance<C, E>, e: HTMLElement) => void;
-    initial?: (value: C[V], instance: ComponentInstance<C, E>, e: HTMLElement) => void;
-    update?: (value: C[V], instance: ComponentInstance<C, E>, e: HTMLElement) => void;
+    changed?: (value: A[V], instance: ComponentInstance<A, E, S>, e: HTMLElement) => void;
+    initial?: (value: A[V], instance: ComponentInstance<A, E, S>, e: HTMLElement) => void;
+    update?: (value: A[V], instance: ComponentInstance<A, E, S>, e: HTMLElement) => void;
 }
 
-interface ComponentInstance<C, E, S extends string> {
-    component: Component<C, E, S>;
+interface ComponentInstance<A, E, S extends string> {
+    component: Component<A, E, S>;
     cache: Record<string, any>;
-    get<V extends keyof C>(value: V, defaultValue?: C[V]): C[V];
-    trigger<P extends keyof E>(eventName: P, payload: E[P]): void;
+    get<V extends keyof A>(value: V, defaultValue?: A[V]): A[V];
+    trigger<K extends keyof E>(eventName: K, payload: E[K]): void;
     update(): void;
     render(): void;
 }
@@ -21,7 +22,7 @@ interface ComponentInstance<C, E, S extends string> {
 type ComponentTemplateTag = string | Expression;
 type ComponentTemplateValues = Record<string, Expression | any>; // when value is Expression, that expression is watched
 type ComponentTemplateEvents = Record<string, Expression | ((payload: any) => any)>;
-type ComponentTemplateSlots = Record<string, string | ComponentTemplate | Array<string | ComponentTemplate>>;
+type ComponentTemplateSlots = Record<string, Array<string | ComponentTemplate>>;
 
 type ComponentTemplate = [
     ComponentTemplateTag,
@@ -30,30 +31,31 @@ type ComponentTemplate = [
     ComponentTemplateSlots?
 ];
 
-interface ComponentBase<C, E = never, S extends string = never> {
+interface ComponentBase<A, E = never, S extends string = never> {
   ref?: string;
   name: string;
   collection: string;
-  render: (instance: ComponentInstance<C, E, S>) => ComponentTemplate;
-  created?: (instance: ComponentInstance<C, E, S>, e: HTMLElement) => void;
-  updated?: (instance: ComponentInstance<C, E,S>, e: HTMLElement) => void;
-  destroyed?: (instance: ComponentInstance<C, E, S>, e: HTMLElement) => void;
+  state?: ObjectType;
+  render: (instance: ComponentInstance<A, E, S>) => ComponentTemplate;
+  created?: (instance: ComponentInstance<A, E, S>, e: HTMLElement) => void;
+  updated?: (instance: ComponentInstance<A, E,S>, e: HTMLElement) => void;
+  destroyed?: (instance: ComponentInstance<A, E, S>, e: HTMLElement) => void;
 }
 
-type Component<C = never, E = never, S extends string = never> = 
-  ComponentBase<C, E, S> & 
-  ( [C] extends [never] ? {} : { attributes: { [V in keyof C]: ComponentValue<C, E, V> | Type } } ) & 
-  ( [E] extends [never] ? {} : { events: { [P in keyof E]: Type } } ) & 
+type Component<A = never, E = never, S extends string = never> = 
+  ComponentBase<A, E, S> & 
+  ( [A] extends [never] ? {} : { attributes: { [V in keyof A]: ComponentValue<A, E, S, V> | Type } } ) & 
+  ( [E] extends [never] ? {} : { events: { [K in keyof E]: Type } } ) & 
   ( [S] extends [never] ? {} : { slots: { [L in S]: ObjectType /* scope added to context */ } } );
 
 
-interface ComponentVisuals<C = never, E = never, S extends string = never> {
+interface ComponentVisuals<A = never, E = never, S extends string = never> {
     collection: string;
     category: string;
     name: string;
     description: string;
-    attributes: { [V in keyof C]: string };
-    events: { [V in keyof E]: string };
+    attributes: { [K in keyof A]: string };
+    events: { [K in keyof E]: string };
     slots: { [P in S]: string };
 }
 
@@ -161,6 +163,10 @@ export const PieChart: Component<{
  * [':hide, { condition: Expression }, {}, 
  *  [...children]
  * ]
+ * [':slot, { name: string }, {}, 
+ *  [...defaultValue]
+ * ]
+ * 
  * 
  * context in components
  * { 
@@ -172,6 +178,86 @@ export const PieChart: Component<{
  *   item & index if in :for
  * }
  * 
+ * 
  * ComponentType = object with attribute and local component state
  * 
+ * 
+ * Solve
+ * - how will user-defined components trigger an event?
+ * 
+ * 
  */
+
+const components: Record<string, Component> = {};
+
+interface ComponentScope {
+    parent?: ComponentScope;
+    watch(expr: Expression, listener: (value: any) => void): void;
+    child(): ComponentScope;
+    context: LiveContext;
+}
+
+type ComponentCompiler = (template: ComponentTemplate, scope: ComponentScope, defs: DefinitionProvider, run: Runtime) => HTMLElement;
+
+
+function getCompiler(template: ComponentTemplate): ComponentCompiler {
+    return CompileDom;
+} 
+
+const CompileDom: ComponentCompiler = (template, parentScope, defs, run) => {
+    const [tag, attrs, events, children] = template;
+    const e = document.createElement(tag as any) as HTMLElement;
+    const scope = parentScope.child();
+
+    if (isObject(attrs)) {
+        for (const attr in attrs) {
+            const attrValue = attrs[attr];
+
+            if (isArray(attrValue)) {
+                const expr = defs.getExpression(attrValue);
+
+                scope.watch(expr, (v) => {
+                    (e as any)[attr] = v;
+                });
+            } else {
+                (e as any)[attr] = attrValue;
+            }
+        }
+    }
+
+    if (isObject(events)) {
+        for (const ev in events) {
+            const eventValue = events[ev];
+
+            if (isFunction(eventValue)) {
+                e.addEventListener(ev, eventValue);
+            }
+            else if (isArray(eventValue)) { 
+                const expr = defs.getExpression(eventValue);
+
+                e.addEventListener(ev, (nativeEvent) => {
+                    run.run(expr, scope.context);
+                });
+            }
+        }
+    }
+
+    if (children && children.default) {
+        const child = children.default;
+        const childs = isArray(child) ? child : [child];
+
+        for (const childTemplate of childs) { 
+            if (isString(childTemplate)) {
+                e.append(childTemplate);
+            } else {
+                const childElement = getCompiler(childTemplate)(childTemplate, scope, defs, run);
+                // when element changes because tag is dynamic, update child
+                e.appendChild(childElement);
+
+            }
+            
+        }
+    }
+
+    return e;
+};
