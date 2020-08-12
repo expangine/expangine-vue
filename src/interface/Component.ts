@@ -1,5 +1,5 @@
 import { Type, Expression, Types, ObjectType, isArray, isObject, DefinitionProvider, isFunction, Runtime, isString } from 'expangine-runtime';
-import { LiveContext, LiveRuntimeImpl } from 'expangine-runtime-live';
+import { LiveContext, LiveRuntimeImpl, LiveRuntime } from 'expangine-runtime-live';
 import { runProgramDialog } from '@/app/RunProgram';
 
 
@@ -53,7 +53,60 @@ interface ComponentInstance<A, E, S extends string> {
 }
 
 function newComponentInstance(component: Component<any, any, any>, slots?: NodeTemplateNamedSlots, parent?: ComponentInstance<any, any, any>): ComponentInstance<any, any, any> {
-    return null as unknown as ComponentInstance<any, any, any>;
+
+    const listeners: Record<string, Array<(payload: any) => any>> = Object.create(null);
+
+    const instance: ComponentInstance<any, any, any> = {
+        component,
+        cache: {},
+        context: {},
+        parent,
+        slots,
+        get: (attr: any, defaultValue?: any): any => {
+            return instance.context[attr];
+        },
+        set: (attr: any, value: any): void => {
+            instance.context[attr] = value;
+        },
+        trigger: (eventName: any, payload: any): void => {
+            if (eventName in listeners) {
+                listeners[eventName].forEach(l => l(payload));
+            }
+        },
+        on: (eventName: any, listener: (payload: any) => any): Off => {
+            if (!(eventName in listeners)){ 
+                listeners[eventName] = [];
+            }
+            listeners[eventName].push(listener);
+
+            return () => {
+                const i = listeners[eventName].indexOf(listener);
+                if (i !== -1) {
+                    listeners[eventName].splice(i, 1);
+                }
+            };
+        },
+        watch: (expr: any, onValue: (value: any) => void): Off => {
+            const cmd = LiveRuntime.eval(expr);
+
+            onValue(cmd(instance.context));
+
+            return () => {};
+        },
+        eval: (expr: any): ((extra?: any) => any) => {
+            const cmd = LiveRuntime.eval(expr);
+
+            return (extra) => cmd(extra ? { ...instance.context, ...extra} : instance.context);
+        },
+        update: (): void => {
+
+        },
+        render: (): void => {
+
+        },
+    };
+
+    return instance;
 }
 
 type Off = () => void;
@@ -91,6 +144,15 @@ type Component<A = never, E = never, S extends string = never> =
   IfNever<S, {}, { slots: { [L in S]: ObjectType } }>
 ;
 
+
+export const RootComponent: Component<any, any, any> =  {
+    collection: 'expangine',
+    name: 'root',
+    attributes: {},
+    events: {},
+    slots: {},
+    render: () => [':slot', {}, {}, []]
+};
 
 // example implementations
 
@@ -267,13 +329,18 @@ function compile(template: NodeTemplate, component: ComponentInstance<any, any, 
     return getCompiler(template)(template, component, parent, scope);
 }
 
-function mount(template: NodeTemplate, replace: Node): NodeInstance
+function mount(page: any, template: NodeTemplate, replace: Node): ComponentInstance<any, any, any>
 {
-    const compiled = compile(template, null as any as ComponentInstance<any, any, any>);
+    const rootScope = objectToScope({ page, refs: {} });
+
+    const instance = newComponentInstance(RootComponent, { default: template });
+    const compiled = compile(template, instance, undefined, rootScope);
 
     replace.parentElement?.replaceChild(compiled.element, replace);
 
-    return compiled;
+    instance.node = compiled;
+
+    return instance;
 }
 
 function isStyleElement(x: any): x is HTMLElement 
@@ -413,8 +480,6 @@ compilers[COMPILER_DEFAULT] = (template, component, parent) =>
     return instance;
 };
 
-// todo: to cache or not to cache
-// condition
 compilers[DIRECTIVE_IF] = (template, component, parent) => 
 {
     const [, attrs, , childSlots] = template;
@@ -462,7 +527,6 @@ compilers[DIRECTIVE_IF] = (template, component, parent) =>
     return instance;
 };
 
-// condition
 compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, parent) => 
 {
     const [tag, attrs, , childSlots] = template;
@@ -522,15 +586,19 @@ compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, pa
     return instance;
 };
 
-// 
 compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) => 
 {
     const [id, attrs, events, childSlots] = template;
     const componentBase = components[id as string];
     const component = newComponentInstance(componentBase, isNamedSlots(childSlots) ? childSlots : undefined, parentComponent);
     const rendered = componentBase.render(component);
-    const localScope = objectToScope({});
+    const localScope = childScope(parent, { this: component });
     const instance = compile(rendered, component, parent, localScope);
+
+    if (scope && scope.refs && componentBase.ref)
+    {
+        scope.refs[componentBase.ref] = component;
+    }
 
     component.node = instance;
 
@@ -624,7 +692,6 @@ compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) =>
     return instance;
 };
 
-// name, scope
 compilers[DIRECTIVE_SLOT] = (template, component, parent, scope) => 
 {
     const [, attrs, , childSlots] = template;
@@ -655,7 +722,6 @@ compilers[DIRECTIVE_SLOT] = (template, component, parent, scope) =>
     return instance;
 };
 
-// items: Expression, item: string, index: string, key: Expression
 compilers[DIRECTIVE_FOR] = (template, component, parent, scope) => 
 {
     const [, attrs, , childSlots] = template;
@@ -725,21 +791,3 @@ compilers[DIRECTIVE_FOR] = (template, component, parent, scope) =>
 
     return instance;
 };
-
-
-/**
- * object to scope
- * 
- * function scope() {}
- * return Object.assign(new scope(), object);
- * 
- * create child scope from parent & object
- * 
- * function child() {}
- * child.prototype = parent;
- * return Object.assign(new child(), object);
- * 
- * 
- * 
- *
- */
