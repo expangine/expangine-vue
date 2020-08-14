@@ -1,12 +1,11 @@
-import { Type, Expression, Types, ObjectType, isArray, isObject, DefinitionProvider, isFunction, Runtime, isString } from 'expangine-runtime';
-import { LiveContext, LiveRuntimeImpl, LiveRuntime } from 'expangine-runtime-live';
-import { runProgramDialog } from '@/app/RunProgram';
+import { Type, Expression, Types, ObjectType, isArray, isObject, isFunction, isString } from 'expangine-runtime';
+import { LiveContext, LiveRuntime } from 'expangine-runtime-live';
 
 
 
 // expangine-vue
 
-interface ComponentVisuals<A = never, E = never, S extends string = never> {
+export interface ComponentVisuals<A = never, E = never, S extends string = never> {
     collection: string;
     category: string;
     name: string;
@@ -16,7 +15,7 @@ interface ComponentVisuals<A = never, E = never, S extends string = never> {
     slots: { [P in S]: { description: string, scope: Record<string, string> } };
 }
 
-interface ComponentCollection {
+export interface ComponentCollection {
     name: string;
     dependentStyles: string[];
     dependentCode: string[];
@@ -27,7 +26,7 @@ interface ComponentCollection {
 
 // expangine-inteface
 
-interface ComponentValue<A, E, S extends string, V extends keyof A> {
+export interface ComponentValue<A, E, S extends string, V extends keyof A> {
     type: Type;
     default?: Expression;
     changed?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node) => void;
@@ -35,7 +34,7 @@ interface ComponentValue<A, E, S extends string, V extends keyof A> {
     update?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node) => void;
 }
 
-interface ComponentInstance<A, E, S extends string> {
+export interface ComponentInstance<A, E, S extends string> {
     component: Component<A, E, S>;
     cache: Record<string, any>;
     context: LiveContext;
@@ -52,7 +51,7 @@ interface ComponentInstance<A, E, S extends string> {
     render(): void;
 }
 
-function newComponentInstance(component: Component<any, any, any>, slots?: NodeTemplateNamedSlots, parent?: ComponentInstance<any, any, any>): ComponentInstance<any, any, any> {
+export function newComponentInstance(component: Component<any, any, any>, slots?: NodeTemplateNamedSlots, parent?: ComponentInstance<any, any, any>): ComponentInstance<any, any, any> {
 
     const listeners: Record<string, Array<(payload: any) => any>> = Object.create(null);
 
@@ -70,7 +69,7 @@ function newComponentInstance(component: Component<any, any, any>, slots?: NodeT
         },
         trigger: (eventName: any, payload: any): void => {
             if (eventName in listeners) {
-                listeners[eventName].forEach(l => l(payload));
+                listeners[eventName].forEach((l) => l(payload));
             }
         },
         on: (eventName: any, listener: (payload: any) => any): Off => {
@@ -91,7 +90,7 @@ function newComponentInstance(component: Component<any, any, any>, slots?: NodeT
 
             onValue(cmd(instance.context));
 
-            return () => {};
+            return () => { /* not empty */ };
         },
         eval: (expr: any): ((extra?: any) => any) => {
             const cmd = LiveRuntime.eval(expr);
@@ -99,32 +98,34 @@ function newComponentInstance(component: Component<any, any, any>, slots?: NodeT
             return (extra) => cmd(extra ? { ...instance.context, ...extra} : instance.context);
         },
         update: (): void => {
-
+            if (instance.component.updated && instance.node) {
+                instance.component.updated(instance, instance.node.element);
+            }
         },
         render: (): void => {
-
+            /* not empty */
         },
     };
 
     return instance;
 }
 
-type Off = () => void;
-type NodeTemplateTag = string | Expression;
-type NodeTemplateValues = Record<string, Expression | any>; // when value is Expression, that expression is watched
-type NodeTemplateEvents = Record<string, Expression | any | ((payload: any) => any)>;
-type NodeTemplateChild = string | NodeTemplate;
-type NodeTemplateNamedSlots = Record<string, NodeTemplateChild>;
-type NodeTemplateSlots = NodeTemplateChild[] | NodeTemplateNamedSlots;
+export type Off = () => void;
+export type NodeTemplateTag = string | Expression;
+export type NodeTemplateValues = Record<string, Expression | any>; // when value is Expression, that expression is watched
+export type NodeTemplateEvents = Record<string, Expression | any | ((payload: any) => any)>;
+export type NodeTemplateChild = string | NodeTemplate | Expression;
+export type NodeTemplateNamedSlots = Record<string, NodeTemplateChild>;
+export type NodeTemplateSlots = NodeTemplateChild[] | NodeTemplateNamedSlots;
 
-type NodeTemplate = [
+export type NodeTemplate = [
     NodeTemplateTag,
     NodeTemplateValues?,
     NodeTemplateEvents?,
     NodeTemplateSlots?
 ];
 
-interface ComponentBase<A, E = never, S extends string = never> {
+export interface ComponentBase<A, E = never, S extends string = never> {
   ref?: string;
   name: string;
   collection: string;
@@ -135,9 +136,9 @@ interface ComponentBase<A, E = never, S extends string = never> {
   destroyed?: (instance: ComponentInstance<A, E, S>, e: Node) => void;
 }
 
-type IfNever<T, Y, N> = [T] extends [never] ? Y : N;
+export type IfNever<T, Y, N> = [T] extends [never] ? Y : N;
 
-type Component<A = never, E = never, S extends string = never> = 
+export type Component<A = never, E = never, S extends string = never> = 
   ComponentBase<A, E, S> & 
   IfNever<A, {}, { attributes: { [V in keyof A]: ComponentValue<A, E, S, V> | Type } }> & 
   IfNever<E, {}, { events: { [K in keyof E]: Type } }> & 
@@ -151,7 +152,7 @@ export const RootComponent: Component<any, any, any> =  {
     attributes: {},
     events: {},
     slots: {},
-    render: () => [':slot', {}, {}, []]
+    render: () => [':slot', {}, {}, []],
 };
 
 // example implementations
@@ -286,20 +287,20 @@ export const PieChart: Component<{
  * 
  */
 
-const DEFAULT_SLOT = 'default';
-const COMPILER_DEFAULT = '*';
-const COMPILER_DYNAMIC = ':dynamic';
-const COMPILER_COMPONENT = ':component';
-const DIRECTIVE_IF = ':if';
-const DIRECTIVE_SHOW = ':show';
-const DIRECTIVE_HIDE = ':hide';
-const DIRECTIVE_FOR = ':for';
-const DIRECTIVE_SLOT = ':slot';
+export const DEFAULT_SLOT = 'default';
+export const COMPILER_DEFAULT = '*';
+export const COMPILER_DYNAMIC = ':dynamic';
+export const COMPILER_COMPONENT = ':component';
+export const DIRECTIVE_IF = ':if';
+export const DIRECTIVE_SHOW = ':show';
+export const DIRECTIVE_HIDE = ':hide';
+export const DIRECTIVE_FOR = ':for';
+export const DIRECTIVE_SLOT = ':slot';
 
 
-const components: Record<string, Component<any, any, any>> = {};
+export const components: Record<string, Component<any, any, any>> = {};
 
-interface NodeInstance 
+export interface NodeInstance 
 {
     parent?: NodeInstance;
     children?: NodeInstance[];
@@ -308,11 +309,11 @@ interface NodeInstance
     scope?: any;
 }
 
-type NodeCompiler = (template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any) => NodeInstance;
+export type NodeCompiler = (template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any) => NodeInstance;
 
-const compilers: Record<string, NodeCompiler> = {};
+export const compilers: Record<string, NodeCompiler> = {};
 
-function getCompiler(template: NodeTemplate): NodeCompiler 
+export function getCompiler(template: NodeTemplate): NodeCompiler 
 {
     const [tag] = template;
     const key = isString(tag) 
@@ -324,12 +325,12 @@ function getCompiler(template: NodeTemplate): NodeCompiler
     return compilers[key];
 }
 
-function compile(template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any): NodeInstance
+export function compile(template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any): NodeInstance
 {
     return getCompiler(template)(template, component, parent, scope);
 }
 
-function mount(page: any, template: NodeTemplate, replace: Node): ComponentInstance<any, any, any>
+export function mount(page: any, template: NodeTemplate, replace: Node): ComponentInstance<any, any, any>
 {
     const rootScope = objectToScope({ page, refs: {} });
 
@@ -343,12 +344,12 @@ function mount(page: any, template: NodeTemplate, replace: Node): ComponentInsta
     return instance;
 }
 
-function isStyleElement(x: any): x is HTMLElement 
+export function isStyleElement(x: any): x is HTMLElement 
 {
     return !!x && isObject(x.style);
 }
 
-function getSlots(slots?: NodeTemplateSlots, name: string = DEFAULT_SLOT): NodeTemplateChild[]
+export function getSlots(slots?: NodeTemplateSlots, name: string = DEFAULT_SLOT): NodeTemplateChild[]
 {
     return !slots
         ? []
@@ -359,29 +360,31 @@ function getSlots(slots?: NodeTemplateSlots, name: string = DEFAULT_SLOT): NodeT
                 : [];
 }
 
-function objectToScope(object: any)
+export function objectToScope(object: any)
 {
-    function scope() {}
+    function scope() { /* not empty */ }
     return Object.assign(new (scope as any)(), object);
 }
 
-function childScope(parent: any, object: any) 
+export function childScope(parent: any, object: any) 
 {
-    function child() {}
+    function child() { /* not empty */ }
     child.prototype = parent;
     return Object.assign(new (child as any)(), object);
 }
 
-function isNamedSlots(value: any): value is NodeTemplateNamedSlots
+export function isNamedSlots(value: any): value is NodeTemplateNamedSlots
 {
     return typeof value === 'object' && !Array.isArray(value);
 }
 
-function changeElement(instance: NodeInstance, element: Node)
+export function changeElement(instance: NodeInstance, element: Node)
 {
     instance.element.parentElement?.replaceChild(element, instance.element);
     instance.element = element;
 }
+
+
 
 
 compilers[COMPILER_DYNAMIC] = (template, component, parent, scope) =>
@@ -401,7 +404,7 @@ compilers[COMPILER_DYNAMIC] = (template, component, parent, scope) =>
     return instance;
 };
 
-compilers[COMPILER_DEFAULT] = (template, component, parent) => 
+compilers[COMPILER_DEFAULT] = (template, component, parent, scope) => 
 {
     const [tag, attrs, events, childSlots] = template;
     const element = document.createElement(tag as any) as HTMLElement;
@@ -417,12 +420,12 @@ compilers[COMPILER_DEFAULT] = (template, component, parent) =>
             {
                 component.watch(attrValue, (v) => 
                 {
-                    (element as any)[attr] = v;
+                    element.setAttribute(attr, v);
                 });
             } 
             else 
             {
-                (element as any)[attr] = attrValue;
+                element.setAttribute(attr, attrValue);
             }
         }
     }
@@ -465,9 +468,18 @@ compilers[COMPILER_DEFAULT] = (template, component, parent) =>
             {
                 element.append(childTemplate);
             } 
+            else if (childTemplate instanceof Expression)
+            {
+                const textNode = document.createTextNode('');
+
+                component.watch(childTemplate, (text) =>
+                {
+                    textNode.textContent = text;
+                });
+            }
             else 
             {
-                const childNode = compile(childTemplate, component, instance);
+                const childNode = compile(childTemplate, component, instance, scope);
     
                 element.appendChild(childNode.element);
                 children.push(childNode);
@@ -480,7 +492,7 @@ compilers[COMPILER_DEFAULT] = (template, component, parent) =>
     return instance;
 };
 
-compilers[DIRECTIVE_IF] = (template, component, parent) => 
+compilers[DIRECTIVE_IF] = (template, component, parent, scope) => 
 {
     const [, attrs, , childSlots] = template;
     const placeholder = document.createComment('if');
@@ -510,9 +522,18 @@ compilers[DIRECTIVE_IF] = (template, component, parent) =>
         {
             element = document.createTextNode(childTemplate);
         } 
+        else if (childTemplate instanceof Expression)
+        {
+            const textNode = document.createTextNode('');
+
+            component.watch(childTemplate, (text) =>
+            {
+                textNode.textContent = text;
+            });
+        }
         else 
         {
-            const childNode = compile(childTemplate, component, instance);
+            const childNode = compile(childTemplate, component, instance, scope);
             element = childNode.element;
             instance.children = [childNode];
         }
@@ -527,7 +548,7 @@ compilers[DIRECTIVE_IF] = (template, component, parent) =>
     return instance;
 };
 
-compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, parent) => 
+compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, parent, scope) => 
 {
     const [tag, attrs, , childSlots] = template;
     const show = tag === DIRECTIVE_SHOW;
@@ -567,9 +588,18 @@ compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, pa
 
             check();
         } 
+        else if (childTemplate instanceof Expression)
+        {
+            const textNode = document.createTextNode('');
+
+            component.watch(childTemplate, (text) =>
+            {
+                textNode.textContent = text;
+            });
+        }
         else 
         {
-            const childNode = compile(childTemplate, component, instance);
+            const childNode = compile(childTemplate, component, instance, scope);
 
             element = childNode.element;
             instance.children = [childNode];
@@ -710,6 +740,15 @@ compilers[DIRECTIVE_SLOT] = (template, component, parent, scope) =>
             {
                 instance.element = document.createTextNode(slot);
             }
+            else if (slot instanceof Expression)
+            {
+                const textNode = document.createTextNode('');
+
+                component.watch(slot, (text) =>
+                {
+                    textNode.textContent = text;
+                });
+            }
             else
             {
                 const slotCompiled = compile(slot, component, instance, childScope(scope, slotScope));
@@ -739,7 +778,7 @@ compilers[DIRECTIVE_FOR] = (template, component, parent, scope) =>
         component.watch(attrs.items, (items) =>
         {
             let current: Node | undefined | null = parent.element.firstChild;
-            let keys = new Set();
+            const keys = new Set();
 
             for (let itemIndex = 0; itemIndex < items.length; itemIndex++)
             {

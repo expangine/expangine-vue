@@ -149,7 +149,7 @@ export class Registry
 
   public addOperation<P extends string, O extends string, S extends string>(op: Operation<P, O, S, any, any>, visuals: OperationVisuals<P, O, S>): this
   {
-    this.operationMap[op.id] = visuals as OperationVisuals<any, any, any>;
+    this.operationMap[op.id] = visuals as unknown as OperationVisuals<any, any, any>;
 
     return this;
   }
