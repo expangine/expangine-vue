@@ -1,4 +1,5 @@
-import { Type, Expression, Types, ObjectType, isArray, isObject, isFunction, isString } from 'expangine-runtime';
+import { observe, unobserve, watch, Node as LinkedNode, Watcher } from 'scrute';
+import { Type, Expression, Types, ObjectType, isArray, isObject, isFunction, isString, NoExpression } from 'expangine-runtime';
 import { LiveContext, LiveRuntime } from 'expangine-runtime-live';
 
 
@@ -29,86 +30,173 @@ export interface ComponentCollection {
 export interface ComponentValue<A, E, S extends string, V extends keyof A> {
     type: Type;
     default?: Expression;
-    changed?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node) => void;
-    initial?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node) => void;
-    update?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node) => void;
+    changed?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node[]) => void;
+    initial?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node[]) => void;
+    update?: (value: A[V], instance: ComponentInstance<A, E, S>, e: Node[]) => void;
 }
 
-export interface ComponentInstance<A, E, S extends string> {
-    component: Component<A, E, S>;
-    cache: Record<string, any>;
-    context: LiveContext;
-    node?: NodeInstance;
-    parent?: ComponentInstance<any, any, any>;
-    slots?: NodeTemplateNamedSlots;
-    get<V extends keyof A>(attr: V, defaultValue?: A[V]): A[V];
-    set<V extends keyof A>(attr: V, value: A[V]): void;
-    trigger<K extends keyof E>(eventName: K, payload: E[K]): void;
-    on<K extends keyof E>(eventName: K, listener: (payload: E[K]) => any): Off;
-    watch(expr: any, onValue: (value: any) => void): Off;
-    eval(expr: any): (extra?: any) => any;
-    update(): void;
-    render(): void;
+export class ComponentInstance<A, E, S extends string> {
+    public component: Component<A, E, S>;
+    public cache: Record<string, any>;
+    public scope: Scope<A>;
+    public node?: NodeInstance;
+    public parent?: ComponentInstance<any, any, any>;
+    public slots?: NodeTemplateNamedSlots;
+    public listeners: Record<keyof E, Array<(payload: any) => any>>;
+
+    public constructor(component: Component<A, E, S>, slots?: NodeTemplateNamedSlots, parent?: ComponentInstance<any, any, any>) {
+        this.component = component;
+        this.cache = Object.create(null);
+        this.scope = new Scope(parent ? parent.scope : null);
+        this.slots = slots;
+        this.parent = parent;
+        this.listeners = Object.create(null);
+    }
+
+    public trigger<K extends keyof E>(eventName: K, payload: E[K]): void {
+        if (eventName in this.listeners) {
+            this.listeners[eventName].forEach((l) => l(payload));
+        }
+    }
+
+    public on<K extends keyof E>(eventName: K, listener: (payload: E[K]) => any): Off {
+        if (!(eventName in this.listeners)){ 
+            this.listeners[eventName] = [];
+        }
+        this.listeners[eventName].push(listener);
+
+        return () => {
+            const i = this.listeners[eventName].indexOf(listener);
+            if (i !== -1) {
+                this.listeners[eventName].splice(i, 1);
+            }
+        };
+    }
+
+    public update(): void {
+        if (this.component.updated && this.node) {
+            this.component.updated(this, this.node.element);
+        }
+    }
+
+    public render(): void {
+
+    }
+
+    public destroy(): void {
+        this.scope.destroy();
+        this.listeners = Object.create(null);
+    }
 }
 
-export function newComponentInstance(component: Component<any, any, any>, slots?: NodeTemplateNamedSlots, parent?: ComponentInstance<any, any, any>): ComponentInstance<any, any, any> {
+export class Scope<A extends LiveContext = any> {
+    
+    public parent: Scope | null;
+    public data: A;
+    public observed: A;
+    public link: LinkedNode<Scope<A>>;
+    public children?: LinkedNode<Scope<A>>;
+    public disables: number;
+    public watchers: LinkedNode<Watcher>;
+    
+    public constructor(parent: Scope | null = null, data: any = {}) {
+        this.parent = parent;
+        this.data = parent ? createChildScope(parent.data, data) : createScope(data);
+        this.observed = observe(this.data);
+        this.disables = 0;
+        this.link = new LinkedNode(this);
+        this.watchers = LinkedNode.head();
+    }
 
-    const listeners: Record<string, Array<(payload: any) => any>> = Object.create(null);
-
-    const instance: ComponentInstance<any, any, any> = {
-        component,
-        cache: {},
-        context: {},
-        parent,
-        slots,
-        get: (attr: any, defaultValue?: any): any => {
-            return instance.context[attr];
-        },
-        set: (attr: any, value: any): void => {
-            instance.context[attr] = value;
-        },
-        trigger: (eventName: any, payload: any): void => {
-            if (eventName in listeners) {
-                listeners[eventName].forEach((l) => l(payload));
+    public addToParent() {
+        if (this.parent) {
+            if (!this.parent.children) {
+                this.parent.children = LinkedNode.head();
             }
-        },
-        on: (eventName: any, listener: (payload: any) => any): Off => {
-            if (!(eventName in listeners)){ 
-                listeners[eventName] = [];
+            this.link.insertAfter(this.parent.children);
+        }
+    }
+
+    public createChild(data: any = {}, addToParent: boolean = true): Scope {
+        const child = new Scope(this, data);
+        if (addToParent) {
+            child.addToParent();
+        }
+        return child;
+    }
+
+    public get<V extends keyof A>(attr: V, defaultValue?: A[V]): A[V] {
+        return attr in this.observed ? this.observed[attr] : defaultValue as A[V];
+    }
+
+    public set<V extends keyof A>(attr: V, value: A[V]): void {
+        this.observed[attr] = value;
+    }
+
+    public setMany(values: Partial<A>) {
+        copyProperties(this.observed, values);
+    }
+
+    public watch(expr: any, onValue: (value: any) => void): Off {
+        const cmd = LiveRuntime.eval(expr);
+
+        const watcher = watch(() => {
+            onValue(cmd(this.observed));
+        });
+
+        const node = new LinkedNode(watcher);
+
+        node.insertAfter(this.watchers);
+
+        return () => {
+            watcher.off();
+            node.remove();
+        };
+    }
+
+    public eval(expr: any): ((extra?: any) => any) {
+        const cmd = LiveRuntime.eval(expr);
+
+        return (extra) => cmd(extra ? { ...this.data, ...extra} : this.data);
+    }
+
+    public enable(): void {
+        if (this.disables > 0) {
+            this.disables--;
+            if (this.disables === 0) {
+                this.watchers.forEach((w) => w.resume());
             }
-            listeners[eventName].push(listener);
-
-            return () => {
-                const i = listeners[eventName].indexOf(listener);
-                if (i !== -1) {
-                    listeners[eventName].splice(i, 1);
-                }
-            };
-        },
-        watch: (expr: any, onValue: (value: any) => void): Off => {
-            const cmd = LiveRuntime.eval(expr);
-
-            onValue(cmd(instance.context));
-
-            return () => { /* not empty */ };
-        },
-        eval: (expr: any): ((extra?: any) => any) => {
-            const cmd = LiveRuntime.eval(expr);
-
-            return (extra) => cmd(extra ? { ...instance.context, ...extra} : instance.context);
-        },
-        update: (): void => {
-            if (instance.component.updated && instance.node) {
-                instance.component.updated(instance, instance.node.element);
+            if (this.children) {
+                this.children.forEach((c) => c.enable());
             }
-        },
-        render: (): void => {
-            /* not empty */
-        },
-    };
+        }
+    }
 
-    return instance;
+    public disable(): void {
+        if (this.disables === 0) {
+            this.watchers.forEach((w) => w.pause());
+        }
+        if (this.children) {
+            this.children.forEach((c) => c.disable());
+        }
+        this.disables++;
+    }
+
+    public setEnabled(enabled: boolean) {
+        enabled ? this.enable() : this.disable();
+    }
+
+    public destroy(): void {
+        this.link.remove();
+        this.disables = Number.MAX_SAFE_INTEGER;
+        this.watchers.forEach((w) => w.off());
+        if (this.children) {
+            this.children.forEach((c) => c.destroy());
+        }
+        unobserve(this.observed);
+    }
 }
+
 
 export type Off = () => void;
 export type NodeTemplateTag = string | Expression;
@@ -131,9 +219,9 @@ export interface ComponentBase<A, E = never, S extends string = never> {
   collection: string;
   state?: Expression;
   render: (instance: ComponentInstance<A, E, S>) => NodeTemplate;
-  created?: (instance: ComponentInstance<A, E, S>, e: Node) => void;
-  updated?: (instance: ComponentInstance<A, E,S>, e: Node) => void;
-  destroyed?: (instance: ComponentInstance<A, E, S>, e: Node) => void;
+  created?: (instance: ComponentInstance<A, E, S>, e: Node[]) => void;
+  updated?: (instance: ComponentInstance<A, E, S>, e: Node[]) => void;
+  destroyed?: (instance: ComponentInstance<A, E, S>, e: Node[]) => void;
 }
 
 export type IfNever<T, Y, N> = [T] extends [never] ? Y : N;
@@ -168,66 +256,9 @@ export const HtmlInput: Component<{
         value: Types.text(),
     },
     render: (i) => ['input', {
-        type: i.get('type'),
-        value: i.get('value'),
+        type: i.scope.get('type'),
+        value: i.scope.get('value'),
     }],
-};
-
-const google: any = null;
-
-// googlecharts/pie
-export const PieChart: Component<{
-    title: string,
-    label: string,
-    value: string,
-    data: Array<{label: string, value: number, color?: string, offset?: number}>,
-}, { 
-    updated: null,
-}> = {
-    name: 'pie',
-    collection: 'googlecharts',
-    attributes: {
-        title: Types.text(),
-        label: Types.text(),
-        value: Types.text(),
-        data: Types.list(Types.object({ 
-                label: Types.text(), 
-                value: Types.number(),
-                color: Types.optional(Types.color()),
-                offset: Types.number(0, 1),
-        })),
-    },
-    events: {
-        updated: Types.null(),
-    },
-    render: () => ['div'],
-    created: (i, e) => {
-        i.update();
-    },
-    updated: (i, e) => {
-        const chart = i.cache.chart || new google.visualization.PieChart(e);
-        const [data, label, value, title] = [i.get('data'), i.get('label'), i.get('value'), i.get('title')];
-        const chartData = ([[label, value]] as Array<[string, any]>).concat(data.map((p) => [p.label, p.value]));
-
-        const options = {
-            title,
-            slices: {} as any,
-        };
-
-        data.forEach((point, pointIndex) => {
-            options.slices[pointIndex] = {
-                offset: point.offset,
-                color: point.color,
-            };
-        });
-
-        chart.draw(chartData, options);
-
-        i.cache.chart = chart;
-        i.cache.options = options;
-
-        i.trigger('updated', null);
-    },
 };
 
 /**
@@ -284,7 +315,9 @@ export const PieChart: Component<{
  * 
  * Solve
  * - how will user-defined components trigger an event?
- * 
+ * - modifications to elements/nodes should be queued
+ * - nodes can have multiple elements (for, default scope not restricted to first)
+ * - triggering custom component events should be queued (created, updated, initial, changed, update)
  */
 
 export const DEFAULT_SLOT = 'default';
@@ -305,11 +338,11 @@ export interface NodeInstance
     parent?: NodeInstance;
     children?: NodeInstance[];
     component: ComponentInstance<any, any, any>;
-    element: Node;
-    scope?: any;
+    element: Node[];
+    scope: Scope;
 }
 
-export type NodeCompiler = (template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any) => NodeInstance;
+export type NodeCompiler = (template: NodeTemplate, component: ComponentInstance<any, any, any>, scope: Scope, parent?: NodeInstance) => NodeInstance;
 
 export const compilers: Record<string, NodeCompiler> = {};
 
@@ -319,25 +352,32 @@ export function getCompiler(template: NodeTemplate): NodeCompiler
     const key = isString(tag) 
         ? tag in compilers
             ? tag
-            : COMPILER_DEFAULT
+            : tag in components
+                ? COMPILER_COMPONENT
+                : COMPILER_DEFAULT
         : COMPILER_DYNAMIC;
 
     return compilers[key];
 }
 
-export function compile(template: NodeTemplate, component: ComponentInstance<any, any, any>, parent?: NodeInstance, scope?: any): NodeInstance
+export function compile(template: NodeTemplate, component: ComponentInstance<any, any, any>, scope: Scope, parent?: NodeInstance): NodeInstance
 {
-    return getCompiler(template)(template, component, parent, scope);
+    return getCompiler(template)(template, component, scope, parent);
 }
 
 export function mount(page: any, template: NodeTemplate, replace: Node): ComponentInstance<any, any, any>
 {
-    const rootScope = objectToScope({ page, refs: {} });
+    const rootScope = new Scope(null, { page, refs: {} });
 
-    const instance = newComponentInstance(RootComponent, { default: template });
-    const compiled = compile(template, instance, undefined, rootScope);
+    const instance = new ComponentInstance(RootComponent, { default: template });
+    const compiled = compile(template, instance, rootScope);
 
-    replace.parentElement?.replaceChild(compiled.element, replace);
+    if (replace.parentElement) {
+        for (const e of compiled.element) {
+            replace.parentElement.insertBefore(e, replace);
+        }
+        replace.parentElement.removeChild(replace);
+    }
 
     instance.node = compiled;
 
@@ -360,17 +400,27 @@ export function getSlots(slots?: NodeTemplateSlots, name: string = DEFAULT_SLOT)
                 : [];
 }
 
-export function objectToScope(object: any)
+export function copyProperties(target: any, source: any)
 {
-    function scope() { /* not empty */ }
-    return Object.assign(new (scope as any)(), object);
+    for (const prop in source)
+    {
+        target[prop] = source[prop];
+    }
+
+    return target;
 }
 
-export function childScope(parent: any, object: any) 
+export function createScope(object: any)
+{
+    function scope() { /* not empty */ }
+    return copyProperties(new (scope as any)(), object);
+}
+
+export function createChildScope(parent: any, object: any) 
 {
     function child() { /* not empty */ }
     child.prototype = parent;
-    return Object.assign(new (child as any)(), object);
+    return copyProperties(new (child as any)(), object);
 }
 
 export function isNamedSlots(value: any): value is NodeTemplateNamedSlots
@@ -378,37 +428,180 @@ export function isNamedSlots(value: any): value is NodeTemplateNamedSlots
     return typeof value === 'object' && !Array.isArray(value);
 }
 
-export function changeElement(instance: NodeInstance, element: Node)
+export function changeElement(instance: NodeInstance, element: Node[])
 {
-    instance.element.parentElement?.replaceChild(element, instance.element);
-    instance.element = element;
+    for (let i = 0; i < element.length; i++) {
+        const n = element[i];
+        const o = instance.element[i];
+
+        if (o === n) {
+            continue;
+        }
+
+        if (o && o.parentElement) {
+            o.parentElement.replaceChild(n, o);
+            instance.element[i] = n;
+        } else if (!o && i > 0) {
+            const prev = instance.element[i - 1];
+            const next = prev.nextSibling;
+            if (next && next.parentElement) {
+                next.parentElement.insertBefore(n, next);
+            } else if (!next && prev && prev.parentElement) {
+                prev.parentElement.appendChild(n);
+            }
+            instance.element[i] = n;
+        }
+    }
+
+    for (let i = instance.element.length - 1; i >= element.length; i--) {
+        const o = instance.element[i];
+        if (o.parentElement) {
+            o.parentElement.removeChild(o);
+        }
+        instance.element.splice(i, 1);
+    }
+}
+
+export interface NodeChildrenController
+{
+    element: Node[];
+    updateScopes( values: any ): void;
+    destroyScopes(): void;
+}
+
+export function createChildNodes(children: NodeTemplateChild[], scope: Scope, component: ComponentInstance<any, any, any>, childScope: Scope, instance: NodeInstance): NodeChildrenController
+{
+    let element: Node[] = [];
+    let scopes: Scope[] = [];
+
+    for (const child of children)
+    {
+        if (isString(child)) 
+        {
+            element.push(document.createTextNode(child));
+        } 
+        else if (child instanceof Expression)
+        {
+            const textNode = document.createTextNode('');
+
+            scope.watch(child, (text) =>
+            {
+                textNode.textContent = text;
+            });
+
+            element.push(textNode);
+        }
+        else 
+        {
+            const childNode = compile(child, component, childScope, instance);
+
+            for (let i = 0; i < childNode.element.length; i++)
+            {
+                element.push(childNode.element[i]);
+            }
+
+            scopes.push(childNode.scope);
+
+            if (!instance.children)
+            {
+                instance.children = [childNode];
+            }
+            else
+            {
+                instance.children.push(childNode);
+            }
+        }
+    }
+
+    return {
+        element,
+        updateScopes(values: any) {
+            for (const scope of scopes) {
+                scope.setMany(values);
+            }
+        },
+        destroyScopes() {
+            for (const scope of scopes) {
+                scope.destroy();
+            }
+        },
+    };
+}
+
+export function createChildElement(child: NodeTemplateChild, scope: Scope, component: ComponentInstance<any, any, any>, childScope: Scope, instance: NodeInstance): Node[]
+{
+    let element: Node[];
+
+    if (isString(child)) 
+    {
+        element = [document.createTextNode(child)];
+    } 
+    else if (child instanceof Expression)
+    {
+        const textNode = document.createTextNode('');
+
+        scope.watch(child, (text) =>
+        {
+            textNode.textContent = text;
+        });
+
+        element = [textNode];
+    }
+    else 
+    {
+        const childNode = compile(child, component, childScope, instance);
+
+        element = childNode.element;
+
+        if (!instance.children)
+        {
+            instance.children = [childNode];
+        }
+        else
+        {
+            instance.children.push(childNode);
+        }
+    }
+
+    return element;
+}
+
+export function isWatchable(x: any): x is (Expression | any[])
+{
+    return isArray(x) || x instanceof Expression;
 }
 
 
-
-
-compilers[COMPILER_DYNAMIC] = (template, component, parent, scope) =>
+compilers[COMPILER_DYNAMIC] = (template, component, scope, parent) =>
 {
     const [tag] = template;
-    const instance: NodeInstance = { parent, component, element: document.createComment('dynamic') };
+    const instance: NodeInstance = { parent, component, scope, element: [document.createComment('dynamic')] };
+    let lastInstance: NodeInstance;
 
-    component.watch(tag, (tagValue) =>
+    component.scope.watch(tag, (tagValue) =>
     {
         template[0] = tagValue;
 
-        const dynamicInstance = compile(template, component, parent, scope);
+        if (lastInstance)
+        {
+            lastInstance.scope.destroy();
+        }
+
+        const dynamicInstance = compile(template, component, scope, parent);
 
         changeElement(instance, dynamicInstance.element);
+
+        lastInstance = dynamicInstance;
     });
 
     return instance;
 };
 
-compilers[COMPILER_DEFAULT] = (template, component, parent, scope) => 
+compilers[COMPILER_DEFAULT] = (template, component, scope, parent) => 
 {
     const [tag, attrs, events, childSlots] = template;
     const element = document.createElement(tag as any) as HTMLElement;
-    const instance: NodeInstance = { element, component, parent };
+    const instance: NodeInstance = { element: [element], component, scope, parent };
 
     if (isObject(attrs)) 
     {
@@ -416,9 +609,9 @@ compilers[COMPILER_DEFAULT] = (template, component, parent, scope) =>
         {
             const attrValue = attrs[attr];
 
-            if (isArray(attrValue)) 
+            if (isWatchable(attrValue)) 
             {
-                component.watch(attrValue, (v) => 
+                component.scope.watch(attrValue, (v) => 
                 {
                     element.setAttribute(attr, v);
                 });
@@ -442,7 +635,7 @@ compilers[COMPILER_DEFAULT] = (template, component, parent, scope) =>
             } 
             else
             { 
-                const listener = component.eval(eventValue);
+                const listener = scope.eval(eventValue);
 
                 // todo: prevent, stop, capture, self, once
                 element.addEventListener(ev, (nativeEvent) => 
@@ -460,177 +653,132 @@ compilers[COMPILER_DEFAULT] = (template, component, parent, scope) =>
 
     if (childs.length > 0) 
     {
-        const children: NodeInstance[] = [];
-
         for (const childTemplate of childs) 
         {
-            if (isString(childTemplate)) 
-            {
-                element.append(childTemplate);
-            } 
-            else if (childTemplate instanceof Expression)
-            {
-                const textNode = document.createTextNode('');
+            const childElement = createChildElement(childTemplate, scope, component, scope, instance);
 
-                component.watch(childTemplate, (text) =>
-                {
-                    textNode.textContent = text;
-                });
-            }
-            else 
+            for (const child of childElement)
             {
-                const childNode = compile(childTemplate, component, instance, scope);
-    
-                element.appendChild(childNode.element);
-                children.push(childNode);
+                element.appendChild(child);
             }
         }
-
-        instance.children = children;
     }
 
     return instance;
 };
 
-compilers[DIRECTIVE_IF] = (template, component, parent, scope) => 
+compilers[DIRECTIVE_IF] = (template, component, scope, parent) => 
 {
     const [, attrs, , childSlots] = template;
-    const placeholder = document.createComment('if');
-    let element: Node = placeholder;
-    const instance: NodeInstance = { parent, component, element };
-
+    const placeholder = [document.createComment('if')];
+    let element: Node[] = placeholder.slice();
+    const instance: NodeInstance = { parent, component, scope, element };
+    const childScope = scope.createChild();
     const childTemplate = getSlots(childSlots)[0];
 
     if (attrs && attrs.condition && childTemplate) 
-    {    
-        let visible: boolean = false;
+    {
+        element = createChildElement(childTemplate, scope, component, childScope, instance);
 
-        const check = () => 
+        let visible = false;
+
+        scope.watch(attrs.condition, (newVisible) => 
         {
-            const previous = instance.element;
-            const desired = visible ? element : placeholder;
+            const visibleBoolean = !!newVisible;
 
-            if (previous !== desired) 
+            if (visible !== visibleBoolean)
             {
-                changeElement(instance, desired);
-            }
-
-            // disable/enable childNode based on visible
-        };
-
-        if (isString(childTemplate)) 
-        {
-            element = document.createTextNode(childTemplate);
-        } 
-        else if (childTemplate instanceof Expression)
-        {
-            const textNode = document.createTextNode('');
-
-            component.watch(childTemplate, (text) =>
-            {
-                textNode.textContent = text;
-            });
-        }
-        else 
-        {
-            const childNode = compile(childTemplate, component, instance, scope);
-            element = childNode.element;
-            instance.children = [childNode];
-        }
-
-        component.watch(attrs.condition, (newVisible) => 
-        {
-            visible = newVisible;
-            check();
-        });
-    }
-
-    return instance;
-};
-
-compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, parent, scope) => 
-{
-    const [tag, attrs, , childSlots] = template;
-    const show = tag === DIRECTIVE_SHOW;
-    const placeholder = document.createComment((tag as string).substring(1));
-    let element: Node = placeholder;
-    const instance: NodeInstance = { parent, component, element };
-    
-    const childTemplate = getSlots(childSlots)[0];
-    
-    if (attrs && attrs.condition && childTemplate) 
-    {    
-        let visible: boolean = false;
-        
-        const check = () => 
-        {
-            const isVisible = (visible === show);
-
-            if (isString(childTemplate))
-            {
+                visible = visibleBoolean;
+                
                 const previous = instance.element;
-                const desired = isVisible ? element : placeholder;
+                const desired = visible ? element : placeholder;
 
                 if (previous !== desired) 
                 {
                     changeElement(instance, desired);
                 }
+
+                childScope.setEnabled(visible);
             }
-            else if (isStyleElement(instance.element))
-            {
-                instance.element.style.display = isVisible ? '' : 'none';
-            }
-        };
-
-        if (isString(childTemplate)) 
-        {
-            element = document.createTextNode(childTemplate);
-
-            check();
-        } 
-        else if (childTemplate instanceof Expression)
-        {
-            const textNode = document.createTextNode('');
-
-            component.watch(childTemplate, (text) =>
-            {
-                textNode.textContent = text;
-            });
-        }
-        else 
-        {
-            const childNode = compile(childTemplate, component, instance, scope);
-
-            element = childNode.element;
-            instance.children = [childNode];
-        }
-
-        component.watch(attrs.condition, (newVisible) => 
-        {
-            visible = !!newVisible;
-
-            check();
         });
+    }
+    else
+    {
+        throw new Error(`The :if directive requires a condition attribute and a single child.`);
     }
 
     return instance;
 };
 
-compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) => 
+compilers[DIRECTIVE_SHOW] = compilers[DIRECTIVE_HIDE] = (template, component, scope, parent) => 
+{
+    const [tag, attrs, , childSlots] = template;
+    const show = tag === DIRECTIVE_SHOW;
+    const placeholder = [document.createComment((tag as string).substring(1))];
+    let element: Node[] = placeholder.slice();
+    const instance: NodeInstance = { parent, component, scope, element };
+    const childScope = scope.createChild();
+    const childTemplate = getSlots(childSlots)[0];
+    
+    if (attrs && attrs.condition && childTemplate) 
+    {    
+        let visible: boolean | undefined;
+        
+        element = createChildElement(childTemplate, scope, component, childScope, instance);
+
+        scope.watch(attrs.condition, (newVisible) => 
+        {
+            const visibleBoolean = !!newVisible;
+
+            if (visible !== visibleBoolean)
+            {
+                visible = visibleBoolean;
+
+                const isVisible = (visible === show);
+
+                if (isString(childTemplate))
+                {
+                    const previous = instance.element;
+                    const desired = isVisible ? element : placeholder;
+
+                    if (previous !== desired) 
+                    {
+                        changeElement(instance, desired);
+                    }
+                }
+                else if (isStyleElement(instance.element))
+                {
+                    instance.element.style.display = isVisible ? '' : 'none';
+                }
+
+                childScope.setEnabled(isVisible);
+            }           
+        });
+    }
+    else
+    {
+        throw new Error(`The ${tag} directive requires a condition attribute and a singule child.`);
+    }
+
+    return instance;
+};
+
+compilers[COMPILER_COMPONENT] = (template, parentComponent, scope, parent) => 
 {
     const [id, attrs, events, childSlots] = template;
     const componentBase = components[id as string];
-    const component = newComponentInstance(componentBase, isNamedSlots(childSlots) ? childSlots : undefined, parentComponent);
+    const component = new ComponentInstance(componentBase, isNamedSlots(childSlots) ? childSlots : undefined, parentComponent);
     const rendered = componentBase.render(component);
-    const localScope = childScope(parent, { this: component });
-    const instance = compile(rendered, component, parent, localScope);
+    const localScope = scope.createChild({ this: component, refs: {} });
+    const instance = compile(rendered, component, localScope, parent);
 
-    if (scope && scope.refs && componentBase.ref)
+    if (scope && scope.data.refs && componentBase.ref)
     {
-        scope.refs[componentBase.ref] = component;
+        scope.data.refs[componentBase.ref] = component;
     }
 
     component.node = instance;
+    component.scope = localScope;
 
     if (componentBase.attributes)
     {
@@ -643,13 +791,13 @@ compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) =>
 
             const attrInput = attrs && attr in attrs ? attrs[attr] : attrObject.default;
 
-            if (isArray(attrInput))
+            if (isWatchable(attrInput))
             {
                 let first = true;
 
-                component.watch(attrInput, (v) =>
+                scope.watch(attrInput, (v) =>
                 {
-                    component.set(attr, v);
+                    localScope.set(attr, v);
 
                     if (instance.element)
                     {
@@ -676,20 +824,20 @@ compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) =>
             }
             else
             {
-                component.set(attr, attrInput);
+                localScope.set(attr, attrInput);
             }
         }
     }
 
     if (componentBase.state)
     {
-        const localState = component.eval(componentBase.state)();
+        const localState = scope.eval(componentBase.state)();
 
         if (isObject(localState)) 
         {
             for (const stateName in localState)
             {
-                component.set(stateName, localState[stateName]);
+                localScope.set(stateName, localState[stateName]);
             }
         }
     }
@@ -705,9 +853,9 @@ compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) =>
 
             const eventValue = events[ev];
 
-            if (isArray(eventValue)) 
+            if (isWatchable(eventValue)) 
             {
-                const listener = component.eval(eventValue);
+                const listener = localScope.eval(eventValue);
 
                 component.on(ev, listener);
             }
@@ -722,11 +870,12 @@ compilers[COMPILER_COMPONENT] = (template, parentComponent, parent, scope) =>
     return instance;
 };
 
-compilers[DIRECTIVE_SLOT] = (template, component, parent, scope) => 
+// TODO think about scope
+compilers[DIRECTIVE_SLOT] = (template, component, scope, parent) => 
 {
     const [, attrs, , childSlots] = template;
-    const element = document.createComment('slot');
-    const instance: NodeInstance = { parent, component, element };
+    const element = [document.createComment('slot')];
+    const instance: NodeInstance = { parent, component, scope, element };
 
     if (attrs)
     {
@@ -736,91 +885,64 @@ compilers[DIRECTIVE_SLOT] = (template, component, parent, scope) =>
         
         if (slot) 
         {
-            if (isString(slot)) 
-            {
-                instance.element = document.createTextNode(slot);
-            }
-            else if (slot instanceof Expression)
-            {
-                const textNode = document.createTextNode('');
-
-                component.watch(slot, (text) =>
-                {
-                    textNode.textContent = text;
-                });
-            }
-            else
-            {
-                const slotCompiled = compile(slot, component, instance, childScope(scope, slotScope));
-
-                instance.element = slotCompiled.element;
-            }
+            instance.element = createChildElement(slot, component.scope, component, scope, instance);
         }
     }
 
     return instance;
 };
 
-compilers[DIRECTIVE_FOR] = (template, component, parent, scope) => 
+compilers[DIRECTIVE_FOR] = (template, component, scope, parent) => 
 {
     const [, attrs, , childSlots] = template;
-    const element = document.createComment('for');
-    const instance: NodeInstance = { parent, component, element };
-    const itemTemplate = getSlots(childSlots)[0];
+    const placeholder = document.createComment('for');
+    const element = [placeholder];
+    const instance: NodeInstance = { parent, component, scope, element };
+    const itemTemplate = getSlots(childSlots);
 
-    if (attrs && attrs.items && parent && isArray(itemTemplate))
+    if (attrs && attrs.items && parent)
     {
         const propItem = attrs.item || 'item';
         const propIndex = attrs.index || 'index';
-        const key = component.eval(attrs.key);
-        const map = new Map<any, NodeInstance>();
+        const key = scope.eval(attrs.key);
+        const map = new Map<any, NodeChildrenController>();
 
-        component.watch(attrs.items, (items) =>
+        scope.watch(attrs.items, (items) =>
         {
-            let current: Node | undefined | null = parent.element.firstChild;
+            const newChildren: Node[] = [placeholder];
             const keys = new Set();
 
             for (let itemIndex = 0; itemIndex < items.length; itemIndex++)
             {
                 const item = items[itemIndex];
-                const itemScope = { [propItem]: item, [propIndex]: itemIndex };
-                const itemKey = key(itemScope);
-                let itemNode = map.get(itemKey);
+                const itemScopeData = { [propItem]: item, [propIndex]: itemIndex };
+                const itemKey = key(itemScopeData);
+                let itemController = map.get(itemKey);
 
-                if (!itemNode)
+                if (!itemController)
                 {
-                    itemNode = compile(itemTemplate, component, instance, childScope(scope, itemScope));
+                    const itemScope = scope.createChild(itemScopeData);
 
-                    map.set(itemKey, itemNode);
+                    itemController = createChildNodes(itemTemplate, itemScope, component, itemScope, instance);
+
+                    map.set(itemKey, itemController);
                 }
                 else
                 {
-                    Object.assign(itemNode.scope, itemScope); // do this in a way that triggers expressions to be updated
+                    itemController.updateScopes(itemScopeData);
                 }
 
                 keys.add(itemKey);
-
-                if (current !== itemNode.element)
-                {
-                    if (current)
-                    {
-                        parent.element.replaceChild(itemNode.element, current);
-                        current = itemNode.element;
-                    }
-                    else
-                    {
-                        parent.element.appendChild(itemNode.element);
-                    }
-                }
-
-                current = current?.nextSibling;
+                newChildren.push(...itemController.element);
             }
+
+            changeElement(instance, newChildren);
 
             map.forEach((entryValue, entryKey) => 
             {
                 if (!keys.has(entryKey)) 
                 {
-                    entryValue.element.parentElement?.removeChild(entryValue.element);
+                    entryValue.destroyScopes();
 
                     map.delete(entryKey);
                 }
@@ -830,3 +952,77 @@ compilers[DIRECTIVE_FOR] = (template, component, parent, scope) =>
 
     return instance;
 };
+
+
+// EXAMPLES
+
+
+
+// googlecharts/pie
+export const PieChart: Component<{
+    title: string,
+    label: string,
+    value: string,
+    data: Array<{label: string, value: number, color?: string, offset?: number}>,
+}, { 
+    updated: null,
+}> = {
+    name: 'pie',
+    collection: 'googlecharts',
+    attributes: {
+        title: Types.text(),
+        label: Types.text(),
+        value: Types.text(),
+        data: Types.list(Types.object({ 
+                label: Types.text(), 
+                value: Types.number(),
+                color: Types.optional(Types.color()),
+                offset: Types.number(0, 1),
+        })),
+    },
+    events: {
+        updated: Types.null(),
+    },
+    render: () => ['div'],
+    created: (i, e) => {
+        i.update();
+    },
+    updated: (i, e) => {
+        const google = (window as any).google;
+
+        google.charts.setOnLoadCallback(() => {
+            const chart = i.cache.chart || new google.visualization.PieChart(e[0]);
+            const [data, label, value, title] = [
+                i.scope.get('data'), 
+                i.scope.get('label'), 
+                i.scope.get('value'), 
+                i.scope.get('title'),
+            ];
+            
+            const chartData = ([[label, value]] as Array<[string, any]>).concat(data.map((p) => [p.label, p.value]));
+
+            const options = {
+                title,
+                slices: {} as any,
+            };
+
+            data.forEach((point, pointIndex) => {
+                options.slices[pointIndex] = {
+                    offset: point.offset,
+                    color: point.color,
+                };
+            });
+
+            const chartTable = google.visualization.arrayToDataTable(chartData);
+
+            chart.draw(chartTable, options);
+
+            i.cache.chart = chart;
+            i.cache.options = options;
+
+            i.trigger('updated', null);
+        });
+    },
+};
+
+components['googlecharts/pie'] = PieChart as any;
