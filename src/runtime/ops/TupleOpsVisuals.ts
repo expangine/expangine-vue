@@ -1,5 +1,6 @@
 import { TupleOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -48,6 +49,10 @@ export default (registry: Registry) =>
     name: 'Build Tuple',
     description: 'Build a tuple by concatenating tuples/values together into tuple.',
     singleline: 'tuple of {a} {b} {c} {d} {e}',
+    singlelineReadonly: (params) => 'tuple of {a} {b}' + 
+      ifExpr(params.c, ' {c}') + 
+      ifExpr(params.d, ' {d}') +
+      ifExpr(params.e, ' {e}'),
     comments: {
       a: 'The 1st tuple or value to add to the tuple result',
       b: 'The 2nd tuple or value to add to the tuple result',

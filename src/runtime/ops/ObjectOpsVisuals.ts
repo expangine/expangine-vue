@@ -1,5 +1,6 @@
 import { ObjectOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -96,6 +97,10 @@ export default (registry: Registry) =>
     name: 'Merge Objects',
     description: 'Merge object [a] and [b] and optionally [c], [d], and [e]',
     singleline: 'merge {a} {b} {c} {d} {e}',
+    singlelineReadonly: (params) => 'merge {a} {b}' + 
+      ifExpr(params.c, ' {c}') + 
+      ifExpr(params.d, ' {d}') + 
+      ifExpr(params.e, ' {e}'),
     comments: {
       a: 'The 1st object to copy. Properties in this object could be overriden by the following objects.',
       b: 'The 2nd object to copy. Properties in this object could be overriden by the following objects.',

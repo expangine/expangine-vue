@@ -1,5 +1,6 @@
 import { SetOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -121,6 +122,8 @@ export default (registry: Registry) =>
     name: 'Copy Set',
     description: 'Copy [set] optionally doing a [deepCopy] of each value in the set',
     singleline: 'copy {set} and deep copy the values with {deepCopy}',
+    singlelineReadonly: (params) => 'copy {set}' + 
+      ifExpr(params.deepCopy, ' and deep copy the values with {deepCopy}'),
     comments: {
       set: 'The set to copy',
       deepCopy: 'The expression which copies the current value',
@@ -139,6 +142,8 @@ export default (registry: Registry) =>
     name: 'Transform Set',
     description: 'Transform [set] values with [transform]',
     singleline: 'transform {set} values with {transform}',
+    singlelineReadonly: (params) => 'transform {set}' + 
+      ifExpr(params.transform, ' values with {transform}'),
     comments: {
       set: 'The set to †ransform',
       transform: 'The expression which transforms a value',

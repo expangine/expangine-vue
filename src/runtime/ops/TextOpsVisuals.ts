@@ -1,5 +1,6 @@
 import { TextOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -115,6 +116,8 @@ export default (registry: Registry) =>
     name: 'Split Text',
     description: 'Split [value] [by] optionally a maximum number of [limit] times',
     singleline: 'split {value} by {by} a maximum number of {limit} times',
+    singlelineReadonly: (params) => 'split {value} by {by}' + 
+      ifExpr(params.limit, ' a maximum number of {limit} times'),
     comments: {
       value: 'The value to split into an array of text',
       by: 'The text to split around',
@@ -140,6 +143,10 @@ export default (registry: Registry) =>
     name: 'Text Section',
     description: 'Get a section of a [value] from [start] to [end] (exclusive)',
     singleline: 'section of {value} from {start} to {end} (exclusive)',
+    singlelineReadonly: (params) => 'section of {value} from' + 
+      ifExpr(params.start, ' {start}', ' start') + 
+      ' to' +
+      ifExpr(params.end, ' {end}', ' end') + ' (exclusive)',
     comments: {
       value: 'The value to get a section of',
       start: 'The index of the first character in the text',
@@ -157,6 +164,8 @@ export default (registry: Registry) =>
     name: 'Index of Text',
     description: 'Finds the index of [search] in [value] starting at [start]',
     singleline: 'index of {search} in {value} starting at {start}',
+    singlelineReadonly: (params) => 'index of {search} in {value}' + 
+      ifExpr(params.start, ' starting at {start}'),
     comments: {
       value: 'The text to search through',
       search: 'The text to search for',
@@ -172,6 +181,8 @@ export default (registry: Registry) =>
     name: 'Last Index of Text',
     description: 'Finds the last index of [search] in [value] starting at [start]',
     singleline: 'last index of {search} in {value} starting at {start}',
+    singlelineReadonly: (params) => 'last index of {search} in {value}' + 
+      ifExpr(params.start, ' starting at {start}'),
     comments: {
       value: 'The text to search through',
       search: 'The text to search for',
@@ -187,6 +198,10 @@ export default (registry: Registry) =>
     name: 'Trim Text',
     description: 'Remove the whitespace in [value] at the [start] and [end]',
     singleline: 'trim {value} at start {start} and end {end}',
+    singlelineReadonly: (params) => 'trim {value} at start' + 
+      ifExpr(params.start, ' {start}') + 
+      ' and end' + 
+      ifExpr(params.end, ' {end}'),
     comments: {
       value: 'The text to trim',
       start: 'If whitespace should be removed from the start',
@@ -225,6 +240,8 @@ export default (registry: Registry) =>
     name: 'Phonetic Value using Soundex',
     description: 'Computes the phonetic code of a text [value], also known as soundex. The phonetic code can be used to determine if two words sound similar in English. The closer the code is in characters, the more they sound alike.',
     singleline: 'soundex of {value} with minimum length {min} and maximum {max}',
+    singlelineReadonly: (params) => 'soundex of {value} with minimum length {min}' +
+      ifExpr(params.max, ' and maximum {max}'),
     comments: {
       value: 'The text to compute the phonetic code of',
       max: 'The maximum number of characters to return',
@@ -273,6 +290,8 @@ export default (registry: Registry) =>
     name: 'Compare Text',
     description: 'Compare [value] and [test] and [ignoreCase]',
     singleline: 'compare {value} to {test} and ignore case {ignoreCase}',
+    singlelineReadonly: (params) => 'compare {value} to {test}' + 
+      ifExpr(params.ignoreCase, ' and ignore case {ignoreCase}', ' (case sensitive)'),
     comments: {
       value: 'The first text to compare',
       test: 'The second text to compare',
@@ -288,6 +307,8 @@ export default (registry: Registry) =>
     name: 'Like Text',
     description: 'Determines if [value] is like [pattern] using % as a wildcard',
     singleline: '{value} like {pattern} and ignore case {ignoreCase}',
+    singlelineReadonly: (params) => '{value} like {pattern}' + 
+      ifExpr(params.ignoreCase, ' and ignore case {ignoreCase}', ' (case sensitive)'),
     comments: {
       value: 'The text value to compare to the [pattern]',
       pattern: 'The pattern with % wildcards',
@@ -303,6 +324,9 @@ export default (registry: Registry) =>
     name: 'Pad Text',
     description: 'Pad [value] with [padding] with a [min] and [max] length, optionally [append]ing the [padding] to the end',
     singleline: 'pad {value} with {padding} to at least {min} characters and no more than {max} characters optionally appending padding to end {append}',
+    singlelineReadonly: (params) => 'pad {value} with {padding} to at least {min} characters' +
+      ifExpr(params.max, ' and no more than {max} characters') + 
+      ifExpr(params.append, ' optionally appending padding to the end {append}'),
     comments: {
       value: 'The text value to pad',
       padding: 'The text to pad at the start of [value] or at the end if [append] is true',
@@ -321,6 +345,9 @@ export default (registry: Registry) =>
     name: 'Matches Regular Expression',
     description: 'Determines if [value] matches [regex]',
     singleline: '{value} matches {regex}? ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => '{value} matches {regex}?' + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}', ' (case sensitive)') +
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value to test',
       regex: 'The regular expression',
@@ -338,6 +365,10 @@ export default (registry: Registry) =>
     name: 'Split Text with Regular Expression',
     description: 'Determines if [value] matches [regex]',
     singleline: 'split {value} with {regex} limit {limit} ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => 'split {value} with {regex}' + 
+      ifExpr(params.limit, ' limit {limit}') + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}', ' (case sensitive)') + 
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value to split',
       regex: 'The regular expression to split by',
@@ -357,6 +388,9 @@ export default (registry: Registry) =>
     name: 'Get Regular Expression Matches',
     description: 'Get a list of the matches in [value] to a [regex]',
     singleline: 'matches of {regex} in {value} ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => 'matches of {regex} in {value}' + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}', ' (case sensitive)') +
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value to find matches in',
       regex: 'The regular expression to search with',
@@ -374,6 +408,9 @@ export default (registry: Registry) =>
     name: 'Get Regular Expression Match Groups',
     description: 'Get a list of the match groups in [value] to a [regex]',
     singleline: 'match groups of {regex} in {value} ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => 'match groups of {regex} in {value}' + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}') + 
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value to find matches in',
       regex: 'The regular expression to search with',
@@ -391,6 +428,10 @@ export default (registry: Registry) =>
     name: 'Replace Text using Regular Expression',
     description: 'Replace occurrences of [regex] with [replacement] in [value]',
     singleline: '{value} replace {regex} with {replacement} all occurrences {all} ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => '{value} replace {regex} with {replacement}' + 
+      ifExpr(params.all, ' all occurrences {all}') + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}', ' (case sensitive)') + 
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value replace parts of',
       regex: 'The regular expression to replace with',
@@ -411,6 +452,10 @@ export default (registry: Registry) =>
     name: 'Replace Text Dynamically using Regular Expression',
     description: 'Replace occurrences in [value] of [regex] calling [replace] for each match',
     singleline: '{value} replace {regex} using {replace} all occurrences {all} ignore case {ignoreCase} multiple lines {multiline}',
+    singlelineReadonly: (params) => '{value} replace {regex} using {replace}' +
+      ifExpr(params.all, ' all occurrences {all}') + 
+      ifExpr(params.ignoreCase, ' ignore case {ignoreCase}', ' (case sensitive)') + 
+      ifExpr(params.multiline, ' multiple lines {multiline}'),
     comments: {
       value: 'The text value replace parts of',
       regex: 'The regular expression to replace with',

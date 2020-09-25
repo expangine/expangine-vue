@@ -1,5 +1,6 @@
 import { NumberOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -558,6 +559,9 @@ export default (registry: Registry) =>
     name: 'Random Number',
     description: 'Return a random number between [min] and [max], optional a [whole] number that can [includeMax]',
     singleline: 'random number between {min} and {max} as a whole number {whole} where the max is inclusive {includeMax}',
+    singlelineReadonly: (params) => 'random number between {min} and {max}' + 
+      ifExpr(params.whole, ' as a whole number {whole}') + 
+      ifExpr(params.includeMax, ' where the max is inclusive {includeMax}'),
     comments: {
       min: 'The minimum random value to return, defaults to 0',
       max: 'The maximum random value to return, defaults to 1',
@@ -577,6 +581,8 @@ export default (registry: Registry) =>
     name: 'Format Number to Base Text',
     description: 'Format [value] to the base [base] with a minimum number of digits [minDigits]',
     singleline: 'format {value} to base {base} with a minimum number of digits {minDigits}',
+    singlelineReadonly: (params) => 'format {value} to base {base}' + 
+      ifExpr(params.minDigits, ' with a minimum number of digits {minDigits}'),
     comments: {
       value: 'The number to format as text',
       base: 'The base to convert the number to',
@@ -593,6 +599,13 @@ export default (registry: Registry) =>
     name: 'Format Number to Text',
     description: 'Format [value] to text optional with a [prefix] and [suffix], a minimum number of decimal places [minPlaces], a maximum number of decimal places [maxPlaces] or using exponents [useExponnet] and using a [thousandSeparator]',
     singleline: 'format {value} to text with prefix {prefix} suffix {suffix} a minimum number of decimal places {minPlaces} a maximum number of decimal places {maxPlaces} using exponents {useExponent} using the thousand separator {thousandSeparator}',
+    singlelineReadonly: (params) => 'format {value} to text' +
+      ifExpr(params.prefix, ' with prefix {prefix}') +
+      ifExpr(params.suffix, ' suffix {suffix}') +
+      ifExpr(params.minPlaces, ' a minimum number of decimal places {minPlaces}') + 
+      ifExpr(params.maxPlaces, ' a maximum number of decimal places {maxPlaces}') +
+      ifExpr(params.useExponent, ' using exponents {useExponent}') + 
+      ifExpr(params.thousandSeparator, ' using the thousand separator {thousandSeparator}'),
     comments: {
       value: 'The number to format as text',
       prefix: 'The prefix of the result',
@@ -617,6 +630,10 @@ export default (registry: Registry) =>
     name: 'Format Number to Percent',
     description: 'Format [value] to percent (multiplying it by 100), a minimum number of decimal places [minPlaces], a maximum number of decimal places [maxPlaces], and using a [thousandSeparator]',
     singleline: 'format {value} to percent a minimum number of decimal places {minPlaces} a maximum number of decimal places {maxPlaces} using the thousand separator {thousandSeparator}',
+    singlelineReadonly: (params) => 'format {value} to percent' +
+      ifExpr(params.minPlaces, ' a minimum number of decimal places {minPlaces}') + 
+      ifExpr(params.maxPlaces, ' a maximum number of decimal places {maxPlaces}') +
+      ifExpr(params.thousandSeparator, ' using the thousand separator {thousandSeparator}'),
     comments: {
       value: 'The number to format as text',
       minPlaces: 'The minimum number of decimal places to return',
@@ -654,7 +671,9 @@ export default (registry: Registry) =>
   registry.addOperation(NumberOps.isZero, {
     name: 'Is Zero?',
     description: 'Determines whether [value] is zero with an acceptable range of [epsilon]',
-    singleline: '{value} is true',
+    singleline: '{value} is zero within {epsilon}',
+    singlelineReadonly: (params) => '{value} is zero' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The value to compare',
       epsilon: 'The acceptable error range to check, since decimal values cannot be practically represented perfectly in a program',
@@ -669,6 +688,8 @@ export default (registry: Registry) =>
     name: 'Numbers Equal?',
     description: 'Determines whether [value] is equal to [test] with an acceptable range of [epsilon]',
     singleline: '{value} equals {test} within {epsilon}',
+    singlelineReadonly: (params) => '{value} equals {test}' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The first value to compare',
       test: 'The second value to compare',
@@ -684,6 +705,8 @@ export default (registry: Registry) =>
     name: 'Numbers Not Equal?',
     description: 'Determines whether [value] is not equal to [test] with an acceptable range of [epsilon]',
     singleline: '{value} not equal to {test} within {epsilon}',
+    singlelineReadonly: (params) => '{value} not equal to {test}' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The first value to compare',
       test: 'The second value to compare',
@@ -743,6 +766,10 @@ export default (registry: Registry) =>
     name: 'Is Number Between?',
     description: 'Determines whether [value] is between [min] and [max] where min is inclusive [minInclusive] and max is inclusive [maxInclusive]',
     singleline: '{value} between {min} (inclusive {minInclusive}) and {max} (inclusive {maxInclusive})',
+    singlelineReadonly: (params) => '{value} between {min}' + 
+      ifExpr(params.minInclusive, ' (inclusive {minInclusive})', ' (inclusive)') + 
+      ' and  {max}' +
+      ifExpr(params.maxInclusive, ' (inclusive {maxInclusive})', ' (inclusive)'),
     comments: {
       value: 'The value to compare',
       min: 'The minimum value allowed',
@@ -761,6 +788,8 @@ export default (registry: Registry) =>
     name: 'Whole Number?',
     description: 'Determines whether [value] is a whole number with an acceptable range of [epsilon]',
     singleline: '{value} is whole within {epsilon}',
+    singlelineReadonly: (params) => '{value} is whole' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The value to check for wholeness',
       epsilon: 'The acceptable error range to check, since decimal values cannot be practically represented perfectly in a program',
@@ -775,6 +804,8 @@ export default (registry: Registry) =>
     name: 'Decimal Number?',
     description: 'Determines whether [value] is a number with a fractional value with an acceptable range of [epsilon]',
     singleline: '{value} is decimal within {epsilon}',
+    singlelineReadonly: (params) => '{value} is decimal' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The value to check for a fractional value',
       epsilon: 'The acceptable error range to check, since decimal values cannot be practically represented perfectly in a program',
@@ -809,6 +840,8 @@ export default (registry: Registry) =>
     name: 'Number Divisible By?',
     description: 'Determines whether [value] is divisible by [by]with an acceptable range of [epsilon]',
     singleline: '{value} is divisible by {by} within {epsilon}',
+    singlelineReadonly: (params) => '{value} is divisible by {by}' +
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The value to check',
       by: 'The divisor in the divisibility check',

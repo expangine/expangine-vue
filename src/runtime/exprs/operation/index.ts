@@ -1,5 +1,5 @@
 import { ExpressionVisuals } from '../ExpressionVisuals';
-import { OperationExpression, objectReduce } from 'expangine-runtime';
+import { OperationExpression } from 'expangine-runtime';
 
 import OperationEditor from './OperationEditor.vue';
 import { templateReplace } from '@/common';

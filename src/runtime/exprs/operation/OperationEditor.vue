@@ -31,7 +31,7 @@
     </template>
   </v-autocomplete>
 
-  <ex-templated v-else :template="operationVisuals.singleline" class="ex-center-aligned">
+  <ex-templated v-else :template="template" class="ex-center-aligned">
     <template #prefix>
       <ex-expression-menu
         v-if="!readOnly"
@@ -157,6 +157,11 @@ export default ExpressionBase<OperationExpression>().extend({
     changing: false,
   }),
   computed: {
+    template(): string {
+      return this.readOnly && this.operationVisuals.singlelineReadonly
+        ? this.operationVisuals.singlelineReadonly(this.value.params)
+        : this.operationVisuals.singleline;
+    },
     filterOperation: () => filterOperation,
     inlineClass(): string {
       return (this.readOnly || this.multiline ? '' : 'pr-0 ') + 'pl-0' + (this.readOnly && !this.multiline ? ' d-none' : '');

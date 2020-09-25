@@ -1,5 +1,6 @@
 import { ColorOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -38,6 +39,8 @@ export default (registry: Registry) =>
     name: 'Build Color',
     description: 'Build color with [r], [g], [b], [a]',
     singleline: 'new color r={r} g={g} b={b} a={a}',
+    singlelineReadonly: (params) => 'new color r={r} g={g} b={b}' +
+      ifExpr(params.a, ' a={a}'),
     comments: {
       r: 'The red component',
       g: 'The green component',
@@ -54,6 +57,8 @@ export default (registry: Registry) =>
     name: 'Map Color',
     description: 'map color [value] with [r], [g], [b], [a]',
     singleline: 'new color r={r} g={g} b={b} a={a}',
+    singlelineReadonly: (params) => 'new color r={r} g={g} b={b}' + 
+      ifExpr(params.a, ' a={a}'),
     comments: {
       value: 'The color to map to a new color',
       r: 'A new red component based on the current',
@@ -75,6 +80,8 @@ export default (registry: Registry) =>
     name: 'Generic Color Operation',
     description: 'color operation between [value] and [test] with [r], [g], [b], [a]',
     singleline: 'operate on {value} and {test} with r={r} g={g} b={b} a={a}',
+    singlelineReadonly: (params) => 'operate on {value} and {test} with r={r} g={g} b={b}' + 
+      ifExpr(params.a, ' a={a}'),
     comments: {
       value: 'The first color to operate on',
       test: 'The second color to operate on',
@@ -108,6 +115,8 @@ export default (registry: Registry) =>
     name: 'Add Colors',
     description: '[value] + [addend]',
     singleline: '{value} + {addend} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} + {addend}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The first color to add',
       addend: 'The second color to add',
@@ -123,6 +132,8 @@ export default (registry: Registry) =>
     name: 'Add Scaled Color',
     description: '[value] + [addend] * [addendScale]',
     singleline: '{value} + {subtrahend} * {addendScale} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} + {subtrahend} * {addendScale}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to add to',
       addend: 'The color to add, scaled by some value',
@@ -139,6 +150,8 @@ export default (registry: Registry) =>
     name: 'Subtract Colors',
     description: '[value] - [subtrahend]',
     singleline: '{value} - {subtrahend} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} - {subtrahend}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to subtract from',
       subtrahend: 'The color to subtract',
@@ -154,6 +167,8 @@ export default (registry: Registry) =>
     name: 'Multiply Colors',
     description: '[value] * [multiplier]',
     singleline: '{value} * {multiplier} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} * {multiplier}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to multiply',
       multiplier: 'The amount to multiply by',
@@ -169,6 +184,8 @@ export default (registry: Registry) =>
     name: 'Divide Colors',
     description: '[value] / [divisor]',
     singleline: '{value} / {divisor} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} / {divisor}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to multiply',
       divisor: 'The amount to divide by',
@@ -184,6 +201,8 @@ export default (registry: Registry) =>
     name: 'Modulus Colors',
     description: '[value] % [divisor]',
     singleline: '{value} % {divisor} including alpha {alpha}',
+    singlelineReadonly: (params) => '{value} % {divisor}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to mod',
       divisor: 'The amount to mod by',
@@ -295,6 +314,8 @@ export default (registry: Registry) =>
     name: 'Invert Color',
     description: 'Invert the color [value]',
     singleline: 'invert {value} including alpha {alpha}',
+    singlelineReadonly: (params) => 'invert {value}' + 
+      ifExpr(params.alpha, ' including alpha {alpha}'),
     comments: {
       value: 'The color to invert',
       alpha: 'True if the alpha components should be operated on, otherwise the alpha in [value] is used',
@@ -383,6 +404,8 @@ export default (registry: Registry) =>
     name: 'Colors Equal?',
     description: 'Determines whether [value] is equal to [test]',
     singleline: '{value} equals {test} within {epsilon}',
+    singlelineReadonly: (params) => '{value} equals {test}' + 
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The color to evaluate',
       test: 'The test object to compare against',
@@ -398,6 +421,8 @@ export default (registry: Registry) =>
     name: 'Colors Not Equal?',
     description: 'Determines whether [value] is not equal to [test]',
     singleline: '{value} not equal to {test} within {epsilon}',
+    singlelineReadonly: (params) => '{value} not equal to {test}' + 
+      ifExpr(params.epsilon, ' within {epsilon}'),
     comments: {
       value: 'The color to evaluate',
       test: 'The test color to compare against',

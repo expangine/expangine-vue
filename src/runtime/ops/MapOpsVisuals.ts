@@ -1,5 +1,6 @@
 import { MapOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -27,6 +28,8 @@ export default (registry: Registry) =>
     name: 'Create Map For',
     description: 'Create an empty Map for [value]s and [key]s with given types',
     singleline: 'create map for values {value} and keys {key}',
+    singlelineReadonly: (params) => 'create map for values {value}' + 
+      ifExpr(params.key, ' and keys {key}'),
     comments: {
       value: 'The value which this map will have',
       key: 'The key which this map will have',
@@ -176,6 +179,9 @@ export default (registry: Registry) =>
     name: 'Copy Map',
     description: 'Copy [map] optionally doing a [deepCopy] of each value in the map and [deepCopyKey] of each matching key',
     singleline: 'copy {map} and deep copy the values with {deepCopy} and keys with {deepCopyKey}',
+    singlelineReadonly: (params) => 'copy {map}' + 
+      ifExpr(params.deepCopy, ' and deep copy the values with {deepCopy}') + 
+      ifExpr(params.deepCopyKey, ' and keys with {deepCopyKey}'),
     comments: {
       map: 'The map to copy',
       deepCopy: 'The expression which copies the current value',
@@ -197,6 +203,9 @@ export default (registry: Registry) =>
     name: 'Transform Map',
     description: 'Transform [map] values with [transform] and/or the keys with [transformKey]',
     singleline: 'transform {map} values with {transform} and keys with {transformKey}',
+    singlelineReadonly: (params) => 'transform {map}' + 
+      ifExpr(params.transform, ' values with {transform}' + ifExpr(params.transformKey, ' and')) + 
+      ifExpr(params.transformKey, ' keys with {transformKey}'),
     comments: {
       map: 'The map to †ransform',
       transform: 'The expression which transforms a value',

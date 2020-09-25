@@ -1,5 +1,6 @@
 import { DateOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -59,6 +60,8 @@ export default (registry: Registry) =>
     name: 'Parse Date',
     description: 'Parse a date from one of many acceptable [value] types',
     singleline: 'parse {value} as date as UTC {parseAsUTC}',
+    singlelineReadonly: (params) => 'parse {value} as date' + 
+      ifExpr(params.parseAsUTC, ' as UTC {parseAsUTC}'),
     comments: {
       value: 'The value to parse',
       parseAsUTC: 'If a text value should be parsed as a UTC timestamp',
@@ -73,6 +76,8 @@ export default (registry: Registry) =>
     name: 'Date from Text',
     description: 'Parse a date from [value]',
     singleline: 'parse text {value} as date as UTC {parseAsUTC}',
+    singlelineReadonly: (params) => 'parse text {value} as date' + 
+      ifExpr(params.parseAsUTC, ' as UTC {parseAsUTC}'),
     comments: {
       value: 'The value to parse',
       parseAsUTC: 'If a text value should be parsed as a UTC timestamp',
@@ -193,6 +198,8 @@ export default (registry: Registry) =>
     name: 'Change Date to end of Unit of Time',
     description: 'Change [value] to end of [unit] [inclusive]',
     singleline: 'set {value} to end of {unit} inclusively? {inclusive}',
+    singlelineReadonly: (params) => 'set {value} to end of {unit}' + 
+      ifExpr(params.inclusive, ' inclusively? {inclusive}', ' (exclusive)'),
     comments: {
       value: 'The date value',
       unit: 'The unit of time',
@@ -263,6 +270,9 @@ export default (registry: Registry) =>
     name: 'Difference between Dates',
     description: 'Difference in [unit] between [value] and [test], absolute value [absolute], and adjust [adjust]',
     singleline: 'difference in {unit} between {value} and {test} absolute value {absolute} and adjusted with {adjust}',
+    singlelineReadonly: (params) => 'difference in {unit} between {value} and {test}' + 
+      ifExpr(params.absolute, ' absolute value {absolute}') + 
+      ifExpr(params.adjust, ' and adjusted with {adjust}'),
     comments: {
       value: 'The value to compare',
       test: 'The test value to compare against',
@@ -398,6 +408,10 @@ export default (registry: Registry) =>
     name: 'Is Date in Range?',
     description: 'Determines whether [value] is between [start] [startInclusive] and [end] [endInclusive] with the same unit of time [unit]',
     singleline: '{start} < {value} < {end} in the same {unit} where start is inclusive {startInclusive} and end is inclusive {endInclusive}',
+    singlelineReadonly: (params) => '{start} ' + 
+      ifExpr(params.startInclusive, '<', '<=') + ' {value} < {end} in the same {unit}' + 
+      ifExpr(params.startInclusive, ' where start is inclusive {startInclusive}') + 
+      ifExpr(params.endInclusive, ' and end is inclusive {endInclusive}'),
     comments: {
       value: 'The value to evaluate',
       start: 'The start date of the range',
@@ -429,6 +443,8 @@ export default (registry: Registry) =>
     name: 'Is Date at End Of?',
     description: 'Determines whether [value] is end of unit [unit], inclusive [inclusive]',
     singleline: '{value} is end of {unit} inclusive {inclusive}',
+    singlelineReadonly: (params) => '{value} is end of {unit}' + 
+      ifExpr(params.inclusive, ' inclusive {inclusive}', ' (exclusive)'),
     comments: {
       value: 'The value to evaluate',
       unit: 'The unit of time to use to compare the dates',

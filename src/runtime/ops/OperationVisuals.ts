@@ -1,4 +1,4 @@
-import { ExpressionMap, Type } from 'expangine-runtime';
+import { ExpressionMap, Type, Expression } from 'expangine-runtime';
 import { Registry } from '../Registry';
 
 
@@ -10,6 +10,7 @@ export type OperationVisuals<
   name: string;
   description: string;
   singleline: string;
+  singlelineReadonly?: (params: Record<P | O, Expression>) => string;
   comments: Record<P | O, string>;
   returnComments: string;
   keywords?: string[];

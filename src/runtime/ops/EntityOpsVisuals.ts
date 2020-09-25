@@ -1,5 +1,6 @@
 import { EntityOps, Exprs } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -9,6 +10,8 @@ export default (registry: Registry) =>
     name: 'Create a Type instance',
     description: 'Create a new instance of the Type [name].',
     singleline: 'new {name} with {initial}',
+    singlelineReadonly: (params) => 'new {name}' + 
+      ifExpr(params.initial, ' with {initial}'),
     comments: {
       name: 'The name of the Type to create',
       initial: 'The initial values of the Type',
@@ -26,6 +29,8 @@ export default (registry: Registry) =>
     name: 'Get Type instances',
     description: 'Get the instances of [name] Type, optionally [where]',
     singleline: 'get {name} {where}',
+    singlelineReadonly: (params) => 'get {name}' + 
+      ifExpr(params.where, ' {where}'),
     comments: {
       name: 'The name of the Type',
       where: 'Only return an instance when this is true',

@@ -1,5 +1,6 @@
 import { ListOps } from 'expangine-runtime';
 import { Registry } from '../Registry';
+import { ifExpr } from './helpers';
 
 
 export default (registry: Registry) =>
@@ -47,6 +48,8 @@ export default (registry: Registry) =>
     name: 'Build List',
     description: 'Build a List with [count] items of [item]',
     singleline: 'build list with {count} items of {item} using the same item {sameItem}',
+    singlelineReadonly: (params) => 'build list with {count} items of {item}' + 
+      ifExpr(params.sameItem, ' using the same item {sameItem}'),
     comments: {
       count: 'The number of items to be placed in the list',
       item: 'The item to place in the list. If [sameItem] is true the same exact item is placed at each index, otherwise a new item will be generated for each index in the list.',
@@ -227,6 +230,9 @@ export default (registry: Registry) =>
     name: 'Find Item Where',
     description: 'Finds an item in [list] that meet criteria [where], starting at [start] and optionally searching in [reverse]',
     singleline: 'find item in {list} where {where} starting at {start} and searching in reverse {reverse}',
+    singlelineReadonly: (params) => 'find item in {list} where {where}' + 
+      ifExpr(params.start, 'starting at {start}') + 
+      ifExpr(params.reverse, ' and searching in reverse {reverse}'),
     comments: {
       list: 'The list to search through',
       where: 'The condition used to find the item being searched',
@@ -249,6 +255,8 @@ export default (registry: Registry) =>
     name: 'Copy List',
     description: 'Copy [list] optionally doing a [deepCopy] of each item in the list',
     singleline: 'copy {list} and deep copy the items with {deepCopy}',
+    singlelineReadonly: (params) => 'copy {list}' + 
+      ifExpr(params.deepCopy, ' and deep copy the items with {deepCopy}'),
     comments: {
       list: 'The list to copy',
       deepCopy: 'The expression which copies the current item [copy]',
@@ -356,6 +364,8 @@ export default (registry: Registry) =>
     name: 'Duplicate items from List',
     description: 'Returns a list with the duplicate items from [list]',
     singleline: 'get duplicate items from {list} with comparison {isEqual} and only allow duplicates once {once}',
+    singlelineReadonly: (params) => 'get duplicate items from {list} with comparison {isEqual}' + 
+      ifExpr(params.once, ' and only allow duplicates once {once}'),
     comments: {
       list: 'The list to get duplicate items from',
       isEqual: 'The comparison expression',
@@ -431,6 +441,8 @@ export default (registry: Registry) =>
     name: 'Item Index',
     description: 'Finds the index of an [item] in a [list]',
     singleline: 'find {item} in {list} where is equal {isEqual} starting at {start}',
+    singlelineReadonly: (params) => 'find {item} in {list} where is equal {isEqual}' + 
+      ifExpr(params.start, ' starting at {start}'),
     comments: {
       list: 'The list to search through',
       item: 'The item to look for',
@@ -452,6 +464,8 @@ export default (registry: Registry) =>
     name: 'Item Index from End',
     description: 'Finds the last index of an [item] in a [list]',
     singleline: 'find {item} in {list} starting at the end where is equal {isEqual} starting at {start}',
+    singlelineReadonly: (params) => 'find {item} in {list} starting at the end where is equal {isEqual}' + 
+      ifExpr(params.start, ' starting at {start}'),
     comments: {
       list: 'The list to search through',
       item: 'The item to look for',
@@ -473,6 +487,9 @@ export default (registry: Registry) =>
     name: 'Find Index in List',
     description: 'Finds the first index in the [list] that meets the [where] criteria',
     singleline: 'find index in {list} where {where} searching in reverse {reverse} starting at {start}',
+    singlelineReadonly: (params) => 'find index in {list} where {where}' + 
+      ifExpr(params.reverse, ' searching in reverse {reverse}') + 
+      ifExpr(params.start, ' starting at {start}'),
     comments: {
       list: 'The list to search through',
       start: 'The starting index, defaults to 0',
@@ -556,6 +573,10 @@ export default (registry: Registry) =>
     name: 'Join Items into Text',
     description: 'Join items from [list] into text using a [delimiter]',
     singleline: 'join items in {list} with delimiter {delimiter} by converting items to text with {toText} and adding the prefix {prefix} and suffix {suffix}',
+    singlelineReadonly: (params) => 'join items in {list} with delimiter {delimiter}' + 
+      ifExpr(params.toText, ' by converting items to text with {toText}') + 
+      ifExpr(params.prefix, ' and adding the prefix {prefix}') + 
+      ifExpr(params.suffix, ' and suffix {suffix}'),
     comments: {
       list: 'The list to join the items of',
       delimiter: 'The delimiter used to join the items',
@@ -581,6 +602,8 @@ export default (registry: Registry) =>
     name: 'Iterate List',
     description: 'Iterate over [list] and call [each] for each item optionally going in [reverse]',
     singleline: 'iterate {list} calling {each} for each item in reverse {reverse}',
+    singlelineReadonly: (params) => 'iterate {list} calling {each}' + 
+      ifExpr(params.reverse, ' for each item in reverse {reverse}'),
     comments: {
       list: 'The list to iterate',
       each: 'The expression to call for each item in the list',
@@ -700,6 +723,8 @@ export default (registry: Registry) =>
     name: 'Group Items By',
     description: 'Group items in [list] by [by] and transform items with [getValue]',
     singleline: 'group items in {list} by {by} and transform items with {getValue}',
+    singlelineReadonly: (params) => 'group items in {list} by {by}' + 
+      ifExpr(params.getValue, ' and transform items with {getValue}'),
     comments: {
       list: 'The list to group',
       by: 'Takes the current item and returns a value to group items by',
@@ -720,6 +745,8 @@ export default (registry: Registry) =>
     name: 'Group Items into Map',
     description: 'Group items in [list] into a map by [getKey] and transform items with [getValue]',
     singleline: 'group items in {list} into a map by {getKey} and transform items with {getValue}',
+    singlelineReadonly: (params) => 'group items in {list} into a map by {getKey}' + 
+      ifExpr(params.getValue, ' and transform items with {getValue}'),
     comments: {
       list: 'The list to group',
       getKey: 'Takes the current item and returns a key to group items by',
@@ -740,6 +767,8 @@ export default (registry: Registry) =>
     name: 'Items to Map',
     description: 'Convert items in [list] into a map by [getKey] and transform items with [getValue]',
     singleline: 'convert items in {list} into a map by {getKey} and transform items with {getValue}',
+    singlelineReadonly: (params) => 'convert items in {list} into a map by {getKey}' + 
+      ifExpr(params.getValue, ' and transform items with {getValue}'),
     comments: {
       list: 'The list to convert',
       getKey: 'Takes the current item and returns a key to convert items by',
