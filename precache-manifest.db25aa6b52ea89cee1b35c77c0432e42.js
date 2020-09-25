@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "browserconfig.xml"
   },
   {
-    "revision": "5b8a001e2985d3f3c1a5",
+    "revision": "6cbe56772ae5b9539402",
     "url": "css/app.5f8b2588.css"
   },
   {
@@ -52,12 +52,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "examples/index.json"
   },
   {
-    "revision": "0545589d73d717cc0eec935c9d77e059",
+    "revision": "c88e5a5f7b31112acd016e166b861078",
     "url": "index.html"
   },
   {
-    "revision": "5b8a001e2985d3f3c1a5",
-    "url": "js/app.9a14308b.js"
+    "revision": "6cbe56772ae5b9539402",
+    "url": "js/app.86b66b14.js"
   },
   {
     "revision": "e25f6073c0ace23efc8b",
