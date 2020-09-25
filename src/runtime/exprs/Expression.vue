@@ -103,12 +103,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Expression, OperationExpression, NoExpression } from 'expangine-runtime';
 import { ShortcutContext } from '@/app/Shortcuts';
 import { Preferences, PreferenceCategory } from '@/app/Preference';
-import { sendNotification } from '@/app/Notify';
-import { getConfirmation } from '@/app/Confirm';
 import { ExpressionVisuals } from './ExpressionVisuals';
 import ExpressionBase from './ExpressionBase';
 

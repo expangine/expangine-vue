@@ -1,5 +1,5 @@
 <template>
-  <v-tabs>
+  <v-tabs v-model="tab">
     <v-tab>Input</v-tab>
     <v-tab v-if="type">Type</v-tab>
     <v-tab v-if="type">Data</v-tab>
@@ -27,36 +27,38 @@
       @click="load"
     >{{ labelLoad }}</v-btn>
 
-    <v-tab-item class="data-container">
-      <v-textarea
-        solo
-        flat
-        filled
-        hide-details
-        height="100%"
-        placeholder="Paste your JS code or JSON here"
-        v-focus-on-create="'textarea'"
-        v-model="input"
-      ></v-textarea>
-    </v-tab-item>
+    <v-tabs-items touchless v-model="tab">
+      <v-tab-item class="data-container">
+        <v-textarea
+          solo
+          flat
+          filled
+          hide-details
+          height="100%"
+          placeholder="Paste your JS code or JSON here"
+          v-focus-on-create="'textarea'"
+          v-model="input"
+        ></v-textarea>
+      </v-tab-item>
 
-    <v-tab-item class="data-container" v-if="type">
-      <ex-type-editor
-        :type="type"
-        :registry="registry"
-        :settings="settings"
-        @change="onChange"
-      ></ex-type-editor>
-    </v-tab-item>
+      <v-tab-item class="data-container" v-if="type">
+        <ex-type-editor
+          :type="type"
+          :registry="registry"
+          :settings="settings"
+          @change="onChange"
+        ></ex-type-editor>
+      </v-tab-item>
 
-    <v-tab-item class="data-container" v-if="data">
-      <ex-type-input
-        v-model="data"
-        :type="dataType"
-        :registry="registry"
-        :settings="settings"
-      ></ex-type-input>
-    </v-tab-item>
+      <v-tab-item class="data-container" v-if="data">
+        <ex-type-input
+          v-model="data"
+          :type="dataType"
+          :registry="registry"
+          :settings="settings"
+        ></ex-type-input>
+      </v-tab-item>
+    </v-tabs-items>
   </v-tabs>
 </template>
 
@@ -94,6 +96,7 @@ export default Vue.extend({
     input: '',
     data: null as any,
     removeDescribedRestrictions: true,
+    tab: 0,
   }),
   computed: {
     isRemoveRestrictions() {

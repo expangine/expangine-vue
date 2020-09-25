@@ -644,7 +644,7 @@ export default (registry: Registry) =>
   registry.addOperation(NumberOps.isValid, {
     name: 'Is Number?',
     description: 'Determines whether [value] is a valid value for Number',
-    singleline: 'is {value} number?',
+    singleline: '{value} is number?',
     comments: {
       value: 'The value to evaluate',
     },

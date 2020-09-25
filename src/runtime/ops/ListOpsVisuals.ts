@@ -542,6 +542,16 @@ export default (registry: Registry) =>
     returnComments: 'A random item from the list, or undefined if the list is empty.',
   });
 
+  registry.addOperation(ListOps.flatten, {
+    name: 'Flatten List or Tuple of Objects',
+    description: 'Flatten [list] to object',
+    singleline: 'flatten {list} to object',
+    comments: {
+      list: 'The list or tuple of objects to flatten into an object',
+    },
+    returnComments: 'A random item from the list, or undefined if the list is empty.',
+  });
+
   registry.addOperation(ListOps.join, {
     name: 'Join Items into Text',
     description: 'Join items from [list] into text using a [delimiter]',
@@ -873,7 +883,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.sum, {
     name: 'Items Sum',
     description: 'Get sum of a [value] in a [list]',
-    singleline: 'sum of {value} in {list}',
+    singleline: 'from {list} sum {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -889,7 +899,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.avg, {
     name: 'Items Average',
     description: 'Get average [value] in a [list]',
-    singleline: 'average {value} in {list}',
+    singleline: 'from {list} average {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -905,7 +915,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.std, {
     name: 'Items Standard Deviation',
     description: 'Get standard deviation of a [value] in a [list]',
-    singleline: 'standard deviation of {value} in {list}',
+    singleline: 'from {list} standard deviation of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -921,7 +931,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.variance, {
     name: 'Items Variance',
     description: 'Get variance of a [value] in a [list]',
-    singleline: 'variance of {value} in {list}',
+    singleline: 'from {list} variance of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -937,7 +947,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.median, {
     name: 'Items Median',
     description: 'Get median of a [value] in a [list]',
-    singleline: 'median of {value} in {list}',
+    singleline: 'from {list} median of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -953,7 +963,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitand, {
     name: 'Items Bitwise AND',
     description: 'Get bitwise AND of a [value] in a [list]',
-    singleline: 'bitwise AND of {value} in {list}',
+    singleline: 'from {list} bitwise AND of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -969,7 +979,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitor, {
     name: 'Items Bitwise OR',
     description: 'Get bitwise OR of a [value] in a [list]',
-    singleline: 'bitwise OR of {value} in {list}',
+    singleline: 'from {list} bitwise OR of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -985,7 +995,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.bitxor, {
     name: 'Items Bitwise XOR',
     description: 'Get bitwise XOR of a [value] in a [list]',
-    singleline: 'bitwise XOR of {value} in {list}',
+    singleline: 'from {list} bitwise XOR of {value}',
     comments: {
       list: 'The list to search through',
       value: 'The expression which takes an item and returns a number value',
@@ -1001,7 +1011,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.isValid, {
     name: 'Is List?',
     description: 'Determines whether [value] is a valid value for List',
-    singleline: 'is {value} list?',
+    singleline: '{value} is list?',
     comments: {
       value: 'The value to evaluate',
     },
@@ -1011,7 +1021,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.isEmpty, {
     name: 'Is Empty?',
     description: 'Determines whether [list] is empty',
-    singleline: 'is {list} empty?',
+    singleline: '{list} is empty?',
     comments: {
       list: 'The list to check',
     },
@@ -1021,7 +1031,7 @@ export default (registry: Registry) =>
   registry.addOperation(ListOps.isNotEmpty, {
     name: 'Is Not Empty?',
     description: 'Determines whether [list] is not empty',
-    singleline: 'is {list} not empty?',
+    singleline: '{list} is not empty?',
     comments: {
       list: 'The list to check',
     },

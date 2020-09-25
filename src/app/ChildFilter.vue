@@ -1,5 +1,5 @@
 <template>
-  <div v-intersect="handleFocus">
+  <div v-intersect="handleFocus" class="ex-child-filter">
     <v-text-field
       ref="filter"
       solo
@@ -74,7 +74,7 @@ export default Vue.extend({
       const children = parent.querySelectorAll(this.childClasses);
       const lowered = this.filter.toLowerCase();
 
-      for (const child of children) 
+      children.forEach((child) =>
       {
         const visible = this.isVisible(child, lowered);
 
@@ -93,7 +93,7 @@ export default Vue.extend({
           child.classList.remove(this.childClass);
           child.classList.add(this.childClassHidden);
         }
-      }
+      });
 
       let node = this.$parent as any;
 
@@ -116,3 +116,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.ex-child-filter {
+  max-width: 500px;
+}
+</style>

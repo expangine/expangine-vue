@@ -23,6 +23,7 @@
     "metaphone": "^1.0.5",
     "papaparse": "^5.1.0",
     "register-service-worker": "^1.6.2",
+    "scrute": "^0.1.1",
     "vue": "^2.6.10",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.3.4",
@@ -42,7 +43,7 @@
     "sass": "^1.17.4",
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.7",
     "vue-cli-plugin-vuetify": "^0.6.3",
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.2.2"

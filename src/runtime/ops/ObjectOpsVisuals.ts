@@ -109,12 +109,13 @@ export default (registry: Registry) =>
       e: 'none',
     },
     returnComments: 'Return a merged copy of [a], [b], [c], [d], and [e] where properties in each subsequent object overrides the properties of the objects before.',
+    keywords: ['merge', 'object'],
   });
 
   registry.addOperation(ObjectOps.isValid, {
     name: 'Is Object?',
     description: 'Determines whether [value] is a valid value for Object',
-    singleline: 'is {value} object?',
+    singleline: '{value} is object?',
     comments: {
       value: 'The value to evaluate',
     },

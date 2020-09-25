@@ -188,8 +188,13 @@
                       <template v-for="(expr, index) in copiedOptions">
                         <v-list-item :key="index" @click="paste(expr.value)">
                           <v-list-item-content>
-                            <v-list-item-title>{{ expr.text }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ expr.description }}</v-list-item-subtitle>
+                            <v-list-item-title 
+                              v-html="expr.text"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              :title="expr.description"
+                              v-html="expr.description"
+                            ></v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
                       </template>

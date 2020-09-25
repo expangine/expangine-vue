@@ -556,7 +556,7 @@ export default (registry: Registry) =>
   registry.addOperation(TextOps.isValid, {
     name: 'Is Text?',
     description: 'Determines whether [value] is a valid value for Text',
-    singleline: 'is {value} text?',
+    singleline: '{value} is text?',
     comments: {
       value: 'The value to evaluate',
     },
@@ -566,7 +566,7 @@ export default (registry: Registry) =>
   registry.addOperation(TextOps.isEmpty, {
     name: 'Is Text Empty?',
     description: 'Determines whether [value] has zero characters',
-    singleline: 'is {value} empty?',
+    singleline: '{value} is empty?',
     comments: {
       value: 'The value to evaluate',
     },
@@ -576,7 +576,7 @@ export default (registry: Registry) =>
   registry.addOperation(TextOps.isNotEmpty, {
     name: 'Is Text Not Empty?',
     description: 'Determines whether [value] has more than zero characters',
-    singleline: 'is {value} not empty?',
+    singleline: '{value} is not empty?',
     comments: {
       value: 'The value to evaluate',
     },
@@ -696,7 +696,7 @@ export default (registry: Registry) =>
   registry.addOperation(TextOps.isUuid, {
     name: 'Is UUID?',
     description: 'Determines whether [value] is a UUID',
-    singleline: 'is {value} uuid?',
+    singleline: '{value} is uuid?',
     comments: {
       value: 'The text to evaluate for UUID',
     },

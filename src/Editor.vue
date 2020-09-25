@@ -297,8 +297,9 @@
       </div>
 
       <v-tabs-items 
-        class="explorer-tabs"
         v-else-if="tabs.length > 0"
+        touchless
+        class="explorer-tabs"
         v-model="currentTab">
         <template v-for="(tab, tabIndex) in tabs">
           <v-tab-item :key="tabIndex">

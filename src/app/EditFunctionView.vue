@@ -34,111 +34,113 @@
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
-      <v-tab-item>
-        <ex-type-editor
-          hide-settings
-          no-transform
-          :type="func.params"
-          :required-type="requiredParamsType"
-          :registry="registry"
-          :settings="settings"
-          @change="onChange"
-          @prop:remove="onArgumentRemove"
-          @prop:rename="onArgumentRename"
-        ></ex-type-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <ex-expression-editor
-          :value="func.expression"
-          :context="func.params"
-          :registry="registry"
-          :settings="settings"
-          @input="onProgramChange"
-        ></ex-expression-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-textarea
-                outlined
-                hide-details
-                auto-grow
-                rows="5"
-                label="Description"
-                v-model="func.description"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-chip label>
-                Created:&nbsp;<timeago :datetime="func.created"></timeago>
-              </v-chip>
-              <v-chip label class="ml-4">
-                Updated:&nbsp;<timeago :datetime="func.updated"></timeago>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-      <v-tab-item>
-        <ex-test-program
-          :registry="registry"
-          :program="func.expression"
-          :input-type="func.params"
-        ></ex-test-program>
-      </v-tab-item>
-      <v-tab-item>
-        <v-simple-table v-if="hasTests">
-          <colgroup>
-            <col style="width: 48px;">
-            <col style="width: 40%;">
-            <col style="width: 60%;">
-            <col style="width: 96px;">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="test in func.tests">
-              <ex-func-test-row
-                :key="test.name"
-                :test="test"
-                :func="func"
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <ex-type-editor
+            hide-settings
+            no-transform
+            :type="func.params"
+            :required-type="requiredParamsType"
+            :registry="registry"
+            :settings="settings"
+            @change="onChange"
+            @prop:remove="onArgumentRemove"
+            @prop:rename="onArgumentRename"
+          ></ex-type-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <ex-expression-editor
+            :value="func.expression"
+            :context="func.params"
+            :registry="registry"
+            :settings="settings"
+            @input="onProgramChange"
+          ></ex-expression-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  outlined
+                  hide-details
+                  auto-grow
+                  rows="5"
+                  label="Description"
+                  v-model="func.description"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip label>
+                  Created:&nbsp;<timeago :datetime="func.created"></timeago>
+                </v-chip>
+                <v-chip label class="ml-4">
+                  Updated:&nbsp;<timeago :datetime="func.updated"></timeago>
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item>
+          <ex-test-program
+            :registry="registry"
+            :program="func.expression"
+            :input-type="func.params"
+          ></ex-test-program>
+        </v-tab-item>
+        <v-tab-item>
+          <v-simple-table v-if="hasTests">
+            <colgroup>
+              <col style="width: 48px;">
+              <col style="width: 40%;">
+              <col style="width: 60%;">
+              <col style="width: 96px;">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="test in func.tests">
+                <ex-func-test-row
+                  :key="test.name"
+                  :test="test"
+                  :func="func"
+                  :registry="registry"
+                ></ex-func-test-row>
+              </template>
+            </tbody>
+          </v-simple-table>
+          <div class="text-center pa-3">
+            <v-btn @click="addTest">
+              <v-icon>mdi-plus</v-icon>
+              Unit Test
+            </v-btn>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <p v-if="references.length === 0" class="pa-3">
+            <v-alert type="info">
+              This Function is not referenced by anything.
+            </v-alert>
+          </p>
+          <v-list dense v-else>
+            <template v-for="(ref, index) in references">
+              <ex-definitions-reference 
+                :key="index"
+                :reference="ref" 
                 :registry="registry"
-              ></ex-func-test-row>
+              ></ex-definitions-reference>
             </template>
-          </tbody>
-        </v-simple-table>
-        <div class="text-center pa-3">
-          <v-btn @click="addTest">
-            <v-icon>mdi-plus</v-icon>
-            Unit Test
-          </v-btn>
-        </div>
-      </v-tab-item>
-      <v-tab-item>
-        <p v-if="references.length === 0" class="pa-3">
-          <v-alert type="info">
-            This Function is not referenced by anything.
-          </v-alert>
-        </p>
-        <v-list dense v-else>
-          <template v-for="(ref, index) in references">
-            <ex-definitions-reference 
-              :key="index"
-              :reference="ref" 
-              :registry="registry"
-            ></ex-definitions-reference>
-          </template>
-        </v-list>
-      </v-tab-item>
+          </v-list>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
 
     <v-alert 

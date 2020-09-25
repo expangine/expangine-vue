@@ -17,6 +17,8 @@ const PREF_REMOVE_EXPRESSION = Preferences.define({
   defaultValue: false,
 });
 
+const DESCRIPTION_MAX = 64;
+
 
 export type ExpressionEventListeners = Record<string, (event: Event, expression: Expression) => void>;
 
@@ -278,8 +280,13 @@ export default function<E extends Expression>()
       copyExpression(): boolean {
         if (this.value !== NoExpression.instance) {
           this.registry.copy(this.value);
+
+          const description = this.registry.getExpressionDescribe(this.value);
+          const shortened = description.length > DESCRIPTION_MAX
+            ? description.substring(0, DESCRIPTION_MAX) + '...'
+            : description;
   
-          sendNotification({ message: 'Expression Copied' });
+          sendNotification({ message: 'Expression Copied:' + shortened });
   
           return true;
         }

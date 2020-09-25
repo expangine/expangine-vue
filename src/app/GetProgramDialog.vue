@@ -18,24 +18,26 @@
       </v-card-title>
       <v-card-text>
         <p v-if="message" v-html="message"></p>
-        <v-tabs v-if="hasTabs">
+        <v-tabs v-if="hasTabs" v-model="tab">
           <v-tab>{{ programLabel }}</v-tab>
           <v-tab>Return Type</v-tab>
-          <v-tab-item>
-            <ex-expression-editor
-              v-model="program"
-              :context="context"
-              :registry="registry"
-              :required-type="expectedType"
-            ></ex-expression-editor>
-          </v-tab-item>
-          <v-tab-item>
-            <ex-type-string-box
-              class="ma-1 ex-scrollable"
-              :type="actualType"
-              :registry="registry"
-            ></ex-type-string-box>
-          </v-tab-item>
+          <v-tabs-items touchless v-model="tab">
+            <v-tab-item>
+              <ex-expression-editor
+                v-model="program"
+                :context="context"
+                :registry="registry"
+                :required-type="expectedType"
+              ></ex-expression-editor>
+            </v-tab-item>
+            <v-tab-item>
+              <ex-type-string-box
+                class="ma-1 ex-scrollable"
+                :type="actualType"
+                :registry="registry"
+              ></ex-type-string-box>
+            </v-tab-item>
+          </v-tabs-items>
         </v-tabs>
         <ex-expression-editor
           v-else

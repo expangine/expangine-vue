@@ -9,7 +9,7 @@
       @remove="remove"
     ></ex-namer>
 
-    <v-tabs vertical icons-and-text background-color="grey lighten-3">
+    <v-tabs vertical icons-and-text background-color="grey lighten-3" v-model="tab">
       <v-tab>
         <v-icon>mdi-axis-arrow</v-icon>
         Edit
@@ -22,294 +22,296 @@
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
-      <v-tab-item>
-        <v-container>
-          <v-row no-gutters>
-            <v-col cols="12">
-              <v-select
-                outlined
-                persistent-hint
-                class="mt-3"
-                label="Kind"
-                :error="invalidKind"
-                :hint="hintKind"
-                :items="kindOptions"
-                v-model="kind"
-              ></v-select>
-            </v-col>
-          </v-row>
-          <!-- Has Many -->
-          <v-row no-gutters v-if="isHasMany">
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="Has Many"
-                hint="The type which has many related"
-                :error="invalidOne"
-                :items="entityOptions"
-                v-model="relationData.one"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="Has Many Relation Name"
-                :hint="hintHasManyOne"
-                v-model="relationData.oneRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="Many"
-                hint="The type which belongs to One"
-                :error="invalidMany"
-                :items="entityOptions"
-                v-model="relationData.many"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="Many Relation Name"
-                :hint="hintHasManyMany"
-                v-model="relationData.manyRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-switch
-                persistent-hint
-                class="ml-3"
-                label="Owns"
-                hint="If One owns the Many than the Many are removed when the One is deleted"
-                v-model="relationData.owns"
-              ></v-switch>
-            </v-col>
-          </v-row>
-          <!-- Has One -->
-          <v-row v-else-if="isHasOne">
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="Has One"
-                hint="The type which has one related"
-                :error="invalidHasOne"
-                :items="entityOptions"
-                v-model="relationData.hasOne"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="Has One Relation Name"
-                :hint="hintHasOneHasOne"
-                v-model="relationData.hasOneRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="One"
-                hint="The type which belongs to One"
-                :error="invalidOne"
-                :items="entityOptions"
-                v-model="relationData.one"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="One Relation Name"
-                :hint="hintHasOneOne"
-                v-model="relationData.oneRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-switch
-                persistent-hint
-                class="ml-3"
-                label="Owns"
-                hint="If Has One owns the One than the One is removed when the Has One is deleted"
-                v-model="relationData.owns"
-              ></v-switch>
-            </v-col>
-            <v-col>
-              <v-switch
-                persistent-hint
-                class="ml-3"
-                label="Required"
-                hint="Has One must always have a One"
-                v-model="relationData.required"
-              ></v-switch>
-            </v-col>
-          </v-row>
-          <!-- Has One Polymorphic -->
-          <v-row v-else-if="isHasOnePolymorphic">
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="Has One"
-                hint="The type which has one related"
-                :error="invalidHasOne"
-                :items="entityOptions"
-                v-model="relationData.hasOne"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="Has One Relation Name"
-                :error="invalidHasOneRelationName"
-                :hint="hintHasOnePolymorphicHasOne"
-                v-model="relationData.hasOneRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                multiple
-                persistent-hint                
-                class="mr-1 mt-3"
-                label="One"
-                hint="The types which belongs to One"
-                :error="invalidPoly"
-                :items="entityOptions"
-                v-model="relationData.poly"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-text-field
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="One Relation Name"
-                :hint="hintHasOnePolymorphicOne"
-                v-model="relationData.polyRelationName"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-combobox
-                outlined
-                persistent-hint
-                class="mr-1 mt-3"
-                label="Discriminator"
-                hint="A field added to Has One which distinguishes which type is related"
-                :items="morphsPropertyOptions"
-                v-model="relationData.morphs[0]"
-              ></v-combobox>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                outlined
-                persistent-hint
-                class="ml-1 mt-3"
-                label="Type"
-                hint="The field type that stores the discriminator"
-                :items="morphsTypeOptions"
-                :value-comparator="morphsTypesComparator"
-                v-model="relationData.morphs[1]"
-              ></v-select>
-            </v-col>
-            <v-col cols="12">
-              <v-simple-table class="ex-table-fixed mt-3">
-                <colgroup>
-                  <col style="width: 30%">
-                  <col style="width: 70%">
-                </colgroup>
-                <thead class="v-data-table--dense">
-                  <tr class="ex-accent-bar">
-                    <th>Type</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="name in relationData.poly">
-                    <tr :key="name">
-                      <td>{{ name }}</td>
-                      <td>
-                        <ex-type-input
-                          :registry="registry"
-                          :type="relationData.morphs[1]"
-                          :settings="morphsTypeSettings"
-                          v-model="relationData.morphsToRelated[name]"
-                        ></ex-type-input>
-                      </td>
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <v-container>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mt-3"
+                  label="Kind"
+                  :error="invalidKind"
+                  :hint="hintKind"
+                  :items="kindOptions"
+                  v-model="kind"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <!-- Has Many -->
+            <v-row no-gutters v-if="isHasMany">
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="Has Many"
+                  hint="The type which has many related"
+                  :error="invalidOne"
+                  :items="entityOptions"
+                  v-model="relationData.one"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="Has Many Relation Name"
+                  :hint="hintHasManyOne"
+                  v-model="relationData.oneRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="Many"
+                  hint="The type which belongs to One"
+                  :error="invalidMany"
+                  :items="entityOptions"
+                  v-model="relationData.many"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="Many Relation Name"
+                  :hint="hintHasManyMany"
+                  v-model="relationData.manyRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-switch
+                  persistent-hint
+                  class="ml-3"
+                  label="Owns"
+                  hint="If One owns the Many than the Many are removed when the One is deleted"
+                  v-model="relationData.owns"
+                ></v-switch>
+              </v-col>
+            </v-row>
+            <!-- Has One -->
+            <v-row v-else-if="isHasOne">
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="Has One"
+                  hint="The type which has one related"
+                  :error="invalidHasOne"
+                  :items="entityOptions"
+                  v-model="relationData.hasOne"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="Has One Relation Name"
+                  :hint="hintHasOneHasOne"
+                  v-model="relationData.hasOneRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="One"
+                  hint="The type which belongs to One"
+                  :error="invalidOne"
+                  :items="entityOptions"
+                  v-model="relationData.one"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="One Relation Name"
+                  :hint="hintHasOneOne"
+                  v-model="relationData.oneRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-switch
+                  persistent-hint
+                  class="ml-3"
+                  label="Owns"
+                  hint="If Has One owns the One than the One is removed when the Has One is deleted"
+                  v-model="relationData.owns"
+                ></v-switch>
+              </v-col>
+              <v-col>
+                <v-switch
+                  persistent-hint
+                  class="ml-3"
+                  label="Required"
+                  hint="Has One must always have a One"
+                  v-model="relationData.required"
+                ></v-switch>
+              </v-col>
+            </v-row>
+            <!-- Has One Polymorphic -->
+            <v-row v-else-if="isHasOnePolymorphic">
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="Has One"
+                  hint="The type which has one related"
+                  :error="invalidHasOne"
+                  :items="entityOptions"
+                  v-model="relationData.hasOne"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="Has One Relation Name"
+                  :error="invalidHasOneRelationName"
+                  :hint="hintHasOnePolymorphicHasOne"
+                  v-model="relationData.hasOneRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  multiple
+                  persistent-hint                
+                  class="mr-1 mt-3"
+                  label="One"
+                  hint="The types which belongs to One"
+                  :error="invalidPoly"
+                  :items="entityOptions"
+                  v-model="relationData.poly"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="One Relation Name"
+                  :hint="hintHasOnePolymorphicOne"
+                  v-model="relationData.polyRelationName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-combobox
+                  outlined
+                  persistent-hint
+                  class="mr-1 mt-3"
+                  label="Discriminator"
+                  hint="A field added to Has One which distinguishes which type is related"
+                  :items="morphsPropertyOptions"
+                  v-model="relationData.morphs[0]"
+                ></v-combobox>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select
+                  outlined
+                  persistent-hint
+                  class="ml-1 mt-3"
+                  label="Type"
+                  hint="The field type that stores the discriminator"
+                  :items="morphsTypeOptions"
+                  :value-comparator="morphsTypesComparator"
+                  v-model="relationData.morphs[1]"
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-simple-table class="ex-table-fixed mt-3">
+                  <colgroup>
+                    <col style="width: 30%">
+                    <col style="width: 70%">
+                  </colgroup>
+                  <thead class="v-data-table--dense">
+                    <tr class="ex-accent-bar">
+                      <th>Type</th>
+                      <th>Value</th>
                     </tr>
-                  </template>
-                </tbody>
-              </v-simple-table>
-            </v-col>
-            <v-col>
-              <v-switch
-                persistent-hint
-                class="ml-3"
-                label="Owns"
-                hint="If Has One owns the One than the One is removed when the Has One is deleted"
-                v-model="relationData.owns"
-              ></v-switch>
-            </v-col>
-            <v-col>
-              <v-switch
-                persistent-hint
-                class="ml-3"
-                label="Required"
-                hint="Has One must always have a One"
-                v-model="relationData.required"
-              ></v-switch>
-            </v-col>
-          </v-row>
-        </v-container>  
-      </v-tab-item>
-      <v-tab-item>
-        <v-container v-if="relation">
-          <v-row>
-            <v-col>
-              <v-chip label>
-                Created:&nbsp;<timeago :datetime="relation.created"></timeago>
-              </v-chip>
-              <v-chip label class="ml-4">
-                Updated:&nbsp;<timeago :datetime="relation.updated"></timeago>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-      <v-tab-item>
-        <p v-if="references.length === 0" class="pa-3">
-          <v-alert type="info">
-            This Relation is not referenced by anything.
-          </v-alert>
-        </p>
-        <v-list dense v-else>
-          <template v-for="(ref, index) in references">
-            <ex-definitions-reference 
-              :key="index"
-              :reference="ref" 
-              :registry="registry"
-            ></ex-definitions-reference>
-          </template>
-        </v-list>
-      </v-tab-item>
+                  </thead>
+                  <tbody>
+                    <template v-for="name in relationData.poly">
+                      <tr :key="name">
+                        <td>{{ name }}</td>
+                        <td>
+                          <ex-type-input
+                            :registry="registry"
+                            :type="relationData.morphs[1]"
+                            :settings="morphsTypeSettings"
+                            v-model="relationData.morphsToRelated[name]"
+                          ></ex-type-input>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </v-simple-table>
+              </v-col>
+              <v-col>
+                <v-switch
+                  persistent-hint
+                  class="ml-3"
+                  label="Owns"
+                  hint="If Has One owns the One than the One is removed when the Has One is deleted"
+                  v-model="relationData.owns"
+                ></v-switch>
+              </v-col>
+              <v-col>
+                <v-switch
+                  persistent-hint
+                  class="ml-3"
+                  label="Required"
+                  hint="Has One must always have a One"
+                  v-model="relationData.required"
+                ></v-switch>
+              </v-col>
+            </v-row>
+          </v-container>  
+        </v-tab-item>
+        <v-tab-item>
+          <v-container v-if="relation">
+            <v-row>
+              <v-col>
+                <v-chip label>
+                  Created:&nbsp;<timeago :datetime="relation.created"></timeago>
+                </v-chip>
+                <v-chip label class="ml-4">
+                  Updated:&nbsp;<timeago :datetime="relation.updated"></timeago>
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item>
+          <p v-if="references.length === 0" class="pa-3">
+            <v-alert type="info">
+              This Relation is not referenced by anything.
+            </v-alert>
+          </p>
+          <v-list dense v-else>
+            <template v-for="(ref, index) in references">
+              <ex-definitions-reference 
+                :key="index"
+                :reference="ref" 
+                :registry="registry"
+              ></ex-definitions-reference>
+            </template>
+          </v-list>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
   </div>
 </template>
@@ -370,6 +372,7 @@ export default Vue.extend({
     relationData: null as any as RelationData,
     kind: null as null | RelationKind,
     updatingData: false,
+    tab: 0,
   }),
   computed: { 
     references(): DefinitionsRelationReference[] {

@@ -23,6 +23,8 @@ const PREF_PASTE = Preferences.define({
   defaultValue: false,
 });
 
+const DESCRIPTION_MAX = 64;
+
 
 export default Vue.extend({
   name: 'ExpressionClipboard',
@@ -63,7 +65,12 @@ export default Vue.extend({
     copy(expr: Expression) {
       this.registry.copy(expr);
 
-      sendNotification({ message: 'Expression Copied' });
+      const description = this.registry.getExpressionDescribe(expr);
+      const shortened = description.length > DESCRIPTION_MAX
+        ? description.substring(0, DESCRIPTION_MAX) + '...'
+        : description;
+
+      sendNotification({ message: 'Expression Copied: ' + shortened });
     },
     async paste(expr: Expression) {
       const { context, requiredType, registry } = this;
