@@ -513,16 +513,22 @@ export async function getDataImportMapping({ registry, type, typeSettings, worke
               } 
               else 
               {
+                const propTypeRequired = propType.getRequired();
                 const valueType = registry.defs.describe(value);
-                const cast = castValue(value, valueType, propType);
+                const cast = castValue(value, valueType, propTypeRequired);
                 
-                if (propType.isValid(cast)) 
+                if (propTypeRequired.isValid(cast)) 
                 {
-                  const castString = registry.getTypeToString(cast, propType, '', ' ', '');
+                  const castString = registry.getTypeToString(cast, propTypeRequired, '', ' ', '');
 
                   convert[prop] = cast;
                   warnings.push(`[${rowIndex}] "${row[mapping]}" in "${mapping}" was converted to ${castString}`);
                 } 
+                else if (propType.isOptional())
+                {
+                  convert[prop] = null;
+                  warnings.push(`[${rowIndex}] "${row[mapping]}" in "${mapping}" could not be converted, it was optional so now it has no value`);
+                }
                 else 
                 {
                   const propDescribe = registry.getTypeDescribe(propType);
