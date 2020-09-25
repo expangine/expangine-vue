@@ -147,17 +147,15 @@
 </template>
 
 <script lang="ts">
-import { Type, ListType, isNumber, ObjectType, Types, isFunction, isString, EntityType } from 'expangine-runtime';
+import { Type, ListType, isNumber, ObjectType, Types, isString, EntityType } from 'expangine-runtime';
 import { LiveRuntime } from 'expangine-runtime-live';
-import { getInput } from '@/app/Input';
 import { System } from '@/app/SystemEvents';
-import { exportFile } from '@/app/FileExport';
 import { sendNotification } from '@/app/Notify';
 import { getConfirmation } from '@/app/Confirm';
 import { getDataExport } from '@/app/DataExport';
 import { getDataImportMapping } from '@/app/DataImport';
 import { Preferences, PreferenceCategory } from '@/app/Preference';
-import { TypeSettings, TypeSettingsRecord } from '../TypeVisuals';
+import { TypeSettingsRecord } from '../TypeVisuals';
 import { ListSubs } from './ListTypes';
 import { ListObjectTableOptions } from './ListObjectTableTypes';
 import ObjectFormField from '../object/ObjectFormField.vue';

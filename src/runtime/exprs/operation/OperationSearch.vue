@@ -15,8 +15,21 @@
     <template #item="{ item }">
       <v-list-item-content>
         <v-list-item-title v-html="item.text"></v-list-item-title>
-        <v-list-item-subtitle v-html="item.description"></v-list-item-subtitle>
+        <v-list-item-subtitle 
+          :title="item.description"
+          v-html="item.description"
+        ></v-list-item-subtitle>
       </v-list-item-content>
+    </template>
+    <template #append-outer>
+      <v-tooltip top v-if="canIgnoreType">
+        <template #activator="{ on }">
+          <v-btn icon color="error" @click="toggleIgnoreType" v-on="on">
+            <v-icon>mdi-filter</v-icon>
+          </v-btn>
+        </template>
+        Remove Type Restrictions from Search
+      </v-tooltip>
     </template>
   </v-autocomplete>
 </template>
@@ -34,6 +47,7 @@ export default ExpressionBase<OperationExpression>().extend({
   name: 'OperationSearch',
   data: () => ({
     query: '',
+    ignoreType: false,
   }),
   computed: {
     searchLabel(): string {
@@ -58,6 +72,9 @@ export default ExpressionBase<OperationExpression>().extend({
       }
 
       return items;
+    },
+    canIgnoreType(): boolean {
+      return !this.ignoreType && (this.returnTypeMode || this.forTypeMode);
     },
     startingValue(): Expression | null {
       return this.value.params[STARTING_PARAM] || null;
@@ -88,7 +105,7 @@ export default ExpressionBase<OperationExpression>().extend({
         : [];
     },
     forTypeMode(): boolean {
-      return this.hasStartingValue;
+      return this.hasStartingValue && !this.ignoreType;
     },
     forTypeDescribed(): string {
       return this.startingValueType
@@ -117,6 +134,9 @@ export default ExpressionBase<OperationExpression>().extend({
       } else {
         this.remove();
       }
+    },
+    toggleIgnoreType() {
+      this.ignoreType = !this.ignoreType;
     },
     chooseOperation(pair: OperationPair) {
       const startingValue = this.startingValue;
@@ -162,3 +182,13 @@ export default ExpressionBase<OperationExpression>().extend({
   },
 });
 </script>
+
+<style lang="less" scoped>
+.v-autocomplete {
+
+  /deep/ .v-input__append-outer {
+    margin-top: 8px;
+    margin-left: 2px;
+  }
+}
+</style>

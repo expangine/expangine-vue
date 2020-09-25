@@ -65,7 +65,7 @@
           <v-card>
             <v-list-item two-line>
               <v-list-item-content>
-                <v-list-item-title class="headline" v-html="visuals.name"></v-list-item-title>
+                <v-list-item-title class="headline" v-html="visuals.name(type)"></v-list-item-title>
                 <v-list-item-subtitle v-html="visuals.description"></v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>

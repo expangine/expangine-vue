@@ -29,7 +29,7 @@ export default (registry: Registry) =>
   registry.addOperation(AnyOps.isDefined, {
     name: 'Is Defined?',
     description: 'Is [value] defined?',
-    singleline: 'is {value} defined?',
+    singleline: '{value} is defined?',
     comments: {
       value: 'The value to check for a non-null/non-undefined value',
     },
@@ -95,7 +95,7 @@ export default (registry: Registry) =>
   registry.addOperation(AnyOps.isValid, {
     name: 'Is Any?',
     description: 'Determines whether [value] is a valid value for Any',
-    singleline: 'is {value} any?',
+    singleline: '{value} is any?',
     comments: {
       value: 'The value to evaluate',
     },

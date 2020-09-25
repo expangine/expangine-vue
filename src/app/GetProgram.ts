@@ -24,6 +24,7 @@ export interface GetProgramOptions
   expectedType: Type | null;
   removeDescribedRestrictions: boolean;
   programLabel: string;
+  tab: number;
   confirm: string;
   unconfirm: string;
   visible: boolean;
@@ -41,6 +42,7 @@ export function getGetProgramDefaults(): GetProgramOptions {
     expectedType: null,
     removeDescribedRestrictions: true,
     programLabel: 'Program',
+    tab: 0,
     confirm: 'OK',
     unconfirm: 'Cancel',
     visible: false,

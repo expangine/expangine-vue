@@ -80,7 +80,7 @@ export default (registry: Registry) =>
   registry.addOperation(BooleanOps.isValid, {
     name: 'Is Boolean?',
     description: 'Determines whether [value] is a valid value for Boolean',
-    singleline: 'is {value} boolean?',
+    singleline: '{value} is boolean?',
     comments: {
       value: 'The value to evaluate',
     },

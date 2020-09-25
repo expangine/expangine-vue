@@ -34,164 +34,166 @@
         <v-icon>mdi-information-outline</v-icon>
         Info
       </v-tab>
-      <v-tab-item>
-        <ex-type-editor
-          :read-only="readOnly"
-          :type="program.dataType"
-          :registry="registry"
-          :settings="settings"
-          @change="onChange"
-        ></ex-type-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <div v-if="isSingleDataset">
-          <v-btn right absolute rounded color="primary" class="mt-3" @click="addDataset">
-            <v-icon>mdi-plus</v-icon> Add Alternative Input
-          </v-btn>
-          <div class="py-4"></div>
-        </div>
-        <div v-else>
-          <v-tabs color="primary" show-arrows v-model="dataIndex">
-            <v-tabs-slider></v-tabs-slider>
-            <template v-for="(dataset, datasetIndex) in program.datasets">
-              <v-tab :key="datasetIndex">
-                {{ dataset.name }}
-                <v-menu offset-y>
-                  <template #activator="{ on }">
-                    <v-btn icon small class="ml-2" v-on="on">
-                      <v-icon small>mdi-settings</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list>
-                    <v-list-item v-if="datasetIndex" @click="setPrimaryDataSet(dataset)">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          Set as primary
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          When the program is ran in the program editor it will use this dataset.
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item @click="renameDataset(dataset)">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          Rename
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          Change the name of the dataset.
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item @click="copyDataset(dataset)">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          Copy
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          Copy this dataset to a new one.
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item @click="removeDataset(dataset)">
-                      <v-list-item-content>
-                        <v-list-item-title>
-                          Remove
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                          Remove this dataset from the program.
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-                
-              </v-tab>
-            </template>
-          </v-tabs>
-        </div>
-        
-        <ex-type-input
-          :value="currentData"
-          :type="program.dataType"
-          :read-only="readOnly"
-          :registry="registry"
-          :settings="settings"
-          @input="onDataChange"
-        ></ex-type-input>
-      </v-tab-item>
-      <v-tab-item>
-        <ex-expression-editor
-          vertical
-          sticky
-          can-remove
-          hide-history
-          :read-only="readOnly"
-          :value="program.expression"
-          :context="program.dataType"
-          :registry="registry"
-          :settings="settings"
-          :data="currentData"
-          @input="onProgramChange"
-          @remove="onProgramRemove"
-        ></ex-expression-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <div v-if="isRunVisible">
-          <ex-run-program
-            :program="program"
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <ex-type-editor
+            :read-only="readOnly"
+            :type="program.dataType"
             :registry="registry"
-          ></ex-run-program>
-        </div>
-      </v-tab-item>
-      <v-tab-item>
-        <div v-if="isDebugVisible">
-          <ex-debug-program
-            hide-close
+            :settings="settings"
+            @change="onChange"
+          ></ex-type-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <div v-if="isSingleDataset">
+            <v-btn right absolute rounded color="primary" class="mt-3" @click="addDataset">
+              <v-icon>mdi-plus</v-icon> Add Alternative Input
+            </v-btn>
+            <div class="py-4"></div>
+          </div>
+          <div v-else>
+            <v-tabs color="primary" show-arrows v-model="dataIndex">
+              <v-tabs-slider></v-tabs-slider>
+              <template v-for="(dataset, datasetIndex) in program.datasets">
+                <v-tab :key="datasetIndex">
+                  {{ dataset.name }}
+                  <v-menu offset-y>
+                    <template #activator="{ on }">
+                      <v-btn icon small class="ml-2" v-on="on">
+                        <v-icon small>mdi-settings</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list>
+                      <v-list-item v-if="datasetIndex" @click="setPrimaryDataSet(dataset)">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Set as primary
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            When the program is ran in the program editor it will use this dataset.
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item @click="renameDataset(dataset)">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Rename
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Change the name of the dataset.
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item @click="copyDataset(dataset)">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Copy
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Copy this dataset to a new one.
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                      <v-list-item @click="removeDataset(dataset)">
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            Remove
+                          </v-list-item-title>
+                          <v-list-item-subtitle>
+                            Remove this dataset from the program.
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+                  
+                </v-tab>
+              </template>
+            </v-tabs>
+          </div>
+          
+          <ex-type-input
+            :value="currentData"
+            :type="program.dataType"
+            :read-only="readOnly"
+            :registry="registry"
+            :settings="settings"
+            @input="onDataChange"
+          ></ex-type-input>
+        </v-tab-item>
+        <v-tab-item>
+          <ex-expression-editor
+            vertical
             sticky
-            :debug="debug"
+            can-remove
+            hide-history
+            :read-only="readOnly"
+            :value="program.expression"
+            :context="program.dataType"
             :registry="registry"
-          ></ex-debug-program>
-        </div>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                outlined
-                hide-details
-                label="Author"
-                v-model="program.author"
-                @change="markUpdated"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <v-textarea
-                outlined
-                hide-details
-                auto-grow
-                label="Description"
-                rows="5"
-                v-model="program.description"
-                @change="markUpdated"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-chip label>
-                Created:&nbsp;<timeago :datetime="program.created"></timeago>
-              </v-chip>
-              <v-chip label class="ml-4">
-                Updated:&nbsp;<timeago :datetime="program.updated"></timeago>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
+            :settings="settings"
+            :data="currentData"
+            @input="onProgramChange"
+            @remove="onProgramRemove"
+          ></ex-expression-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <div v-if="isRunVisible">
+            <ex-run-program
+              :program="program"
+              :registry="registry"
+            ></ex-run-program>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <div v-if="isDebugVisible">
+            <ex-debug-program
+              hide-close
+              sticky
+              :debug="debug"
+              :registry="registry"
+            ></ex-debug-program>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  outlined
+                  hide-details
+                  label="Author"
+                  v-model="program.author"
+                  @change="markUpdated"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  outlined
+                  hide-details
+                  auto-grow
+                  label="Description"
+                  rows="5"
+                  v-model="program.description"
+                  @change="markUpdated"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip label>
+                  Created:&nbsp;<timeago :datetime="program.created"></timeago>
+                </v-chip>
+                <v-chip label class="ml-4">
+                  Updated:&nbsp;<timeago :datetime="program.updated"></timeago>
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
   </div>
 </template>

@@ -9,7 +9,7 @@
       @remove="remove"
     ></ex-namer>
 
-    <v-tabs vertical icons-and-text background-color="grey lighten-3">
+    <v-tabs vertical icons-and-text background-color="grey lighten-3" v-model="tab">
       <v-tab>
         <v-icon>mdi-file-tree</v-icon>
         Design  
@@ -38,291 +38,293 @@
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
-      <v-tab-item>
-        <ex-type-editor
-          :type="type"
-          :registry="registry"
-          :settings="settings"
-          :no-transform="zeroReferences"
-          @change="handleChange"
-          @prop:remove="onPropertyRemove"
-          @prop:rename="onPropertyRename"
-        ></ex-type-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <div>
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <ex-type-editor
+            :type="type"
+            :registry="registry"
+            :settings="settings"
+            :no-transform="zeroReferences"
+            @change="handleChange"
+            @prop:remove="onPropertyRemove"
+            @prop:rename="onPropertyRename"
+          ></ex-type-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <div>
 
-          <v-tabs class="ex-accent-bar">
-            <v-tab>Identifier</v-tab>
-            <v-tab :disabled="disableData">Indexes</v-tab>
-            <v-tab :disabled="disableData">Transcoders</v-tab>
-            <v-tab-item class="pa-3">
-              <v-select
-                outlined
-                persistent-hint
-                label="Identifier"
-                hint="How instances of this type are uniquely identified."
-                :items="primaryTypes"
-                v-model="entity.primaryType"
-              ></v-select>
+            <v-tabs class="ex-accent-bar">
+              <v-tab>Identifier</v-tab>
+              <v-tab :disabled="disableData">Indexes</v-tab>
+              <v-tab :disabled="disableData">Transcoders</v-tab>
+              <v-tab-item class="pa-3">
+                <v-select
+                  outlined
+                  persistent-hint
+                  label="Identifier"
+                  hint="How instances of this type are uniquely identified."
+                  :items="primaryTypes"
+                  v-model="entity.primaryType"
+                ></v-select>
 
-              <div v-if="definesKey">
-                <ex-expression-editor
-                  :context="keyContext"
-                  :registry="registry"
-                  :settings="settings"
-                  :required-type="keyReturnType"
-                  :value="entity.key"
-                  @input="onUpdateKey"
-                ></ex-expression-editor>
-              </div>
+                <div v-if="definesKey">
+                  <ex-expression-editor
+                    :context="keyContext"
+                    :registry="registry"
+                    :settings="settings"
+                    :required-type="keyReturnType"
+                    :value="entity.key"
+                    @input="onUpdateKey"
+                  ></ex-expression-editor>
+                </div>
 
-              <div v-if="definesDescribe" class="mt-3">
-                <h5>
-                  A short description of a given instance.
-                  <span v-if="disableData" class="error--text">
-                    You must specify this expression to enable indexing, transcoders, data, and relationships for this entity.
-                  </span>
-                </h5>
-                <ex-expression-editor
-                  :context="describeContext"
-                  :registry="registry"
-                  :settings="settings"
-                  :required-type="describeReturnType"
-                  v-model="entity.describe"
-                ></ex-expression-editor>
-              </div>
-            </v-tab-item>
-            <v-tab-item>
-              <v-simple-table class="ex-table-fixed">
-                <colgroup>
-                  <col style="width: 30%">
-                  <col style="width: 70%">
-                  <col style="width: 100px">
-                  <col style="width: 110px">
-                </colgroup>
-                <thead class="v-data-table--dense">
-                  <tr class="ex-accent-bar">
-                    <th>Name</th>
-                    <th>Properties</th>
-                    <th>Type</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="index in indices">
-                    <tr :key="index.name">
-                      <td>{{ index.name }}</td>
-                      <td>
-                        <template v-for="prop in index.props">
-                          <v-chip :key="prop">{{ prop }}</v-chip>
-                        </template>
-                      </td>
-                      <td>{{ index.primary ? 'Primary' : index.unique ? 'Unique' : '' }}</td>
-                      <td v-if="canEditIndex(index.name)">
-                        <v-btn icon @click="editIndex(index)">
-                          <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                        <v-btn icon @click="removeIndex(index)">
-                          <v-icon>mdi-delete</v-icon>
-                        </v-btn>
-                      </td>
-                      <td v-else></td>
+                <div v-if="definesDescribe" class="mt-3">
+                  <h5>
+                    A short description of a given instance.
+                    <span v-if="disableData" class="error--text">
+                      You must specify this expression to enable indexing, transcoders, data, and relationships for this entity.
+                    </span>
+                  </h5>
+                  <ex-expression-editor
+                    :context="describeContext"
+                    :registry="registry"
+                    :settings="settings"
+                    :required-type="describeReturnType"
+                    v-model="entity.describe"
+                  ></ex-expression-editor>
+                </div>
+              </v-tab-item>
+              <v-tab-item>
+                <v-simple-table class="ex-table-fixed">
+                  <colgroup>
+                    <col style="width: 30%">
+                    <col style="width: 70%">
+                    <col style="width: 100px">
+                    <col style="width: 110px">
+                  </colgroup>
+                  <thead class="v-data-table--dense">
+                    <tr class="ex-accent-bar">
+                      <th>Name</th>
+                      <th>Properties</th>
+                      <th>Type</th>
+                      <th></th>
                     </tr>
-                  </template>
-                </tbody>
-              </v-simple-table>
-              <v-btn class="ma-3" @click="addIndex">
-                <v-icon>mdi-plus</v-icon>
-                Add Index
-              </v-btn>
-            </v-tab-item>
-            <v-tab-item>
-              <v-simple-table class="ex-table-fixed">
-                <colgroup>
-                  <col style="width: 15%">
-                  <col style="width: 15%">
-                  <col style="width: 30%">
-                  <col style="width: 30%">
-                  <col style="width: 110px">
-                </colgroup>
-                <thead class="v-data-table--dense">
-                  <tr class="ex-accent-bar">
-                    <th>Property</th>
-                    <th>To</th>
-                    <th>Encode</th>
-                    <th>Decode</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="item in transcoders">
-                    <tr :key="item.prop">
-                      <td>{{ item.prop }}</td>
-                      <template v-if="item.transcoder">
-                        <td>{{ getTypeDescription(item.transcoder.encodedType) }}</td>
-                        <td class="ex-single-line">{{ getExpressionDescription(item.transcoder.encode) }}</td>
-                        <td class="ex-single-line">{{ getExpressionDescription(item.transcoder.decode) }}</td>
+                  </thead>
+                  <tbody>
+                    <template v-for="index in indices">
+                      <tr :key="index.name">
+                        <td>{{ index.name }}</td>
                         <td>
-                          <v-btn icon @click="editTranscoder(item.prop)">
+                          <template v-for="prop in index.props">
+                            <v-chip :key="prop">{{ prop }}</v-chip>
+                          </template>
+                        </td>
+                        <td>{{ index.primary ? 'Primary' : index.unique ? 'Unique' : '' }}</td>
+                        <td v-if="canEditIndex(index.name)">
+                          <v-btn icon @click="editIndex(index)">
                             <v-icon>mdi-pencil</v-icon>
                           </v-btn>
-                          <v-btn icon @click="removeTranscoder(item.prop)">
+                          <v-btn icon @click="removeIndex(index)">
                             <v-icon>mdi-delete</v-icon>
                           </v-btn>
                         </td>
-                      </template>
-                      <template v-else>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>
-                          <v-btn icon @click="editTranscoder(item.prop)">
-                            <v-icon>mdi-plus</v-icon>
-                          </v-btn>
-                        </td>
-                      </template>
+                        <td v-else></td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </v-simple-table>
+                <v-btn class="ma-3" @click="addIndex">
+                  <v-icon>mdi-plus</v-icon>
+                  Add Index
+                </v-btn>
+              </v-tab-item>
+              <v-tab-item>
+                <v-simple-table class="ex-table-fixed">
+                  <colgroup>
+                    <col style="width: 15%">
+                    <col style="width: 15%">
+                    <col style="width: 30%">
+                    <col style="width: 30%">
+                    <col style="width: 110px">
+                  </colgroup>
+                  <thead class="v-data-table--dense">
+                    <tr class="ex-accent-bar">
+                      <th>Property</th>
+                      <th>To</th>
+                      <th>Encode</th>
+                      <th>Decode</th>
+                      <th></th>
                     </tr>
-                  </template>
-                </tbody>
-              </v-simple-table>
-            </v-tab-item>
-          </v-tabs>
-          
-        </div>
-      </v-tab-item>
-      <v-tab-item class="data-container">
-        <ex-type-input
-          :type="dataType"
-          :registry="registry"
-          :settings="dataSettings"
-          v-model="entity.instances"
-        ></ex-type-input>
-      </v-tab-item>
-      <v-tab-item class="data-container">
-        <v-simple-table class="ex-table-fixed">
-          <colgroup>
-            <col style="width: 15%">
-            <col style="width: 15%">
-            <col style="width: 30%">
-            <col style="width: 30%">
-            <col style="width: 110px">
-          </colgroup>
-          <thead class="v-data-table--dense">
-            <tr class="ex-accent-bar">
-              <th>Name</th>
-              <th>Kind</th>
-              <th>Related</th>
-              <th>Related Type</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="relation in relations">
-              <tr :key="relation.relationName">
-                <td>{{ relation.name }}</td>
-                <td>{{ getRelationType(relation) }}</td>
-                <td>
-                  <template v-for="related in relation.related">
-                    <v-chip :key="related.name">{{ related.name }}</v-chip>
-                  </template>
-                </td>
-                <td>{{ getTypeDescription(relation.relationType) }}</td>
-                <td>
-                  <v-btn icon @click="editRelation(relation)">
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="removeRelation(relation)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </td>
+                  </thead>
+                  <tbody>
+                    <template v-for="item in transcoders">
+                      <tr :key="item.prop">
+                        <td>{{ item.prop }}</td>
+                        <template v-if="item.transcoder">
+                          <td>{{ getTypeDescription(item.transcoder.encodedType) }}</td>
+                          <td class="ex-single-line">{{ getExpressionDescription(item.transcoder.encode) }}</td>
+                          <td class="ex-single-line">{{ getExpressionDescription(item.transcoder.decode) }}</td>
+                          <td>
+                            <v-btn icon @click="editTranscoder(item.prop)">
+                              <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn icon @click="removeTranscoder(item.prop)">
+                              <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                          </td>
+                        </template>
+                        <template v-else>
+                          <td>-</td>
+                          <td>-</td>
+                          <td>-</td>
+                          <td>
+                            <v-btn icon @click="editTranscoder(item.prop)">
+                              <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                          </td>
+                        </template>
+                      </tr>
+                    </template>
+                  </tbody>
+                </v-simple-table>
+              </v-tab-item>
+            </v-tabs>
+            
+          </div>
+        </v-tab-item>
+        <v-tab-item class="data-container">
+          <ex-type-input
+            :type="dataType"
+            :registry="registry"
+            :settings="dataSettings"
+            v-model="entity.instances"
+          ></ex-type-input>
+        </v-tab-item>
+        <v-tab-item class="data-container">
+          <v-simple-table class="ex-table-fixed">
+            <colgroup>
+              <col style="width: 15%">
+              <col style="width: 15%">
+              <col style="width: 30%">
+              <col style="width: 30%">
+              <col style="width: 110px">
+            </colgroup>
+            <thead class="v-data-table--dense">
+              <tr class="ex-accent-bar">
+                <th>Name</th>
+                <th>Kind</th>
+                <th>Related</th>
+                <th>Related Type</th>
+                <th></th>
               </tr>
-            </template>
-          </tbody>
-        </v-simple-table>
-        <v-btn class="ma-3" @click="addRelation">
-          <v-icon>mdi-plus</v-icon>
-          Add Relation
-        </v-btn>
-      </v-tab-item>
-      <v-tab-item>
-        <v-simple-table class="ex-table-fixed">
-          <colgroup>
-            <col style="width: 30%">
-            <col style="width: 70%">
-            <col style="width: 110px">
-          </colgroup>
-          <thead class="v-data-table--dense">
-            <tr class="ex-accent-bar">
-              <th>Name</th>
-              <th>Description</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="method in entity.methods">
-              <tr :key="method.name">
-                <td>{{ method.name }}</td>
-                <td>{{ method.description }}</td>
-                <td>
-                  <v-btn icon @click="editMethod(method)">
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn icon @click="removeMethod(method)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </td>
+            </thead>
+            <tbody>
+              <template v-for="relation in relations">
+                <tr :key="relation.relationName">
+                  <td>{{ relation.name }}</td>
+                  <td>{{ getRelationType(relation) }}</td>
+                  <td>
+                    <template v-for="related in relation.related">
+                      <v-chip :key="related.name">{{ related.name }}</v-chip>
+                    </template>
+                  </td>
+                  <td>{{ getTypeDescription(relation.relationType) }}</td>
+                  <td>
+                    <v-btn icon @click="editRelation(relation)">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="removeRelation(relation)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </v-simple-table>
+          <v-btn class="ma-3" @click="addRelation">
+            <v-icon>mdi-plus</v-icon>
+            Add Relation
+          </v-btn>
+        </v-tab-item>
+        <v-tab-item>
+          <v-simple-table class="ex-table-fixed">
+            <colgroup>
+              <col style="width: 30%">
+              <col style="width: 70%">
+              <col style="width: 110px">
+            </colgroup>
+            <thead class="v-data-table--dense">
+              <tr class="ex-accent-bar">
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
               </tr>
+            </thead>
+            <tbody>
+              <template v-for="method in entity.methods">
+                <tr :key="method.name">
+                  <td>{{ method.name }}</td>
+                  <td>{{ method.description }}</td>
+                  <td>
+                    <v-btn icon @click="editMethod(method)">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="removeMethod(method)">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </v-simple-table>
+          <v-btn class="ma-3" @click="addMethod">
+            <v-icon>mdi-plus</v-icon>
+            Add Method
+          </v-btn>
+        </v-tab-item>
+        <v-tab-item>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  outlined
+                  hide-details
+                  auto-grow
+                  rows="5"
+                  label="Description"
+                  v-model="entity.description"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-chip label>
+                  Created:&nbsp;<timeago :datetime="entity.created"></timeago>
+                </v-chip>
+                <v-chip label class="ml-4">
+                  Updated:&nbsp;<timeago :datetime="entity.updated"></timeago>
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item>
+          <p v-if="references.length === 0" class="pa-3">
+            <v-alert type="info">
+              This Type is not referenced by anything.
+            </v-alert>
+          </p>
+          <v-list dense v-else>
+            <template v-for="(ref, index) in references">
+              <ex-definitions-reference 
+                :key="index"
+                :reference="ref" 
+                :registry="registry"
+              ></ex-definitions-reference>
             </template>
-          </tbody>
-        </v-simple-table>
-        <v-btn class="ma-3" @click="addMethod">
-          <v-icon>mdi-plus</v-icon>
-          Add Method
-        </v-btn>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-textarea
-                outlined
-                hide-details
-                auto-grow
-                rows="5"
-                label="Description"
-                v-model="entity.description"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-chip label>
-                Created:&nbsp;<timeago :datetime="entity.created"></timeago>
-              </v-chip>
-              <v-chip label class="ml-4">
-                Updated:&nbsp;<timeago :datetime="entity.updated"></timeago>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-      <v-tab-item>
-        <p v-if="references.length === 0" class="pa-3">
-          <v-alert type="info">
-            This Type is not referenced by anything.
-          </v-alert>
-        </p>
-        <v-list dense v-else>
-          <template v-for="(ref, index) in references">
-            <ex-definitions-reference 
-              :key="index"
-              :reference="ref" 
-              :registry="registry"
-            ></ex-definitions-reference>
-          </template>
-        </v-list>
-      </v-tab-item>
+          </v-list>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
   </div>
 </template>
@@ -397,6 +399,7 @@ export default Vue.extend({
   },
   data: () => ({
     relations: [] as EntityRelation[],
+    tab: 0,
   }),
   computed: {
     type(): Type {

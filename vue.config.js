@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   publicPath: '',
   configureWebpack(config) {
@@ -9,5 +11,6 @@ module.exports = {
         enforce: "pre",
       });
     }
+    config.resolve.alias['@'] = path.resolve(__dirname, 'src/');
   },
 };

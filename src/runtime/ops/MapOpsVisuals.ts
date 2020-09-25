@@ -237,7 +237,7 @@ export default (registry: Registry) =>
   registry.addOperation(MapOps.isValid, {
     name: 'Is Map?',
     description: 'Determines whether [value] is a valid value for Map',
-    singleline: 'is {value} map?',
+    singleline: '{value} is map?',
     comments: {
       value: 'The value to evaluate',
     },

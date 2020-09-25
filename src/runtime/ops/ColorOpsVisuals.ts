@@ -372,7 +372,7 @@ export default (registry: Registry) =>
   registry.addOperation(ColorOps.isValid, {
     name: 'Is Color?',
     description: 'Determines whether [value] is a valid value for Color',
-    singleline: 'is {value} color?',
+    singleline: '{value} is color?',
     comments: {
       value: 'The value to evaluate',
     },

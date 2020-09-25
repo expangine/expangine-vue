@@ -9,7 +9,7 @@
       @remove="remove"
     ></ex-namer>
 
-    <v-tabs vertical icons-and-text background-color="grey lighten-3">
+    <v-tabs vertical icons-and-text background-color="grey lighten-3" v-model="tab">
       <v-tab>
         <v-icon>mdi-database-edit</v-icon>
         Data
@@ -26,55 +26,58 @@
         <v-icon>mdi-swap-horizontal-bold</v-icon>
         Refs
       </v-tab>
-      <v-tab-item>
-        <ex-type-input
-          :value="data.data"
-          :type="data.dataType"
-          :read-only="readOnly"
-          :registry="registry"
-          :settings="settings"
-          @input="onDataChange"
-        ></ex-type-input>
-      </v-tab-item>
-      <v-tab-item>
-        <ex-type-editor
-          :read-only="readOnly"
-          :type="data.dataType"
-          :registry="registry"
-          :settings="settings"
-          @change="onChange"
-        ></ex-type-editor>
-      </v-tab-item>
-      <v-tab-item>
-        <v-container>
-          <v-row>
-            <v-col>
-              <v-chip label>
-                Created:&nbsp;<timeago :datetime="data.created"></timeago>
-              </v-chip>
-              <v-chip label class="ml-4">
-                Updated:&nbsp;<timeago :datetime="data.updated"></timeago>
-              </v-chip>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-tab-item>
-      <v-tab-item>
-        <p v-if="references.length === 0" class="pa-3">
-          <v-alert type="info">
-            This Data is not referenced by anything.
-          </v-alert>
-        </p>
-        <v-list dense v-else>
-          <template v-for="(ref, index) in references">
-            <ex-definitions-reference 
-              :key="index"
-              :reference="ref" 
-              :registry="registry"
-            ></ex-definitions-reference>
-          </template>
-        </v-list>
-      </v-tab-item>
+
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <ex-type-input
+            :value="data.data"
+            :type="data.dataType"
+            :read-only="readOnly"
+            :registry="registry"
+            :settings="settings"
+            @input="onDataChange"
+          ></ex-type-input>
+        </v-tab-item>
+        <v-tab-item>
+          <ex-type-editor
+            :read-only="readOnly"
+            :type="data.dataType"
+            :registry="registry"
+            :settings="settings"
+            @change="onChange"
+          ></ex-type-editor>
+        </v-tab-item>
+        <v-tab-item>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-chip label>
+                  Created:&nbsp;<timeago :datetime="data.created"></timeago>
+                </v-chip>
+                <v-chip label class="ml-4">
+                  Updated:&nbsp;<timeago :datetime="data.updated"></timeago>
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item>
+          <p v-if="references.length === 0" class="pa-3">
+            <v-alert type="info">
+              This Data is not referenced by anything.
+            </v-alert>
+          </p>
+          <v-list dense v-else>
+            <template v-for="(ref, index) in references">
+              <ex-definitions-reference 
+                :key="index"
+                :reference="ref" 
+                :registry="registry"
+              ></ex-definitions-reference>
+            </template>
+          </v-list>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
   </div>
 </template>
@@ -116,6 +119,9 @@ export default Vue.extend({
       default: false,
     },
   },
+  data: () => ({
+    tab: 0,
+  }),
   computed: {
     settings(): TypeSettings {
       if (this.registry.getTypeSettingsValidFor(this.data.dataType, this.data.meta)) {

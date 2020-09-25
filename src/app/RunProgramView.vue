@@ -10,52 +10,54 @@
       <v-chip label class="float-right ma-2">
         Elapsed: {{ elapsedTime }}
       </v-chip>
-      <v-tab-item>
-        <ex-data-string-box
-          quotes              
-          :registry="registry"
-          :data="result"
-          :type="resultType"
-        ></ex-data-string-box>
-      </v-tab-item>
-      <v-tab-item>
-        <div class="ex-code-container">
-          <pre class="ex-code" v-html="rawString"></pre>
-        </div>
-      </v-tab-item>
-      <v-tab-item>
-        <ex-type-input
-          v-if="isOutputInterface"
-          read-only
-          :value="result"
-          :type="resultType"
-          :registry="registry"
-          :settings="resultSettings"
-        ></ex-type-input>
-      </v-tab-item>
-      <v-tab-item v-if="showData">
-        <ex-data-string-box
-          quotes
-          :registry="registry"
-          :data="dataAfter"
-          :type="type"
-          @string="dataAfterString = $event"
+      <v-tabs-items touchless v-model="tab">
+        <v-tab-item>
+          <ex-data-string-box
+            quotes              
+            :registry="registry"
+            :data="result"
+            :type="resultType"
           ></ex-data-string-box>
-      </v-tab-item>
-      <v-tab-item v-if="showData">
-        <ex-data-string-box
-          quotes
-          :registry="registry"
-          :data="data"
-          :type="type"
-          @string="dataString = $event"
-          ></ex-data-string-box>
-      </v-tab-item>
-      <v-tab-item v-if="showData">
-        <div class="ex-code-container">
-          <pre class="ex-code" v-html="diffString"></pre>
-        </div>
-      </v-tab-item>
+        </v-tab-item>
+        <v-tab-item>
+          <div class="ex-code-container">
+            <pre class="ex-code" v-html="rawString"></pre>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <ex-type-input
+            v-if="isOutputInterface"
+            read-only
+            :value="result"
+            :type="resultType"
+            :registry="registry"
+            :settings="resultSettings"
+          ></ex-type-input>
+        </v-tab-item>
+        <v-tab-item v-if="showData">
+          <ex-data-string-box
+            quotes
+            :registry="registry"
+            :data="dataAfter"
+            :type="type"
+            @string="dataAfterString = $event"
+            ></ex-data-string-box>
+        </v-tab-item>
+        <v-tab-item v-if="showData">
+          <ex-data-string-box
+            quotes
+            :registry="registry"
+            :data="data"
+            :type="type"
+            @string="dataString = $event"
+            ></ex-data-string-box>
+        </v-tab-item>
+        <v-tab-item v-if="showData">
+          <div class="ex-code-container">
+            <pre class="ex-code" v-html="diffString"></pre>
+          </div>
+        </v-tab-item>
+      </v-tabs-items>
     </v-tabs>
   </div>
 </template>

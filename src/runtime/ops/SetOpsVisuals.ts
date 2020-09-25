@@ -156,7 +156,7 @@ export default (registry: Registry) =>
   registry.addOperation(SetOps.isValid, {
     name: 'Is Set?',
     description: 'Determines whether [value] is a valid value for Set',
-    singleline: 'is {value} set?',
+    singleline: '{value} is set?',
     comments: {
       value: 'The value to evaluate',
     },

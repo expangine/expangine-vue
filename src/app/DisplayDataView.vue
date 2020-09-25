@@ -1,21 +1,23 @@
 <template>
-  <v-tabs>
+  <v-tabs v-model="tab">
     <v-tab>Data</v-tab>
     <v-tab>Data (json)</v-tab>
-    <v-tab-item>
-      <ex-data-string-box
-        max-height="calc(100vh - 300px)"
-        quotes              
-        :registry="registry"
-        :data="data"
-        :type="dataType"
-      ></ex-data-string-box>
-    </v-tab-item>
-    <v-tab-item>
-      <div class="ex-code-container" style="max-height: calc(100vh - 300px)">
-        <pre class="ex-code" v-html="rawString"></pre>
-      </div>
-    </v-tab-item>
+    <v-tabs-items touchless v-model="tab">
+      <v-tab-item>
+        <ex-data-string-box
+          max-height="calc(100vh - 300px)"
+          quotes              
+          :registry="registry"
+          :data="data"
+          :type="dataType"
+        ></ex-data-string-box>
+      </v-tab-item>
+      <v-tab-item>
+        <div class="ex-code-container" style="max-height: calc(100vh - 300px)">
+          <pre class="ex-code" v-html="rawString"></pre>
+        </div>
+      </v-tab-item>
+    </v-tabs-items>
   </v-tabs>
 </template>
 
@@ -35,7 +37,9 @@ export default Vue.extend({
       required: true,
     },
   },
-  data: () => ({}),
+  data: () => ({
+    tab: 0,
+  }),
   computed: {
     dataType(): Type {
       const described = this.registry.defs.describe(this.data);

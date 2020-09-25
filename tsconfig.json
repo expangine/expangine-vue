@@ -11,6 +11,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "types": [
       "webpack-env", "vuetify"
     ],

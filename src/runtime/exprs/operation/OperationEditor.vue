@@ -23,6 +23,7 @@
       <v-list-item-content>
         <v-list-item-title v-html="item.text"></v-list-item-title>
         <v-list-item-subtitle 
+          :title="item.description"
           style="white-space: normal"
           v-html="item.description"
         ></v-list-item-subtitle>
@@ -131,13 +132,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Expression, Type, AnyType, TypeMap, OperationExpression, OperationPair, NoExpression, Operation, OperationTypes, objectMap, OperationMapping, Types } from 'expangine-runtime';
+import { Expression, Type, AnyType, TypeMap, OperationExpression, Operation, OperationTypes, objectMap, OperationMapping, Types } from 'expangine-runtime';
 import { ListOptions, renameVariable } from '@/common';
 import { OperationVisuals } from '../../ops/OperationVisuals';
 import { getInput } from '../../../app/Input';
 import { sendNotification } from '../../../app/Notify';
-import { filterOperation, getListOption, getMappingListOption, sortMappingListOption } from './helpers';
+import { filterOperation, getMappingListOption, sortMappingListOption } from './helpers';
 import { getTestOperation } from '../../../app/TestOperation';
 import OperationSearch from './OperationSearch.vue';
 import OperationParam from './OperationParam.vue';

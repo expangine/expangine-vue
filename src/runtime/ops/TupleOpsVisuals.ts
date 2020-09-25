@@ -89,7 +89,7 @@ export default (registry: Registry) =>
   registry.addOperation(TupleOps.isValid, {
     name: 'Is Tuple?',
     description: 'Determines whether [value] is a valid value for Tuple',
-    singleline: 'is {value} tuple?',
+    singleline: '{value} is tuple?',
     comments: {
       value: 'The value to evaluate',
     },
