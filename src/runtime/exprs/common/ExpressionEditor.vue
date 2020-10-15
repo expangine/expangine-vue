@@ -182,16 +182,17 @@
         <span>Debug</span>
       </v-tooltip>
     </v-toolbar>
-    <ex-expression
-      v-bind="$props"
-      class="ma-2"
-      :read-only="isReadOnly"
-      :show-complexity="isShowComplexity"
-      :display-options="getDisplayOptions"
-      :highlight="highlightedExpressions"
-      @input="onChange"
-      @remove="onRemove"
-    ></ex-expression>
+    <div class="ma-2">
+      <ex-expression
+        v-bind="$props"
+        :read-only="isReadOnly"
+        :show-complexity="isShowComplexity"
+        :display-options="getDisplayOptions"
+        :highlight="highlightedExpressions"
+        @input="onChange"
+        @remove="onRemove"
+      ></ex-expression>
+    </div>
   </div>
 </template>
 

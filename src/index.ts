@@ -17,8 +17,16 @@ import FuncArgument from './runtime/exprs/common/FuncArgument.vue';
 import ExpressionMenu from './runtime/exprs/common/ExpressionMenu.vue';
 import ExpressionEditor from './runtime/exprs/common/ExpressionEditor.vue';
 import ExpressionClipboard from './runtime/exprs/ExpressionClipboard.vue';
+import ExpressionEditButton from './ui/ExpressionEditButton.vue';
 import PathEditor from './runtime/exprs/path/PathEditor.vue';
 import PathViewer from './runtime/exprs/path/PathViewer.vue';
+
+import NodeEditor from './ui/nodes/NodeEditor.vue';
+import NodeViewer from './ui/nodes/NodeViewer.vue';
+import NodeChildren from './ui/nodes/NodeChildren.vue';
+import CompilerEditor from './ui/compilers/CompilerEditor.vue';
+import CompilerViewer from './ui/compilers/CompilerViewer.vue';
+import ComponentPreview from './ui/compilers/ComponentPreview.vue';
 
 import ExplorerFile from './app/explorer/ExplorerFile.vue';
 import ExplorerFolder from './app/explorer/ExplorerFolder.vue';
@@ -188,8 +196,16 @@ export default {
     Vue.component('ex-expression-menu', ExpressionMenu);
     Vue.component('ex-expression-editor', ExpressionEditor);
     Vue.component('ex-expression-clipboard', ExpressionClipboard);
+    Vue.component('ex-expression-edit-button', ExpressionEditButton);
     Vue.component('ex-chip-menu', ChipMenu);
     Vue.component('ex-child-filter', ChildFilter);
+
+    Vue.component('ex-node-editor', NodeEditor);
+    Vue.component('ex-node-viewer', NodeViewer);
+    Vue.component('ex-node-children', NodeChildren);
+    Vue.component('ex-compiler-editor', CompilerEditor);
+    Vue.component('ex-compiler-viewer', CompilerViewer);
+    Vue.component('ex-component-preview', ComponentPreview);
 
     Vue.component('ex-explorer-file', ExplorerFile);
     Vue.component('ex-explorer-folder', ExplorerFolder);

@@ -7,6 +7,10 @@ import { TypeModifier, TypeModifyInput, TypeModifyOption } from './types/TypeMod
 import { TypeHook, TypeHookInput, TypeHookOption } from './types/TypeHook';
 import { ExpressionVisuals } from './exprs/ExpressionVisuals';
 import { OperationVisuals } from './ops/OperationVisuals';
+import { CompilerVisuals } from '@/ui/compilers/CompilerVisuals';
+import { getCompilerName, NodeTemplate, NodeTemplateChild } from 'expangine-ui';
+import { NodeVisuals } from '@/ui/nodes/NodeVisuals';
+import { NodePreview } from '@/ui/nodes/NodePreview';
 
 
 export class Registry
@@ -22,6 +26,10 @@ export class Registry
   public exprMap: Record<string, ExpressionVisuals>;
   public exprs: ExpressionVisuals[];
   public operationMap: Record<string, OperationVisuals>;
+  public compilerMap: Record<string, CompilerVisuals>;
+  public compilers: CompilerVisuals[];
+  public nodeMap: Record<string, NodeVisuals>;
+  public nodes: NodeVisuals[];
   public settingsOverrides: Record<string, any> = {};
   public dataImportTypes: TypeDataImport[];
 
@@ -51,6 +59,10 @@ export class Registry
     this.typeHooks = [];
     this.exprMap = obj();
     this.exprs = [];
+    this.compilerMap = obj();
+    this.compilers = [];
+    this.nodeMap = obj();
+    this.nodes = [];
     this.operationMap = obj();
     this.dataImportTypes = [];
     this.expressionClipboard = [];
@@ -465,6 +477,57 @@ export class Registry
     }
 
     return this.getTypeVisuals(type).subNodes({ value, type, registry: this });
+  }
+
+  public addCompiler(compiler: CompilerVisuals): this
+  {
+    this.compilerMap[compiler.name] = compiler;
+    this.compilers.push(compiler);
+
+    return this;
+  }
+
+  public getCompilerVisuals(node: NodeTemplate)
+  {
+    const compilerName = getCompilerName(node[0]);
+
+    return this.compilerMap[compilerName];
+  }
+
+  public getCompilerLabel(node: NodeTemplate)
+  {
+    return this.getCompilerVisuals(node).label(node, this);
+  }
+
+  public addNode(node: NodeVisuals): this
+  {
+    this.nodeMap[node.name] = node;
+    this.nodes.push(node);
+
+    return this;
+  }
+
+  public getNodeVisuals(node: NodeTemplateChild): NodeVisuals | undefined
+  {
+    return this.nodes.find((c) => c.isValid(node, this));
+  }
+
+  public getNodeLabel(node: NodeTemplateChild)
+  {
+    return this.getNodeVisuals(node)?.label(node, this);
+  }
+
+  public getNodePreviews(): NodePreview[]
+  {
+    const out: NodePreview[] = [];
+
+    this.nodes.forEach((node) => {
+      node.getPreviews(this).forEach((preview) => {
+        out.push(preview);
+      });
+    });
+
+    return out;
   }
 
 }

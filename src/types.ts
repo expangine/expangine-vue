@@ -1,5 +1,4 @@
 
-
 declare module 'vue-markdown';
 
 declare module 'v-click-outside';
@@ -30,4 +29,58 @@ declare module 'diff' {
   export function diffChars(oldStr: string, newStr: string, options?: { ignoreCase?: boolean }): Part[];
 
   export function diffWords(oldStr: string, newStr: string, options?: { ignoreCase?: boolean }): Part[];
+}
+
+declare module '*/docs/index.json' {
+  import { NodeTemplateChild } from 'expangine-ui';
+
+  type TypeDocumentation = string | Record<string, string | Record<string, string>>;
+
+  const Documentation: {
+    name: string;
+    description: string;
+    category: {
+      [categoryName: string]: string;
+    };
+    types: {
+      [typeName: string]: {
+        [typeAttribute: string]: TypeDocumentation;
+      };
+    };
+    components: {
+      [id: string]: {
+        category: string;
+        description: string;
+        preview?: NodeTemplateChild;
+        template?: NodeTemplateChild;
+        example?: NodeTemplateChild;
+        attributes: {
+          [attr: string]: {
+            label: string;
+            description: string;
+            default?: string;
+            callable?: TypeDocumentation;
+            type?: TypeDocumentation;
+          };
+        };
+        events: {
+          [event: string]: {
+            label: string;
+            description: string;
+            scope?: TypeDocumentation;
+          };
+        };
+        slots: {
+          [slot: string]: {
+            label: string;
+            description: string;
+            scope?: TypeDocumentation;
+            default?: string;
+          };
+        };
+      };
+    };
+  };
+
+  export default Documentation;
 }
