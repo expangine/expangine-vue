@@ -41,7 +41,7 @@
     "@vue/cli-service": "^3.10.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "sass": "^1.17.4",
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
